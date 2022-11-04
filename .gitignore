@@ -37,3 +37,9 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# ignore data directory
+data/
+
+# ignore R project (Brian does not use)
+*.RProj
