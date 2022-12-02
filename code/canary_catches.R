@@ -38,7 +38,7 @@ catch = catch[!catch$REMOVAL_TYPE_CODE %in% c("R"),] #remove research catches
 #and so the 44 records with that original designation are now listed as 3B. 
 table(catch$REGION_NAME) #these are where landed...
 table(catch$PACFIN_CATCH_AREA_CODE) #these show no Puget Sound areas (in the 4's)
-table(catch$PACFIN_CATCH_AREA_CODE, catch$ORIG_PACFIN_CATCH_AREA_CODE)
+table(catch$PACFIN_CATCH_AREA_CODE, catch$ORIG_PACFIN_CATCH_AREA_CODE) #but original code for 44 records was 4A - keep these
 
 #Summary of catch assigned to canary from various species codes
 tmp <- catch %>% group_by(LANDING_YEAR, SPECIES_CODE_NAME) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS)) %>% data.frame()
@@ -66,9 +66,14 @@ catch$fleet[catch$PACFIN_GEAR_CODE %in% c("BTR", "DVG", "TRL","USP")] <- "OTH"
 #For WA these vessels are not included, but registered as NA. Vessel names are adequate
 
 #Assign to grouped fleets designations
+#In issue 9 on github, Ali suggests TWS (shrimp trawls) be added to trawl gear,
+#which differs from how it has been done in the past. 
+#Im keeping separate to be able to put in both sectors
 catch$fleet.comb <- rep(NA, nrow(catch))
-catch$fleet.comb[catch$fleet %in% c("HKL", "NET", "OTH", "POT", "TWS")] <- "NTWL"
+catch$fleet.comb[catch$fleet %in% c("HKL", "NET", "OTH", "POT")] <- "NTWL"
 catch$fleet.comb[catch$fleet %in% c("TWL","MID")] <- "TWL"
+catch$fleet.comb[catch$fleet %in% c("TWS")] <- "TWS"
+
 
 ##
 #Summaries
@@ -86,12 +91,21 @@ tmp_wider_groupDealer <- pivot_wider(tmpDealer, names_from = c(fleet.comb,AGENCY
 
 #There are years (2003-2016) for NTWL gear where less than 3 vessels are fishing. 
 #Vessel names show WA VesselID's are ALL NA. 
-#Two more years are added for CA if dealer ID is used.
+#One more years is added for CA if dealer ID is used.
 
-#Fleet categories
-tmp <- catch %>% group_by(fleet, AGENCY_CODE, LANDING_YEAR) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS))
-tmpN <- catch %>% group_by(fleet, AGENCY_CODE, LANDING_YEAR) %>% summarize(N = length(unique(VESSEL_NAME)))
-tmp_wider_fleet <- pivot_wider(tmp, names_from = c(fleet, AGENCY_CODE), names_sep = ".", values_from = sum) %>% arrange(LANDING_YEAR)
-tmp_wider_fleetN <- pivot_wider(tmpN, names_from = c(fleet, AGENCY_CODE), names_sep = ".", values_from = N) %>% arrange(LANDING_YEAR)
-#There are many years for NTWL gear where less than 3 vessels are fishing. 
+
+##
+#Upload to googledrive
+#Must go in CONFIDENTIAL folder
+##
+xx <- googledrive::drive_create(name = 'pacfin_catch',
+                                path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB', 
+                                type = 'spreadsheet', overwrite = TRUE)
+googlesheets4::sheet_write(round(tmp_wider_group,3), ss = xx, sheet = "catch_mt")
+googlesheets4::sheet_write(tmp_wider_groupID, ss = xx, sheet = "unique_vessels")
+googlesheets4::sheet_write(tmp_wider_groupDealer, ss = xx, sheet = "unique_dealers")
+googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
+
+
+
 
