@@ -23,7 +23,7 @@ triennial_bio <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreads
 
 ### Combine age data from triennial and wcgbts, create flags for different regional divisions
 age_combo <- dplyr::select(wcgbts_bio, Year, Length_cm, Sex, Age_years, Latitude_dd, Longitude_dd) %>%
-  dplyr::bind_rows(dplyr::select(triennial_bio$age_data, Year, Length_cm, Sex, Age_years, Latitude_dd, Longitude_dd)) %>%
+  dplyr::bind_rows(dplyr::select(triennial_bio, Year, Length_cm, Sex, Age_years, Latitude_dd, Longitude_dd)) %>%
   dplyr::mutate(is_south_cb = factor(dplyr::if_else(Latitude_dd < 43.3672,
                                         TRUE, FALSE)),
                 is_south_ca = factor(dplyr::if_else(Latitude_dd < 42,
