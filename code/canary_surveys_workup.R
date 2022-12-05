@@ -1,17 +1,24 @@
+# Analyze and plot geographic difference in VBGF curve from survey data
+
 library(magrittr)
 library(ggplot2)
 library(here) 
 
+# option to load data from disk
 # would be good to not have the dates hard coded in.
-load(here('data/catch_canary rockfish_NWFSC.Combo_2022-11-04.rda'))
-wcgbts_catch <- catch
-load(here('data/catch_canary rockfish_Triennial_2022-11-04.rda'))
-triennial_catch <- catch
-load(here('data/bio_canary rockfish_NWFSC.Combo_2022-11-03.rda'))
-wcgbts_bio <- bio
-load(here('data/bio_canary rockfish_Triennial_2022-11-03.rda'))
-triennial_bio <- bio
+# load(here('data/catch_canary rockfish_NWFSC.Combo_2022-11-04.rda'))
+# wcgbts_catch <- catch
+# load(here('data/catch_canary rockfish_Triennial_2022-11-04.rda'))
+# triennial_catch <- catch
+# load(here('data/bio_canary rockfish_NWFSC.Combo_2022-11-03.rda'))
+# wcgbts_bio <- bio
+# load(here('data/bio_canary rockfish_Triennial_2022-11-03.rda'))
+# triennial_bio <- bio
 
+# load data from gdrive
+wcgbts_bio <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreadsheets/d/1VRGKrehGl2zelBxytpKI7QJWjk8ACPSEGY6VKXLIbpc/edit#gid=0')
+triennial_bio <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreadsheets/d/10nBQ0pB1gOpEAESCV331THjErRAZ6zqNAAkySMIzjLg/edit#gid=0', 
+                                           sheet = 'age')
 # Coos Bay latitude: 43.3672
 
 ### Combine age data from triennial and wcgbts, create flags for different regional divisions
@@ -30,11 +37,10 @@ age_combo <- dplyr::select(wcgbts_bio, Year, Length_cm, Sex, Age_years, Latitude
 coastwide <- nls(Length_cm ~linf*(1-exp(-k*(Age_years-t0))), data = age_combo, 
                  start = list(linf = 55, k = 0.3, t0 = 0)) 
 
-### fit age-length model with linf by sex. This is a biologically significant difference
+### fit age-length model by sex. This is a biologically significant difference
 ### to compare regional differences to
 split_sex <- nls(Length_cm ~ linf[Sex]*(1-exp(-k[Sex]*(Age_years-t0[Sex]))), data = age_combo, 
       start = list(linf = rep(55,3), k = rep(0.3,3), t0 = rep(0,3))) 
-# results in linf_adj = -2.64
 
 ### fit models for three different regional division schemes, compare them
 split_region_ca <- nls(Length_cm ~ linf[is_south_ca]*(1-exp(-k[is_south_ca]*(Age_years-t0[is_south_ca]))), data = age_combo, 
@@ -43,7 +49,6 @@ split_region_ca <- nls(Length_cm ~ linf[is_south_ca]*(1-exp(-k[is_south_ca]*(Age
 
 split_region_cb <- nls(Length_cm ~ linf[is_south_cb] * (1-exp(-k[is_south_cb]*(Age_years-t0[is_south_cb]))), data = age_combo, 
                        start = list(linf = rep(55,2), k = rep(0.3,2), t0 = rep(0,2))) 
-# results in linf_adj = -0.557
 
 split_region_wa <- nls(Length_cm ~ linf[is_south_wa] * (1-exp(-k[is_south_wa]*(Age_years-t0[is_south_wa]))), data = age_combo, 
                        start = list(linf = rep(55,2), k = rep(0.3,2), t0 = rep(0,2))) 
@@ -55,13 +60,11 @@ split_region_m <- nls(Length_cm ~ (linf+linf_adj*is_south_cb)*(1-exp(-k*(Age_yea
                     start = list(linf = 55, linf_adj = 0, k = 0.3, t0 = 0), 
                     subset = Sex == 'M') 
 summary(split_region_m)
-# linf_adj = -0.753
 
 split_region_f <- nls(Length_cm ~ (linf+linf_adj*is_south_cb)*(1-exp(-k*(Age_years-t0))), data = age_combo, 
                       start = list(linf = 55, linf_adj = 0, k = 0.3, t0 = 0), 
                       subset = Sex == 'F') 
 summary(split_region_f)
-# linf_adj = -0.439
 
 ### Make beauitful plots of data and fits
 
