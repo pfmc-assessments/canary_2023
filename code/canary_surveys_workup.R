@@ -3,6 +3,7 @@
 library(magrittr)
 library(ggplot2)
 library(here) 
+theme_set(theme_classic())
 
 # option to load data from disk
 # would be good to not have the dates hard coded in.
@@ -56,17 +57,16 @@ split_region_wa <- nls(Length_cm ~ linf[is_south_wa] * (1-exp(-k[is_south_wa]*(A
 AIC(split_region_ca, split_region_cb, split_region_wa, coastwide, split_sex)
 
 ### fit sex sepcific models with coos bay as the split
-split_region_m <- nls(Length_cm ~ (linf+linf_adj*is_south_cb)*(1-exp(-k*(Age_years-t0))), data = age_combo, 
-                    start = list(linf = 55, linf_adj = 0, k = 0.3, t0 = 0), 
-                    subset = Sex == 'M') 
-summary(split_region_m)
+split_cb_m <- split_region_cb <- nls(Length_cm ~ linf[is_south_cb] * (1-exp(-k[is_south_cb]*(Age_years-t0[is_south_cb]))), data = age_combo, 
+                                       start = list(linf = rep(55,2), k = rep(0.3,2), t0 = rep(0,2)), subset = Sex == 'M') 
 
-split_region_f <- nls(Length_cm ~ (linf+linf_adj*is_south_cb)*(1-exp(-k*(Age_years-t0))), data = age_combo, 
-                      start = list(linf = 55, linf_adj = 0, k = 0.3, t0 = 0), 
-                      subset = Sex == 'F') 
-summary(split_region_f)
+split_cb_f <- split_region_cb <- nls(Length_cm ~ linf[is_south_cb] * (1-exp(-k[is_south_cb]*(Age_years-t0[is_south_cb]))), data = age_combo, 
+                                     start = list(linf = rep(55,2), k = rep(0.3,2), t0 = rep(0,2)), subset = Sex == 'F') 
 
-### Make beauitful plots of data and fits
+summary(split_cb_m)
+summary(split_cb_f)
+
+### Make beautiful plots of data and fits
 
 vbgf <- function(x, linf, k, t0, linf_adj = NULL) {
   (linf + ifelse(is.null(linf_adj), 0, linf_adj)) * (1-exp(-k*(x-t0)))
@@ -119,3 +119,62 @@ age_combo %>%
 dplyr::group_by(wcgbts_bio, Year) %>% 
   dplyr::summarise(n = dplyr::n()) %>%
   with(mean(n))
+
+# Percent female by age. Around 50%, then drops off around age 17
+age_combo %>%
+  dplyr::filter(!is.na(Age_years)) %>%
+#  dplyr::mutate(Age_years = factor(Age_years)) %>%
+  dplyr::group_by(Age_years) %>%
+  dplyr::summarise(Pct_female = sum(Sex == 'F') / dplyr::n(),
+                   se = sqrt(Pct_female*(1-Pct_female)/dplyr::n())) %>%
+ # dplyr::mutate(Age_years = as.numeric(Age_years)) %>%
+  ggplot() +
+  geom_point(aes(x = Age_years, y = Pct_female)) +
+  geom_segment(aes(x = Age_years, y = Pct_female - se, xend = Age_years, yend = Pct_female + se))
+
+
+### These are figures for the CDFW and PFMC data workshop presentations
+## scatter plot of age-length-sex
+wcgbts_bio %>%
+  dplyr::filter(!is.na(Age_years)) %>%
+  ggplot(data = ., aes(x = Age_years, y = Length_cm, col = Sex)) +
+  geom_point(alpha = 0.25) +
+  labs(x = 'Age (years)', y = 'Length (cm)')
+ggsave(filename = here('data_workshop_figs/len_data.png'), device = 'png', 
+       height = 5, width = 7, units = 'in', dpi = 500)
+
+## Age-length scatter plot with fitted lines by sex-region
+# First get coefficients out of the regression objects in correct format
+coefs_n_m <- coef(split_cb_m)[c(1,3,5)] %>%
+  set_names(gsub(pattern = '1', replacement = '', x = names(.)))
+coefs_s_m <- coef(split_cb_m)[c(2,4,6)] %>%
+  set_names(gsub(pattern = '2', replacement = '', x = names(.)))
+
+coefs_n_f <- coef(split_cb_f)[c(1,3,5)] %>%
+  set_names(gsub(pattern = '1', replacement = '', x = names(.)))
+coefs_s_f <- coef(split_cb_f)[c(2,4,6)] %>%
+  set_names(gsub(pattern = '2', replacement = '', x = names(.)))
+
+# Now plot
+# The legend could be better but this is good enough
+lwd = 1
+age_combo %>%
+  dplyr::filter(!is.na(Age_years)) %>%
+  ggplot() +
+  geom_point(aes(x = Age_years, y = Length_cm, col = Sex, shape = is_south_cb), 
+             alpha = 0.25) + 
+  geom_function(data = transform(age_combo, is_south_cb = TRUE), col = 'red',
+                fun = vbgf, args = as.list(coefs_n_m), aes(linetype = 'South'), linewidth = lwd) +
+  geom_function(data = transform(age_combo, is_south_cb = FALSE), col = 'red',
+                fun = vbgf, args = as.list(coefs_s_m), aes(linetype = 'North'), linewidth = lwd) +
+  geom_function(data = transform(age_combo, is_south_cb = TRUE), col = 'blue',
+                fun = vbgf, args = as.list(coefs_n_f), aes(linetype = 'South'), linewidth = lwd) +
+  geom_function(data = transform(age_combo, is_south_cb = FALSE), col = 'blue',
+                fun = vbgf, args = as.list(coefs_s_f), aes(linetype = 'North'), linewidth = lwd) +
+  scale_color_manual(values = c('F' = 'blue', 'M' = 'red', 'U' = 'darkgoldenrod1')) +
+  labs(x = 'Age (years)', y = 'Length (cm)') +
+  scale_shape_discrete(name = 'Region', labels = c('TRUE' = 'South', 'FALSE' = 'North')) +
+  scale_linetype_discrete(name = 'Region') +
+  NULL
+ggsave(filename = here('data_workshop_figs/growth_diffs.png'), device = 'png', 
+       height = 5, width = 7, units = 'in', dpi = 500)

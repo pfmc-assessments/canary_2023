@@ -43,3 +43,9 @@ data/
 
 # ignore R project (Brian does not use)
 *.RProj
+
+# ignore figures (take up a lot of space)
+*.png
+*.jpg
+*.jpeg
+data_workshop_figs/
