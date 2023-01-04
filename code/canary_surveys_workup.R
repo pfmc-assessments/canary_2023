@@ -22,9 +22,10 @@ triennial_bio <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreads
                                            sheet = 'age')
 # Coos Bay latitude: 43.3672
 
-### Combine age data from triennial and wcgbts, create flags for different regional divisions
+# Combine age data from triennial and wcgbts, create flags --------
 age_combo <- dplyr::select(wcgbts_bio, Year, Length_cm, Sex, Age_years, Latitude_dd, Longitude_dd) %>%
-  dplyr::bind_rows(dplyr::select(triennial_bio, Year, Length_cm, Sex, Age_years, Latitude_dd, Longitude_dd)) %>%
+  dplyr::bind_rows(trawl = ., triennial = dplyr::select(triennial_bio, Year, Length_cm, Sex, Age_years, Latitude_dd, Longitude_dd), 
+                   .id = 'survey', ) %>%
   dplyr::mutate(is_south_cb = factor(dplyr::if_else(Latitude_dd < 43.3672,
                                         TRUE, FALSE)),
                 is_south_ca = factor(dplyr::if_else(Latitude_dd < 42,
@@ -33,6 +34,10 @@ age_combo <- dplyr::select(wcgbts_bio, Year, Length_cm, Sex, Age_years, Latitude
                                              TRUE, FALSE)),
                 Sex = factor(Sex))
 
+
+
+
+# Fit models --------------------------------------------------------------
 
 ### fit coastwide age-length model
 coastwide <- nls(Length_cm ~linf*(1-exp(-k*(Age_years-t0))), data = age_combo, 
@@ -66,7 +71,9 @@ split_cb_f <- split_region_cb <- nls(Length_cm ~ linf[is_south_cb] * (1-exp(-k[i
 summary(split_cb_m)
 summary(split_cb_f)
 
-### Make beautiful plots of data and fits
+
+# Make beautiful plots ----------------------------------------------------
+
 
 vbgf <- function(x, linf, k, t0, linf_adj = NULL) {
   (linf + ifelse(is.null(linf_adj), 0, linf_adj)) * (1-exp(-k*(x-t0)))
@@ -133,13 +140,15 @@ age_combo %>%
   geom_segment(aes(x = Age_years, y = Pct_female - se, xend = Age_years, yend = Pct_female + se))
 
 
-### These are figures for the CDFW and PFMC data workshop presentations
+# Data workshop figures ---------------------------------------------------
 ## scatter plot of age-length-sex
 wcgbts_bio %>%
   dplyr::filter(!is.na(Age_years)) %>%
   ggplot(data = ., aes(x = Age_years, y = Length_cm, col = Sex)) +
   geom_point(alpha = 0.25) +
-  labs(x = 'Age (years)', y = 'Length (cm)')
+  labs(x = 'Age (years)', y = 'Length (cm)') +
+  scale_color_manual(values = c('F' = 'blue', 'M' = 'red', 'U' = 'darkgoldenrod1'))
+  
 ggsave(filename = here('data_workshop_figs/len_data.png'), device = 'png', 
        height = 5, width = 7, units = 'in', dpi = 500)
 
@@ -178,3 +187,51 @@ age_combo %>%
   NULL
 ggsave(filename = here('data_workshop_figs/growth_diffs.png'), device = 'png', 
        height = 5, width = 7, units = 'in', dpi = 500)
+
+
+## Triennial age and length compositions
+triennial_ca <- dplyr::filter(age_combo, survey == 'triennial', is_south_ca == 'TRUE')
+triennial_n <- triennial_ca %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarise(lengths = sum(!is.na(Length_cm)),
+                   ages = sum(!is.na(Age_years)))
+triennial_ca %>%
+  ggplot() +
+  ggridges::geom_density_ridges(aes(y = factor(Year), x = Age_years), fill = 'gray80') +
+  geom_label(aes(y = factor(Year), label = ages), x = 30, data = triennial_n) +
+  labs(y = 'Year', x = 'Age (yrs)')
+ggsave(filename = here('data_workshop_figs/triennial_ages.png'), device = 'png', 
+       height = 5, width = 9, units = 'in', dpi = 500)
+
+triennial_ca %>%
+  ggplot() +
+  ggridges::geom_density_ridges(aes(y = factor(Year), x = Length_cm), fill = 'gray80') +
+  geom_label(aes(y = factor(Year), label = lengths), x = 70, data = triennial_n) +
+  labs(y = 'Year', x = 'Length (cm)') +
+  xlim(0,75)
+ggsave(filename = here('data_workshop_figs/triennial_lengths.png'), device = 'png', 
+       height = 5, width = 9, units = 'in', dpi = 500)
+
+## WCGBTS age and length comps
+wcgbts_ca <- dplyr::filter(age_combo, survey == 'trawl', is_south_ca == 'TRUE')
+wcgbts_n <- wcgbts_ca %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarise(lengths = sum(!is.na(Length_cm)),
+                   ages = sum(!is.na(Age_years)))
+
+wcgbts_ca %>%
+  ggplot() +
+  ggridges::geom_density_ridges(aes(y = factor(Year), x = Age_years), fill = 'gray80') +
+  geom_label(aes(y = factor(Year), label = ages), x = 55, data = wcgbts_n) +
+  labs(y = 'Year', x = 'Age (yrs)')
+ggsave(filename = here('data_workshop_figs/wcgbts_ages.png'), device = 'png', 
+       height = 5, width = 9, units = 'in', dpi = 500)
+
+wcgbts_ca %>%
+  ggplot() +
+  ggridges::geom_density_ridges(aes(y = factor(Year), x = Length_cm), fill = 'gray80') +
+  geom_label(aes(y = factor(Year), label = lengths), x = 70, data = wcgbts_n) +
+  labs(y = 'Year', x = 'Length (cm)') +
+  xlim(0,75)
+ggsave(filename = here('data_workshop_figs/wcgbts_lengths.png'), device = 'png', 
+       height = 5, width = 9, units = 'in', dpi = 500)
