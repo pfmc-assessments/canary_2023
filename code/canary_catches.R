@@ -10,6 +10,7 @@
 
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 
 dir = "//nwcfile/FRAM/Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/PacFIN data"
 
@@ -19,7 +20,7 @@ dir = "//nwcfile/FRAM/Assessments/Assessment Data/2023 Assessment Cycle/canary r
 # Load the commercial data
 #---------------------------------------------------------------------------------------------------------------#
 #################################################################################################################
-# PacFIN Commercial - 1981-2022 Landings lbs
+# PacFIN Commercial - 1981-2022 Landings mtons
 # 2022 is incomplete yet
 load(file.path(dir, "PacFIN.CNRY.CompFT.01.Sep.2022.RData"))
 com = catch.pacfin
@@ -40,16 +41,15 @@ table(catch$REGION_NAME) #these are where landed...
 table(catch$PACFIN_CATCH_AREA_CODE) #these show no Puget Sound areas (in the 4's)
 table(catch$PACFIN_CATCH_AREA_CODE, catch$ORIG_PACFIN_CATCH_AREA_CODE) #but original code for 44 records was 4A - keep these
 
-#Summary of catch assigned to canary from various species codes
-tmp <- catch %>% group_by(LANDING_YEAR, SPECIES_CODE_NAME) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS)) %>% data.frame()
+#Summary of catch assigned to canary from Original pacfin codes to look specifically at URCK
+tmp <- catch %>% group_by(AGENCY_CODE,LANDING_YEAR, ORIG_PACFIN_SPECIES_CODE) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS)) %>% data.frame()
 tmp$sum = round(tmp$sum,3)
-spec_by_year = pivot_wider(tmp,names_from = c(LANDING_YEAR), values_from = sum)
+spec_by_year = pivot_wider(tmp,names_from = c(AGENCY_CODE,LANDING_YEAR), values_from = sum)
 #The percentage of landings assigned to canary from unspecified rockfish, unspecified rockfish N/A, and rockfish unspecified 
 #It is high between 1981 to 1994
-perc_urck = round(100*colSums(spec_by_year[which(spec_by_year$SPECIES_CODE_NAME %in% 
-                                 c("UNSPECIFIED ROCKFISH              --N/A--",
-                                   "ROCKFISH, UNSPECIFIED",
-                                   "UNSPECIFIED ROCKFISH")),-1],na.rm=TRUE) / colSums(spec_by_year[,-1],na.rm=T),3)
+perc_urck = round(100*colSums(spec_by_year[which(spec_by_year$ORIG_PACFIN_SPECIES_CODE %in% 
+                                                   c("URCK")),-1],na.rm=TRUE) / colSums(spec_by_year[,-1],na.rm=T),3)
+
 
 #Assign gear codes based on what was used in the 2015 assessment. 
 #Removed any codes that dont show up in current pacfin data.
@@ -71,8 +71,8 @@ catch$fleet[catch$PACFIN_GEAR_CODE %in% c("BTR", "DVG", "TRL","USP")] <- "OTH"
 #Im keeping separate to be able to put in both sectors
 catch$fleet.comb <- rep(NA, nrow(catch))
 catch$fleet.comb[catch$fleet %in% c("HKL", "NET", "OTH", "POT")] <- "NTWL"
-catch$fleet.comb[catch$fleet %in% c("TWL","MID")] <- "TWL"
-catch$fleet.comb[catch$fleet %in% c("TWS")] <- "TWS"
+catch$fleet.comb[catch$fleet %in% c("TWL","MID","TWS")] <- "TWL"
+#catch$fleet.comb[catch$fleet %in% c("TWS")] <- "TWS"
 
 
 ##
@@ -95,8 +95,19 @@ tmp_wider_groupDealer <- pivot_wider(tmpDealer, names_from = c(fleet.comb,AGENCY
 
 
 ##
+#Plotting
+##
+dontShow = unique(c(which(tmpN$N<3),which(tmpDealer$N<3),which(tmpID$N<3)))
+ggplot(filter(tmp[-dontShow,], AGENCY_CODE=="C"), aes(fill=fleet.comb, y=sum, x=LANDING_YEAR)) + 
+  geom_bar(position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+
+##
 #Upload to googledrive
-#Must go in CONFIDENTIAL folder
+#Must go in CONFIDENTIAL folder because of landings from fewer than 3 vessels
 ##
 xx <- googledrive::drive_create(name = 'pacfin_catch',
                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB', 
@@ -107,5 +118,44 @@ googlesheets4::sheet_write(tmp_wider_groupDealer, ss = xx, sheet = "unique_deale
 googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
 
-
+#################################################################################################################
+#---------------------------------------------------------------------------------------------------------------#
+# Load the commercial data for URCK to check totals - Only exploration so commenting out
+#---------------------------------------------------------------------------------------------------------------#
+#################################################################################################################
+# # PacFIN Commercial - 1981-2022 Landings lbs
+# # 2022 is incomplete yet
+# load(file.path(dir, "PacFIN.URCK.CompFT.09.Nov.2022.Rdata"))
+# com = catch.pacfin
+# rm(catch.pacfin)
+# 
+# catch = com 
+# catch = catch[!catch$REMOVAL_TYPE_CODE %in% c("R"),] #remove research catches
+# 
+# tmp <- catch %>% group_by(LANDING_YEAR, SPECIES_CODE_NAME) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS)) %>% data.frame()
+# tmp$sum = round(tmp$sum,3)
+# spec_by_year = pivot_wider(tmp,names_from = c(LANDING_YEAR), values_from = sum)
+# 
+# #Sum across all species contributing to URCK
+# urck = spec_by_year %>% select(-1) %>% replace(is.na(.),0) %>% summarise(across(everything(), sum))
+# 
+# #Group by states
+# tmp <- catch %>% group_by(AGENCY_CODE, LANDING_YEAR) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS))
+# tmpN <- catch %>% group_by(AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(VESSEL_NAME)))
+# tmpID <- catch %>% group_by(AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(VESSEL_ID)))
+# tmpDealer <- catch %>% group_by(AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(DEALER_ID)))
+# tmp_wider_group <- pivot_wider(tmp, names_from = c(AGENCY_CODE), names_sep = ".", values_from = sum) %>% arrange(LANDING_YEAR)
+# tmp_wider_groupN <- pivot_wider(tmpN, names_from = c(AGENCY_CODE), names_sep = ".", values_from = N) %>% arrange(LANDING_YEAR)
+# tmp_wider_groupID <- pivot_wider(tmpID, names_from = c(AGENCY_CODE), names_sep = ".", values_from = N) %>% arrange(LANDING_YEAR)
+# tmp_wider_groupDealer <- pivot_wider(tmpDealer, names_from = c(AGENCY_CODE), names_sep = ".", values_from = N) %>% arrange(LANDING_YEAR)
+# #In most recent years, where URCK is sparse, there are fewer than 3 vessels/dealers
+# #If oNly show for before 2000 is fine
+# 
+# xx <- googledrive::drive_create(name = 'pacfin_catch_urck',
+#                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB', 
+#                                 type = 'spreadsheet', overwrite = TRUE)
+# googlesheets4::sheet_write(round(tmp_wider_group,3), ss = xx, sheet = "catch_mt")
+# googlesheets4::sheet_write(tmp_wider_groupID, ss = xx, sheet = "unique_vessels")
+# googlesheets4::sheet_write(tmp_wider_groupDealer, ss = xx, sheet = "unique_dealers")
+# googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
