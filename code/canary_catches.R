@@ -14,6 +14,10 @@ library(ggplot2)
 
 dir = "//nwcfile/FRAM/Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/PacFIN data"
 
+#User directories
+if(Sys.getenv("USERNAME") == "Brian.Langseth") {
+  git_dir <- "U:/Stock assessments/canary_2023/"
+}
 
 #################################################################################################################
 #---------------------------------------------------------------------------------------------------------------#
@@ -50,7 +54,6 @@ spec_by_year = pivot_wider(tmp,names_from = c(AGENCY_CODE,LANDING_YEAR), values_
 perc_urck = round(100*colSums(spec_by_year[which(spec_by_year$ORIG_PACFIN_SPECIES_CODE %in% 
                                                    c("URCK")),-1],na.rm=TRUE) / colSums(spec_by_year[,-1],na.rm=T),3)
 
-
 #Assign gear codes based on what was used in the 2015 assessment. 
 #Removed any codes that dont show up in current pacfin data.
 #Added unknown gear (USP) into "OTH" category
@@ -68,11 +71,10 @@ catch$fleet[catch$PACFIN_GEAR_CODE %in% c("BTR", "DVG", "TRL","USP")] <- "OTH"
 #Assign to grouped fleets designations
 #In issue 9 on github, Ali suggests TWS (shrimp trawls) be added to trawl gear,
 #which differs from how it has been done in the past. 
-#Im keeping separate to be able to put in both sectors
+#Separate out TWS to check difference with 2015 model estimates.
 catch$fleet.comb <- rep(NA, nrow(catch))
 catch$fleet.comb[catch$fleet %in% c("HKL", "NET", "OTH", "POT")] <- "NTWL"
 catch$fleet.comb[catch$fleet %in% c("TWL","MID","TWS")] <- "TWL"
-#catch$fleet.comb[catch$fleet %in% c("TWS")] <- "TWS"
 
 
 ##
@@ -95,17 +97,6 @@ tmp_wider_groupDealer <- pivot_wider(tmpDealer, names_from = c(fleet.comb,AGENCY
 
 
 ##
-#Plotting
-##
-dontShow = unique(c(which(tmpN$N<3),which(tmpDealer$N<3),which(tmpID$N<3)))
-ggplot(filter(tmp[-dontShow,], AGENCY_CODE=="C"), aes(fill=fleet.comb, y=sum, x=LANDING_YEAR)) + 
-  geom_bar(position="stack", stat="identity") +
-  xlab("Year") +
-  ylab("Landings (MT)") + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-
-
-##
 #Upload to googledrive
 #Must go in CONFIDENTIAL folder because of landings from fewer than 3 vessels
 ##
@@ -116,6 +107,98 @@ googlesheets4::sheet_write(round(tmp_wider_group,3), ss = xx, sheet = "catch_mt"
 googlesheets4::sheet_write(tmp_wider_groupID, ss = xx, sheet = "unique_vessels")
 googlesheets4::sheet_write(tmp_wider_groupDealer, ss = xx, sheet = "unique_dealers")
 googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
+
+
+
+#################################################################################################################
+#Plotting
+#################################################################################################################
+dontShow = unique(c(which(tmpN$N<3),which(tmpDealer$N<3),which(tmpID$N<3)))
+ggplot(filter(tmp[-dontShow,], AGENCY_CODE=="C"), aes(fill=fleet.comb, y=sum, x=LANDING_YEAR)) + 
+  geom_bar(position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","CA_com_landings_fleetGroup.png"),
+       width = 6, height = 4)
+
+ggplot(filter(tmp[-dontShow,], AGENCY_CODE=="O"), aes(fill=fleet.comb, y=sum, x=LANDING_YEAR)) + 
+  geom_bar(position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","OR_com_landings_fleetGroup.png"),
+       width = 6, height = 4)
+
+ggplot(filter(tmp[-dontShow,], AGENCY_CODE=="W"), aes(fill=fleet.comb, y=sum, x=LANDING_YEAR)) + 
+  geom_bar(position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","WA_com_landings_fleetGroup.png"),
+       width = 6, height = 4)
+
+ggplot(tmp[-dontShow,], aes(fill=fleet.comb, y=sum, x=LANDING_YEAR)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("AGENCY_CODE") + 
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","com_landings_fleetGroup.png"),
+       width = 8, height = 4)
+
+
+##
+#More refined landings by fleet for pre-assessment data workshop
+##
+tmp_fleet <- catch %>% group_by(fleet, AGENCY_CODE, LANDING_YEAR) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS))
+tmpN_fleet <- catch %>% group_by(fleet,AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(VESSEL_NAME)))
+tmpID_fleet <- catch %>% group_by(fleet,AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(VESSEL_ID)))
+tmpDealer_fleet <- catch %>% group_by(fleet,AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(DEALER_ID)))
+
+#California
+dontShow = unique(c(which(tmpN_fleet$N<3),which(tmpDealer_fleet$N<3),which(tmpID_fleet$N<3)))
+ggplot(filter(tmp_fleet[-dontShow,], AGENCY_CODE=="C"), aes(y=sum, x=LANDING_YEAR)) + 
+  facet_wrap("fleet") + 
+  geom_bar(aes(fill = fleet), position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","CA_com_landings_fleet.png"),
+       width = 6, height = 4)
+
+tmp_fleet2 = tmp_fleet[-dontShow,]
+#Oregon
+ggplot(filter(tmp_fleet[-dontShow,], AGENCY_CODE=="O"), aes(y=sum, x=LANDING_YEAR)) + 
+  facet_wrap("fleet") + 
+  geom_bar(aes(fill = fleet), position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","OR_com_landings_fleet.png"),
+       width = 6, height = 4)
+
+#Washington
+ggplot(tmp_fleet3, aes(y=sum, x=LANDING_YEAR)) + 
+  facet_wrap("fleet") + 
+  geom_bar(aes(fill = fleet), position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","WA_com_landings_fleet.png"),
+       width = 6, height = 4)
+
+#CoastWide
+ggplot(filter(tmp_fleet[-dontShow,]), aes(y=sum, x=LANDING_YEAR)) + 
+  facet_wrap("AGENCY_CODE") + 
+  geom_bar(aes(fill = fleet), position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","com_landings_fleet.png"),
+       width = 9, height = 4)
+
+
 
 
 #################################################################################################################
