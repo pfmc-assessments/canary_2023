@@ -113,6 +113,9 @@ googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 #################################################################################################################
 #Plotting
 #################################################################################################################
+##
+#Combined fleet plots
+##
 dontShow = unique(c(which(tmpN$N<3),which(tmpDealer$N<3),which(tmpID$N<3)))
 ggplot(filter(tmp[-dontShow,], AGENCY_CODE=="C"), aes(fill=fleet.comb, y=sum, x=LANDING_YEAR)) + 
   geom_bar(position="stack", stat="identity") +
@@ -149,7 +152,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_landings_fleetGroup.png"),
 
 
 ##
-#More refined landings by fleet for pre-assessment data workshop
+#More refined landings by fleet and plots
 ##
 tmp_fleet <- catch %>% group_by(fleet, AGENCY_CODE, LANDING_YEAR) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS))
 tmpN_fleet <- catch %>% group_by(fleet,AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(VESSEL_NAME)))
@@ -167,7 +170,6 @@ ggplot(filter(tmp_fleet[-dontShow,], AGENCY_CODE=="C"), aes(y=sum, x=LANDING_YEA
 ggsave(file.path(git_dir,"data_workshop_figs","CA_com_landings_fleet.png"),
        width = 6, height = 4)
 
-tmp_fleet2 = tmp_fleet[-dontShow,]
 #Oregon
 ggplot(filter(tmp_fleet[-dontShow,], AGENCY_CODE=="O"), aes(y=sum, x=LANDING_YEAR)) + 
   facet_wrap("fleet") + 
@@ -179,7 +181,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","OR_com_landings_fleet.png"),
        width = 6, height = 4)
 
 #Washington
-ggplot(tmp_fleet3, aes(y=sum, x=LANDING_YEAR)) + 
+ggplot(filter(tmp_fleet[-dontShow,], AGENCY_CODE=="W"), aes(y=sum, x=LANDING_YEAR)) + 
   facet_wrap("fleet") + 
   geom_bar(aes(fill = fleet), position="stack", stat="identity") +
   xlab("Year") +
@@ -206,13 +208,13 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_landings_fleet.png"),
 # Load the commercial data for URCK to check totals - Only exploration so commenting out
 #---------------------------------------------------------------------------------------------------------------#
 #################################################################################################################
-# # PacFIN Commercial - 1981-2022 Landings lbs
+# # PacFIN Commercial - 1981-2022 Landings mtons
 # # 2022 is incomplete yet
 # load(file.path(dir, "PacFIN.URCK.CompFT.09.Nov.2022.Rdata"))
 # com = catch.pacfin
 # rm(catch.pacfin)
 # 
-# catch = com 
+# catch = com
 # catch = catch[!catch$REMOVAL_TYPE_CODE %in% c("R"),] #remove research catches
 # 
 # tmp <- catch %>% group_by(LANDING_YEAR, SPECIES_CODE_NAME) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS)) %>% data.frame()
@@ -235,10 +237,18 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_landings_fleet.png"),
 # #If oNly show for before 2000 is fine
 # 
 # xx <- googledrive::drive_create(name = 'pacfin_catch_urck',
-#                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB', 
+#                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(round(tmp_wider_group,3), ss = xx, sheet = "catch_mt")
 # googlesheets4::sheet_write(tmp_wider_groupID, ss = xx, sheet = "unique_vessels")
 # googlesheets4::sheet_write(tmp_wider_groupDealer, ss = xx, sheet = "unique_dealers")
 # googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
+# 
+# 
+# #Biological data is ALL from California
+# load(file.path(dir, "PacFIN.URCK.bds.10.Jan.2023.Rdata"))
+# bds = bds.pacfin
+# rm(bds.pacfin)
+# bds %>% group_by(AGENCY_CODE, SAMPLE_YEAR) %>% summarize(N = length(unique(FISH_LENGTH)))
+
 
