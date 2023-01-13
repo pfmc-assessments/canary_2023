@@ -41,6 +41,9 @@ vignettes/*.pdf
 # ignore data directory
 data/
 
+# ignore literature 
+literature/
+
 # ignore R project (Brian does not use)
 *.RProj
 
