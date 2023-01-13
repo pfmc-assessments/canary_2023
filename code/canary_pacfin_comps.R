@@ -9,6 +9,9 @@
 #devtools::install_github("nwfsc-assess/PacFIN.Utilities")
 library(PacFIN.Utilities)
 library(ggplot2)
+library(tidyr)
+library(dplyr)
+
 
 dir = "//nwcfile/FRAM/Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/PacFIN data"
 
@@ -31,21 +34,24 @@ pacfin = bds.pacfin
 # catch.file = read.csv(file.path(dir, "output catch", "pacfin_catch_by_area_Feb2021.csv"))
 # colnames(catch.file) = c("Year", "CA", "OR", "WA")
 
-#Assign a new field with lengths in cm 
+#Assign a new field with lengths in cm - unk are cm's
 table(pacfin$FISH_LENGTH_UNITS, pacfin$AGENCY_CODE)
 pacfin$fish_lengthcm <- pacfin$FISH_LENGTH
 mmlen <- which(pacfin$FISH_LENGTH_UNITS=="MM")
 pacfin[mmlen,"fish_lengthcm"] <- pacfin[mmlen,"FISH_LENGTH"]/10
 
 #Fork Length - assume unknown is fork length
-#remove the 2 standard length values
+#remove the 2 standard length values (though these are in 2022 so may be updated)
 table(pacfin$AGENCY_CODE, pacfin$FISH_LENGTH_TYPE_DESC)
 pacfin <- pacfin[which(pacfin$FISH_LENGTH_TYPE_CODE != "S"),]
 
+#Assign NA sex to unknown
+pacfin$SEX_CODE <- case_when(is.na(pacfin$SEX_CODE) ~ "U", TRUE ~ pacfin$SEX_CODE)
+
 
 ############################################################################################
-#	Quickly look at the commercial and recreational samples by gear to see if the amount of data for each
-#   and if there looks to be different selectivity by gear type
+#	Quickly look at the commercial and recreational samples by gear to see the amount of 
+#  data for each and if there looks to be different selectivity by gear type
 ############################################################################################
 
 pacfin$fleet[pacfin$PACFIN_GEAR_CODE %in% c("BMT","DNT","FFT","FTS","GFL","GFS","GFT","MDT","OTW","RLT","TWL","BTT")] <- "TWL"
@@ -64,15 +70,42 @@ pacfin$fleet.comb[pacfin$fleet %in% c("TWL","MID","TWS")] <- "TWL"
 #Samples by year
 ##
 
-#Length samples by year
-Nlen <- pacfin %>% 
+#Length and age samples by year
+Nlen <- pacfin %>% filter(.,!is.na(FISH_LENGTH)) %>%
   group_by(fleet.comb, AGENCY_CODE, SAMPLE_YEAR) %>% summarize(N = length(FISH_LENGTH)) %>%
   pivot_wider(names_from = c(fleet.comb,AGENCY_CODE), names_sep = ".", values_from = N) %>% 
   arrange(SAMPLE_YEAR)
 
+Nage <- pacfin %>% filter(.,!is.na(FINAL_FISH_AGE_IN_YEARS)) %>%
+  group_by(fleet.comb, AGENCY_CODE, SAMPLE_YEAR) %>% summarize(N = length(FINAL_FISH_AGE_IN_YEARS)) %>%
+  pivot_wider(names_from = c(fleet.comb,AGENCY_CODE), names_sep = ".", values_from = N) %>% 
+  arrange(SAMPLE_YEAR)
+
+##
+#Upload sample sizes to googledrive
+#If want to update set overwrite to TRUE
+##
+xx <- googledrive::drive_create(name = 'pacfin_bds_N',
+                                path = 'https://drive.google.com/drive/folders/1fleYIaLvdIYMLv14--P1804akQvnWu5J', 
+                                type = 'spreadsheet', overwrite = FALSE)
+googlesheets4::sheet_write(Nlen, ss = xx, sheet = "Nlen")
+googlesheets4::sheet_write(Nage, ss = xx, sheet = "Nage")
+googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
+
+
+############################################################################################
+#Plots
+############################################################################################
+
 lab_val = c("California", "Oregon", "Washington")
 names(lab_val) = c("C","O","W")
 
+
+##
+#Sample size plots
+##
+
+#Length
 ggplot(filter(pacfin,!is.na(FISH_LENGTH)), aes(fill=fleet.comb, x=SAMPLE_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("AGENCY_CODE", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) +
@@ -91,12 +124,7 @@ ggplot(filter(pacfin,!is.na(FISH_LENGTH)), aes(fill = fleet, x=SAMPLE_YEAR)) +
 ggsave(file.path(git_dir,"data_workshop_figs","com_lenN_fleet.png"),
        width = 6, height = 8)
 
-#Age samples by year
-Nage <- pacfin %>% 
-  group_by(fleet.comb, AGENCY_CODE, SAMPLE_YEAR) %>% summarize(N = length(FINAL_FISH_AGE_IN_YEARS)) %>%
-  pivot_wider(names_from = c(fleet.comb,AGENCY_CODE), names_sep = ".", values_from = N) %>% 
-  arrange(SAMPLE_YEAR)
-
+#Age
 ggplot(filter(pacfin,!is.na(FINAL_FISH_AGE_IN_YEARS)), aes(fill=fleet.comb, x=SAMPLE_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("AGENCY_CODE",ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
@@ -108,7 +136,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_ageN_fleetGroup.png"),
 
 ggplot(filter(pacfin,!is.na(FINAL_FISH_AGE_IN_YEARS)), aes(fill=fleet, x=SAMPLE_YEAR)) + 
   geom_bar(position="stack", stat="count") +
-  facet_wrap(c("AGENCY_CODE",ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
+  facet_wrap(c("AGENCY_CODE",ncol=1, labeller = labeller(AGENCY_CODE = lab_val))) + 
   xlab("Year") +
   ylab("# of age samples") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
@@ -117,7 +145,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_ageN_fleet.png"),
 
 
 ##
-#Plot distributions
+#Distributions
 ##
 
 #Lengths
@@ -139,7 +167,29 @@ ggplot(pacfin, aes(fish_lengthcm, fill = fleet, color = fleet)) +
 ggsave(file.path(git_dir,"data_workshop_figs","com_lenDensity_fleet.png"),
        width = 6, height = 8)
 
-#Lengths by sex
+# #by sex - not very informative
+# ggplot(pacfin, aes(fish_lengthcm, fill = SEX_CODE, color = SEX_CODE)) +
+#   geom_density(alpha = 0.4, lwd = 0.8, adjust = 1.5) +
+#   facet_wrap(c("AGENCY_CODE","fleet.comb"), ncol=2, labeller = labeller(AGENCY_CODE = lab_val)) + 
+#   xlab("Fish Length (cm)") +
+#   ylab("Proportion") + 
+#   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+# #Check sample sizes
+# #Oregon has very few (72) U as does Washington NTWL (7). California has mostly U 
+# table(pacfin$AGENCY_CODE,pacfin$fleet.comb,pacfin$SEX_CODE)
+# ggsave(file.path(git_dir,"data_workshop_figs","com_lenDensity_fleetSex.png"),
+#        width = 6, height = 6)
+
+# #by depth - not very informative
+# ggplot(pacfin, aes(y = fish_lengthcm, x = DEPTH_AVERAGE_FATHOMS, color = SEX_CODE)) +
+#   geom_point(size = 1, shape = 1, alpha = 0.5) +
+#   facet_wrap(c("AGENCY_CODE","fleet.comb"), ncol=2, labeller = labeller(AGENCY_CODE = lab_val)) +
+#   xlab("Depth average (fathoms)") +
+#   ylab("Fish length (cm)") +
+#   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+# ggsave(file.path(git_dir,"data_workshop_figs","com_len_by_depth.png"),
+#        width = 6, height = 6)
+
 
 #Ages
 ggplot(pacfin, aes(FINAL_FISH_AGE_IN_YEARS, fill = fleet.comb, color = fleet.comb)) +
@@ -160,4 +210,64 @@ ggplot(pacfin, aes(FINAL_FISH_AGE_IN_YEARS, fill = fleet, color = fleet)) +
 ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleet.png"),
        width = 6, height = 8)
 
-#Ages by sex
+# #by sex - not very informative
+# ggplot(pacfin, aes(FINAL_FISH_AGE_IN_YEARS, fill = SEX_CODE, color = SEX_CODE)) +
+#   geom_density(alpha = 0.4, lwd = 0.8, adjust = 1.5) +
+#   facet_wrap(c("AGENCY_CODE","fleet.comb"), ncol=2, labeller = labeller(AGENCY_CODE = lab_val)) +
+#   xlab("Fish Length (cm)") +
+#   ylab("Proportion") +
+#   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+# #Check sample sizes - altogether very few U
+# table(pacfin$AGENCY_CODE,pacfin$fleet.comb,pacfin$SEX_CODE,is.na(pacfin$FINAL_FISH_AGE_IN_YEARS))
+# ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleetSex.png"),
+#        width = 6, height = 6)
+
+# #by depth - not very informative
+# ggplot(pacfin, aes(y = FINAL_FISH_AGE_IN_YEARS, x = DEPTH_AVERAGE_FATHOMS, color = SEX_CODE)) +
+#   geom_point(size = 1, shape = 1, alpha = 0.5) +
+#   facet_wrap(c("AGENCY_CODE","fleet.comb"), ncol=2, labeller = labeller(AGENCY_CODE = lab_val)) +
+#   xlab("Depth average (fathoms)") +
+#   ylab("Fish age") +
+#   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+# ggsave(file.path(git_dir,"data_workshop_figs","com_age_by_depth.png"),
+#      width = 6, height = 6)
+
+
+############################################################################################
+#Explorations
+############################################################################################
+##
+#Aging methods - see issue #11 in github
+##
+
+#looking at the ones with ages (e.g. ', ,  = FALSE')
+table(pacfin$AGE_METHOD1,pacfin$AGENCY_CODE,is.na(pacfin$FINAL_FISH_AGE_IN_YEARS),useNA="always")
+#The NA values in WA appear to be during years were break and burn
+table(pacfin$SAMPLE_YEAR,pacfin$AGE_METHOD1,pacfin$AGENCY_CODE,is.na(pacfin$FINAL_FISH_AGE_IN_YEARS),useNA="always")
+
+#Ages by ageing method - Only relevant for Oregon and Washington TWL gear
+ggplot(filter(pacfin,AGENCY_CODE!="C" & fleet.comb=="TWL"), aes(FINAL_FISH_AGE_IN_YEARS, fill = AGE_METHOD1, color = AGE_METHOD1)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap(c("AGENCY_CODE","fleet.comb")) +
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+
+#There are also a few samples with an ageing method1 but no FINAL_FISH_AGE_IN_YEARS
+#These are samples with other age reads but no final age read
+#WHAT TO DO WITH THESE?????
+head(pacfin[which(is.na(pacfin$FINAL_FISH_AGE_IN_YEARS) & !is.na(pacfin$age1)),])
+
+
+##
+#Sampling type
+##
+table(pacfin$AGENCY_CODE,pacfin$SAMPLE_TYPE_DESC)
+#WHAT TO DO WITH SPECIAL_REQUEST DATA???
+
+
+##
+#Condition - very few sampled 'alive' so ignore for commercial
+##
+table(pacfin$AGENCY_CODE,pacfin$PACFIN_CONDITION_CODE)
