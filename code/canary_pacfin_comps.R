@@ -136,7 +136,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_ageN_fleetGroup.png"),
 
 ggplot(filter(pacfin,!is.na(FINAL_FISH_AGE_IN_YEARS)), aes(fill=fleet, x=SAMPLE_YEAR)) + 
   geom_bar(position="stack", stat="count") +
-  facet_wrap(c("AGENCY_CODE",ncol=1, labeller = labeller(AGENCY_CODE = lab_val))) + 
+  facet_wrap(c("AGENCY_CODE"),ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
   xlab("Year") +
   ylab("# of age samples") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
@@ -209,6 +209,36 @@ ggplot(pacfin, aes(FINAL_FISH_AGE_IN_YEARS, fill = fleet, color = fleet)) +
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleet.png"),
        width = 6, height = 8)
+
+#Age over time
+#very big difference between surface and break and burn sample reads
+pacfin$surface = NA
+pacfin[pacfin$AGE_METHOD1%in%c("1","B","BB"),"surface"]="N"
+pacfin[pacfin$AGE_METHOD1%in%c("2","S"),"surface"]="Y"
+pacfin[pacfin$AGE_METHOD2%in%c("1","B","BB"),"surface"]="N"
+pacfin[pacfin$AGE_METHOD3%in%c("1","B","BB"),"surface"]="N"
+ggplot(filter(pacfin,!is.na(FINAL_FISH_AGE_IN_YEARS)), aes(y=FINAL_FISH_AGE_IN_YEARS, x=factor(SAMPLE_YEAR), color = surface)) + 
+  geom_violin(trim="FALSE") +
+  stat_summary(fun.y=median, geom="point", shape=18, size=3, color="blue") + 
+  facet_wrap("SEX_CODE") +
+  scale_color_manual(values=c("#00BFC4","#F8766D")) + 
+  scale_x_discrete(breaks=c("1975","1985","1995","2005","2015","2025")) + 
+  xlab("Year") +
+  ylab("Age") 
+ggsave(file.path(git_dir,"data_workshop_figs","com_age_year_by_read.png"),
+       width = 8, height = 4)
+
+# #with less differences in length and actually generally larger fish by length for surface reads
+# ggplot(filter(pacfin,!is.na(FINAL_FISH_AGE_IN_YEARS)), aes(y=fish_lengthcm, x=factor(SAMPLE_YEAR), color = surface)) + 
+#   geom_violin(trim="FALSE") +
+#   stat_summary(fun.y=median, geom="point", shape=18, size=3, color="blue") + 
+#   facet_wrap("SEX_CODE") +
+#   scale_color_manual(values=c("#00BFC4","#F8766D")) + 
+#   scale_x_discrete(breaks=c("1975","1985","1995","2005","2015","2025")) + 
+#   xlab("Year") +
+#   ylab("Length (cm)") 
+# ggsave(file.path(git_dir,"data_workshop_figs","com_len_year_by_read.png"),
+#        width = 8, height = 4)
 
 # #by sex - not very informative
 # ggplot(pacfin, aes(FINAL_FISH_AGE_IN_YEARS, fill = SEX_CODE, color = SEX_CODE)) +
