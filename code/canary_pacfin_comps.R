@@ -6,12 +6,11 @@
 #
 ##################################################################################################
 
-#devtools::install_github("nwfsc-assess/PacFIN.Utilities")
+#devtools::install_github("pfmc-assessments/PacFIN.Utilities")
 library(PacFIN.Utilities)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
-
 
 dir = "//nwcfile/FRAM/Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/PacFIN data"
 
@@ -24,15 +23,28 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 #Load PacFIN BDS data, check for any issues
 ################################
 load(file.path(dir, "PacFIN.CNRY.bds.01.Sep.2022.RData"))
-pacfin = bds.pacfin
+pacfin <- bds.pacfin
 
-# # Load in the current weight-at-length estimates by sex
-# fa = ma = ua = 1.963e-5
-# fb = mb = ub = 3.016
-# 
-# # Read in the PacFIN catch data to base expansion on
-# catch.file = read.csv(file.path(dir, "output catch", "pacfin_catch_by_area_Feb2021.csv"))
-# colnames(catch.file) = c("Year", "CA", "OR", "WA")
+pacfin2 <- cleanPacFIN(Pdata=pacfin,CLEAN=TRUE,verbose=TRUE)
+
+# N SAMPLE_TYPEs changed from M to S for special samples from OR: 0
+# N not in keep_sample_type (SAMPLE_TYPE): 9108
+# N with SAMPLE_TYPE of NA: 0
+# N not in keep_sample_method (SAMPLE_METHOD): 199
+# N with SAMPLE_NO of NA: 0
+# N without length: 148
+# N without Age: 61600
+# N without length and Age: 61614
+# N sample weights not available for OR: 584
+# N records: 133621
+# N remaining if CLEAN: 115486
+# N removed if CLEAN: 18135
+
+#cleanPacFIN removes:
+#9108 samples from special request data (from Oregon) and commercial on-board samples (from Washington)
+#199 samples with purposive sample (from Washington)
+#8830 samples from non-US areas 1412-5A, 1726-5B, 15-4A, and 5677-3D
+#Total is 18135 (because 2 of the Commercial on-board samples were in area 4A)
 
 #Assign a new field with lengths in cm - unk are cm's
 table(pacfin$FISH_LENGTH_UNITS, pacfin$AGENCY_CODE)
@@ -42,11 +54,26 @@ pacfin[mmlen,"fish_lengthcm"] <- pacfin[mmlen,"FISH_LENGTH"]/10
 
 #Fork Length - assume unknown is fork length
 #remove the 2 standard length values (though these are in 2022 so may be updated)
+#also removes samples without lengths
 table(pacfin$AGENCY_CODE, pacfin$FISH_LENGTH_TYPE_DESC)
 pacfin <- pacfin[which(pacfin$FISH_LENGTH_TYPE_CODE != "S"),]
 
 #Assign NA sex to unknown
 pacfin$SEX_CODE <- case_when(is.na(pacfin$SEX_CODE) ~ "U", TRUE ~ pacfin$SEX_CODE)
+
+##
+#Incorporate the changes from cleanPacFIN but 
+#keep existing approach for the pre-assessment workshop
+##
+#Use market type - California samples are assumed to be market type
+pacfin_othertype <- pacfin[pacfin$SAMPLE_TYPE %in% c("C","S"),]
+pacfin <- pacfin[!pacfin$SAMPLE_TYPE %in% c("C","S"),]
+#Use random samples
+pacfin_othermethod <- pacfin[pacfin$SAMPLE_METHOD_CODE %in% c("P"),]
+pacfin <- pacfin[pacfin$SAMPLE_METHOD_CODE=="R",]
+#Exclude non US samples
+pacfin_otherareas <- pacfin[pacfin$PSMFC_CATCH_AREA_CODE %in% c("5A","5B","4A","3D"),]
+pacfin <- pacfin[!pacfin$PSMFC_CATCH_AREA_CODE %in% c("5A","5B","4A","3D"),]
 
 
 ############################################################################################
@@ -54,12 +81,13 @@ pacfin$SEX_CODE <- case_when(is.na(pacfin$SEX_CODE) ~ "U", TRUE ~ pacfin$SEX_COD
 #  data for each and if there looks to be different selectivity by gear type
 ############################################################################################
 
+#There is no POT gear (based on codes from 2015 assessment) in bds data, so exclude 
 pacfin$fleet[pacfin$PACFIN_GEAR_CODE %in% c("BMT","DNT","FFT","FTS","GFL","GFS","GFT","MDT","OTW","RLT","TWL","BTT")] <- "TWL"
 pacfin$fleet[pacfin$PACFIN_GEAR_CODE %in% c("MDT","MPT")] <- "MID"
 pacfin$fleet[pacfin$PACFIN_GEAR_CODE %in% c("DST","SHT","SST")] <- "TWS"
 pacfin$fleet[pacfin$PACFIN_GEAR_CODE %in% c("JIG","LGL","OHL","POL","VHL","HKL")] <- "HKL"
 pacfin$fleet[pacfin$PACFIN_GEAR_CODE %in% c("DGN","DPN","GLN","SEN","STN")] <- "NET"
-pacfin$fleet[pacfin$PACFIN_GEAR_CODE %in% c("CLP","CPT","FPT","OPT","PRW")] <- "POT"
+#pacfin$fleet[pacfin$PACFIN_GEAR_CODE %in% c("CLP","CPT","FPT","OPT","PRW")] <- "POT" 
 pacfin$fleet[pacfin$PACFIN_GEAR_CODE %in% c("BTR", "DVG", "TRL","USP","OTH")] <- "OTH"
 
 pacfin$fleet.comb <- NA
@@ -87,7 +115,7 @@ Nage <- pacfin %>% filter(.,!is.na(FINAL_FISH_AGE_IN_YEARS)) %>%
 ##
 xx <- googledrive::drive_create(name = 'pacfin_bds_N',
                                 path = 'https://drive.google.com/drive/folders/1fleYIaLvdIYMLv14--P1804akQvnWu5J', 
-                                type = 'spreadsheet', overwrite = FALSE)
+                                type = 'spreadsheet', overwrite = TRUE)
 googlesheets4::sheet_write(Nlen, ss = xx, sheet = "Nlen")
 googlesheets4::sheet_write(Nage, ss = xx, sheet = "Nage")
 googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
@@ -170,12 +198,12 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_lenDensity_fleet.png"),
 # #by sex - not very informative
 # ggplot(pacfin, aes(fish_lengthcm, fill = SEX_CODE, color = SEX_CODE)) +
 #   geom_density(alpha = 0.4, lwd = 0.8, adjust = 1.5) +
-#   facet_wrap(c("AGENCY_CODE","fleet.comb"), ncol=2, labeller = labeller(AGENCY_CODE = lab_val)) + 
+#   facet_wrap(c("AGENCY_CODE","fleet.comb"), ncol=2, labeller = labeller(AGENCY_CODE = lab_val)) +
 #   xlab("Fish Length (cm)") +
-#   ylab("Proportion") + 
+#   ylab("Proportion") +
 #   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 # #Check sample sizes
-# #Oregon has very few (72) U as does Washington NTWL (7). California has mostly U 
+# #Oregon has very few (72) U as does Washington NTWL (7). California has mostly U
 # table(pacfin$AGENCY_CODE,pacfin$fleet.comb,pacfin$SEX_CODE)
 # ggsave(file.path(git_dir,"data_workshop_figs","com_lenDensity_fleetSex.png"),
 #        width = 6, height = 6)
@@ -229,14 +257,14 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_age_year_by_read.png"),
        width = 8, height = 4)
 
 # #with less differences in length and actually generally larger fish by length for surface reads
-# ggplot(filter(pacfin,!is.na(FINAL_FISH_AGE_IN_YEARS)), aes(y=fish_lengthcm, x=factor(SAMPLE_YEAR), color = surface)) + 
+# ggplot(filter(pacfin,!is.na(FINAL_FISH_AGE_IN_YEARS)), aes(y=fish_lengthcm, x=factor(SAMPLE_YEAR), color = surface)) +
 #   geom_violin(trim="FALSE") +
-#   stat_summary(fun.y=median, geom="point", shape=18, size=3, color="blue") + 
+#   stat_summary(fun.y=median, geom="point", shape=18, size=3, color="blue") +
 #   facet_wrap("SEX_CODE") +
-#   scale_color_manual(values=c("#00BFC4","#F8766D")) + 
-#   scale_x_discrete(breaks=c("1975","1985","1995","2005","2015","2025")) + 
+#   scale_color_manual(values=c("#00BFC4","#F8766D")) +
+#   scale_x_discrete(breaks=c("1975","1985","1995","2005","2015","2025")) +
 #   xlab("Year") +
-#   ylab("Length (cm)") 
+#   ylab("Length (cm)")
 # ggsave(file.path(git_dir,"data_workshop_figs","com_len_year_by_read.png"),
 #        width = 8, height = 4)
 
@@ -288,13 +316,6 @@ ggplot(filter(pacfin,AGENCY_CODE!="C" & fleet.comb=="TWL"), aes(FINAL_FISH_AGE_I
 #These are samples with other age reads but no final age read
 #WHAT TO DO WITH THESE?????
 head(pacfin[which(is.na(pacfin$FINAL_FISH_AGE_IN_YEARS) & !is.na(pacfin$age1)),])
-
-
-##
-#Sampling type
-##
-table(pacfin$AGENCY_CODE,pacfin$SAMPLE_TYPE_DESC)
-#WHAT TO DO WITH SPECIAL_REQUEST DATA???
 
 
 ##
