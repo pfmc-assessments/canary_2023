@@ -5,22 +5,19 @@ author:
     first: B
     middle: J
     family: Langseth
-  - name: Kiva Oken
-    code: 2
+  - name: Kiva L. Oken
+    code: 1
     first: K
     middle: ''
     family: Oken
-author_list: Langseth, B.J., K. Oken
+author_list: Langseth, B.J., K.L. Oken
 affiliation:
   - code: 1
     address: Northwest Fisheries Science Center, U.S. Department of Commerce, National
       Oceanic and Atmospheric Administration, National Marine Fisheries Service, 2725
       Montlake Boulevard East, Seattle, Washington 98112
-  - code: 2
-    address: .na.character
 address:
   - ^1^Northwest Fisheries Science Center, U.S. Department of Commerce, National Oceanic
     and Atmospheric Administration, National Marine Fisheries Service, 2725 Montlake
     Boulevard East, Seattle, Washington 98112
-  - ^2^NA
 ---

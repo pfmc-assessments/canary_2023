@@ -30,7 +30,7 @@ setwd(doc_dir)
 # Create the needed items to generate the "right" template that would be based on the inputs here:
 # Need to only do this once
 sa4ss::draft(
-  authors = c("Brian J. Langseth", "Kiva Oken"),
+  authors = c("Brian J. Langseth", "Kiva L. Oken"),
   species = "Canary Rockfish",
   latin = "Sebastes pinniger",
   coast = "U.S. West",
@@ -52,7 +52,3 @@ bookdown::render_book(
   clean = FALSE, 
   output_dir = getwd()
 )
-
-
-bookdown::render_book("00a.Rmd", clean = FALSE, output_dir = getwd())
-setwd("..")
