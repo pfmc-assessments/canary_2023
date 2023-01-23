@@ -28,7 +28,6 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 # 2022 is incomplete yet
 load(file.path(dir, "PacFIN.CNRY.CompFT.01.Sep.2022.RData"))
 com = catch.pacfin
-rm(catch.pacfin)
 
 
 #################################################################################################################
@@ -59,6 +58,7 @@ perc_urck = round(100*colSums(spec_by_year[which(spec_by_year$ORIG_PACFIN_SPECIE
 #Added unknown gear (USP) into "OTH" category
 catch$fleet <- rep(NA, nrow(catch))
 catch$fleet[catch$PACFIN_GEAR_CODE %in% c("BMT","DNT","FFT","FTS","GFL","GFS","GFT","MDT","OTW","RLT")] <- "TWL"
+catch$fleet[catch$PACFIN_GEAR_CODE %in% c("MDT","MPT")] <- "MID"
 catch$fleet[catch$PACFIN_GEAR_CODE %in% c("DST","SHT","SST")] <- "TWS"
 catch$fleet[catch$PACFIN_GEAR_CODE %in% c("JIG","LGL","OHL","POL","VHL")] <- "HKL"
 catch$fleet[catch$PACFIN_GEAR_CODE %in% c("DGN","DPN","GLN","SEN","STN")] <- "NET"
@@ -102,7 +102,7 @@ tmp_wider_groupDealer <- pivot_wider(tmpDealer, names_from = c(fleet.comb,AGENCY
 ##
 xx <- googledrive::drive_create(name = 'pacfin_catch',
                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB', 
-                                type = 'spreadsheet', overwrite = TRUE)
+                                type = 'spreadsheet', overwrite = FALSE)
 googlesheets4::sheet_write(round(tmp_wider_group,3), ss = xx, sheet = "catch_mt")
 googlesheets4::sheet_write(tmp_wider_groupID, ss = xx, sheet = "unique_vessels")
 googlesheets4::sheet_write(tmp_wider_groupDealer, ss = xx, sheet = "unique_dealers")
@@ -141,26 +141,34 @@ ggplot(filter(tmp[-dontShow,], AGENCY_CODE=="W"), aes(fill=fleet.comb, y=sum, x=
 ggsave(file.path(git_dir,"data_workshop_figs","WA_com_landings_fleetGroup.png"),
        width = 6, height = 4)
 
+lab_val = c("California", "Oregon", "Washington")
+names(lab_val) = c("C","O","W")
 ggplot(tmp[-dontShow,], aes(fill=fleet.comb, y=sum, x=LANDING_YEAR)) + 
   geom_bar(position="stack", stat="identity") +
-  facet_wrap("AGENCY_CODE") + 
+  facet_wrap("AGENCY_CODE", ncol = 1, labeller = labeller(AGENCY_CODE = lab_val)) + 
   xlab("Year") +
   ylab("Landings (MT)") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","com_landings_fleetGroup.png"),
-       width = 8, height = 4)
+       width = 6, height = 8)
 
 
 ##
 #More refined landings by fleet and plots
 ##
+
+#Pot never really shows up to a large degree so combining with Other for sake of 
+#pre-assessment workshop plotting
+catch$fleet[catch$fleet %in% c("POT")] <- "OTH"
+
 tmp_fleet <- catch %>% group_by(fleet, AGENCY_CODE, LANDING_YEAR) %>% summarize(sum = sum(LANDED_WEIGHT_MTONS))
 tmpN_fleet <- catch %>% group_by(fleet,AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(VESSEL_NAME)))
 tmpID_fleet <- catch %>% group_by(fleet,AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(VESSEL_ID)))
 tmpDealer_fleet <- catch %>% group_by(fleet,AGENCY_CODE,LANDING_YEAR) %>% summarize(N = length(unique(DEALER_ID)))
 
-#California
 dontShow = unique(c(which(tmpN_fleet$N<3),which(tmpDealer_fleet$N<3),which(tmpID_fleet$N<3)))
+
+#California
 ggplot(filter(tmp_fleet[-dontShow,], AGENCY_CODE=="C"), aes(y=sum, x=LANDING_YEAR)) + 
   facet_wrap("fleet") + 
   geom_bar(aes(fill = fleet), position="stack", stat="identity") +
@@ -192,13 +200,13 @@ ggsave(file.path(git_dir,"data_workshop_figs","WA_com_landings_fleet.png"),
 
 #CoastWide
 ggplot(filter(tmp_fleet[-dontShow,]), aes(y=sum, x=LANDING_YEAR)) + 
-  facet_wrap("AGENCY_CODE") + 
+  facet_wrap("AGENCY_CODE", ncol = 1, labeller = labeller(AGENCY_CODE = lab_val)) + 
   geom_bar(aes(fill = fleet), position="stack", stat="identity") +
   xlab("Year") +
   ylab("Landings (MT)") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","com_landings_fleet.png"),
-       width = 9, height = 4)
+       width = 6, height = 8)
 
 
 
