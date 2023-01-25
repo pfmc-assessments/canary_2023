@@ -107,7 +107,7 @@ ggplot(filter(tmp_longer,type%in%c("sum_rel_mort","sum_ret") & mode %in%c("PC","
   facet_wrap(c("AGENCY","mode"), ncol = 2, labeller = labeller(AGENCY = lab_val)) + 
   xlab("Year") +
   ylab("Removals (MT)") + 
-  scale_fill_discrete(name = "Breakdown", labels = c("Dead releases","Retained")) + 
+  scale_fill_discrete(name = "Disposition", labels = c("Dead releases","Retained")) + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","rec_removals_mode_retain_releaseMort.png"),
        width = 6, height = 8)
