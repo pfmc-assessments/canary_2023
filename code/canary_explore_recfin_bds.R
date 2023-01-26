@@ -32,6 +32,7 @@ table(bds$RECFIN_IMPUTED_LENGTH,useNA="always")
 table(bds$AGENCY_WATER_AREA_NAME,bds$STATE_NAME,useNA="always")
 table(bds$IS_AGENCY_LENGTH_WITHIN_MAX,useNA="always")
 table(bds$RECFIN_MODE_NAME,useNA="always")
+table(bds$IS_RETAINED,bds$STATE_NAME,useNA="always")
 
 #Remove 8 samples with NA lengths 
 bds = bds[!is.na(bds$RECFIN_LENGTH_MM),]
@@ -46,19 +47,23 @@ bds$sex <- dplyr::case_when(bds$RECFIN_SEX_CODE %in% c("U","","FALSE") ~ "U",
                             TRUE ~ bds$RECFIN_SEX_CODE)
 
 #Add shorter state name
-bds$state = dplyr::case_when(bds$STATE_NAME == "CALIFORNIA" ~ "C",
+bds$state <- dplyr::case_when(bds$STATE_NAME == "CALIFORNIA" ~ "C",
                              bds$STATE_NAME == "OREGON" ~ "O",
                              bds$STATE_NAME == "WASHINGTON" ~ "W")
 #Add shorter mode name
-bds$mode = dplyr::case_when(bds$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC",
+bds$mode <- dplyr::case_when(bds$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC",
                              bds$RECFIN_MODE_NAME == "PRIVATE/RENTAL BOATS" ~ "PR",
                              bds$RECFIN_MODE_NAME == "NOT KNOWN" ~ "Unk")
+
+#Exclude "released" fish
+bds_rel <- bds[bds$IS_RETAINED == "RELEASED",]
+bds <- bds[bds$IS_RETAINED == "RETAINED",]
 
 ##
 #Samples by year
 ##
 
-#Length and age samples by year
+#Length samples by year
 Nlen <- bds %>% group_by(mode, state, RECFIN_YEAR) %>% 
   summarize(N = length(lengthcm)) %>%
   pivot_wider(names_from = c(state,mode), names_sep = ".", values_from = N, 
@@ -72,6 +77,11 @@ Nlen <- bds %>% group_by(mode, state, RECFIN_YEAR) %>%
 
 bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2021.csv"),header=TRUE)
 
+table(bdsage$USE_THIS_AGE,useNA="always")
+table(bdsage$RECFIN_SEX_CODE,bdsage$SAMPLING_AGENCY_NAME,useNA="always") #going to be mostly unsexed
+table(bdsage$NUMBER_OF_READS,useNA="always")
+table(bdsage$RECFIN_AGEING_METHOD_DESC,useNA="always")
+
 #Add shorter state name
 bdsage$state = dplyr::case_when(bdsage$SAMPLING_AGENCY_NAME == "ODFW" ~ "O",
                                 bdsage$SAMPLING_AGENCY_NAME == "WDFW" ~ "W")
@@ -81,15 +91,19 @@ bdsage$mode = dplyr::case_when(bdsage$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" 
                             bdsage$RECFIN_MODE_NAME == "PRIVATE/RENTAL BOATS" ~ "PR",
                             bdsage$RECFIN_MODE_NAME == "NOT KNOWN" ~ "Unk")
 
+#Age samples by year
+Nage <- bdsage %>% filter(., !is.na(USE_THIS_AGE)) %>% group_by(mode, state, SAMPLE_YEAR) %>% 
+  summarize(N = length(USE_THIS_AGE)) %>%
+  pivot_wider(names_from = c(state,mode), names_sep = ".", values_from = N, 
+              names_glue = "{state}_{mode}_{.value}", names_sort = TRUE, ) %>% 
+  arrange(SAMPLE_YEAR)
 
-
-Nage <- NA 
 
 # ##
 # #Upload sample sizes to googledrive
 # ##
-# xx <- googledrive::drive_create(name = 'pacfin_bds_N',
-#                                 path = 'https://drive.google.com/drive/folders/1fleYIaLvdIYMLv14--P1804akQvnWu5J', 
+# xx <- googledrive::drive_create(name = 'recfin_bds_N',
+#                                 path = 'https://drive.google.com/drive/folders/1fleYIaLvdIYMLv14--P1804akQvnWu5J',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(Nlen, ss = xx, sheet = "Nlen")
 # googlesheets4::sheet_write(Nage, ss = xx, sheet = "Nage")
@@ -128,7 +142,8 @@ ggplot(filter(bds,mode%in%c("PC","PR")), aes(fill=sex, x=RECFIN_YEAR)) +
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN_sex.png"),
        width = 6, height = 8)
 
-ggplot(filter(bds,mode%in%c("PC","PR")), aes(fill=IS_RETAINED, x=RECFIN_YEAR)) + 
+bds_all <- rbind(bds,bds_rel)
+ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(fill=IS_RETAINED, x=RECFIN_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -185,8 +200,8 @@ ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = sex, color = sex))
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_sex.png"),
        width = 6, height = 8)
 
-table(bds$IS_RETAINED,bds$mode,bds$state)
-ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
+bds_all <- rbind(bds,bds_rel)
+ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Length (cm)") +
