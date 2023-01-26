@@ -66,8 +66,11 @@ pacfin$SEX_CODE <- case_when(is.na(pacfin$SEX_CODE) ~ "U", TRUE ~ pacfin$SEX_COD
 ##
 pacfin_preclean <- pacfin #keep uncleaned version
 #Use market type - California samples are assumed to be market type
+#Keep oregon special project data before 1986
 pacfin_othertype <- pacfin[pacfin$SAMPLE_TYPE %in% c("C","S"),]
+pacfin_OSPkeep <- pacfin[pacfin$SAMPLE_TYPE %in% c("S") & pacfin$SAMPLE_YEAR<=1986,]
 pacfin <- pacfin[!pacfin$SAMPLE_TYPE %in% c("C","S"),]
+pacfin <- rbind(pacfin,pacfin_OSPkeep)
 #Use random samples
 pacfin_othermethod <- pacfin[pacfin$SAMPLE_METHOD_CODE %in% c("P"),]
 pacfin <- pacfin[pacfin$SAMPLE_METHOD_CODE=="R",]
@@ -80,7 +83,7 @@ pacfin$Age <- PacFIN.Utilities::getAge(pacfin,
                                     verbose=TRUE,
                                     keep=unique(unlist(pacfin[, grep("AGE_METHOD[0-9]*$", colnames(pacfin))])),
                                     col.bestage="FINAL_FISH_AGE_IN_YEARS")
-  #Of these samples with adjusted ages, all are from WA, and 211 are surface reads (which are from 1980 and 1981)
+  #Of these 696 samples with adjusted ages, all are from WA, and 211 are surface reads (which are from 1980 and 1981)
   #There are some large differences between surface reads and break and burn reads and break and burn and break and burn
   a=pacfin[which(is.na(pacfin$FINAL_FISH_AGE_IN_YEARS) & !is.na(pacfin$Age)),]
   table(a$SAMPLE_YEAR,a$AGE_METHOD1,a$AGE_METHOD2,a$AGE_METHOD3,useNA="always")
@@ -89,7 +92,8 @@ pacfin$Age <- PacFIN.Utilities::getAge(pacfin,
   points(a$age1-a$age3,col=(as.numeric(a$AGE_METHOD1=="S")+1))
 #Conclude that differences occur across all samples, regardless of aging method, so keep all methods in.
 #Ultimately, given the small relative percentage these samples make, their generally variable estimates, and 
-#that an average doesn't result in using an estimate, I dont include an age for these. Run based on using FINAL_FISH_AGE_IN_YEARS
+#that an average doesn't result in using an estimate (see issue #11 in github), I dont include an age for these. 
+#Run based on using FINAL_FISH_AGE_IN_YEARS
 
 ############################################################################################
 #	Quickly look at the commercial and recreational samples by gear to see the amount of 
@@ -128,7 +132,7 @@ Nage <- pacfin %>% filter(.,!is.na(FINAL_FISH_AGE_IN_YEARS)) %>%
 # #Upload sample sizes to googledrive
 # ##
 # xx <- googledrive::drive_create(name = 'pacfin_bds_N',
-#                                 path = 'https://drive.google.com/drive/folders/1fleYIaLvdIYMLv14--P1804akQvnWu5J', 
+#                                 path = 'https://drive.google.com/drive/folders/1fleYIaLvdIYMLv14--P1804akQvnWu5J',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(Nlen, ss = xx, sheet = "Nlen")
 # googlesheets4::sheet_write(Nage, ss = xx, sheet = "Nage")
@@ -209,6 +213,16 @@ ggplot(pacfin, aes(fish_lengthcm, fill = fleet, color = fleet)) +
 ggsave(file.path(git_dir,"data_workshop_figs","com_lenDensity_fleet.png"),
        width = 6, height = 8)
 
+ggplot(filter(pacfin,fleet %in% c("HKL","MID","TWL")), aes(fish_lengthcm, fill = fleet, color = fleet)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("AGENCY_CODE", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","com_lenDensity_fleet_reduced.png"),
+       width = 6, height = 8)
+
+
 # #by sex - not very informative
 # ggplot(pacfin, aes(fish_lengthcm, fill = SEX_CODE, color = SEX_CODE)) +
 #   geom_density(alpha = 0.4, lwd = 0.8, adjust = 1.5) +
@@ -252,6 +266,15 @@ ggplot(pacfin, aes(FINAL_FISH_AGE_IN_YEARS, fill = fleet, color = fleet)) +
 ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleet.png"),
        width = 6, height = 8)
 
+ggplot(filter(pacfin,fleet %in% c("HKL","MID","TWL")), aes(FINAL_FISH_AGE_IN_YEARS, fill = fleet, color = fleet)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("AGENCY_CODE", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleet_reduced.png"),
+       width = 6, height = 8)
+
 #Age over time
 #very big difference between surface and break and burn sample reads
 #Only age_method1 includes surface reads so use age1 instead of final age
@@ -277,15 +300,15 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_age_year_by_read_by_state.png
 # pacfin_preclean[pacfin_preclean$AGE_METHOD1%in%c("2","S"),"surface"]="Y"
 # pacfin_preclean[pacfin_preclean$AGE_METHOD2%in%c("1","B","BB"),"surface"]="N"
 # pacfin_preclean[pacfin_preclean$AGE_METHOD3%in%c("1","B","BB"),"surface"]="N"
-# ggplot(filter(pacfin_preclean,!is.na(FINAL_FISH_AGE_IN_YEARS)&SEX_CODE!="U"), aes(y=age1, x=factor(SAMPLE_YEAR), color = surface)) + 
+# ggplot(filter(pacfin_preclean,!is.na(FINAL_FISH_AGE_IN_YEARS)&SEX_CODE!="U"), aes(y=age1, x=factor(SAMPLE_YEAR), color = surface)) +
 #   geom_violin(trim="FALSE") +
-#   stat_summary(fun.y=median, geom="point", shape=18, size=3, color="blue") + 
+#   stat_summary(fun.y=median, geom="point", shape=18, size=3, color="blue") +
 #   facet_wrap(c("SEX_CODE","AGENCY_CODE"), labeller = labeller(AGENCY_CODE = lab_val)) +
-#   scale_color_manual(values=c("#00BFC4","#F8766D")) + 
-#   scale_x_discrete(breaks=c("1975","1985","1995","2005","2015","2025")) + 
+#   scale_color_manual(values=c("#00BFC4","#F8766D")) +
+#   scale_x_discrete(breaks=c("1975","1985","1995","2005","2015","2025")) +
 #   xlab("Year") +
-#   ylab("Age") 
-# ggsave(file.path(git_dir,"data_workshop_figs","com_age_year_by_read_by_state_2015assess.png"),
+#   ylab("Age")
+# ggsave(file.path(git_dir,"data_workshop_figs","com_age_year_by_read_by_state_notcleaned.png"),
 #        width = 8, height = 4)
 
 # #Oregon has surface reads that show this pattern too among special projects samples
@@ -303,6 +326,26 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_age_year_by_read_by_state.png
 #   scale_x_discrete(breaks=c("1975","1985","1995","2005","2015","2025")) +
 #   xlab("Year") +
 #   ylab("Age")
+
+#Compare Oregon special projects data with rest of oregon data in years where both overlap
+ggplot(filter(pacfin,AGENCY_CODE=="O" & SAMPLE_YEAR <= 1986 & SAMPLE_YEAR >= 1973), aes(fish_lengthcm, fill = SAMPLE_TYPE, color = SAMPLE_TYPE)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("AGENCY_CODE", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","com_O_SPlength.png"),
+       width = 6, height = 4)
+lab_surf = c("Break & Burn", "Surface")
+names(lab_surf) = c("N","Y")
+ggplot(filter(pacfin,AGENCY_CODE=="O" & SAMPLE_YEAR <= 1986 & SAMPLE_YEAR >= 1973 & surface %in% c("Y","N")), aes(FINAL_FISH_AGE_IN_YEARS, fill = SAMPLE_TYPE, color = SAMPLE_TYPE)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap(c("AGENCY_CODE","surface"), ncol=1, labeller = labeller(AGENCY_CODE = lab_val, surface = lab_surf)) + 
+  xlab("Age") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","com_O_SPage.png"),
+       width = 6, height = 8)
 
 # #with less differences in length and actually generally larger fish by length for surface reads
 # ggplot(filter(pacfin,!is.na(FINAL_FISH_AGE_IN_YEARS)), aes(y=fish_lengthcm, x=factor(SAMPLE_YEAR), color = surface)) +
