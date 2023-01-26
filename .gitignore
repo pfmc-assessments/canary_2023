@@ -40,6 +40,7 @@ vignettes/*.pdf
 
 # ignore data directory
 data/
+data-raw/
 
 # ignore literature 
 literature/
