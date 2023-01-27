@@ -41,6 +41,9 @@ bds = bds[-which(bds$RECFIN_LENGTH_MM<100),]
 #Add cm field
 bds$lengthcm = bds$RECFIN_LENGTH_MM/10
 
+#Exclude 16 inland and 24 estuary fish
+bds <- bds[-which(bds$AGENCY_WATER_AREA_NAME %in% c("ESTUARY","IN")),]
+
 #Assign NA, "", FALSE, and U sex to unknown sex code
 bds$sex <- dplyr::case_when(bds$RECFIN_SEX_CODE %in% c("U","","FALSE") ~ "U",
                             is.na(bds$RECFIN_SEX_CODE) ~ "U",
@@ -58,6 +61,7 @@ bds$mode <- dplyr::case_when(bds$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC
 #Exclude "released" fish
 bds_rel <- bds[bds$IS_RETAINED == "RELEASED",]
 bds <- bds[bds$IS_RETAINED == "RETAINED",]
+
 
 ##
 #Samples by year
@@ -110,6 +114,97 @@ Nage <- bdsage %>% filter(., !is.na(USE_THIS_AGE)) %>% group_by(mode, state, SAM
 # googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
 
+################################
+#Load Oregon provided BDS data, check for any issues
+#################################
+
+#From Ali email on 1/25/2023
+#"The MRFSS data have been filtered for ocean boat fish only, and the RecFIN data are already
+#ocean boat only but have been filtered to exclude the discarded CPFV fish and fish that are
+#aged (source code=ORA) so as to not double count fish.  I would further recommend filtering 
+#the MRFSS data to only have directly measured fish by using the “Length_Flag” field and 
+#filtering for “measured” fish."
+
+#NOTE: I have not filtered based on whether fish are measured or not
+
+##
+#MRFSS era data
+##
+
+#Only need to pull from googledrive once
+# googledrive::drive_download(file = "Oregon data/OR_MRFSS_Lengths_1980-2003.xlsx",
+#                             path = file.path(git_dir,"data-raw","OR_MRFSS_Lengths_1980-2003.xlsx"))
+or_bds_mrfss <- readxl::read_excel(path = file.path(git_dir,"data-raw","OR_MRFSS_Lengths_1980-2003.xlsx"),
+                             sheet = "OR_MRFSS_Lengths_1980-2003")
+or_bds_mrfss$Length <- as.numeric(or_bds_mrfss$Length)
+or_bds_mrfss$Total.Length <- as.numeric(or_bds_mrfss$Total.Length)
+
+table(or_bds_mrfss$MRFSS_MODE_FX,useNA="always") #6 = PC #7 = PR
+table(or_bds_mrfss$Area_X_Name,useNA="always")
+table(or_bds_mrfss$Gear,useNA="always") #some spear/spear gun, all are ocean so keep
+table(or_bds_mrfss$Length_Flag,useNA="always") #appears to be fork length
+table(or_bds_mrfss$Total.Length_Flag,useNA="always") #appears to be total length
+plot(or_bds_mrfss$Total.Length-or_bds_mrfss$Length)
+plot(or_bds_mrfss$Total.Length,or_bds_mrfss$Length)
+table(or_bds_mrfss$Fleet,useNA="always")
+table(or_bds_mrfss$Year,useNA="always")
+
+#add length in cm based on fork length
+or_bds_mrfss$lengthcm <- or_bds_mrfss$Length/10
+
+#Add shorter mode name
+or_bds_mrfss$mode = dplyr::case_when(or_bds_mrfss$Mode_FX_Name == "charter" ~ "PC",
+                                     or_bds_mrfss$Mode_FX_Name == "private boat" ~ "PR")
+
+#Add sex (which is all unknown)
+or_bds_mrfss$sex = "U"
+
+
+##
+#RecFIN era data
+##
+
+#Only need to pull from googledrive once
+# googledrive::drive_download(file = "Oregon data/OR_RecFIN_OceanBoat_lengths_20230125.csv",
+#                             path = file.path(git_dir,"data-raw","OR_RecFIN_OceanBoat_lengths_20230125.csv"))
+or_bds_recfin <- read.csv(file = file.path(git_dir,"data-raw","OR_RecFIN_OceanBoat_lengths_20230125.csv"),header=TRUE)
+
+table(or_bds_recfin$AGENCY_LENGTH_UNITS,useNA="always")
+table(or_bds_recfin$FISH_SEX,useNA="always") #all unsexed
+table(or_bds_recfin$RECFIN_MODE_NAME,useNA="always")
+table(or_bds_recfin$RECFIN_LENGTH_TYPE,useNA="always")
+table(or_bds_recfin$FISHING_DEPTH,useNA="always")
+table(or_bds_recfin$RECFIN_WATER_AREA_NAME,useNA="always")
+table(or_bds_recfin$IS_AGENCY_LENGTH_WITHIN_MAX,useNA="always")
+table(or_bds_recfin$RECFIN_LENGTH_MM,useNA="always") #all have a length
+table(or_bds_recfin$IS_RETAINED,useNA="always")
+table(or_bds_recfin$DESCENDING_DEVICE_USED,useNA="always")
+table(or_bds_recfin$RECFIN_YEAR,useNA="always")
+
+#Remove 24 estuary fish
+or_bds_recfin <- or_bds_recfin[-which(or_bds_recfin$RECFIN_WATER_AREA_NAME=="ESTUARY"),]
+
+#Assign NA to unknown sex code
+or_bds_recfin$sex <- dplyr::case_when(is.na(or_bds_recfin$FISH_SEX) ~ "U",
+                            TRUE ~ "Unk")
+#Add length in cm
+or_bds_recfin$lengthcm <- or_bds_recfin$RECFIN_LENGTH_MM/10
+
+#Add shorter mode name
+or_bds_recfin$mode = dplyr::case_when(or_bds_recfin$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC",
+                                     or_bds_recfin$RECFIN_MODE_NAME == "PRIVATE/RENTAL BOATS" ~ "PR")
+
+#Rename year
+or_bds_recfin$Year <- or_bds_recfin$RECFIN_YEAR
+
+
+##
+#Combine Oregon data into one dataset
+##
+
+or_bds <- rbind(or_bds_mrfss[,c("Year","mode","lengthcm","sex")],or_bds_recfin[,c("Year","mode","lengthcm","sex")])
+or_bds$state <- "O"
+
 ############################################################################################
 #Plots
 ############################################################################################
@@ -119,7 +214,7 @@ names(lab_val) = c("C","O","W")
 
 
 ##
-#Sample size plots
+#Sample size plots for RecFIN pull
 ##
 
 #Length
@@ -177,10 +272,10 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_ageN_sex.png"),
 
 
 ##
-#Distributions
+#Distributions for RecFIN pull
 ##
 
-#Lengths by mode - pretty similar
+#Lengths by mode - pretty similar without released fish
 ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = mode)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
@@ -188,6 +283,16 @@ ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = mode
   ylab("Proportion") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_mode.png"),
+       width = 6, height = 8)
+
+bds_all <- rbind(bds,bds_rel) #if including released fish
+ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = mode)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_mode_withreleased.png"),
        width = 6, height = 8)
 
 #Lengths by sex - pretty similar
@@ -200,8 +305,10 @@ ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = sex, color = sex))
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_sex.png"),
        width = 6, height = 8)
 
+#Lengths by retention - only in years (>=2003) and modes (PC) where each exists
 bds_all <- rbind(bds,bds_rel)
-ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
+table(bds_all$RECFIN_YEAR, bds_all$mode, bds_all$IS_RETAINED)
+ggplot(filter(bds_all,mode%in%c("PC") & RECFIN_YEAR >= 2003), aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Length (cm)") +
@@ -209,7 +316,6 @@ ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(lengthcm, fill = IS_RETAINED, c
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_retained.png"),
        width = 6, height = 8)
-
 
 #Ages by mode - pretty similar
 ggplot(filter(bdsage,mode%in%c("PC","PR")), aes(USE_THIS_AGE, fill = mode, color = mode)) +
@@ -234,9 +340,29 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_ageDensity_sex.png"),
        width = 6, height = 8)
 
 
+##
+#Sample sizes for Oregon provided data
+##
 
+#Length
+ggplot(filter(or_bds,mode%in%c("PC","PR")), aes(fill=mode, x=Year)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","OR_rec_lenN_mode.png"),
+       width = 6, height = 3)
 
-
+#Lengths by mode - pretty similar
+ggplot(or_bds, aes(lengthcm, fill = mode, color = mode)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","OR_rec_lenDensity_mode.png"),
+       width = 6, height = 3)
 
 
 
