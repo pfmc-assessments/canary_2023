@@ -145,22 +145,31 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_perc_mode_releaseMort.png"),
 ##
 #Totals for washington
 ##
-ggplot(filter(wa_rec_longer, disposition == "RETAINED_N"), aes(y=value, x=YEAR)) + 
+ggplot(wa_rec_longer, aes(y=value, x=YEAR)) + 
   geom_bar(position="stack", stat="identity") +
   facet_wrap("state",labeller = labeller(state = lab_val)) +
   xlab("Year") +
-  ylab("Total Retained (N)") + 
+  ylab("Total Removals (N)") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_retainedN.png"),
+ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_removalsN.png"),
        width = 6, height = 3)
 
 ggplot(filter(wa_rec_longer, disposition %in% c("RETAINED_N","RELEASED_TOTAL_N")), aes(fill = disposition, y=value, x=YEAR)) + 
   geom_bar(position="stack", stat="identity") +
   facet_wrap("state",labeller = labeller(state = lab_val)) +
   xlab("Year") +
-  ylab("Total Retained (N)") + 
+  ylab("Total Removals (N)") + 
   theme_bw() + theme(legend.position = c(0.2,0.8), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_retained_releaseN.png"),
+       width = 6, height = 3)
+
+ggplot(filter(wa_rec_longer, !disposition %in% c("RETAINED_N","RELEASED_TOTAL_N")), aes(fill = disposition, y=value, x=YEAR)) + 
+  geom_bar(position="fill", stat="identity") +
+  facet_wrap("state",labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_releaseDepth.png"),
        width = 6, height = 3)
 
 ##
