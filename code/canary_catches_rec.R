@@ -15,7 +15,7 @@ library(ggplot2)
 #User directories
 if(Sys.getenv("USERNAME") == "Brian.Langseth") {
   dir <- "U:/Stock assessments/canary_rockfish_supporting_2023/RecFIN pulls"
-  git_dir <- "U:/Stock assessments/canary_2023/"
+  git_dir <- "U:/Stock assessments/canary_2023"
 }
 
 #################################################################################################################
@@ -25,11 +25,24 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 #################################################################################################################
 # RecFIN - 2021-2021 Landings mtons
 # 2022 is incomplete yet
-recfin = read.csv(file.path(dir, "RecFIN_CTE001_canary_2001_2021.csv"),header=TRUE)
+recfin <- read.csv(file.path(dir, "RecFIN_CTE001_canary_2001_2021.csv"),header=TRUE)
+
+#WA sport catch - only need to pull from googledrive once
+# googledrive::drive_download(file = "Canary_WA_RecCatch_2023Updates.xlsx",
+#                             path = file.path(git_dir,"data-raw","Canary_WA_RecCatch_2023Updates.xlsx"))
+wa_rec <- readxl::read_excel(path = file.path(git_dir,"data-raw","Canary_WA_RecCatch_2023Updates.xlsx"),
+                             col_names = c("YEAR","RETAINED_N","RELEASED_TOTAL_N","REL1_10ftm",
+                                           "REL10_20ftm","REL20_30ftm","REL30plusftm","RELUNKftm"),skip=3)
+
+#OR rec catch - only need to pull from googledrive once
+# googledrive::drive_download(file = "Oregon data/Oregon Recreational landings_451_2022.xlsx",
+#                             path = file.path(git_dir,"data-raw","Oregon Recreational landings_451_2022.xlsx"))
+or_rec <- readxl::read_excel(path = file.path(git_dir,"data-raw","Oregon Recreational landings_451_2022.xlsx"),
+                             sheet = "Oregon Recreational landings_45")
 
 
 #################################################################################################################
-# Evaluate the recreational data 
+# Evaluate the RecFIN data 
 #################################################################################################################
 
 #Check categories
@@ -55,6 +68,11 @@ plot(tmp$sum_total - (tmp$sum_rel_mort+tmp$sum_ret)) #totals sum properly
 tmp_wider <- pivot_wider(tmp, names_from = c(AGENCY,mode), names_sep = ".", values_from = c(sum_ret,sum_rel,sum_rel_mort,sum_total), names_glue = "{AGENCY}_{mode}_{.value}", names_sort = TRUE) %>% arrange(RECFIN_YEAR)
 tmp_wider <- tmp_wider %>% select(c("RECFIN_YEAR",sort(colnames(tmp_wider[,-1]))))
 
+wa_rec_longer <- pivot_longer(wa_rec, cols = names(wa_rec)[-1], names_to = "disposition")
+wa_rec_longer$state = "W"
+
+or_rec_longer <- pivot_longer(or_rec[,-which(names(or_rec)=="Total_MT")], cols = c("Retained_MT","Released_MT"), names_to = "disposition")
+or_rec_longer$state = "O"
 
 
 # ##
@@ -72,13 +90,11 @@ tmp_wider <- tmp_wider %>% select(c("RECFIN_YEAR",sort(colnames(tmp_wider[,-1]))
 #################################################################################################################
 #Plotting
 #################################################################################################################
-tmp_longer <- pivot_longer(tmp, cols = c(sum_ret,sum_rel,sum_rel_mort,sum_total), names_to = "type")
-
 lab_val = c("California", "Oregon", "Washington")
 names(lab_val) = c("C","O","W")
 
 ##
-#Totals
+#Totals for recfin
 ##
 #Total landings by mode
 ggplot(tmp, aes(fill=mode, y=sum_total, x=RECFIN_YEAR)) + 
@@ -91,6 +107,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_removals.png"),
        width = 6, height = 8)
 
 #Breakdown of disposition of dead fish (retained or dead releases) 
+tmp_longer <- pivot_longer(tmp, cols = c(sum_ret,sum_rel,sum_rel_mort,sum_total), names_to = "type")
 ggplot(filter(tmp_longer,type%in%c("sum_rel_mort","sum_ret")), aes(fill=type, y=value, x=RECFIN_YEAR)) + 
   geom_bar(position="stack", stat="identity") +
   facet_wrap("AGENCY", ncol = 1, labeller = labeller(AGENCY = lab_val)) + 
@@ -125,6 +142,48 @@ ggplot(filter(tmp_perc[,c("mode","AGENCY","RECFIN_YEAR","perc")],mode%in%c("PR",
 ggsave(file.path(git_dir,"data_workshop_figs","rec_perc_mode_releaseMort.png"),
        width = 6, height = 8)
 
+##
+#Totals for washington
+##
+ggplot(filter(wa_rec_longer, disposition == "RETAINED_N"), aes(y=value, x=YEAR)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("state",labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("Total Retained (N)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_retainedN.png"),
+       width = 6, height = 3)
+
+ggplot(filter(wa_rec_longer, disposition %in% c("RETAINED_N","RELEASED_TOTAL_N")), aes(fill = disposition, y=value, x=YEAR)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("state",labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("Total Retained (N)") + 
+  theme_bw() + theme(legend.position = c(0.2,0.8), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_retained_releaseN.png"),
+       width = 6, height = 3)
+
+##
+#Totals for Oregon
+##
+ggplot(or_rec, aes(y=Total_MT, x=Year)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("state",labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("Total removals (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","OR_rec_total.png"),
+       width = 6, height = 3)
+
+ggplot(or_rec_longer, aes(y=value, x=Year, fill = disposition)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("state",labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("Total removals (MT)") + 
+  scale_fill_discrete(labels=c("Released dead","Retained")) +
+  theme_bw() + theme(legend.position = c(0.7,0.8), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","OR_rec_disposition.png"),
+       width = 6, height = 3)
 
 
 
