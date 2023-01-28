@@ -251,7 +251,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_lenDensity_fleet_reduced.png"
 ggplot(pacfin, aes(FINAL_FISH_AGE_IN_YEARS, fill = fleet.comb, color = fleet.comb)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("AGENCY_CODE", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
-  xlab("Fish Length (cm)") +
+  xlab("Age") +
   ylab("Proportion") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleetGroup.png"),
@@ -260,7 +260,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleetGroup.png"),
 ggplot(pacfin, aes(FINAL_FISH_AGE_IN_YEARS, fill = fleet, color = fleet)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("AGENCY_CODE", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
-  xlab("Fish Length (cm)") +
+  xlab("Age") +
   ylab("Proportion") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleet.png"),
@@ -269,7 +269,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleet.png"),
 ggplot(filter(pacfin,fleet %in% c("HKL","MID","TWL")), aes(FINAL_FISH_AGE_IN_YEARS, fill = fleet, color = fleet)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("AGENCY_CODE", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
-  xlab("Fish Length (cm)") +
+  xlab("Age") +
   ylab("Proportion") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","com_ageDensity_fleet_reduced.png"),
@@ -363,7 +363,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_O_SPage.png"),
 # ggplot(pacfin, aes(FINAL_FISH_AGE_IN_YEARS, fill = SEX_CODE, color = SEX_CODE)) +
 #   geom_density(alpha = 0.4, lwd = 0.8, adjust = 1.5) +
 #   facet_wrap(c("AGENCY_CODE","fleet.comb"), ncol=2, labeller = labeller(AGENCY_CODE = lab_val)) +
-#   xlab("Fish Length (cm)") +
+#   xlab("Age") +
 #   ylab("Proportion") +
 #   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 # #Check sample sizes - altogether very few U
@@ -399,7 +399,7 @@ table(pacfin$SAMPLE_YEAR,pacfin$AGE_METHOD1,pacfin$AGENCY_CODE,is.na(pacfin$FINA
 ggplot(filter(pacfin,AGENCY_CODE!="C" & fleet.comb=="TWL"), aes(FINAL_FISH_AGE_IN_YEARS, fill = surface, color = surface)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap(c("AGENCY_CODE","fleet.comb")) +
-  xlab("Fish Length (cm)") +
+  xlab("Age") +
   ylab("Proportion") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 

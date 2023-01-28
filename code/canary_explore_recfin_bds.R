@@ -227,6 +227,15 @@ ggplot(filter(bds,mode%in%c("PC","PR")), aes(fill=mode, x=RECFIN_YEAR)) +
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN_mode.png"),
        width = 6, height = 8)
 
+ggplot(filter(bds,mode%in%c("PC","PR")), aes(x=RECFIN_YEAR)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN.png"),
+       width = 6, height = 8)
+
 table(bds$sex,bds$state)
 ggplot(filter(bds,mode%in%c("PC","PR")), aes(fill=sex, x=RECFIN_YEAR)) + 
   geom_bar(position="stack", stat="count") +
@@ -256,6 +265,15 @@ ggplot(filter(bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(fill=mode
   ylab("# of age samples") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","rec_ageN_mode.png"),
+       width = 6, height = 8)
+
+ggplot(filter(bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(x=SAMPLE_YEAR)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of age samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","rec_ageN.png"),
        width = 6, height = 8)
 
 table(bdsage$RECFIN_SEX_CODE,bdsage$state,is.na(bdsage$USE_THIS_AGE))
@@ -295,16 +313,6 @@ ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = 
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_mode_withreleased.png"),
        width = 6, height = 8)
 
-#Lengths by sex - pretty similar
-ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = sex, color = sex)) +
-  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
-  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
-  xlab("Fish Length (cm)") +
-  ylab("Proportion") + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_sex.png"),
-       width = 6, height = 8)
-
 #Lengths by retention - only in years (>=2003) and modes (PC) where each exists
 bds_all <- rbind(bds,bds_rel)
 table(bds_all$RECFIN_YEAR, bds_all$mode, bds_all$IS_RETAINED)
@@ -315,6 +323,16 @@ ggplot(filter(bds_all,mode%in%c("PC") & RECFIN_YEAR >= 2003), aes(lengthcm, fill
   ylab("Proportion") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_retained.png"),
+       width = 6, height = 8)
+
+#Lengths by sex - pretty similar
+ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = sex, color = sex)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_sex.png"),
        width = 6, height = 8)
 
 #Ages by mode - pretty similar
@@ -352,6 +370,15 @@ ggplot(filter(or_bds,mode%in%c("PC","PR")), aes(fill=mode, x=Year)) +
   ylab("# of length samples") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","OR_rec_lenN_mode.png"),
+       width = 6, height = 3)
+
+ggplot(filter(or_bds,mode%in%c("PC","PR")), aes(x=Year)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","OR_rec_lenN.png"),
        width = 6, height = 3)
 
 #Lengths by mode - pretty similar
