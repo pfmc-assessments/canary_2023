@@ -256,6 +256,16 @@ ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(fill=IS_RETAINED, x=RECFIN_YEAR
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN_retained.png"),
        width = 6, height = 8)
 
+bds_all <- rbind(bds,bds_rel)
+ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(fill=IS_RETAINED, x=RECFIN_YEAR)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap(c("state","mode"), ncol=2, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN_retained_mode.png"),
+       width = 6, height = 8)
+
 
 #Age
 ggplot(filter(bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(fill=mode, x=SAMPLE_YEAR)) + 
@@ -313,6 +323,18 @@ ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = 
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_mode_withreleased.png"),
        width = 6, height = 8)
 
+#Lengths by retention
+bds_all <- rbind(bds,bds_rel)
+table(bds_all$RECFIN_YEAR, bds_all$mode, bds_all$IS_RETAINED)
+ggplot(filter(bds_all,mode%in%c("PC", "PR")), aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_retained.png"),
+       width = 6, height = 8)
+
 #Lengths by retention - only in years (>=2003) and modes (PC) where each exists
 bds_all <- rbind(bds,bds_rel)
 table(bds_all$RECFIN_YEAR, bds_all$mode, bds_all$IS_RETAINED)
@@ -322,7 +344,23 @@ ggplot(filter(bds_all,mode%in%c("PC") & RECFIN_YEAR >= 2003), aes(lengthcm, fill
   xlab("Fish Length (cm)") +
   ylab("Proportion") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_retained.png"),
+ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_retained_PC2003.png"),
+       width = 6, height = 8)
+
+#Lengths by retention - only in years dominated by releases (CA 2009-2016 and OR 2004-2014)
+bds_all <- rbind(bds,bds_rel)
+table(bds_all$RECFIN_YEAR, bds_all$mode, bds_all$IS_RETAINED)
+bds_all_CAshort <- filter(bds_all, mode%in%c("PC","PR") & RECFIN_YEAR %in% c(2009:2016) & state == "C")
+bds_all_ORshort <- filter(bds_all, mode%in%c("PC","PR") & RECFIN_YEAR %in% c(2004:2014) & state == "O")
+bds_all_WA <- filter(bds_all, mode%in%c("PC","PR") & state == "W")
+bds_all_short <- rbind(bds_all_CAshort, bds_all_ORshort, bds_all_WA)
+ggplot(bds_all_short, aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_retained_WA_CA09-16_OR04-14.png"),
        width = 6, height = 8)
 
 #Lengths by sex - pretty similar
