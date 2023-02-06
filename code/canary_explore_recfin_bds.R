@@ -146,8 +146,13 @@ table(or_bds_mrfss$Length_Flag,useNA="always") #appears to be fork length
 table(or_bds_mrfss$Total.Length_Flag,useNA="always") #appears to be total length
 plot(or_bds_mrfss$Total.Length-or_bds_mrfss$Length)
 plot(or_bds_mrfss$Total.Length,or_bds_mrfss$Length)
+table(or_bds_mrfss$MRFSS_WGT_FLAG,useNA="always") 
+table(or_bds_mrfss$WGT_FLAG_ALT,useNA="always") 
+#there are 16 samples where length wasn't measured, but rather taken from weight, and 2 where neither length nor weight was measured. 
+table(or_bds_mrfss$Length_Flag,or_bds_mrfss$Total.Length_Flag, or_bds_mrfss$WGT_FLAG_ALT,useNA="always")
 table(or_bds_mrfss$Fleet,useNA="always")
 table(or_bds_mrfss$Year,useNA="always")
+
 
 #add length in cm based on fork length
 or_bds_mrfss$lengthcm <- or_bds_mrfss$Length/10
@@ -158,6 +163,12 @@ or_bds_mrfss$mode = dplyr::case_when(or_bds_mrfss$Mode_FX_Name == "charter" ~ "P
 
 #Add sex (which is all unknown)
 or_bds_mrfss$sex = "U"
+
+#Remove samples with lengths based on weight to length conversions (16 with measured weight and 2 with computed weight)
+or_bds_mrfss = or_bds_mrfss[-which(or_bds_mrfss$Length_Flag=="computed" & or_bds_mrfss$Total.Length_Flag=="computed"),]
+
+#Remove the 579 samples without any length provided
+or_bds_mrfss = or_bds_mrfss[!is.na(or_bds_mrfss$lengthcm),]
 
 
 ##
@@ -200,6 +211,8 @@ or_bds_recfin$Year <- or_bds_recfin$RECFIN_YEAR
 
 ##
 #Combine Oregon data into one dataset
+#There are samples in both datasets in 2001-2003. Per Ali, 
+#these are separate samples so they can be combined
 ##
 
 or_bds <- rbind(or_bds_mrfss[,c("Year","mode","lengthcm","sex")],or_bds_recfin[,c("Year","mode","lengthcm","sex")])
