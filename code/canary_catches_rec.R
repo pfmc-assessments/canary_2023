@@ -20,7 +20,7 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 
 #################################################################################################################
 #---------------------------------------------------------------------------------------------------------------#
-# Load RecFIN data
+# Load RecFIN and state provided data
 #---------------------------------------------------------------------------------------------------------------#
 #################################################################################################################
 # RecFIN - 2021-2021 Landings mtons
@@ -42,8 +42,10 @@ or_rec <- readxl::read_excel(path = file.path(git_dir,"data-raw","Oregon Recreat
 
 
 #################################################################################################################
-# Evaluate the RecFIN data 
+# Evaluate the data 
 #################################################################################################################
+
+##RecFIN
 
 #Check categories
 table(recfin$AGENCY,useNA="always")
@@ -54,7 +56,6 @@ table(recfin$RECFIN_WATER_AREA_NAME,recfin$AGENCY,useNA="always")
 recfin %>% group_by(RECFIN_WATER_AREA_NAME) %>% summarize(sum = sum(SUM_TOTAL_MORTALITY_MT))
 table(recfin$RECFIN_TRIP_TYPE_NAME,useNA="always")
 recfin %>% group_by(RECFIN_TRIP_TYPE_NAME) %>% summarize(sum = sum(SUM_TOTAL_MORTALITY_MT))
-
 
 #Summary of catch categories by year, mode, and state
 recfin$mode <- rep(NA, nrow(recfin))
@@ -68,13 +69,6 @@ plot(tmp$sum_total - (tmp$sum_rel_mort+tmp$sum_ret)) #totals sum properly
 tmp_wider <- pivot_wider(tmp, names_from = c(AGENCY,mode), names_sep = ".", values_from = c(sum_ret,sum_rel,sum_rel_mort,sum_total), names_glue = "{AGENCY}_{mode}_{.value}", names_sort = TRUE) %>% arrange(RECFIN_YEAR)
 tmp_wider <- tmp_wider %>% select(c("RECFIN_YEAR",sort(colnames(tmp_wider[,-1]))))
 
-wa_rec_longer <- pivot_longer(wa_rec, cols = names(wa_rec)[-1], names_to = "disposition")
-wa_rec_longer$state = "W"
-
-or_rec_longer <- pivot_longer(or_rec[,-which(names(or_rec)=="Total_MT")], cols = c("Retained_MT","Released_MT"), names_to = "disposition")
-or_rec_longer$state = "O"
-
-
 # ##
 # #Upload to googledrive
 # #Based on pull of public forms so not confidential
@@ -85,6 +79,36 @@ or_rec_longer$state = "O"
 # googlesheets4::sheet_write(round(tmp_wider,3), ss = xx, sheet = "catch_mt")
 # googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
+
+## WA provided data
+
+#Add discard by depth amounts
+#Discard rates are found in Table 1-10 of Council doc linked in issue #10
+#Use surface rates. Dont have information on amount of releases at depth
+wa_rec$DEAD_RELEASED_TOTAL_N = wa_rec$REL1_10ftm*0.21 + 
+                               wa_rec$REL10_20ftm*0.37 + 
+                               wa_rec$REL20_30ftm*0.53 + 
+                               wa_rec$REL30plusftm*1.00 +
+                               #Divide unknown depths based on proportions of releases for each known depth
+                               wa_rec$RELUNKftm*(wa_rec$REL1_10ftm/(wa_rec$RELEASED_TOTAL_N-wa_rec$RELUNKftm))*0.21 +
+                               wa_rec$RELUNKftm*(wa_rec$REL10_20ftm/(wa_rec$RELEASED_TOTAL_N-wa_rec$RELUNKftm))*0.37 +
+                               wa_rec$RELUNKftm*(wa_rec$REL20_30ftm/(wa_rec$RELEASED_TOTAL_N-wa_rec$RELUNKftm))*0.53 +
+                               wa_rec$RELUNKftm*(wa_rec$REL30plusftm/(wa_rec$RELEASED_TOTAL_N-wa_rec$RELUNKftm))*1.00
+#Take averages to fill in mortality for released fish in 2002-2004, which dont have released by depth information
+rel_mort_rate <- wa_rec$DEAD_RELEASED_TOTAL_N/wa_rec$RELEASED_TOTAL_N
+avg_rate2005_2007 <- mean(rel_mort_rate[29:31], na.rm=TRUE)
+plot(x=wa_rec$YEAR, rel_mort_rate, type="b", xlab= "Year", "ylab" = "Release Mortality Reate")
+abline(h=avg_rate2005_2007,lty=2) #mean over most recent three years of data
+wa_rec[wa_rec$YEAR%in%c(2002:2004),]$DEAD_RELEASED_TOTAL_N <- avg_rate2005_2007 * wa_rec[wa_rec$YEAR%in%c(2002:2004),]$RELEASED_TOTAL_N
+
+wa_rec_longer <- pivot_longer(wa_rec, cols = names(wa_rec)[-1], names_to = "disposition")
+wa_rec_longer$state = "W"
+
+
+## OR provided data
+
+or_rec_longer <- pivot_longer(or_rec[,-which(names(or_rec)=="Total_MT")], cols = c("Retained_MT","Released_MT"), names_to = "disposition")
+or_rec_longer$state = "O"
 
 
 #################################################################################################################
@@ -149,7 +173,7 @@ ggplot(wa_rec_longer, aes(y=value, x=YEAR)) +
   geom_bar(position="stack", stat="identity") +
   facet_wrap("state",labeller = labeller(state = lab_val)) +
   xlab("Year") +
-  ylab("Total Removals (N)") + 
+  ylab("Total Removals and Releses (N)") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_removalsN.png"),
        width = 6, height = 3)
@@ -163,7 +187,16 @@ ggplot(filter(wa_rec_longer, disposition %in% c("RETAINED_N","RELEASED_TOTAL_N")
 ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_retained_releaseN.png"),
        width = 6, height = 3)
 
-ggplot(filter(wa_rec_longer, !disposition %in% c("RETAINED_N","RELEASED_TOTAL_N")), aes(fill = disposition, y=value, x=YEAR)) + 
+ggplot(filter(wa_rec_longer, disposition %in% c("RETAINED_N","DEAD_RELEASED_TOTAL_N")), aes(fill = disposition, y=value, x=YEAR)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("state",labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("Total Removals (N)") + 
+  theme_bw() + theme(legend.position = c(0.2,0.8), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_explore_figs","WA_rec_retained_deadreleaseN.png"),
+       width = 6, height = 3)
+
+ggplot(filter(wa_rec_longer, !disposition %in% c("RETAINED_N","RELEASED_TOTAL_N","DEAD_RELEASED_TOTAL_N")), aes(fill = disposition, y=value, x=YEAR)) + 
   geom_bar(position="fill", stat="identity") +
   facet_wrap("state",labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -193,6 +226,5 @@ ggplot(or_rec_longer, aes(y=value, x=Year, fill = disposition)) +
   theme_bw() + theme(legend.position = c(0.7,0.8), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","OR_rec_disposition.png"),
        width = 6, height = 3)
-
 
 
