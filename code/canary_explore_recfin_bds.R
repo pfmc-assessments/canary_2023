@@ -279,8 +279,7 @@ wa_bds <- wa_bds[!is.na(wa_bds$fish_length_cm),]
 
 wa_bds$state <- "W"
 
-
-#Lengths are really varied based on gear. 
+#Lengths are really varied based on gear (used to support removal of research samples) 
 samp_val = c("Research", "Sport")
 names(samp_val) = c("R","S")
 ggplot(wa_bds, aes(fish_length_cm, fill = gear_name, color = sample_method_code)) +
@@ -293,7 +292,7 @@ ggplot(wa_bds, aes(fish_length_cm, fill = gear_name, color = sample_method_code)
 ggsave(file.path(git_dir,"data_explore_figs","WA_SportResearch_lenDensity.png"),
        width = 6, height = 8)
 
-#what about ages
+#what about ages - they are too (used to support removal of research samples)
 samp_val = c("Research", "Sport")
 names(samp_val) = c("R","S")
 ggplot(wa_bds, aes(best_age, fill = gear_name, color = sample_method_code)) +
@@ -305,7 +304,6 @@ ggplot(wa_bds, aes(best_age, fill = gear_name, color = sample_method_code)) +
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_explore_figs","WA_SportResearch_lenDensity.png"),
        width = 6, height = 8)
-
 
 #Use only sport data as research are specifically targeting small and big fish to 
 #try to get decent growth estimates
@@ -326,7 +324,7 @@ names(lab_val) = c("C","O","W")
 ##
 
 #Length
-ggplot(filter(bds,mode%in%c("PC","PR")), aes(fill=mode, x=RECFIN_YEAR)) + 
+ggplot(filter(recfin_bds,mode%in%c("PC","PR")), aes(fill=mode, x=RECFIN_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -335,7 +333,7 @@ ggplot(filter(bds,mode%in%c("PC","PR")), aes(fill=mode, x=RECFIN_YEAR)) +
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN_mode.png"),
        width = 6, height = 8)
 
-ggplot(filter(bds,mode%in%c("PC","PR")), aes(x=RECFIN_YEAR)) + 
+ggplot(filter(recfin_bds,mode%in%c("PC","PR")), aes(x=RECFIN_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -344,8 +342,8 @@ ggplot(filter(bds,mode%in%c("PC","PR")), aes(x=RECFIN_YEAR)) +
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN.png"),
        width = 6, height = 8)
 
-table(bds$sex,bds$state)
-ggplot(filter(bds,mode%in%c("PC","PR")), aes(fill=sex, x=RECFIN_YEAR)) + 
+table(recfin_bds$sex,recfin_bds$state)
+ggplot(filter(recfin_bds,mode%in%c("PC","PR")), aes(fill=sex, x=RECFIN_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -354,8 +352,8 @@ ggplot(filter(bds,mode%in%c("PC","PR")), aes(fill=sex, x=RECFIN_YEAR)) +
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN_sex.png"),
        width = 6, height = 8)
 
-bds_all <- rbind(bds,bds_rel)
-ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(fill=IS_RETAINED, x=RECFIN_YEAR)) + 
+recfin_bds_all <- rbind(recfin_bds,recfin_bds_rel)
+ggplot(filter(recfin_bds_all,mode%in%c("PC","PR")), aes(fill=IS_RETAINED, x=RECFIN_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -364,8 +362,8 @@ ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(fill=IS_RETAINED, x=RECFIN_YEAR
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN_retained.png"),
        width = 6, height = 8)
 
-bds_all <- rbind(bds,bds_rel)
-ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(fill=IS_RETAINED, x=RECFIN_YEAR)) + 
+recfin_bds_all <- rbind(recfin_bds,recfin_bds_rel)
+ggplot(filter(recfin_bds_all,mode%in%c("PC","PR")), aes(fill=IS_RETAINED, x=RECFIN_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap(c("state","mode"), ncol=2, labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -376,7 +374,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_lenN_retained_mode.png"),
 
 
 #Age
-ggplot(filter(bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(fill=mode, x=SAMPLE_YEAR)) + 
+ggplot(filter(recfin_bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(fill=mode, x=SAMPLE_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -385,7 +383,7 @@ ggplot(filter(bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(fill=mode
 ggsave(file.path(git_dir,"data_workshop_figs","rec_ageN_mode.png"),
        width = 6, height = 8)
 
-ggplot(filter(bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(x=SAMPLE_YEAR)) + 
+ggplot(filter(recfin_bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(x=SAMPLE_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -394,8 +392,8 @@ ggplot(filter(bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(x=SAMPLE_
 ggsave(file.path(git_dir,"data_workshop_figs","rec_ageN.png"),
        width = 6, height = 8)
 
-table(bdsage$RECFIN_SEX_CODE,bdsage$state,is.na(bdsage$USE_THIS_AGE))
-ggplot(filter(bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(fill=RECFIN_SEX_CODE, x=SAMPLE_YEAR)) + 
+table(recfin_bdsage$RECFIN_SEX_CODE,recfin_bdsage$state,is.na(recfin_bdsage$USE_THIS_AGE))
+ggplot(filter(recfin_bdsage,!is.na(USE_THIS_AGE) & mode%in%c("PC","PR")), aes(fill=RECFIN_SEX_CODE, x=SAMPLE_YEAR)) + 
   geom_bar(position="stack", stat="count") +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
@@ -412,7 +410,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_ageN_sex.png"),
 ##
 
 #Lengths by mode - pretty similar without released fish
-ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = mode)) +
+ggplot(filter(recfin_bds,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = mode)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Length (cm)") +
@@ -421,8 +419,8 @@ ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = mode
 ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_mode.png"),
        width = 6, height = 8)
 
-bds_all <- rbind(bds,bds_rel) #if including released fish
-ggplot(filter(bds_all,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = mode)) +
+recfin_bds_all <- rbind(recfin_bds,recfin_bds_rel) #if including released fish
+ggplot(filter(recfin_bds_all,mode%in%c("PC","PR")), aes(lengthcm, fill = mode, color = mode)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Length (cm)") +
@@ -432,9 +430,9 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_mode_withreleased.
        width = 6, height = 8)
 
 #Lengths by retention
-bds_all <- rbind(bds,bds_rel)
-table(bds_all$RECFIN_YEAR, bds_all$mode, bds_all$IS_RETAINED)
-ggplot(filter(bds_all,mode%in%c("PC", "PR")), aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
+recfin_bds_all <- rbind(recfin_bds,recfin_bds_rel)
+table(recfin_bds_all$RECFIN_YEAR, recfin_bds_all$mode, recfin_bds_all$IS_RETAINED)
+ggplot(filter(recfin_bds_all,mode%in%c("PC", "PR")), aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Length (cm)") +
@@ -444,9 +442,9 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_retained.png"),
        width = 6, height = 8)
 
 #Lengths by retention - only in years (>=2003) and modes (PC) where each exists
-bds_all <- rbind(bds,bds_rel)
-table(bds_all$RECFIN_YEAR, bds_all$mode, bds_all$IS_RETAINED)
-ggplot(filter(bds_all,mode%in%c("PC") & RECFIN_YEAR >= 2003), aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
+recfin_bds_all <- rbind(recfin_bds,recfin_bds_rel)
+table(recfin_bds_all$RECFIN_YEAR, recfin_bds_all$mode, recfin_bds_all$IS_RETAINED)
+ggplot(filter(recfin_bds_all,mode%in%c("PC") & RECFIN_YEAR >= 2003), aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Length (cm)") +
@@ -456,13 +454,13 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_retained_PC2003.pn
        width = 6, height = 8)
 
 #Lengths by retention - only in years dominated by releases (CA 2009-2016 and OR 2004-2014)
-bds_all <- rbind(bds,bds_rel)
-table(bds_all$RECFIN_YEAR, bds_all$mode, bds_all$IS_RETAINED)
-bds_all_CAshort <- filter(bds_all, mode%in%c("PC","PR") & RECFIN_YEAR %in% c(2009:2016) & state == "C")
-bds_all_ORshort <- filter(bds_all, mode%in%c("PC","PR") & RECFIN_YEAR %in% c(2004:2014) & state == "O")
-bds_all_WA <- filter(bds_all, mode%in%c("PC","PR") & state == "W")
-bds_all_short <- rbind(bds_all_CAshort, bds_all_ORshort, bds_all_WA)
-ggplot(bds_all_short, aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
+recfin_bds_all <- rbind(recfin_bds,recfin_bds_rel)
+table(recfin_bds_all$RECFIN_YEAR, recfin_bds_all$mode, recfin_bds_all$IS_RETAINED)
+recfin_bds_all_CAshort <- filter(recfin_bds_all, mode%in%c("PC","PR") & RECFIN_YEAR %in% c(2009:2016) & state == "C")
+recfin_bds_all_ORshort <- filter(recfin_bds_all, mode%in%c("PC","PR") & RECFIN_YEAR %in% c(2004:2014) & state == "O")
+recfin_bds_all_WA <- filter(recfin_bds_all, mode%in%c("PC","PR") & state == "W")
+recfin_bds_all_short <- rbind(recfin_bds_all_CAshort, recfin_bds_all_ORshort, recfin_bds_all_WA)
+ggplot(recfin_bds_all_short, aes(lengthcm, fill = IS_RETAINED, color = IS_RETAINED)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Length (cm)") +
@@ -472,7 +470,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_retained_WA_CA09-1
        width = 6, height = 8)
 
 #Lengths by sex - pretty similar
-ggplot(filter(bds,mode%in%c("PC","PR")), aes(lengthcm, fill = sex, color = sex)) +
+ggplot(filter(recfin_bds,mode%in%c("PC","PR")), aes(lengthcm, fill = sex, color = sex)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Length (cm)") +
@@ -482,7 +480,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_lenDensity_sex.png"),
        width = 6, height = 8)
 
 #Ages by mode - pretty similar
-ggplot(filter(bdsage,mode%in%c("PC","PR")), aes(USE_THIS_AGE, fill = mode, color = mode)) +
+ggplot(filter(recfin_bdsage,mode%in%c("PC","PR")), aes(USE_THIS_AGE, fill = mode, color = mode)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Age") +
@@ -492,7 +490,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","rec_ageDensity_mode.png"),
        width = 6, height = 8)
 
 #Ages by sex - pretty similar
-ggplot(filter(bdsage,mode%in%c("PC","PR")), aes(USE_THIS_AGE, fill = RECFIN_SEX_CODE, color = RECFIN_SEX_CODE)) +
+ggplot(filter(recfin_bdsage,mode%in%c("PC","PR")), aes(USE_THIS_AGE, fill = RECFIN_SEX_CODE, color = RECFIN_SEX_CODE)) +
   geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
   xlab("Fish Age") +
@@ -537,8 +535,44 @@ ggplot(or_bds, aes(lengthcm, fill = mode, color = mode)) +
 ggsave(file.path(git_dir,"data_workshop_figs","OR_rec_lenDensity_mode.png"),
        width = 6, height = 3)
 
+#Done yet have ages from Oregon
 
 
+##
+#Sample sizes and lengths for Washington provided data
+##
+
+#Length
+ggplot(filter(wa_bds,mode%in%c("PC","PR")), aes(fill=mode, x=sample_year)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Ages
+ggplot(filter(wa_bds,mode%in%c("PC","PR") & !is.na(wa_bds$best_age)), aes(fill=mode, x=sample_year)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of age samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Lengths by mode - pretty similar
+ggplot(wa_bds, aes(lengthcm, fill = mode, color = mode)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Ages by mode - pretty similar
+ggplot(wa_bds, aes(best_age, fill = mode, color = mode)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish age") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 
 
