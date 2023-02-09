@@ -20,47 +20,47 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 #LENGTH - Load RecFIN length BDS data, check for any issues
 ################################
 
-bdsWA = read.csv(file.path(dir, "RecFIN_SD001_WA_canary_1983_2021.csv"),header=TRUE)
-bdsOR = read.csv(file.path(dir, "RecFIN_SD001_OR_canary_1999_2021.csv"),header=TRUE)
-bdsCA = read.csv(file.path(dir, "RecFIN_SD001_CA_canary_2003_2021.csv"),header=TRUE)
-bds = rbind(bdsWA,bdsOR,bdsCA)
+recfin_bdsWA = read.csv(file.path(dir, "RecFIN_SD001_WA_canary_1983_2021.csv"),header=TRUE)
+recfin_bdsOR = read.csv(file.path(dir, "RecFIN_SD001_OR_canary_1999_2021.csv"),header=TRUE)
+recfin_bdsCA = read.csv(file.path(dir, "RecFIN_SD001_CA_canary_2003_2021.csv"),header=TRUE)
+recfin_bds = rbind(recfin_bdsWA,recfin_bdsOR,recfin_bdsCA)
 
-table(bds$AGENCY_LENGTH_UNITS,useNA="always")
-table(bds$RECFIN_SEX_CODE,bds$STATE_NAME,useNA="always") #going to be mostly unsexed
-table(bds$RECFIN_LENGTH_MM,useNA="always")
-table(bds$RECFIN_IMPUTED_LENGTH,useNA="always")
-table(bds$AGENCY_WATER_AREA_NAME,bds$STATE_NAME,useNA="always")
-table(bds$IS_AGENCY_LENGTH_WITHIN_MAX,useNA="always")
-table(bds$RECFIN_MODE_NAME,useNA="always")
-table(bds$IS_RETAINED,bds$STATE_NAME,useNA="always")
+table(recfin_bds$AGENCY_LENGTH_UNITS,useNA="always")
+table(recfin_bds$RECFIN_SEX_CODE,recfin_bds$STATE_NAME,useNA="always") #going to be mostly unsexed
+table(recfin_bds$RECFIN_LENGTH_MM,useNA="always")
+table(recfin_bds$RECFIN_IMPUTED_LENGTH,useNA="always")
+table(recfin_bds$AGENCY_WATER_AREA_NAME,recfin_bds$STATE_NAME,useNA="always")
+table(recfin_bds$IS_AGENCY_LENGTH_WITHIN_MAX,useNA="always")
+table(recfin_bds$RECFIN_MODE_NAME,useNA="always")
+table(recfin_bds$IS_RETAINED,recfin_bds$STATE_NAME,useNA="always")
 
 #Remove 8 samples with NA lengths 
-bds = bds[!is.na(bds$RECFIN_LENGTH_MM),]
+recfin_bds = recfin_bds[!is.na(recfin_bds$RECFIN_LENGTH_MM),]
 #Exclude two samples with weird MM measurements and two samples with 0 length
-bds = bds[-which(bds$RECFIN_LENGTH_MM<100),]
+recfin_bds = recfin_bds[-which(recfin_bds$RECFIN_LENGTH_MM<100),]
 #Add cm field
-bds$lengthcm = bds$RECFIN_LENGTH_MM/10
+recfin_bds$lengthcm = recfin_bds$RECFIN_LENGTH_MM/10
 
 #Exclude 16 inland and 24 estuary fish
-bds <- bds[-which(bds$AGENCY_WATER_AREA_NAME %in% c("ESTUARY","IN")),]
+recfin_bds <- recfin_bds[-which(recfin_bds$AGENCY_WATER_AREA_NAME %in% c("ESTUARY","IN")),]
 
 #Assign NA, "", FALSE, and U sex to unknown sex code
-bds$sex <- dplyr::case_when(bds$RECFIN_SEX_CODE %in% c("U","","FALSE") ~ "U",
-                            is.na(bds$RECFIN_SEX_CODE) ~ "U",
-                            TRUE ~ bds$RECFIN_SEX_CODE)
+recfin_bds$sex <- dplyr::case_when(recfin_bds$RECFIN_SEX_CODE %in% c("U","","FALSE") ~ "U",
+                            is.na(recfin_bds$RECFIN_SEX_CODE) ~ "U",
+                            TRUE ~ recfin_bds$RECFIN_SEX_CODE)
 
 #Add shorter state name
-bds$state <- dplyr::case_when(bds$STATE_NAME == "CALIFORNIA" ~ "C",
-                             bds$STATE_NAME == "OREGON" ~ "O",
-                             bds$STATE_NAME == "WASHINGTON" ~ "W")
+recfin_bds$state <- dplyr::case_when(recfin_bds$STATE_NAME == "CALIFORNIA" ~ "C",
+                             recfin_bds$STATE_NAME == "OREGON" ~ "O",
+                             recfin_bds$STATE_NAME == "WASHINGTON" ~ "W")
 #Add shorter mode name
-bds$mode <- dplyr::case_when(bds$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC",
-                             bds$RECFIN_MODE_NAME == "PRIVATE/RENTAL BOATS" ~ "PR",
-                             bds$RECFIN_MODE_NAME == "NOT KNOWN" ~ "Unk")
+recfin_bds$mode <- dplyr::case_when(recfin_bds$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC",
+                             recfin_bds$RECFIN_MODE_NAME == "PRIVATE/RENTAL BOATS" ~ "PR",
+                             recfin_bds$RECFIN_MODE_NAME == "NOT KNOWN" ~ "Unk")
 
 #Exclude "released" fish
-bds_rel <- bds[bds$IS_RETAINED == "RELEASED",]
-bds <- bds[bds$IS_RETAINED == "RETAINED",]
+recfin_bds_rel <- recfin_bds[recfin_bds$IS_RETAINED == "RELEASED",]
+recfin_bds <- recfin_bds[recfin_bds$IS_RETAINED == "RETAINED",]
 
 
 ##
@@ -68,7 +68,7 @@ bds <- bds[bds$IS_RETAINED == "RETAINED",]
 ##
 
 #Length samples by year
-Nlen <- bds %>% group_by(mode, state, RECFIN_YEAR) %>% 
+Nlen <- recfin_bds %>% group_by(mode, state, RECFIN_YEAR) %>% 
   summarize(N = length(lengthcm)) %>%
   pivot_wider(names_from = c(state,mode), names_sep = ".", values_from = N, 
               names_glue = "{state}_{mode}_{.value}", names_sort = TRUE, ) %>% 
@@ -79,24 +79,24 @@ Nlen <- bds %>% group_by(mode, state, RECFIN_YEAR) %>%
 #AGE - Load RecFIN age BDS data, check for any issues
 ################################
 
-bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2021.csv"),header=TRUE)
+recfin_bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2021.csv"),header=TRUE)
 
-table(bdsage$USE_THIS_AGE,useNA="always")
-table(bdsage$RECFIN_SEX_CODE,bdsage$SAMPLING_AGENCY_NAME,useNA="always") #going to be mostly unsexed
-table(bdsage$NUMBER_OF_READS,useNA="always")
-table(bdsage$RECFIN_AGEING_METHOD_DESC,useNA="always")
+table(recfin_bdsage$USE_THIS_AGE,useNA="always")
+table(recfin_bdsage$RECFIN_SEX_CODE,recfin_bdsage$SAMPLING_AGENCY_NAME,useNA="always") #going to be mostly unsexed
+table(recfin_bdsage$NUMBER_OF_READS,useNA="always")
+table(recfin_bdsage$RECFIN_AGEING_METHOD_DESC,useNA="always")
 
 #Add shorter state name
-bdsage$state = dplyr::case_when(bdsage$SAMPLING_AGENCY_NAME == "ODFW" ~ "O",
-                                bdsage$SAMPLING_AGENCY_NAME == "WDFW" ~ "W")
+recfin_bdsage$state = dplyr::case_when(recfin_bdsage$SAMPLING_AGENCY_NAME == "ODFW" ~ "O",
+                                recfin_bdsage$SAMPLING_AGENCY_NAME == "WDFW" ~ "W")
 
 #Add shorter mode name
-bdsage$mode = dplyr::case_when(bdsage$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC",
-                            bdsage$RECFIN_MODE_NAME == "PRIVATE/RENTAL BOATS" ~ "PR",
-                            bdsage$RECFIN_MODE_NAME == "NOT KNOWN" ~ "Unk")
+recfin_bdsage$mode = dplyr::case_when(recfin_bdsage$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC",
+                            recfin_bdsage$RECFIN_MODE_NAME == "PRIVATE/RENTAL BOATS" ~ "PR",
+                            recfin_bdsage$RECFIN_MODE_NAME == "NOT KNOWN" ~ "Unk")
 
 #Age samples by year
-Nage <- bdsage %>% filter(., !is.na(USE_THIS_AGE)) %>% group_by(mode, state, SAMPLE_YEAR) %>% 
+Nage <- recfin_bdsage %>% filter(., !is.na(USE_THIS_AGE)) %>% group_by(mode, state, SAMPLE_YEAR) %>% 
   summarize(N = length(USE_THIS_AGE)) %>%
   pivot_wider(names_from = c(state,mode), names_sep = ".", values_from = N, 
               names_glue = "{state}_{mode}_{.value}", names_sort = TRUE, ) %>% 
@@ -211,12 +211,107 @@ or_bds_recfin$Year <- or_bds_recfin$RECFIN_YEAR
 
 ##
 #Combine Oregon data into one dataset
-#There are samples in both datasets in 2001-2003. Per Ali, 
-#these are separate samples so they can be combined
+#There are samples in both datasets in 2001-2003. Per Ali, these are separate samples so they can be combined
 ##
 
-or_bds <- rbind(or_bds_mrfss[,c("Year","mode","lengthcm","sex")],or_bds_recfin[,c("Year","mode","lengthcm","sex")])
+or_bds <- rbind(or_bds_mrfss[,c("Year","mode","lengthcm","sex")], or_bds_recfin[,c("Year","mode","lengthcm","sex")])
 or_bds$state <- "O"
+
+
+
+################################
+#Load Washington provided Sport and Research BDS data, check for any issues
+#################################
+
+#Only need to pull from googledrive once
+# googledrive::drive_download(file = "WA_CanaryBiodata2023_Feb7version.xlsx",
+#                             path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"))
+wa_bds_sport <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"),
+                                   sheet = "Sport")
+wa_bds_research <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"),
+                                   sheet = "Research")
+
+wa_bds <- rbind(wa_bds_sport, wa_bds_research[,which(names(wa_bds_research)!="fish_sample_date")])
+
+table(wa_bds$data_type_code,useNA="always")
+table(wa_bds$data_source_agency_name,useNA="always")
+table(wa_bds$sample_year,useNA="always")
+table(wa_bds$species_name,useNA="always")
+table(wa_bds$fish_length_cm,useNA="always")
+table(wa_bds$best_age,useNA="always")
+table(wa_bds$age_structure_name,useNA="always")
+table(wa_bds$sex_name,useNA="always")
+table(wa_bds$mfbds_v_sample.punch_card_area_code,useNA="always")
+table(wa_bds$stock_region,useNA="always")
+table(wa_bds$gear_name,useNA="always")
+table(wa_bds$boat_mode_code,useNA="always")
+table(wa_bds$length_type_name,useNA="always") #assume all are fork length
+table(wa_bds$age_method_name_1,useNA="always")
+table(wa_bds$age_method_name_2,useNA="always")
+table(wa_bds$sample_method_code,useNA="always") #guessing R is random and P is purposive. Theresa and Kristen say (on Feb 7) assume NA is random
+table(wa_bds$gear_name,wa_bds$sample_method_code,useNA="always") #guessing R is random and P is purposive
+table(wa_bds$sample_year, wa_bds$gear_name, wa_bds$data_type_code,useNA="always")
+
+#Compared to bdsWA (my recfin pull) this dataset is missing some 1990s data.
+#Other than sport missing some 1990s data (which Theresa and Kristen say they 
+#can reproduce only if they pull Puget Sound fish), and recfin missing 1980s data and 2006, 
+#the sport sample sizes only differ by 2 fewer samples in 2017 and 3 fewer in 2018
+table(wa_bds[wa_bds$data_type_code=="S",]$sample_year,useNA="always") #sport only
+table(recfin_bdsWA$RECFIN_YEAR,useNA="always")
+
+#Rename length field
+wa_bds$lengthcm <- wa_bds$fish_length_cm
+
+#Reorganize sex field, with unknown or NA being "U" 
+wa_bds$sex <- dplyr::case_when(wa_bds$sex_name == "Female" ~ "F",
+                               wa_bds$sex_name == "Male" ~ "M",
+                               wa_bds$sex_name == "Unknown" ~ "U",
+                               is.na(wa_bds$sex_name) ~ "U")
+
+#Reorganize mode name
+wa_bds$mode <- dplyr::case_when(wa_bds$boat_mode_code == "C" ~ "PC",
+                                wa_bds$boat_mode_code == "B" ~ "PR",
+                                wa_bds$boat_mode_code == "?" ~ "Unk",
+                                is.na(wa_bds$boat_mode_code) ~ "Unk")
+
+#Remove samples without a length (these do not have an age)
+wa_bds <- wa_bds[!is.na(wa_bds$fish_length_cm),]
+
+wa_bds$state <- "W"
+
+
+#Lengths are really varied based on gear. 
+samp_val = c("Research", "Sport")
+names(samp_val) = c("R","S")
+ggplot(wa_bds, aes(fish_length_cm, fill = gear_name, color = sample_method_code)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("data_type_code", ncol=1, labeller = labeller(data_type_code = samp_val)) +
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  scale_color_manual(labels = c("Purposive", "Random"), values = c("#F8766D","#00BFC4")) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_explore_figs","WA_SportResearch_lenDensity.png"),
+       width = 6, height = 8)
+
+#what about ages
+samp_val = c("Research", "Sport")
+names(samp_val) = c("R","S")
+ggplot(wa_bds, aes(best_age, fill = gear_name, color = sample_method_code)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap(c("data_type_code","sex"), ncol=2, labeller = labeller(data_type_code = samp_val)) +
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  scale_color_manual(labels = c("Purposive", "Random"), values = c("#F8766D","#00BFC4")) +
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_explore_figs","WA_SportResearch_lenDensity.png"),
+       width = 6, height = 8)
+
+
+#Use only sport data as research are specifically targeting small and big fish to 
+#try to get decent growth estimates
+wa_bds <- wa_bds[wa_bds$data_type_code == "S",]
+
+
 
 ############################################################################################
 #Plots
