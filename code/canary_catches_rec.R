@@ -23,22 +23,34 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 # Load RecFIN and state provided data
 #---------------------------------------------------------------------------------------------------------------#
 #################################################################################################################
-# RecFIN - 2021-2021 Landings mtons
+# RecFIN - 2001-2021 Removals mtons
 # 2022 is incomplete yet
 recfin <- read.csv(file.path(dir, "RecFIN_CTE001_canary_2001_2021.csv"),header=TRUE)
 
-#WA sport catch - only need to pull from googledrive once
+#WA sport catch - 1967-2022 Landings and Releases N
+#Only need to pull from googledrive once
 # googledrive::drive_download(file = "Canary_WA_RecCatch_2023Updates.xlsx",
 #                             path = file.path(git_dir,"data-raw","Canary_WA_RecCatch_2023Updates.xlsx"))
 wa_rec <- readxl::read_excel(path = file.path(git_dir,"data-raw","Canary_WA_RecCatch_2023Updates.xlsx"),
                              col_names = c("YEAR","RETAINED_N","RELEASED_TOTAL_N","REL1_10ftm",
                                            "REL10_20ftm","REL20_30ftm","REL30plusftm","RELUNKftm"),skip=3)
 
-#OR rec catch - only need to pull from googledrive once
+#OR rec catch - 1979-2022 Removals mtons
+#Only need to pull from googledrive once
 # googledrive::drive_download(file = "Oregon data/Oregon Recreational landings_451_2022.xlsx",
 #                             path = file.path(git_dir,"data-raw","Oregon Recreational landings_451_2022.xlsx"))
 or_rec <- readxl::read_excel(path = file.path(git_dir,"data-raw","Oregon Recreational landings_451_2022.xlsx"),
                              sheet = "Oregon Recreational landings_45")
+
+#CA mrfss catch - actually from all states -  1980-2003 Landings mtons
+#Only need to pull from googledrive once
+# googledrive::drive_download(file = "CONFIDENTIAL_MRFSS_CA/conf_Canary MRFSS-CATCH-ESTIMATES.xlsx",
+#                             path = file.path(git_dir,"data-raw","CA_Canary_MRFSS_catch.xlsx"))
+mrfss <- readxl::read_excel(path = file.path(git_dir,"data-raw","CA_Canary_MRFSS_catch.xlsx"),
+                             sheet = "MRFSS-CATCH-ESTIMATES")
+#reduce to CA data only and for canary rockfish
+ca_mrfss <- mrfss[which(mrfss$RECFIN_SUB_REGION_NAME %in% c("Northern California", "Southern California")),]
+ca_mrfss <- ca_mrfss[which(ca_mrfss$COMMON == "CANARY ROCKFISH"),]
 
 
 #################################################################################################################
@@ -111,6 +123,38 @@ or_rec_longer <- pivot_longer(or_rec[,-which(names(or_rec)=="Total_MT")], cols =
 or_rec_longer$state = "O"
 
 
+##MRFSS data
+
+#Check categories
+table(ca_mrfss$YEAR_,useNA="always")
+table(ca_mrfss$AGENCY_CODE,useNA="always") #reduced to only california above
+table(ca_mrfss$RECFIN_SUB_REGION_NAME)
+table(ca_mrfss$SOURCE_MODE_NAME,useNA="always") #keep all modes in for catch
+ca_mrfss %>% group_by(SOURCE_MODE_NAME) %>% summarize(sum = sum(WGT_AB1_mt))
+table(ca_mrfss$SOURCE_AREA_NAME,useNA="always")
+ca_mrfss %>% group_by(SOURCE_AREA_NAME) %>% summarize(sum = sum(WGT_AB1_mt))
+table(ca_mrfss$RECFIN_WATER_AREA_NAME,useNA="always")
+table(ca_mrfss$GROUP_NAME,useNA="always")
+
+#Add shorter mode name
+ca_mrfss$mode <- dplyr::case_when(ca_mrfss$SOURCE_MODE_NAME == "PARTY/CHARTER BOAT" ~ "PC",
+                                  ca_mrfss$SOURCE_MODE_NAME %in% c("PRIVATE/RENTAL BOAT","PRIVATE BOAT") ~ "PR",
+                                  ca_mrfss$SOURCE_MODE_NAME %in% c("BEACH/BANK", "MAN-MADE", "SHORE") ~ "Other")
+ca_mrfss$state = "C"
+
+#Calculate total
+tmp <- ca_mrfss %>% group_by(YEAR_, mode) %>% summarize(sum = sum(WGT_AB1_mt)) %>% data.frame()
+ca_mrfss_tot <- pivot_wider(tmp, names_from = c(mode), values_from = sum)
+
+#Fill in missing 1990-1992 years
+impute_trend = (sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1993),-1], na.rm=TRUE) - sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1989),-1], na.rm=TRUE))/(1993-1989)
+impute_catch = cbind("YEAR_" = c(1990,1991,1992),
+                     "Other" = sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1989),-1]) + 1:3*impute_rate, 
+                     "PC" = NA, 
+                     "PR" = NA)
+ca_mrfss_tot = rbind(ca_mrfss_tot,impute_catch) %>% arrange(.,YEAR_)
+
+
 #################################################################################################################
 #Plotting
 #################################################################################################################
@@ -173,7 +217,7 @@ ggplot(wa_rec_longer, aes(y=value, x=YEAR)) +
   geom_bar(position="stack", stat="identity") +
   facet_wrap("state",labeller = labeller(state = lab_val)) +
   xlab("Year") +
-  ylab("Total Removals and Releses (N)") + 
+  ylab("Total Removals and Releases (N)") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_removalsN.png"),
        width = 6, height = 3)
@@ -193,7 +237,7 @@ ggplot(filter(wa_rec_longer, disposition %in% c("RETAINED_N","DEAD_RELEASED_TOTA
   xlab("Year") +
   ylab("Total Removals (N)") + 
   theme_bw() + theme(legend.position = c(0.2,0.8), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-ggsave(file.path(git_dir,"data_explore_figs","WA_rec_retained_deadreleaseN.png"),
+ggsave(file.path(git_dir,"data_figs","WA_rec_retained_deadreleaseN.png"),
        width = 6, height = 3)
 
 ggplot(filter(wa_rec_longer, !disposition %in% c("RETAINED_N","RELEASED_TOTAL_N","DEAD_RELEASED_TOTAL_N")), aes(fill = disposition, y=value, x=YEAR)) + 
@@ -210,7 +254,7 @@ ggsave(file.path(git_dir,"data_workshop_figs","WA_rec_releaseDepth.png"),
 ##
 ggplot(or_rec, aes(y=Total_MT, x=Year)) + 
   geom_bar(position="stack", stat="identity") +
-  facet_wrap("state",labeller = labeller(state = lab_val)) +
+  #facet_wrap("state",labeller = labeller(state = lab_val)) +
   xlab("Year") +
   ylab("Total removals (MT)") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
@@ -228,3 +272,39 @@ ggsave(file.path(git_dir,"data_workshop_figs","OR_rec_disposition.png"),
        width = 6, height = 3)
 
 
+##
+#Totals for California from MRFSS data
+##
+ggplot(ca_mrfss, aes(y=WGT_AB1_mt, x=YEAR_)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("state",labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_figs","CA_rec_MRFSS_landings.png"),
+       width = 6, height = 3)
+
+ggplot(ca_mrfss, aes(y=WGT_AB1_mt, x=YEAR_, fill = mode)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("state",labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_figs","CA_rec_MRFSS_landings_mode.png"),
+       width = 6, height = 3)
+
+ggplot(pivot_longer(ca_mrfss_tot, cols = c("Other","PC", "PR"), names_to = "mode"), aes(y=value, x=YEAR_, fill = mode)) + 
+  geom_bar(position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_figs","CA_rec_MRFSS_landings_mode_fillGaps.png"),
+       width = 6, height = 3)
+
+ggplot(pivot_longer(ca_mrfss_tot, cols = c("Other","PC", "PR"), names_to = "mode"), aes(y=value, x=YEAR_)) + 
+  geom_bar(position="stack", stat="identity") +
+  xlab("Year") +
+  ylab("Landings (MT)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_figs","CA_rec_MRFSS_landings_fillGaps.png"),
+       width = 6, height = 3)
