@@ -36,15 +36,50 @@ data.frame(gemm[,c("Year","Sector","dis_mort_rate")])
 
 ##<<<<<<<<<<<<< TO CONFIRM - KEEP OR REMOVE ANY OTHER SECTIONS (e.g. At-sea-hake, tribal)?? <<<<<<<<<<<<<<<
 
-aggregate(Landings~Sector, data = gemm, FUN = function(x) round(sum(x),2))
-aggregate(Discards~Sector, data = gemm, FUN = function(x) round(sum(x),2))
-aggregate(`Discard Mortality`~Sector, data = gemm, FUN = function(x) round(sum(x),2))
+#Summaries by sectors
+sector_val <- cbind(aggregate(Landings~Sector, data = gemm, FUN = function(x) round(sum(x),2)),
+                    "Discards" = aggregate(Discards~Sector, data = gemm, FUN = function(x) round(sum(x),2))[,2],
+                    "DiscardMortality" = aggregate(`Discard Mortality`~Sector, data = gemm, FUN = function(x) round(sum(x),2))[,2])
+sector_val[order(sector_val$DiscardMortality),]
 
+#Tribal shoreside and incidental Im not actually sure on but these dont matter
+#because there are no discard mortality estimates for those sectors
+ntwl <- c("Combined LE & OA CA Halibut",
+          "CS - Hook & Line",
+          "CS - Pot",
+          "CS EM - Pot",
+          "LE Fixed Gear DTL - Hook & Line", 
+          "LE Fixed Gear DTL - Pot",        
+          "LE Sablefish - Hook & Line",      
+          "LE Sablefish - Pot",
+          "OA Fixed Gear - Hook & Line",    
+          "OA Fixed Gear - Pot", 
+          "Directed P Halibut",
+          "Nearshore",
+          "Incidental")
+twl <- c("CS - Bottom and Midwater Trawl",
+         "CS - Bottom Trawl",
+         "CS - Midwater Trawl",
+         "CS EM - Bottom Trawl",
+         "Limited Entry Trawl",             
+         "Midwater Hake",                  
+         "Midwater Hake EM",                
+         "Midwater Rockfish",              
+         "Midwater Rockfish EM",
+         "Pink Shrimp",
+         "Ridgeback Prawn Trawl",
+         "LE CA Halibut",
+         "OA CA Halibut",
+         "Shoreside Hake",                
+         "Tribal Shoreside")
+
+#Summaries by sectors grouped into recreational and commercial)
 gemm$grouped_sector = NA
 gemm$grouped_sector[gemm$Sector == "Washington Recreational"] = "wa_rec"
 gemm$grouped_sector[gemm$Sector == "California Recreational"] = "ca_rec"
 gemm$grouped_sector[gemm$Sector == "Oregon Recreational"] = "or_rec"
-gemm$grouped_sector[is.na(gemm$grouped_sector)] = "commercial"
+gemm$grouped_sector[gemm$Sector %in% ntwl] = "commercial_ntwl"
+gemm$grouped_sector[gemm$Sector %in% twl] = "commercial_twl"
 
 landings  = aggregate(Landings ~ Year + grouped_sector, data = gemm, drop = FALSE, FUN = sum)
 discards  = aggregate(Discards ~ Year + grouped_sector, data = gemm, drop = FALSE, FUN = sum)
@@ -52,7 +87,7 @@ disc_mort = aggregate(`Discard Mortality` ~ Year + grouped_sector, data = gemm, 
 all_dead  = aggregate(`Mortality (Landings and Discard Mortality)` ~ Year + grouped_sector, data = gemm, drop = FALSE, FUN = sum)
 
 all = data.frame(Year = landings$Year,
-                 Area = landings$grouped_sector,
+                 grp_sector = landings$grouped_sector,
                  Landings = landings$Landings,
                  Discard = discards$Discards,
                  Dead_Discard = disc_mort$`Discard Mortality`,
@@ -91,7 +126,9 @@ tot_ncs$ratio = tot_ncs$Observed_DISCARD.MTS/(tot_ncs$Observed_RETAINED.MTS+tot_
 tot_cs$ratio = tot_cs$Observed_DISCARD.MTS/(tot_cs$Observed_RETAINED.MTS+tot_cs$Observed_DISCARD.MTS)
 
 ##
-#Plots of discards ratios
+#Plots of discards ratios - Unsure how helpful these are because WCGOP is used to pull
+#total discards PLUS retained, not the ratios shown here. If want to look at values
+#replace 'y = ratio' with Observed_RETAINED.MTS + Observed_DISCARD.MTS
 ##
 ggplot(tot_ncs, aes(x=ryear, y=ratio, col = gear2)) +
   geom_line(linetype = "solid") +
@@ -160,15 +197,33 @@ ratio_fix = cbind("Year" = tot_fix$Year, tot_fix[,-1] / apply(tot_fix[,-1], 1, s
 ratio_twl = cbind("Year" = tot_twl$Year, tot_twl[,-1] / apply(tot_twl[,-1], 1, sum))
 ratio_all = cbind("Year" = tot_fix$Year, (tot_fix[,-1] + tot_twl[,-1]) / apply((tot_fix[,-1] + tot_twl[,-1]), 1, sum))
 
+##
+#Plots of ratios
+##
+#Fixed
+matplot(x=ratio_fix$Year, y=ratio_fix[,-1], type = "l", col = c(1,2,5), lty = 1, lwd = 3, 
+        ylab = "Proportion of WCGOP discards + retained", xlab = "Year", main = "Fixed Gear Proportion")
+legend("topright", legend = c("CA", "OR", "WA"), col = c(1,2,5), lty = 1, lwd = 3, horiz=T, bty = "n")
+#Trawl
+matplot(x=ratio_twl$Year, y=ratio_twl[,-1], type = "l", col = c(1,2,5), lty = 1, lwd = 3, 
+        ylab = "Proportion of WCGOP discards + retained", xlab = "Year", main = "Trawl Gear Proportion")
+legend("topright", legend = c("CA", "OR", "WA"), col = c(1,2,5), lty = 1, lwd = 3, horiz=T, bty = "n")
+#All
+matplot(x=ratio_all$Year, y=ratio_all[,-1], type = "l", col = c(1,2,5), lty = 1, lwd = 3, 
+        ylab = "Proportion of WCGOP discards + retained", xlab = "Year", main = "All Proportion")
+legend("topright", legend = c("CA", "OR", "WA"), col = c(1,2,5), lty = 1, lwd = 3, horiz=T, bty = "n")
+
 
 #Dead discard values (mt) by state
-
 #<<<<<<<<<<<< WAITING ON GETTING 2016 DATA FROM CHANTEL <<<<<<<<<<<<<<<<<<<<<<<<#
 #Once obtained can run the following
 dead = data.frame(Year = ratio_all$Year,
-                  ca = ratio_all$ca * all[which(all$Area == "commercial"), "Dead_Discard"],
-                  or = ratio_all$or * all[which(all$Area == "commercial"), "Dead_Discard"],
-                  wa = ratio_all$wa * all[which(all$Area == "commercial"), "Dead_Discard"] ) 
+                  ca_twl = ratio_fix$ca * all[which(all$grp_sector == "commercial_twl"), "Dead_Discard"],
+                  or_twl = ratio_fix$or * all[which(all$grp_sector == "commercial_twl"), "Dead_Discard"],
+                  wa_twl = ratio_fix$wa * all[which(all$grp_sector == "commercial_twl"), "Dead_Discard"],
+                  ca_ntwl = ratio_twl$ca * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"],
+                  or_ntwl = ratio_twl$or * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"],
+                  wa_ntwl = ratio_twl$wa * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"], 
 
 #write.csv(dead, file = file.path(git_dir, "data", "quillback_commercial_discard.csv"), row.names = FALSE)
 
