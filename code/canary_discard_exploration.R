@@ -104,26 +104,45 @@ all[is.na(all)] = 0
 # Load the WCGOP discard totals and make plots
 #-----------------------------------------------------------------------------------
 
-ncs = rbind(read.csv(file.path(dir,"canary_OB_DisRatios_boot_ncs_2003-2010_Gear_State_2023-01-27.csv")),
-            read.csv(file.path(dir,"canary_OB_DisRatios_boot_ncs_2011-2015_Gear_State_2023-01-27.csv")),
-            read.csv(file.path(dir,"canary_OB_DisRatios_boot_ncs_2016-2021_Gear_State_2023-01-27.csv")))
-cs = rbind(read.csv(file.path(dir,"CONFIDENTIAL_canary_OB_DisRatios_boot_cs_2011-2015_Gear_State_2023-01-27.csv")),
-           read.csv(file.path(dir,"CONFIDENTIAL_canary_OB_DisRatios_boot_cs_2016-2021_Gear_State_2023-01-27.csv")))
+# #Old data (missing 2016)
+# ncs = rbind(read.csv(file.path(dir,"canary_OB_DisRatios_boot_ncs_2003-2010_Gear_State_2023-01-27.csv")),
+#             read.csv(file.path(dir,"canary_OB_DisRatios_boot_ncs_2011-2015_Gear_State_2023-01-27.csv")),
+#             read.csv(file.path(dir,"canary_OB_DisRatios_boot_ncs_2016-2021_Gear_State_2023-01-27.csv")))
+# cs = rbind(read.csv(file.path(dir,"CONFIDENTIAL_canary_OB_DisRatios_boot_cs_2011-2015_Gear_State_2023-01-27.csv")),
+#            read.csv(file.path(dir,"CONFIDENTIAL_canary_OB_DisRatios_boot_cs_2016-2021_Gear_State_2023-01-27.csv")))
+
+#Updated data - change field names to match original files fields
+ncs <- read.csv(file.path(dir,"canary_ncs_wcgop_discard_all_years_Gear_State_2023-02-15.csv"))
+cs <- read.csv(file.path(dir,"canary_cs_wcgop_discard_all_years_Gear_State_2023-02-15.csv"))
+names(ncs)[c(1:3,10,11)] <- c("ryear","State","gear2","Observed_DISCARD.MTS","Observed_RETAINED.MTS")
+names(cs)[c(1:3,11,12)] <- c("ryear","State","gear2","Observed_DISCARD.MTS","Observed_RETAINED.MTS")
+#remove redacted values and set as numerica
+cs <- cs[-which(!cs$nonconfidential),]
+cs$Observed_RETAINED.MTS <- as.numeric(cs$Observed_RETAINED.MTS)
+cs$Observed_DISCARD.MTS <- as.numeric(cs$Observed_DISCARD.MTS)
+
 
 #Expand out to every combination of year, state, and gear
-ret_ncs = aggregate(Observed_RETAINED.MTS ~ ryear + State + gear2, data = ncs, drop = FALSE,FUN = sum)
-dis_ncs = aggregate(Observed_DISCARD.MTS  ~ ryear + State + gear2, data = ncs, drop = FALSE,FUN = sum)
+ret_ncs = aggregate(Observed_RETAINED.MTS ~ ryear + State + gear2, data = ncs, drop = FALSE, FUN = sum)
+dis_ncs = aggregate(Observed_DISCARD.MTS  ~ ryear + State + gear2, data = ncs, drop = FALSE, FUN = sum)
 ret_cs  = aggregate(Observed_RETAINED.MTS ~ ryear + State + gear2, data = cs, drop = FALSE, FUN = sum)
-dis_cs  = aggregate(Observed_DISCARD.MTS  ~ ryear + State + gear2, data = cs, drop = FALSE,FUN = sum)
+dis_cs  = aggregate(Observed_DISCARD.MTS  ~ ryear + State + gear2, data = cs, drop = FALSE, FUN = sum)
 
 #Combine across sectors
 tot_ncs = cbind(ret_ncs,"Observed_DISCARD.MTS"=dis_ncs$Observed_DISCARD.MTS)
 tot_cs = cbind(ret_cs,"Observed_DISCARD.MTS"=dis_cs$Observed_DISCARD.MTS)
 tot_ncs[is.na(tot_ncs)] = tot_cs[is.na(tot_cs)] = 0
 
+#Combine across ncs and cs
+tot_tot = tot_ncs
+tot_tot[which(tot_tot$ryear %in% tot_cs$ryear),"Observed_RETAINED.MTS"] = tot_tot[which(tot_tot$ryear %in% tot_cs$ryear),"Observed_RETAINED.MTS"] + tot_cs[,"Observed_RETAINED.MTS"]
+tot_tot[which(tot_tot$ryear %in% tot_cs$ryear),"Observed_DISCARD.MTS"] = tot_tot[which(tot_tot$ryear %in% tot_cs$ryear),"Observed_DISCARD.MTS"] + tot_cs[,"Observed_DISCARD.MTS"]
+
 #Create discard ratios
 tot_ncs$ratio = tot_ncs$Observed_DISCARD.MTS/(tot_ncs$Observed_RETAINED.MTS+tot_ncs$Observed_DISCARD.MTS)
 tot_cs$ratio = tot_cs$Observed_DISCARD.MTS/(tot_cs$Observed_RETAINED.MTS+tot_cs$Observed_DISCARD.MTS)
+tot_tot$ratio = tot_tot$Observed_DISCARD.MTS/(tot_tot$Observed_RETAINED.MTS+tot_tot$Observed_DISCARD.MTS)
+
 
 ##
 #Plots of discards ratios - Unsure how helpful these are because WCGOP is used to pull
@@ -137,7 +156,7 @@ ggplot(tot_ncs, aes(x=ryear, y=ratio, col = gear2)) +
   xlab("Year") +
   ylab("Ratio of discards to total catches (dis + ret)") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-ggsave(file.path(git_dir,"data_explore_figs","CONFIDENTIAL_WCGOP_discard_rates_ncs.png"),
+ggsave(file.path(git_dir,"data_explore_figs","WCGOP_discard_rates_ncs_newData.png"),
        width = 6, height = 8)
 
 ggplot(tot_cs, aes(x=ryear, y=ratio, col = gear2)) +
@@ -147,8 +166,25 @@ ggplot(tot_cs, aes(x=ryear, y=ratio, col = gear2)) +
   xlab("Year") +
   ylab("Ratio of discards to total catches (dis + ret)") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-ggsave(file.path(git_dir,"data_explore_figs","CONFIDENTIAL_WCGOP_discard_rates_cs.png"),
+ggsave(file.path(git_dir,"data_explore_figs","WCGOP_discard_rates_cs_newData.png"),
        width = 6, height = 8)
+
+#For combining across cs and ncs, if used discard rates would probably want to set the WA fixed gear value in 2012 to 1.0
+ggplot(tot_tot, aes(x=ryear, y=ratio, col = gear2)) +
+  geom_line(linetype = "solid") +
+  facet_wrap("State", ncol = 1) +
+  geom_point() +
+  xlab("Year") +
+  ylab("Ratio of discards to total catches (dis + ret)") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_explore_figs","WCGOP_discard_rates_cs plus ncs_newData.png"),
+       width = 6, height = 8)
+
+
+wcgop_ratios = pivot_wider(tot_tot[,-c(4,5)], 
+                     names_from = c(State,gear2), values_from = ratio)
+#write.csv(wcgop_ratios, file = file.path(git_dir, "data", "canary_wcgop_discardRatios.csv"), row.names = FALSE)
+
 
 
 #-----------------------------------------------------------------------------------
@@ -215,17 +251,15 @@ legend("topright", legend = c("CA", "OR", "WA"), col = c(1,2,5), lty = 1, lwd = 
 
 
 #Dead discard values (mt) by state
-#<<<<<<<<<<<< WAITING ON GETTING 2016 DATA FROM CHANTEL <<<<<<<<<<<<<<<<<<<<<<<<#
-#Once obtained can run the following
-dead = data.frame(Year = ratio_all$Year,
-                  ca_twl = ratio_fix$ca * all[which(all$grp_sector == "commercial_twl"), "Dead_Discard"],
-                  or_twl = ratio_fix$or * all[which(all$grp_sector == "commercial_twl"), "Dead_Discard"],
-                  wa_twl = ratio_fix$wa * all[which(all$grp_sector == "commercial_twl"), "Dead_Discard"],
-                  ca_ntwl = ratio_twl$ca * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"],
-                  or_ntwl = ratio_twl$or * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"],
-                  wa_ntwl = ratio_twl$wa * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"], 
+dead = data.frame("Year" = ratio_all$Year,
+                  "ca_twl" = ratio_twl$ca * all[which(all$grp_sector == "commercial_twl"), "Dead_Discard"],
+                  "or_twl" = ratio_twl$or * all[which(all$grp_sector == "commercial_twl"), "Dead_Discard"],
+                  "wa_twl" = ratio_twl$wa * all[which(all$grp_sector == "commercial_twl"), "Dead_Discard"],
+                  "ca_ntwl" = ratio_fix$ca * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"],
+                  "or_ntwl" = ratio_fix$or * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"],
+                  "wa_ntwl" = ratio_fix$wa * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"]) 
 
-#write.csv(dead, file = file.path(git_dir, "data", "quillback_commercial_discard.csv"), row.names = FALSE)
+#write.csv(dead, file = file.path(git_dir, "data", "canary_commercial_discard_mt.csv"), row.names = FALSE)
 
 
 
