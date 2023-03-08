@@ -1,12 +1,67 @@
 ## Base Model Results
 
+### Evaluation of model parameters
+
+We estimate catchability analytically for every state-specific index of abundance (i.e., fleets 16-27, see Table 20).  Estimates of catchability range from 0.234 (WA late triennial) to 1.983 (CA late triennial), except for the pre-recruit index which is not weighted by area.  We are not surprised that catchability estimates are highly variable, given that indices of abundance are highly variable due to the large variability in the spatial distribution and shoaling behavior for canary rockfish (Thorson et al., 2011).  We are also unsurprised that catchability is generally less than one for indices, given that a substantial portion of canary biomass is likely to unavailable to bottom trawl sampling gear, as is used for all indices of abundance (except the pre-recruit index).
 
 ### Parameter Estimates
+
+Table 22 lists all parameters estimated in the model.  This table enumerates 13 biological parameters, 43 parameters governing selectivity and catchability, 82 recruitment deviations, and 164 distribution deviations.  The 246 recruitment and distribution deviations are interpreted as random effects, resulting in 56 fixed effects.  The 13 biological parameters primarily represent individual growth.
+
+#### Life history parameters
+
+The von Bertalanffy growth function was used to model the relationship between length and age in canary rockfish. Sex-specific length and age data are available, so we elected to estimate separate growth curves for males and females (Table 21).  Sex-specific data were used to fit a 5-parameter growth model which includes parameters L1(s), L2(s), k(s), CV1(s) and CV2(s), where L1(s) is the length for sex s at age a1=1 yr., L2(s) is the length for sex s at age a2=30 yr., k(s) is the Brody growth coefficient for sex s, CV1(s) is the coefficient of variation in individual length at age for sex s at age a1, and CV2(s) is the coefficient of variation in individual length at age for sex s at ages at or greater than age a2.  The CV for ages between a1 and a2 is linearly interpolated.  We assume that males and females have identical average length at age a1 (i.e., L1(s)=L1 for both sexes s).  Growth was estimated to differ substantially between males and females, as has been noted in previous assessments (Stewart 2007), as shown in Figure 91.  
+
+####	 Stock-recruit parameters
+In this assessment the log of R0 was estimated, while steepness was fixed at its prior mean of 0.773.  This prior was estimated using a likelihood profile approximation to a maximum marginal likelihood mixed-effect model for steepness from ten Category-1 rockfish species off the U.S. West Coast (Pacific ocean perch, Boccaccio, canary, chilipepper, black, darkblotched, gopher, splitnose, widow aurora, and yellowtail rockfish).  Both northern and southern assessments of black rockfish were used, although the log-likelihood for each was given a 0.5 weighting, to ensure that the together these two assessments had an equal weighting to the other species. This likelihood profile model is intended to synthesize observation-level data from assessed species, while avoiding the use of model output and thus improving upon previous meta-analyses (Dorn, 2002; Forrest et al., 2010). This methodology has been simulation tested, and has been recommended by the PFMC SSC for use in stock assessments. 
+
+We estimate lognormal deviations from the standard Beverton-Holt stock-recruit relationship for the period between 1870 and 2011. Deviations are penalized in the objective function, and the standard deviation of the penalty (σR) is specified as: 
+
+*INSERT EQUATION HERE*
+
+Where r̂y is the estimated recruitment deviation in year y, v ̂(r ̂_y) is the estimated standard error-squared of r̂y, the first summand on the right-hand side represents the sample variance of the recruitment deviations; the second summand on the right-hand side represents the average standard error-squared of recruitment deviations, as recommended in the “Estimating σR“ subsection of Methot and Taylor (2011) and correcting for their typo. 
+
+‘Main’ recruitment deviations were estimated for modeled years that had information about recruitment (as determined from the bias-correction ramp), i.e., 1960-2014. We additionally estimated ‘early’ deviations between 1933 and 1959 so that age-structure in the year of first compositional data (1968) would deviate from the stable age-structure for all ages with data (i.e., ages 1-35) to a degree that is consistent with estimated variability in recruitment. This resulted in an estimate of B0 that is also consistent with estimated variability in recruitment given the assumption that initial catch was negligible. 
+
+Recruitment deviations are also bias-corrected following Methot and Taylor (2011), by providing a proportion of the total bias correction for year y that varies depending upon how informative the data are about ry. Specifically, we used r4ss (Taylor et al., 2012) to estimate a five-parameter bias-correction ramp (Figure 92).
+
+####	Selectivity
+Selectivity (Figure 93 through Figure 101) is estimated as a function of length separately for every fishery and survey, and is mirrored for a given fishery/survey among all three states.  Selectivity for every fishery/survey is estimated using a double-normal selectivity pattern, which allows for dome-shaped selectivity.  We specifically estimate four parameters for each selectivity:
+	the minimum length at which selectivity is one (the “peak”), 
+	the width of the ascending curve for selectivity at lengths less than the peak, 
+	the width of the dome, i.e., the range of lengths for which selectivity is one, and 
+	the width of the descending curve for selectivity at lengths greater than the peak plus the width of the dome.
+We additionally estimate a change in selectivity for the trawl and non-trawl fisheries between 1999 and 2000 (reflecting changes in fisher behavior following the declaration of overfished status for canary rockfish in 1999), and another change in selectivity for the trawl fishery between 2010 and 2011 (reflecting a change in fisher behavior following the implementation of individual transferable quotas starting in 2011).  For each break-point change in selectivity, we re-estimate all four parameters.  Hence, there is no information regarding selectivity that is shared among time blocks.
+
+For the trawl fleets, selectivity prior to 2000 is greatest at 48 cm. and then declines to nearly 80% of its peak.  Selectivity changes in 2000 to be strongly dome-shaped, while targeting small individuals more strongly and large individual less.  The selectivity change following ITQs similarly causes a decrease in the length of maximum selectivity, and a further shift towards selecting small individuals.
+
+For the non-trawl fleets, selectivity is (essentially) asymptotic prior to 2000, reaching an asymptote at 43 cm.  Following overfished designation in 1999, the fishery becomes slightly less asymptotic (i.e., a small dome, with selectivity declining to 90% for larger individuals), and also shifts to target slightly smaller individuals.
+
+For the recreational fishery, selectivity is strongly dome-shaped with maximum selection at 32cm, and declining strongly for larger individuals.  For the at-sea hake fishery, selectivity is also somewhat dome-shaped, with a maximum for larger (45cm) individuals, and declining somewhat for larger individuals.
+
+Among surveys, the WCGBTS survey is estimated to have nearly uniform selectivity across a broad range of lengths.  This likely reflects the synoptic spatial coverage of this survey design, combined with the fact that canary individuals are likely to be partially inaccessible to the survey (i.e., within rocky habitats) as both juveniles and adults.  By contrast, selectivity for early and late triennial surveys are largely similar, with the early triennial decreasing slightly more steeply post-peak, but both peaking for large individuals (early: 55 cm; late: 51 cm), and having a slow increase across a wide range of lengths.  
+
+####	Summary time series of population status and exploitation rate
+Summary time series are listed in Table 23, and visualized in Figure 102 through Figure 106.  These summaries indicate that fishing mortality peaked in 1991-1992 when the stock was being overfished (FSPR > 1.7), and that overfishing ceased (FSPR < 1.0) in 2000, after the stock was declared overfished.  Spawning output across all three strata reached its lowest level in 1994 (relative spawning output = 13.7%), and has since steadily recovered (relative spawning output = 0.552 in 2014).  Recovery has been aided by strong recruitment in 2001-2003, 2007, and 2010, and the pattern of reduced recruitment 2003-2006 is consistent with many other groundfishes in the California Current (J. Thorson et al., 2013).  Recovery (defined as the year of lowest spawning output, Figure 101) began earlier in Washington than either Oregon or California, and relative spawning output in Washington (Figure 103) is estimated to be higher than in Oregon or California in 2014.  California is estimated to have experienced the lowest level of relative spawning output during the historical period of any state (occurring in 1999), and is estimated as having the lowest relative spawning output in 2014.
+
+####	Estimated stock-recruit relationship
+The time series of stock-recruitment residuals (Figure 107) suggests how little information is available to estimate recruitment deviations for canary rockfish, where few years have a 95% confidence interval that does not overlap zero, and where only one year (1980) has a deviation whose absolute value is greater than one.  The time-series indicates that main recruitment deviations start around the period when there is information to estimate annual variation in recruitment.    
+
+A plot comparing spawning output vs. recruitment (Figure 108) shows that the highest recruitment occurred primarily before intensive fishing (1962, 1968, 1979). It also shows the high degree of compensation that is expected for canary rockfish given the prior on steepness that was estimated for rockfishes in 2015.
+
+Finally, a plot of the fraction of total recruitment among spatial strata (Figure 109) shows considerable spatial variation in recruitment.  This variation is consistent with spatial variation in the center of gravity for pre-recruits seen in the coast-wide pre-recruit survey (J. Field, pers. comm.).  Oregon generally has the largest portion of recruitment (with an expectation approaching 50%), while Washington is expected to have slightly more than 30% of recruitment, and California is expected to receive approximately 20% of recruitment.  
+
+####	Historical Harvest
+In 2000, canary rockfish were declared overfished and the annual harvest limits since have been determined by a rebuilding plan.  An update assessment with an updated rebuilding plan was last performed in 2011.  The SPR harvest rate for rebuilding was set equal to 88.7% resulting in ACLs of 102, 107, 116, and 119 metric tons for 2011-2014 respectively.  The total landings including discard have been well below the annual ACLs since 2009.  The total attainment of the ACL between 2009 and 2014 has ranged from a 31 (2011) to 60% (2009).  
+
+The total catch assumed in the model included estimated discards by the trawl and non-trawl fisheries.  The annual discard amount was estimated based upon assumed discard rates (Table 8).   Therefore, all estimates of fishing intensity (FSPR) and yield are based on the treatment of removals as landings and dead discards.  
+
 
 ### Fits to the Data
 
 ### Population Trajectory
 
-### Reference Points
+
+
 
 

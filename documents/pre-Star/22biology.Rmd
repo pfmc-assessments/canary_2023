@@ -1,9 +1,36 @@
 ## Biological Data
 
+The stock assessment model requires specifying several life history parameters from analyses external to the model.  These parameters include the maturity schedule, fecundity (the relationship between female weight and egg production), the natural mortality rate for males, the steepness of the stock-recruit relationship, individual condition (the relationship between individual weight and length), and estimates of error for determinations of individual age from reading otoliths.
+
 ### Natural Mortality
 
+We update the prior for the natural mortality rate from the value (M=0.06) used in the previous 2007 benchmark and maintained in the 2009 and 2011 update assessments.  The prior is computed by O. Hamel (Hamel, 2015) and for rockfishes it is computed using a single number, maximum age, using the relationship developed by Hoenig (1983).  Maximum age is poorly defined for long-lived species, given that the oldest observed individual may exceed the next-to-oldest individual by many years.  We therefore obtain maximum age from the same source that regression-based approaches usually obtain it from, e.g., a well-respected reference for a given taxa.  For canary rockfish, we obtain a maximum age of 84 yrs. from Love et al. (2002), and this value results in a lognormal prior with a log-mean of -2.955 and a log-standard deviation of 0.5323.  O. Hamel (personal communication 2015) recommends using as fixed value the median of the prior, which corresponds to 0.0521.
 
 ### Maturation and Fecundity
+
+#### Maturity
+
+We estimate the maturity schedule using all histological measurements of female ovaries available.  This included 205 ovaries collected and read by Oregon Department of Fish and Wildlife, which were collected between March 4 and September 2, 2014 from Astoria (n=184) and Newport (n=21), as well as 436 ovaries collected during the WCGBTS between 2009-2014 (2009: 49, 2010: 83, 2011: 82, 2012: 52, 2013: 54, 2014: 116) from a range of depths (56-218 m.) and latitudes (35.7-48.3 N).  Maturity for each ovary was determined by whether there were oocytes within developmental stages 3 or later, and additionally, and ovary where there was significant (>25%) atresia were classified as “immature”.  Maturity therefore included information regarding both the probability of being at an age/length after the development of viable oocytes, as well as the rate at which otherwise mature individuals will skip spawning in a given calendar year.  This latter process is termed “skipped spawning” and has been documented previously for canary rockfish (Stokes et al., In preparation).   
+
+The maturity schedule was then estimated by a three-parameter logistic regression model:
+
+*INSERT EQUATION HERE*
+
+p_i=p ̂_max  e^(β ̂(l_i-l ̂_mid ) )/(1+e^(β ̂(l_i-l ̂_mid ) ) )
+
+O_i~Bernoulli(p_i)
+
+where li is the length of individual i, Bernoulli(pi) is a Bernoulli probability mass function with probability pi, pi is the probability that ovary i is mature, 1-p ̂_max is the probability of skipped spawning for mature individuals, β ̂ is the estimated slope of the logistic function, and l ̂_mid is the length at which half of individuals are mature.  Parameters for this model were estimated using Template Model Builder, and the expected maturity schedule was calculated using the generalized delta-method.  Examination of the estimated maturity schedule (Figure 34) illustrates a nearly 7.1% chance that mature individuals will skip spawning in a given calendar year, and that the length of 50% maturity occurs around 42 cm.
+
+#### Fecundity
+
+Fecundity information was updated based on the dissertation of E.J. Dick (Dick, 2009).  Comparison of old and new fecundity relationships (Figure 35) illustrates that the new relationship has a somewhat increased benefit of old and large females relative to young and small females in terms of contribution to spawning output.  The new relationship has also decreased spawning output somewhat overall, but this has no effect on model results given that spawning output is defined relative to unfished levels and hence the absolute scale is unimportant.
+
+### Steepness
+
+Steepness is defined as the proportion of average recruitment for an unfished population that is expected for a population with 20% of unfished spawning output.  It represents a measure of compensation in the spawner-recruit relationship, which is the only source of compensation included in this, and most other assessment models.  It is typically difficult to estimate using data for a single population (Conn et al., 2010), which has led to a series of meta-analyses to estimate its likely value (Dorn, 2002; Myers et al., 1995).  
+
+The Scientific and Statistical Committee of the PFMC has recommended for use in the 2015 assessment cycle an update of the method developed by M. Dorn.  This method computes a likelihood profile for estimates of steepness from the most recent assessment of all Category-1 assessed Pacific rockfish stocks.  This prior is then treated as a marginal likelihood and a hyper-distribution for steepness in Pacific rockfishes is estimated using maximum marginal likelihood (in this case, using a Bayesian paradigm).  The prior for 2015 has a predictive mean of 0.773 and a standard deviation of 0.147.  We fix the value for steepness for canary rockfish at the prior mean.
 
 
 ### Sex Ratio
@@ -11,8 +38,27 @@
 
 ### Length-Weight Relationship
 
+Individual condition is defined broadly as the relationship between individual length and weight in fishes.  Condition is estimated externally to the assessment model using a regression model:
+
+*INSERT EQUATION HERE*
+w_i=a ̂〖l_i〗^b ̂  e^(ε_i )
+ε~Normal(0,σ^2)
+
+where wi¬ and li are weight (kg) and length (cm) for individual i, and a ̂ and b ̂ are estimated parameters representing the weight-length relationship.  To estimate these parameters, we compile all observations of weight and length from the triennial and WCGBT surveys.  The triennial provides a sample size of 2,039 unique individuals (female: 942, male: 1,087), while the WCGBTS provides a sample size of 4,639 unique individuals (female: 2,057, male: 2,582).  Parameters are estimated using Template Model Builder, and a plot of data and model estimates provides no evidence of lack of model fit for either males or females.  The updated relationship (Figure 36) indicates that males increase weight faster than females as a function of length, and both male and female condition increase weight with length faster than assumed in the previous 2011 update assessment.
+
+
 
 ### Growth (Length-at-Age)
 
 
 ### Ageing Precision and Bias
+
+In the 2005 assessment, a single ageing error key determining the level of bias in observed vs. true age and imprecision (the degree of variability in observed age at true age) was used to ‘smear’ model expectations in the observation sub-model of SS2 and generate appropriate predictions to compare with observed age-frequency data (Methot and Wetzel, 2013).  This treatment is similar to a full treatment via maximum marginal likelihood, given that it computes the expectation for a data stream (e.g., age composition) after integrating across values on a latent variable (true ages) and an observation process (the ageing error pattern).  All historically surface-read ages were excluded, due to known (but not quantified in the assessment) levels of bias and imprecision associated with using this method for a long-lived species (Boehlert and Yoklavich, 1984).
+
+For the 2007 benchmark assessment, all sources of ageing information for break-and-burn reads of otoliths were revisited through inspection of the various cross- and double-read efforts.  Ageing bias and imprecision was estimated simultaneously using the first generation of the ageing error software developed by A. Punt, as subsequently published (Punt et al., 2008).  The 2007 assessment also explored the bias and imprecision of surface reads, but surface reads were not subsequently included in the 2007 benchmark or 2009/2011 update assessments.  
+
+There has been some debate regarding validation of age determination from break-and-burn reads.  The 2005 and 2007 assessments assumed that break-and-burn ages from the ODFW/CAPS lab were negatively biased, based on radiocarbon validation methods (Piner et al., 2005), while ages from the WDFW ageing lab were believed to be approximately in-line with ages determined from radiocarbon.  However, subsequent analysis of bomb radiocarbon has suggested delayed timing of detectable carbon signatures in the California Current relative to other regions, which could explain the bias of the ODFW/CAPS labs relative to radiocarbon signal (Hamel et al., 2008).  Additional exploration using the 2005 model has claimed that significant negative bias in the ODFW/CAPS lab is inconsistent with available data at that time (Stewart and Piner, 2007).   We therefore adopt as base case the assumption that the ODFW/CAPS lab is unbiased, and estimate linear bias in WDFW break-and-burn, and curvilinear bias in surface reads from all labs, relative to ODFW/CAPS reads.  We also present a comparison of the base case with a model that assumes that WDFW reads are unbiased (results presented later).
+
+In this assessment, we obtain all available double read data and re-estimate bias and imprecision for reads provided by ODFW, WDFW, and CAPS labs using either break-and-burn or surface read techniques.  This includes 2,307 unique otoliths with double-reads primarily among readers at the CAPS laboratory, obtained from P. McDonald (personal communication, Nov. 20, 2014), as well as 6,544 unique otoliths with double-reads between CAPS or ODFW laboratories and the WDFW laboratory, obtained from P. Weyland (personal communication, Dec. 17, 2014).  Exploratory analysis indicated memory problems with the analysis software unless reads were restricted to those aged 60 or younger, and this restriction decreased the total sample size to 8,812 (from 8,851).  All reads were classified by laboratory and reader method, resulting in five unique categories for ageing error:  CAPS break-and-burn (4,991 unique reads); ODFW break-and-burn (2,400 unique reads); WDFW break-and-burn (10,180 unique reads); ODFW surface reads (199 unique reads); and WDFW surface reads (576 unique reads), where the total number of unique reads for each lab exceeds the number of unique otoliths because otoliths are read twice or three times each.
+
+	We analyzed this data set using the ageing error software provided by Andre Punt (Punt et al., 2008), and using release 1.0.0 of the R package nwfscAgeingError (Thorson et al., 2012b) for input/output and diagnostics, publicly available at: https://github.com/nwfsc-assess/nwfscAgeingError.  This software estimates the latent (unobserved) age structure of the sampled population as fixed effects for all ages between a minimum and maximum specified age, and then estimates the proportion at age for ages above or below these minimum/maximum ages as declining exponentially.  Exploratory analysis indicated few samples with read age above 30 years, so this age was chosen as the age above which proportion at age declines exponentially.  We assumed that ages from the CAPS ageing laboratory were unbiased, and estimated a linear bias for break-and-burn reads from ODFW and WDFW ageing labs.  We also estimated an identical, curvilinear form for bias in the surface reads provided by ODFW and WDFW labs, and estimated a constant coefficient of variation (CV) for imprecision for break-and-burn reads from CAPS, ODFW, WDFW, and surface reads from either lab.  Results indicate a somewhat irregular shape for the latent (unobserved) distribution of proportion at age for the sampled population (Figure 37), but where the estimated and observed proportion at age approximately matches by eye.  The estimated pattern for bias and imprecision indicates that ODFW break-and-burn reads are almost unbiased relative to CAPS break-and-burn reads.  However, the WDFW break-and-burn reads have a positive bias relative to CAPS break-and-burn reads (+3.76 yrs. at age 30).  Most significantly, the surface reads provided by ODFW and WDFW have a substantial curvilinear bias for ages past 20 years.  However, for ages lower than 20 years, the bias is never greater than +2 years relative to the true age.   
