@@ -96,17 +96,17 @@ tmp_wider_groupDealer <- pivot_wider(tmpDealer, names_from = c(fleet.comb,AGENCY
 #One more years is added for CA if dealer ID is used.
 
 
-##
-#Upload to googledrive
-#Must go in CONFIDENTIAL folder because of landings from fewer than 3 vessels
-##
-xx <- googledrive::drive_create(name = 'pacfin_catch',
-                                path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB', 
-                                type = 'spreadsheet', overwrite = FALSE)
-googlesheets4::sheet_write(round(tmp_wider_group,3), ss = xx, sheet = "catch_mt")
-googlesheets4::sheet_write(tmp_wider_groupID, ss = xx, sheet = "unique_vessels")
-googlesheets4::sheet_write(tmp_wider_groupDealer, ss = xx, sheet = "unique_dealers")
-googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
+# ##
+# #Upload to googledrive
+# #Must go in CONFIDENTIAL folder because of landings from fewer than 3 vessels
+# ##
+# xx <- googledrive::drive_create(name = 'pacfin_catch',
+#                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB', 
+#                                 type = 'spreadsheet', overwrite = FALSE)
+# googlesheets4::sheet_write(round(tmp_wider_group,3), ss = xx, sheet = "catch_mt")
+# googlesheets4::sheet_write(tmp_wider_groupID, ss = xx, sheet = "unique_vessels")
+# googlesheets4::sheet_write(tmp_wider_groupDealer, ss = xx, sheet = "unique_dealers")
+# googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
 
 
