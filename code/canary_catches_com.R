@@ -71,7 +71,7 @@ catch$fleet[catch$PACFIN_GEAR_CODE %in% c("BTR", "DVG", "TRL","USP")] <- "OTH"
 #Assign to grouped fleets designations
 #In issue 9 on github, Ali suggests TWS (shrimp trawls) be added to trawl gear,
 #which differs from how it has been done in the past. 
-#Separate out TWS to check difference with 2015 model estimates.
+#Separate out TWS if want to check difference with 2015 model estimates.
 catch$fleet.comb <- rep(NA, nrow(catch))
 catch$fleet.comb[catch$fleet %in% c("HKL", "NET", "OTH", "POT")] <- "NTWL"
 catch$fleet.comb[catch$fleet %in% c("TWL","MID","TWS")] <- "TWL"
