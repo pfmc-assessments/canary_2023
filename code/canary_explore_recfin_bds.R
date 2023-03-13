@@ -107,7 +107,7 @@ Nage <- recfin_bdsage %>% filter(., !is.na(USE_THIS_AGE)) %>% group_by(mode, sta
 # #Upload sample sizes to googledrive
 # ##
 # xx <- googledrive::drive_create(name = 'recfin_bds_N',
-#                                 path = 'https://drive.google.com/drive/folders/1fleYIaLvdIYMLv14--P1804akQvnWu5J',
+#                                 path = 'https://drive.google.com/drive/folders/1Lx4JN-nmJkWtcqmelODZYoVrHyVLzegP',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(Nlen, ss = xx, sheet = "Nlen")
 # googlesheets4::sheet_write(Nage, ss = xx, sheet = "Nage")
@@ -123,9 +123,8 @@ Nage <- recfin_bdsage %>% filter(., !is.na(USE_THIS_AGE)) %>% group_by(mode, sta
 #ocean boat only but have been filtered to exclude the discarded CPFV fish and fish that are
 #aged (source code=ORA) so as to not double count fish.  I would further recommend filtering 
 #the MRFSS data to only have directly measured fish by using the “Length_Flag” field and 
-#filtering for “measured” fish."
-
-#NOTE: I have not filtered based on whether fish are measured or not
+#filtering for “measured” fish. I would not recommend using lengths imputed from weights but 
+#from total length would probably be just fine."
 
 ##
 #MRFSS era data
@@ -164,7 +163,7 @@ or_bds_mrfss$mode = dplyr::case_when(or_bds_mrfss$Mode_FX_Name == "charter" ~ "P
 #Add sex (which is all unknown)
 or_bds_mrfss$sex = "U"
 
-#Remove samples with lengths based on weight to length conversions (16 with measured weight and 2 with computed weight)
+#Remove 18 samples with lengths based on weight to length conversions (16 with measured weight and 2 with computed weight)
 or_bds_mrfss = or_bds_mrfss[-which(or_bds_mrfss$Length_Flag=="computed" & or_bds_mrfss$Total.Length_Flag=="computed"),]
 
 #Remove the 579 samples without any length provided

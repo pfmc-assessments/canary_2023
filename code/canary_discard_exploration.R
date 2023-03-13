@@ -97,7 +97,7 @@ all[is.na(all)] = 0
 all$Discard_Mort_Rate = round(all[,"Dead_Discard"] / all[,"Tot_Dead"], 3)
 all[is.na(all)] = 0
 
-#write.csv(all, file = file.path(git_dir, "data", "quillback_gemm_mortality_and_discard.csv"), row.names = FALSE)
+#write.csv(all, file = file.path(git_dir, "data", "canary_gemm_mortality_and_discard.csv"), row.names = FALSE)
 
 
 #-----------------------------------------------------------------------------------
