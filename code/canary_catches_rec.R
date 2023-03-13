@@ -143,16 +143,42 @@ ca_mrfss$mode <- dplyr::case_when(ca_mrfss$SOURCE_MODE_NAME == "PARTY/CHARTER BO
 ca_mrfss$state = "C"
 
 #Calculate total
-tmp <- ca_mrfss %>% group_by(YEAR_, mode) %>% summarize(sum = sum(WGT_AB1_mt)) %>% data.frame()
-ca_mrfss_tot <- pivot_wider(tmp, names_from = c(mode), values_from = sum)
+ca_tmp <- ca_mrfss %>% group_by(YEAR_, mode) %>% summarize(sum = sum(WGT_AB1_mt)) %>% data.frame()
+ca_mrfss_tot <- pivot_wider(ca_tmp, names_from = c(mode), values_from = sum)
 
 #Fill in missing 1990-1992 years
 impute_trend = (sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1993),-1], na.rm=TRUE) - sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1989),-1], na.rm=TRUE))/(1993-1989)
 impute_catch = cbind("YEAR_" = c(1990,1991,1992),
-                     "Other" = sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1989),-1]) + 1:3*impute_rate, 
+                     "Other" = sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1989),-1]) + 1:3*impute_trend, 
                      "PC" = NA, 
                      "PR" = NA)
 ca_mrfss_tot = rbind(ca_mrfss_tot,impute_catch) %>% arrange(.,YEAR_)
+
+
+#################################################################################################################
+# Combine the data into a single dataset
+#################################################################################################################
+
+rec_df <- data.frame("Year" = min(unique(c(wa_rec$YEAR, or_rec$Year, recfin$RECFIN_YEAR, ca_mrfss$YEAR_))):2022)
+
+#Add washington - in numbers
+rec_df$wa_N <- 0
+rec_df[rec_df$Year %in% wa_rec$YEAR,]$wa_N <- rowSums(wa_rec[,c("RETAINED_N","DEAD_RELEASED_TOTAL_N")],na.rm=T)
+
+#Add oregon - >2000 are releases and dead releases, <2001 can assume no discards
+rec_df$or_MT <- 0
+rec_df[rec_df$Year %in% or_rec$Year,]$or_MT <- or_rec$Total_MT
+
+#Add california recfin
+rec_df$ca_MT <- 0
+ca_recfin <- recfin %>% dplyr::filter(AGENCY=="C") %>% group_by(AGENCY, RECFIN_YEAR) %>% 
+  summarize(sum_ret = sum(SUM_RETAINED_MT), sum_rel = sum(SUM_RELEASED_ALIVE_MT), sum_rel_mort = sum(SUM_RELEASED_DEAD_MT), sum_total = sum(SUM_TOTAL_MORTALITY_MT))
+rec_df[rec_df$Year %in% ca_recfin$RECFIN_YEAR,]$ca_MT <- ca_recfin$sum_total
+
+#Add california mrfss
+rec_df[rec_df$Year %in% ca_mrfss_tot$YEAR_,]$ca_MT <- rowSums(ca_mrfss_tot[,-1],na.rm=T)
+
+#write.csv(rec_df, file = file.path(git_dir, "data", "canary_rec_catch.csv"), row.names = FALSE)
 
 
 #################################################################################################################
