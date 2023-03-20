@@ -1,7 +1,7 @@
 ##############################################################################################################
 #
-# 	Purpose: Output Canary Rockfish Landings 
-#            into form for use in SS
+# 	Purpose: Explore Canary Rockfish Landings 
+#            before putting into form for use in SS
 #
 #   Created: Oct 28, 2022
 #			  by Brian Langseth 
