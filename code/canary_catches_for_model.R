@@ -172,6 +172,8 @@ removals[removals$Year %in% c(2022),-1] <- round((1+dis_rat_late) * removals[rem
 
 ##
 #Add Oregon commercial reconstruction years <2000
+#Although last assessment used <1987 only, Ali has updated the proportions of nomial canary
+#with a different reconstruction that runs from 1987-1999, so we use that one for this cycle
 ##
 
 removals[removals$Year %in% c(1892:1999),"NTWL.O"] <- or_com[or_com$YEAR %in% c(1892:1999),"NTRW"]
@@ -209,7 +211,7 @@ removals[removals$Year %in% c(1995:1999),-1] = (1+0.2) * removals[removals$Year 
 #################################################################################################################
 
 #CA MRFSS 1990-1992 already filled in in "canary_catches_rec.R"
-#and was a linear ramp between 1989 and 1993
+#and was an average of previous 3 years of data for 1990, previous 3 and later 3 for 1991, and later 3 for 1992
 
 #Ramp down OR rec to 0 in 1972
 or_ramp <- rec[rec$Year == 1979,]$or_MT/(1979-1972) * length(1973:1978):1
@@ -222,8 +224,10 @@ rec[rec$Year %in% c(1968:1974),]$wa_N <- rec[rec$Year==1975,]$wa_N - wa_ramp_ear
 wa_ramp_late <- (rec[rec$Year == 1990,]$wa_N - rec[rec$Year == 1986,]$wa_N)/(1990-1986) * length(1987:1989):1
 rec[rec$Year %in% c(1987:1989),]$wa_N <- rec[rec$Year==1990,]$wa_N - wa_ramp_late
 
-#Add 2004 estimate from last assessment for CA rec
-rec[rec$Year == 2004,]$ca_MT <- 10.01
+#Add 2004 estimate for CA rec
+#Last assessment appears to have only used landings, not landings + otherwise dead
+#Thus use value provided by John Budrick (via email on 3/16) based on download for another species when 2004 data were present
+rec[rec$Year == 2004,]$ca_MT <- 10.59
 
 #Add 2020 CA proxy estimate to CA recfin estimate. Proxy estimate found in 
 #https://github.com/pfmc-assessments/california-data/tree/main/recreational-fishery/proxy%202020%20data

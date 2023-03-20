@@ -146,12 +146,31 @@ ca_mrfss$state = "C"
 ca_tmp <- ca_mrfss %>% group_by(YEAR_, mode) %>% summarize(sum = sum(WGT_AB1_mt)) %>% data.frame()
 ca_mrfss_tot <- pivot_wider(ca_tmp, names_from = c(mode), values_from = sum)
 
-#Fill in missing 1990-1992 years
-impute_trend = (sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1993),-1], na.rm=TRUE) - sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1989),-1], na.rm=TRUE))/(1993-1989)
-impute_catch = cbind("YEAR_" = c(1990,1991,1992),
-                     "Other" = sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1989),-1]) + 1:3*impute_trend, 
-                     "PC" = NA, 
+#Fill in missing (or very low) PC mode sampling 1993-1995
+#Apply average ratio of PC to PR to estimate PC 
+pc_rat <- mean((ca_mrfss_tot$PC/ca_mrfss_tot$PR)[ca_mrfss_tot$YEAR_ %in% c(1980:1992,1996:2003)])
+plot(ca_mrfss_tot$PC/ca_mrfss_tot$PR, x = ca_mrfss_tot$YEAR_, 
+     ylab = "PC:PR", type = "b", main = "All years with data. \n 1995 PC estimate was very low, so not used to calc average (solid line)")
+abline(h=pc_rat)
+ca_mrfss_tot[ca_mrfss_tot$YEAR_ %in% c(1993:1995),"PC"] <- pc_rat * ca_mrfss_tot[ca_mrfss_tot$YEAR_ %in% c(1993:1995),"PR"]
+
+#Fill in missing 1990-1992 years - based on three year averages
+plot(rowSums(ca_mrfss_tot[,-1], na.rm = T), x=ca_mrfss_tot$YEAR_, type="b", ylab = "CA rec catch mt")
+average_vals <- c(mean(rowSums(ca_mrfss_tot[ca_mrfss_tot$YEAR_ %in% c(1987:1989),-1], na.rm = T)), #3 yr average before
+          mean(rowSums(ca_mrfss_tot[ca_mrfss_tot$YEAR_ %in% c(1987:1989, 1993:1995),-1], na.rm = T)), #3 yr average before and after
+          mean(rowSums(ca_mrfss_tot[ca_mrfss_tot$YEAR_ %in% c(1993:1995),-1], na.rm = T))) #3 yr average after
+impute_catch <- cbind("YEAR_" = c(1990,1991,1992),
+                     "Other" = average_vals,
+                     "PC" = NA,
                      "PR" = NA)
+lines(y=impute_catch[,2], x=impute_catch[,1],pch=19,col=2,lwd=3)
+# #Based on linear interpolation
+# impute_trend = (sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1993),-1], na.rm=TRUE) - sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1989),-1], na.rm=TRUE))/(1993-1989)
+# impute_catch = cbind("YEAR_" = c(1990,1991,1992),
+#                      "Other" = sum(ca_mrfss_tot[ca_mrfss_tot$YEAR_%in%c(1989),-1]) + 1:3*impute_trend,
+#                      "PC" = NA,
+#                      "PR" = NA)
+# points(y=impute_catch[,2], x=impute_catch[,1],pch=19,col=5)
 ca_mrfss_tot = rbind(ca_mrfss_tot,impute_catch) %>% arrange(.,YEAR_)
 
 
