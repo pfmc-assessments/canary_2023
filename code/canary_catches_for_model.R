@@ -11,6 +11,9 @@
 #     canary_catches_rec.R
 #     canary_discard_exploration.R
 #
+#   See discussion #47 in github repo for descriptions
+#     https://github.com/pfmc-assessments/canary_2023/discussions/47
+#
 ##############################################################################################################
 
 library(dplyr)
@@ -54,6 +57,66 @@ gemm_discard <- utils::read.csv(file = file.path(git_dir, "data", "canary_commer
 # googledrive::drive_download(file = "Oregon data/Oregon Commercial landings_451_2022.csv",
 #                             path = file.path(git_dir,"data-raw","Oregon Commercial landings_451_2022.csv"))
 or_com <- utils::read.csv(file = file.path(git_dir,"data-raw","Oregon Commercial landings_451_2022.csv"), header = TRUE)
+
+
+##
+#California historical commercial
+##
+
+####Reconstruction from Ralston - sent by EJ Dick
+
+ca_hist_com <- utils::read.csv(file = file.path(git_dir,"data-raw","Canary_CA_Catch_Reconstruction_Ralston_et_al_2010.csv"), header = TRUE)
+ca_hist_com$mt <- ca_hist_com$pounds*0.000453592
+
+#Per EJ's email, for 2021 Vermillion (page 10), he allocated annual catches
+#from unknown locations (Region 0) and unknown gear types proportional to the 
+#catches from known regions and gears. Catches from known regions, but unknown
+#gears, were allocated proportional to catches by known gears within the same region 
+table(ca_hist_com$region,ca_hist_com$gear) #gears 2 and 4
+table(ca_hist_com$year,ca_hist_com$gear) #every year
+
+#Allocate UNK from known regions first
+#Because UNK regions dont have TWL or OTH amounts, the below gives amounts only for known regions
+ca_hist_com_ag <- ca_hist_com %>% group_by(year, region, gear) %>% summarize(sum = sum(mt)) %>% 
+  pivot_wider(names_from = gear, values_from = sum)
+ca_hist_com_ag$UNK_twl <- ca_hist_com_ag$UNK * (ca_hist_com_ag$TWL / rowSums(ca_hist_com_ag[,c("TWL","OTH")], na.rm=T))
+ca_hist_com_ag$UNK_oth <- ca_hist_com_ag$UNK * (ca_hist_com_ag$OTH / rowSums(ca_hist_com_ag[,c("TWL","OTH")], na.rm=T))
+
+#Allocate UNK from unknown regions next
+#Determine proportion of catch made up by OTH and TWO across all KNOWN regions within a year 
+ca_hist_com_ag2 <- ca_hist_com %>% dplyr::filter(gear %in% c("OTH","TWL")) %>% group_by(year, gear) %>% summarize(sum = sum(mt)) %>% 
+  pivot_wider(names_from = gear, values_from = sum)
+ca_hist_com_ag2$perc_twl_KNOWNreg <- (ca_hist_com_ag2$TWL / rowSums(ca_hist_com_ag2[,c("TWL","OTH")], na.rm=T))
+ca_hist_com_ag2$perc_oth_KNOWNreg <- (ca_hist_com_ag2$OTH / rowSums(ca_hist_com_ag2[,c("TWL","OTH")], na.rm=T))
+#Use proportions across all known regions to allocation unknown catches in unknown regions
+ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK_twl <- ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK * ca_hist_com_ag2$perc_twl_KNOWNreg
+ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK_oth <- ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK * ca_hist_com_ag2$perc_oth_KNOWNreg
+
+#Sum up total TWL and OTH gear across regions
+ca_hist_com_ag$TOT_TWL = ca_hist_com_ag$TWL + ca_hist_com_ag$UNK_twl
+ca_hist_com_ag$TOT_OTH = ca_hist_com_ag$OTH + ca_hist_com_ag$UNK_oth
+ca_hist_com_out <- ca_hist_com_ag %>% group_by(year) %>% 
+  summarize(TWL = sum(TOT_TWL, na.rm = T), NTWL = sum(TOT_OTH, na.rm=T)) %>% data.frame()
+
+
+####Landings from 1969-1980 - sent by EJ Dick
+ca_com_70s <- utils::read.csv(file = file.path(git_dir,"data-raw","Canary_CA_Comm_1969-1980.csv"), header = TRUE)
+ca_com_70s$mt <- ca_com_70s$POUNDS*0.000453592
+table(ca_com_70s$GEAR_GRP)
+
+ca_com_70s_out <- ca_com_70s %>% group_by(YEAR, GEAR_GRP) %>% 
+  summarize(sum = sum(mt)) %>% pivot_wider(names_from = GEAR_GRP, values_from = sum) %>%
+  data.frame()
+names(ca_com_70s_out)[1] <- "year"
+
+#Sum together the HKL and NET gear catches
+ca_com_70s_out$NTWL <- ca_com_70s_out$HKL + ca_com_70s_out$NET
+
+
+####Combine California historical periods
+ca_hist_out  <- rbind(ca_hist_com_out, ca_com_70s_out[,c("year","TWL","NTWL")])
+
+#write.csv(ca_hist_out, file = file.path(git_dir, "data", "canary_CA_hist_catch.csv"), row.names = FALSE)
 
 
 #################################################################################################################
@@ -115,9 +178,11 @@ removals[removals$Year %in% c(1892:1999),"NTWL.O"] <- or_com[or_com$YEAR %in% c(
 removals[removals$Year %in% c(1892:1999),"TWL.O"] <- or_com[or_com$YEAR %in% c(1892:1999),"TRW"]
 
 ##
-#Add California commercial reconstruction years <2000 - TO DO
+#Add California commercial reconstruction years <1981
 ##
 
+removals[removals$Year %in% ca_hist_out$year,"NTWL.C"] <- ca_hist_out$NTWL
+removals[removals$Year %in% ca_hist_out$year,"TWL.C"] <- ca_hist_out$TWL
 
 
 ##
@@ -129,12 +194,12 @@ removals[removals$Year %in% c(1892:1999),"TWL.O"] <- or_com[or_com$YEAR %in% c(1
 #Add <2000 discards based on Pikitch historical rates 
 ##
 
-#1995-199 = 20%
+#1995-1999 = 20%
 #1981-1994 = 5%
 #<1981 = 1%
 removals[removals$Year %in% c(1892:1980),-1] = (1+0.01) * removals[removals$Year %in% c(1892:1980),-1]
-removals[removals$Year %in% c(1981:1994),-1] = (1+0.2) * removals[removals$Year %in% c(1981:1994),-1]
-removals[removals$Year %in% c(1995:1999),-1] = (1+0.05) * removals[removals$Year %in% c(1995:1999),-1]
+removals[removals$Year %in% c(1981:1994),-1] = (1+0.05) * removals[removals$Year %in% c(1981:1994),-1]
+removals[removals$Year %in% c(1995:1999),-1] = (1+0.2) * removals[removals$Year %in% c(1995:1999),-1]
 
 
 #################################################################################################################
@@ -156,6 +221,13 @@ rec[rec$Year %in% c(1968:1974),]$wa_N <- rec[rec$Year==1975,]$wa_N - wa_ramp_ear
 
 wa_ramp_late <- (rec[rec$Year == 1990,]$wa_N - rec[rec$Year == 1986,]$wa_N)/(1990-1986) * length(1987:1989):1
 rec[rec$Year %in% c(1987:1989),]$wa_N <- rec[rec$Year==1990,]$wa_N - wa_ramp_late
+
+#Add 2004 estimate from last assessment for CA rec
+rec[rec$Year == 2004,]$ca_MT <- 10.01
+
+#Add 2020 CA proxy estimate to CA recfin estimate. Proxy estimate found in 
+#https://github.com/pfmc-assessments/california-data/tree/main/recreational-fishery/proxy%202020%20data
+rec[rec$Year == 2020,]$ca_MT <- 10.08 + rec[rec$Year == 2020,]$ca_MT
 
 #Add in rec fleets
 removals$rec.C <- 0
