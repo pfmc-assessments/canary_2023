@@ -126,13 +126,19 @@ ca_hist_out  <- rbind(ca_hist_com_out, ca_com_70s_out[,c("year","TWL","NTWL")])
 #################################################################################################################
 
 ##
+#California historical recreational landings - file copied from 2015 assessment catch history file
+##
+
+ca_hist_rec <- utils::read.csv(file = file.path(git_dir, "data", "CA_canary_rec_1928_1979_PulledFrom2015Assessment.csv"), header = TRUE)
+
+##
 #Recreational data
 #This is output from canary_catches.rec.R
 ##
 
 rec <- utils::read.csv(file = file.path(git_dir, "data", "canary_rec_catch.csv"), header = TRUE)
-
-
+#Extend rec to incorporate CA historical time period
+rec <- rbind(data.frame("Year" = c(1928:1966), "wa_N" = 0, "or_MT" = 0, "ca_MT" = 0), rec)
 
 #################################################################################################################
 #---------------------------------------------------------------------------------------------------------------#
@@ -223,6 +229,12 @@ rec[rec$Year %in% c(1968:1974),]$wa_N <- rec[rec$Year==1975,]$wa_N - wa_ramp_ear
 
 wa_ramp_late <- (rec[rec$Year == 1990,]$wa_N - rec[rec$Year == 1986,]$wa_N)/(1990-1986) * length(1987:1989):1
 rec[rec$Year %in% c(1987:1989),]$wa_N <- rec[rec$Year==1990,]$wa_N - wa_ramp_late
+
+#Add CA historical estimates
+rec[rec$Year %in% ca_hist_rec$Year, c("ca_MT")] <- ca_hist_rec$ca_MT
+
+#Replace 1980 MRFSS estimate with average of 1979 CA historical estimate and 1981 MRFSS estimate
+rec[rec$Year == 1980, c("ca_MT")] <- mean(rec[rec$Year %in% c(1979,1981), c("ca_MT")])
 
 #Add 2004 estimate for CA rec
 #Last assessment appears to have only used landings, not landings + otherwise dead
