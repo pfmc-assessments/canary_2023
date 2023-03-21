@@ -11,11 +11,11 @@ theme_set(theme_classic(base_size = 16))
 
 # option to load data from disk
 # would be good to not have the dates hard coded in.
-load(here('data/Catch__NWFSC.Combo_2023-01-23.rda'))
+load(here('data/Catch__NWFSC.Combo_2023-02-13.rda'))
 wcgbts_catch <- Out
 load(here('data/Catch__Triennial_2023-01-23.rda'))
 triennial_catch <- Out
-load(here('data/Bio_All_NWFSC.Combo_2023-01-30.rda'))
+load(here('data/Bio_All_NWFSC.Combo_2023-02-13.rda'))
 wcgbts_bio <- Data
 load(here('data/Bio_All_Triennial_2023-01-23.rda'))
 triennial_bio <- Data
@@ -315,19 +315,22 @@ with(wcgbts_catch, sum(total_catch_wt_kg > 0 & Depth_m > 350) / sum(total_catch_
 wcgbts_catch %>%
   tibble::as_tibble() %>%
   dplyr::filter(total_catch_numbers > 0) %>%
-  dplyr::arrange(desc(Depth_m)) %>% View
+  dplyr::arrange(desc(Depth_m))
 # 350m depth excludes 1 fish in 1 tow.
 
 strata <- nwfscSurvey::CreateStrataDF.fn(
   names = c("shallow_s", "deep_s", "shallow_n", "deep_n"), 
   depths.shallow = c( 55,   183,  55,   183),
-  depths.deep    = c(183,   300,  183,  300),
+  depths.deep    = c(183,   350,  183,  350),
   lats.south     = c( 32,   32,   34.5, 34.5),
   lats.north     = c( 34.5, 34.5, 49,   49))
 
 biomass <- nwfscSurvey::Biomass.fn(dir = NULL, 
                                    dat = wcgbts_catch,  
                                    strat.df = strata)
+
+plot_comps(age.freq)
+
 ggplot(biomass$Bio,
        aes(x = as.numeric(Year),
            y = Value,
@@ -402,3 +405,18 @@ ggplot() +
 
 
 yoy_data_raw %>% head
+
+
+# Growth variability for ages that are sampled in WCGBTS every year
+wcgbts_bio %>%
+  dplyr::group_by(Age, Year) %>%
+  dplyr::summarise(Length_cm = mean(Length_cm), n = dplyr::n()) %>%
+  dplyr::filter(dplyr::n() == 19, !is.na(Age)) %>% 
+  ggplot() +
+  geom_line(aes(x = Year, y = Length_cm, col = Age, group = Age))
+
+canary.converted$dat$catch %>% 
+  dplyr::filter(fleet == 6, catch>0) %>%
+  # ggplot() +
+  # geom_line(aes(x = year, y = catch))
+  write.csv(file = here('data/wa_historical.csv'), row.names = FALSE)

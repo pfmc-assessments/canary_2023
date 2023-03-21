@@ -1,0 +1,7 @@
+###
+console output
+2023-02-23 16:11:10
+###
+ 
+ reading from starter.ss
+Error trying to open data input file Canary_data.SS

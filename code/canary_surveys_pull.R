@@ -38,8 +38,6 @@ triennial_bio <- nwfscSurvey::PullBio.fn(Name = 'canary rockfish',
   purrr::map(.f = function(df) dplyr::mutate(df, Date = as.character(Date)))
 
 
-xx <- nwfscSurvey::pull_biological_samples('canary rockfish')
-
 # bio samples
 wcgbts_bio_samples <- nwfscSurvey::pull_biological_samples(common_name = 'canary rockfish', 
                                                            dir = here('data'), 

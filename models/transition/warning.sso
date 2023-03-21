@@ -1,0 +1,11 @@
+#V3.30.16.00;_2020_09_03;_trans;_Stock_Synthesis_by_Richard_Methot_(NOAA)_using_ADMB_12.2
+#Stock Synthesis (SS) is a work of the U.S. Government and is not subject to copyright protection in the United States.
+#Foreign copyrights may apply. See copyright.txt for more information.
+Thu Feb 23 15:46:25 2023
+
+set autogen  1 1 1 1 1
+setting in starter does not request all priors, and 23 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Final gradient: 1.36035 is larger than final_conv: 0.0001
+ Main recdev biasadj is >2 times ratio of rmse to sigmaR
+Reminder: Number of lamdas !=0.0 and !=1.0:  20
+ N warnings: 4
