@@ -112,6 +112,12 @@ avg_rate2005_2007 <- mean(rel_mort_rate[29:31], na.rm=TRUE)
 plot(x=wa_rec$YEAR, rel_mort_rate, type="b", xlab= "Year", "ylab" = "Release Mortality Reate")
 abline(h=avg_rate2005_2007,lty=2) #mean over most recent three years of data
 wa_rec[wa_rec$YEAR%in%c(2002:2004),]$DEAD_RELEASED_TOTAL_N <- avg_rate2005_2007 * wa_rec[wa_rec$YEAR%in%c(2002:2004),]$RELEASED_TOTAL_N
+#Fill in discards 2000 and 2001 with same release rate as for 2002 (see issue #42 in github)
+#Assume same mortality for released fish as for 2002 (which was average of 2005-2007). Similar to 2017-2022
+rel_rate <- wa_rec$RELEASED_TOTAL_N/wa_rec$RETAINED_N
+plot(x=wa_rec$YEAR, rel_rate, type="b", xlab= "Year", "ylab" = "Proportion of fish released")
+wa_rec[wa_rec$YEAR %in% c(2000:2001),]$RELEASED_TOTAL_N <- wa_rec[wa_rec$YEAR %in% c(2000:2001),]$RETAINED_N * rel_rate[26]
+wa_rec[wa_rec$YEAR %in% c(2000:2001),]$DEAD_RELEASED_TOTAL_N <- wa_rec[wa_rec$YEAR %in% c(2000:2001),]$RELEASED_TOTAL_N * avg_rate2005_2007
 
 wa_rec_longer <- pivot_longer(wa_rec, cols = names(wa_rec)[-1], names_to = "disposition")
 wa_rec_longer$state = "W"
