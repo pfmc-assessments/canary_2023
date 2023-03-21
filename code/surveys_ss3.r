@@ -1,3 +1,5 @@
+# This generates design-based age and length comps for surveys and formats them for SS3
+
 library(magrittr)
 library(ggplot2)
 library(here) 
