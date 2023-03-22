@@ -273,18 +273,28 @@ removals[removals$Year %in% rec$Year, c("rec.W","rec.O","rec.C")] <- rec[,-1]
 
 #################################################################################################################
 #---------------------------------------------------------------------------------------------------------------#
+# Load foreign fleet landings (from Table 7 in Rogers 2003 report)
+#---------------------------------------------------------------------------------------------------------------#
+#################################################################################################################
+
+#Same as the 2015 stock assessment values
+for_fleet <- data.frame("Year" = c(1966:1976),
+                        "FOR.C" = c(41,103,415,5,0,0,13,372,150,63,49),
+                        "FOR.O" = c(1445,658,286,50,73,118,318,525,81,141,114),
+                        "FOR.W" = c(113,90,109,12,28,70,68,68,288,0,0))
+#Add to rest of removals
+removals$FOR.C <- 0
+removals$FOR.O <- 0
+removals$FOR.W <- 0
+removals[removals$Year %in% for_fleet$Year, c("FOR.C","FOR.O","FOR.W")] <- for_fleet[,-1]
+
+
+#################################################################################################################
+#---------------------------------------------------------------------------------------------------------------#
 # Output final total removals file
 #---------------------------------------------------------------------------------------------------------------#
 #################################################################################################################
 
-##
-#Upload to googledrive
-##
-# xx <- googledrive::drive_create(name = 'total_removals',
-#                                 path = 'https://drive.google.com/drive/folders/1Lx4JN-nmJkWtcqmelODZYoVrHyVLzegP',
-#                                 type = 'spreadsheet', overwrite = FALSE)
-# googlesheets4::sheet_write(round(removals,2), ss = xx, sheet = "Sheet1")
-
-#Upload to network drive
+#Upload to data folder
 # write.csv(round(removals,2), file = file.path(git_dir, "data", "canary_total_removals.csv"), row.names = FALSE)
 
