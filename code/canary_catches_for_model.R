@@ -99,7 +99,20 @@ ca_hist_com_out <- ca_hist_com_ag %>% group_by(year) %>%
   summarize(TWL = sum(TOT_TWL, na.rm = T), NTWL = sum(TOT_OTH, na.rm=T)) %>% data.frame()
 
 
+####Additional landings in CA caught in OR/WA waters
+
+ca_hist_inORWA <- readxl::read_excel(path = file.path(git_dir,"data-raw","CAlandingsCaughtORWA.xlsx"), 
+                                     skip = 10, sheet = "Rockfish.estimator")
+ca_hist_inORWA_canary <- ca_hist_inORWA[,c("Row Labels...1","Canary")]
+
+#Add these to historical Ralston values
+
+ca_hist_com_out[ca_hist_com_out$year %in% ca_hist_inORWA_canary$`Row Labels...1`,]$TWL <- ca_hist_inORWA_canary$Canary + 
+  ca_hist_com_out[ca_hist_com_out$year %in% ca_hist_inORWA_canary$`Row Labels...1`,]$TWL
+
+
 ####Landings from 1969-1980 - sent by EJ Dick
+
 ca_com_70s <- utils::read.csv(file = file.path(git_dir,"data-raw","Canary_CA_Comm_1969-1980.csv"), header = TRUE)
 ca_com_70s$mt <- ca_com_70s$POUNDS*0.000453592
 table(ca_com_70s$GEAR_GRP)
@@ -139,6 +152,7 @@ ca_hist_rec <- utils::read.csv(file = file.path(git_dir, "data", "CA_canary_rec_
 rec <- utils::read.csv(file = file.path(git_dir, "data", "canary_rec_catch.csv"), header = TRUE)
 #Extend rec to incorporate CA historical time period
 rec <- rbind(data.frame("Year" = c(1928:1966), "wa_N" = 0, "or_MT" = 0, "ca_MT" = 0), rec)
+
 
 #################################################################################################################
 #---------------------------------------------------------------------------------------------------------------#
