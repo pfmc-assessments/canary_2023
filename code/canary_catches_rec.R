@@ -81,14 +81,22 @@ plot(tmp$sum_total - (tmp$sum_rel_mort+tmp$sum_ret)) #totals sum properly
 tmp_wider <- pivot_wider(tmp, names_from = c(AGENCY,mode), names_sep = ".", values_from = c(sum_ret,sum_rel,sum_rel_mort,sum_total), names_glue = "{AGENCY}_{mode}_{.value}", names_sort = TRUE) %>% arrange(RECFIN_YEAR)
 tmp_wider <- tmp_wider %>% select(c("RECFIN_YEAR",sort(colnames(tmp_wider[,-1]))))
 
+#Calculate based on number of fish to help convert WA N to MT (github issue #52)
+tmpN <- recfin %>% group_by(mode,AGENCY, RECFIN_YEAR) %>% 
+  summarize(sum_retN = sum(SUM_RETAINED_NUM), sum_relN = sum(SUM_RELEASED_ALIVE_NUM), sum_rel_mortN = sum(SUM_RELEASED_DEAD_NUM), sum_totalN = sum(SUM_TOTAL_MORTALITY_NUM))
+plot(tmpN$sum_totalN - (tmpN$sum_rel_mortN + tmpN$sum_retN)) #totals sum properly
+tmpN_wider <- pivot_wider(tmpN, names_from = c(AGENCY,mode), names_sep = ".", values_from = c(sum_retN,sum_relN,sum_rel_mortN,sum_totalN), names_glue = "{AGENCY}_{mode}_{.value}", names_sort = TRUE) %>% arrange(RECFIN_YEAR)
+tmpN_wider <- tmpN_wider %>% select(c("RECFIN_YEAR",sort(colnames(tmpN_wider[,-1]))))
+
 # ##
 # #Upload to googledrive
 # #Based on pull of public forms so not confidential
 # ##
 # xx <- googledrive::drive_create(name = 'recfin_catch',
-#                                 path = 'https://drive.google.com/drive/folders/1Lx4JN-nmJkWtcqmelODZYoVrHyVLzegP', 
+#                                 path = 'https://drive.google.com/drive/folders/1Lx4JN-nmJkWtcqmelODZYoVrHyVLzegP',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(round(tmp_wider,3), ss = xx, sheet = "catch_mt")
+# googlesheets4::sheet_write(round(tmpN_wider,3), ss = xx, sheet = "catch_N")
 # googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
 

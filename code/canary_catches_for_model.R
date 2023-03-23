@@ -142,7 +142,7 @@ ca_hist_out  <- rbind(ca_hist_com_out, ca_com_70s_out[,c("year","TWL","NTWL")])
 #California historical recreational landings - file copied from 2015 assessment catch history file
 ##
 
-ca_hist_rec <- utils::read.csv(file = file.path(git_dir, "data", "CA_canary_rec_1928_1979_PulledFrom2015Assessment.csv"), header = TRUE)
+ca_hist_rec <- utils::read.csv(file = file.path(git_dir, "data-raw", "CA_canary_rec_1928_1979_PulledFrom2015Assessment.csv"), header = TRUE)
 
 ##
 #Recreational data
@@ -267,8 +267,87 @@ rec[rec$Year %in% c(2020, 2021),]$ca_MT <- alloc_val$sum + rec[rec$Year %in% c(2
 #Add in rec fleets
 removals$rec.C <- 0
 removals$rec.O <- 0
-removals$rec.W <- 0
-removals[removals$Year %in% rec$Year, c("rec.W","rec.O","rec.C")] <- rec[,-1]
+removals$rec.W.N <- 0
+removals[removals$Year %in% rec$Year, c("rec.W.N","rec.O","rec.C")] <- rec[,-1]
+
+
+#################################################################################################################
+#---------------------------------------------------------------------------------------------------------------#
+# Convert WA recreational removals in numbers of fish to MT - see github issue #52
+#---------------------------------------------------------------------------------------------------------------#
+#################################################################################################################
+
+#Read in sport bio data - samples sizes differ slightly with recfin, and are low in most years
+wa_bds <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"), sheet = "Sport")
+wa_bds_len <- wa_bds %>% group_by(sample_year) %>% summarize(avgL = mean(fish_length_cm, na.rm=T), N = length(fish_length_cm)) %>% data.frame()
+table(wa_bds$sample_year,is.na(wa_bds$fish_length_cm))
+wa_bds_len <- right_join(x = wa_bds_len, y = data.frame("sample_year" = c(1967:2022))) %>% arrange(sample_year)
+
+####Options for how to calculate average weight
+
+##1. No assumptions, let the data stand as they are. For any years without length data use an average
+par(mar = c(5, 4, 4, 4) + 0.3)
+h=barplot(height = wa_bds_len$N, names.arg = wa_bds_len$sample_year, xlab = "Year", ylab = "Number of samples (bars)")
+box()
+par(new = TRUE)
+plot(y = wa_bds_len$avgL, x = h, axes = FALSE, bty = "n", xlab = "", ylab = "", type = "b")
+abline(h=mean(wa_bds_len$avgL, na.rm = T), lty = 2)
+axis(side=4)
+mtext("Mean length in cm (points)", side=4, line=3)
+legend(x=20, y=45, c("Unweighted mean length \n across all years"), col=c(1), lty=c(2), pch=c(NA), bty = "n")
+
+#Enter in this approach's estimate for WA rec in MT if choosing (We are choosing option 2 though)
+wa_rec_avgW <- wa_bds_len
+wa_rec_avgW[is.na(wa_rec_avgW$avgL),"avgL"] <- mean(wa_rec_avgW$avgL, na.rm=T)
+wa_rec_avgW$avgW1 <- (1.04058E-08 * (wa_rec_avgW$avgL*10)^3.084136662)*0.001
+# removals$rec.W.mt.1 <- 0 
+# removals[removals$Year %in% c(1967:2022),]$rec.W.mt.1 <- wa_rec_avgW$avgW*removals[removals$Year %in% c(1967:2022),"rec.W"]
+
+
+##2. Do borrowing for low sample years using weighted mean. Assume blocking based on rec regulations (2017-2022, 2004-2016, 2000-2003, <1999)
+#Exception to weighted mean for the single datum in 1987. Its far enough away from other points so use overall mean for the block with no weighting
+wa_bds_len$avgL2 = wa_bds_len$avgL
+wa_bds_len[wa_bds_len$sample_year == 2014,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(2013,2014,2015),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(2012,2013,2014),]$N)
+wa_bds_len[wa_bds_len$sample_year == 2013,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(2012,2013,2014),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(2012,2013,2014),]$N)
+wa_bds_len[wa_bds_len$sample_year == 2012,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(2011,2012,2013),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(2011,2012,2013),]$N)
+wa_bds_len[wa_bds_len$sample_year == 1998,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$N)
+wa_bds_len[wa_bds_len$sample_year %in% c(1987),]$avgL2 = mean(wa_bds_len[wa_bds_len$sample_year <= 1999,]$avgL, na.rm = T)
+wa_bds_len[wa_bds_len$sample_year %in% c(1982:1983),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$N)
+
+par(mar = c(5, 4, 4, 4) + 0.3)
+h=barplot(height = wa_bds_len$N, names.arg = wa_bds_len$sample_year, xlab = "Year", ylab = "Number of samples (bars)")
+box()
+par(new = TRUE)
+plot(y = wa_bds_len$avgL, x = h, axes = FALSE, bty = "n", xlab = "", ylab = "", type = "b") #original
+points(y = wa_bds_len$avgL2, x = h, pch=19, col = as.numeric(wa_bds_len$N<10)+1) #adjusted based on borrowing
+segments(x0 = 0, x1 = 39, lty = 2, #have to convert year to location along the barplot
+         y0 = mean(wa_bds_len[wa_bds_len$sample_year <= 1999,]$avgL, na.rm = T))
+segments(x0 = 39, x1 = 44, lty = 2, #have to convert year to location along the barplot
+         y0 = mean(wa_bds_len[wa_bds_len$sample_year %in% c(2000:2003),]$avgL, na.rm = T))
+axis(side=4)
+mtext("Mean length in cm (points)", side=4, line=3)
+legend(x=25, y=47.5, c("Sample size <10 - Original L", "Sample size <10 - Adjusted L", "Sample size >=10 - Keep", "Non-weighted mean length by block"), 
+       col=c(1,2,1,1), lty=c(NA,NA,NA,3), pch=c(1,19,19,NA), bty = "n", cex = 0.8)
+
+#Add average lengths in for years with missing length data and enter in this approach's estimate for WA rec in MT
+wa_rec_avgW$avgL2 <- wa_bds_len$avgL2
+wa_rec_avgW[which(is.na(wa_rec_avgW[wa_rec_avgW$sample_year <= 1999,]$avgL2)),]$avgL2 <- mean(wa_bds_len[wa_bds_len$sample_year <= 1999,]$avgL, na.rm = T)
+wa_rec_avgW[which(is.na(wa_rec_avgW[wa_rec_avgW$sample_year <= 2003,]$avgL2)),]$avgL2 <- mean(wa_bds_len[wa_bds_len$sample_year %in% c(2000:2003),]$avgL, na.rm = T) #first block is already filled in so just for 2000 and 2001
+wa_rec_avgW$avgW2 <- (1.04058E-08 * (wa_rec_avgW$avgL2*10)^3.084136662)*0.001
+removals$rec.W.mt.2 <- 0 
+removals[removals$Year %in% c(1967:2022),]$rec.W.mt.2 <- wa_rec_avgW$avgW2*removals[removals$Year %in% c(1967:2022),"rec.W.N"]
+
+
+# ##3. Use the average weight that comes from recfin (2004-2022)
+# recMT <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/1lFM2QPOE-YX7tQpr7h-GKRZMssn3EX0rWoVqNjfysAg/edit#gid=1743641035',
+#                                    sheet = "catch_mt")
+# recN <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/1lFM2QPOE-YX7tQpr7h-GKRZMssn3EX0rWoVqNjfysAg/edit#gid=1743641035',
+#                                    sheet = "catch_N")
+# tmp <- data.frame("Year" = recMT$RECFIN_YEAR, "avgW" = rowSums(recMT[,c("W_OTH_sum_total","W_PC_sum_total","W_PR_sum_total")], na.rm = T) / 
+#   rowSums(recN[,c("W_OTH_sum_totalN","W_PC_sum_totalN","W_PR_sum_totalN")], na.rm = T))
+# wa_rec_avgW$avgW2 <- 0
+# wa_rec_avgW[wa_rec_avgW$sample_year %in% tmp$Year,]$avgW2 <- tmp$avgW
+# #Need MRFSS values to complete this method
 
 
 #################################################################################################################
