@@ -99,7 +99,20 @@ ca_hist_com_out <- ca_hist_com_ag %>% group_by(year) %>%
   summarize(TWL = sum(TOT_TWL, na.rm = T), NTWL = sum(TOT_OTH, na.rm=T)) %>% data.frame()
 
 
+####Additional landings in CA caught in OR/WA waters
+
+ca_hist_inORWA <- readxl::read_excel(path = file.path(git_dir,"data-raw","CAlandingsCaughtORWA.xlsx"), 
+                                     skip = 10, sheet = "Rockfish.estimator")
+ca_hist_inORWA_canary <- ca_hist_inORWA[,c("Row Labels...1","Canary")]
+
+#Add these to historical Ralston values
+
+ca_hist_com_out[ca_hist_com_out$year %in% ca_hist_inORWA_canary$`Row Labels...1`,]$TWL <- ca_hist_inORWA_canary$Canary + 
+  ca_hist_com_out[ca_hist_com_out$year %in% ca_hist_inORWA_canary$`Row Labels...1`,]$TWL
+
+
 ####Landings from 1969-1980 - sent by EJ Dick
+
 ca_com_70s <- utils::read.csv(file = file.path(git_dir,"data-raw","Canary_CA_Comm_1969-1980.csv"), header = TRUE)
 ca_com_70s$mt <- ca_com_70s$POUNDS*0.000453592
 table(ca_com_70s$GEAR_GRP)
@@ -139,6 +152,7 @@ ca_hist_rec <- utils::read.csv(file = file.path(git_dir, "data", "CA_canary_rec_
 rec <- utils::read.csv(file = file.path(git_dir, "data", "canary_rec_catch.csv"), header = TRUE)
 #Extend rec to incorporate CA historical time period
 rec <- rbind(data.frame("Year" = c(1928:1966), "wa_N" = 0, "or_MT" = 0, "ca_MT" = 0), rec)
+
 
 #################################################################################################################
 #---------------------------------------------------------------------------------------------------------------#
@@ -259,18 +273,28 @@ removals[removals$Year %in% rec$Year, c("rec.W","rec.O","rec.C")] <- rec[,-1]
 
 #################################################################################################################
 #---------------------------------------------------------------------------------------------------------------#
+# Load foreign fleet landings (from Table 7 in Rogers 2003 report)
+#---------------------------------------------------------------------------------------------------------------#
+#################################################################################################################
+
+#Same as the 2015 stock assessment values
+for_fleet <- data.frame("Year" = c(1966:1976),
+                        "FOR.C" = c(41,103,415,5,0,0,13,372,150,63,49),
+                        "FOR.O" = c(1445,658,286,50,73,118,318,525,81,141,114),
+                        "FOR.W" = c(113,90,109,12,28,70,68,68,288,0,0))
+#Add to rest of removals
+removals$FOR.C <- 0
+removals$FOR.O <- 0
+removals$FOR.W <- 0
+removals[removals$Year %in% for_fleet$Year, c("FOR.C","FOR.O","FOR.W")] <- for_fleet[,-1]
+
+
+#################################################################################################################
+#---------------------------------------------------------------------------------------------------------------#
 # Output final total removals file
 #---------------------------------------------------------------------------------------------------------------#
 #################################################################################################################
 
-##
-#Upload to googledrive
-##
-# xx <- googledrive::drive_create(name = 'total_removals',
-#                                 path = 'https://drive.google.com/drive/folders/1Lx4JN-nmJkWtcqmelODZYoVrHyVLzegP',
-#                                 type = 'spreadsheet', overwrite = FALSE)
-# googlesheets4::sheet_write(round(removals,2), ss = xx, sheet = "Sheet1")
-
-#Upload to network drive
+#Upload to data folder
 # write.csv(round(removals,2), file = file.path(git_dir, "data", "canary_total_removals.csv"), row.names = FALSE)
 
