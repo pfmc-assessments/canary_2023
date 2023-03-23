@@ -138,7 +138,9 @@ dplyr::group_by(wcgbts_bio, factor(Year)) %>%
   with(mean(n))
 
 # Percent female by age. Around 50%, then drops off around age 17
-wcgbts_bio %>%
+dplyr::bind_rows(tri = triennial_bio$Ages[,c('Age', 'Sex')],
+                 wcgbts = wcgbts_bio[,c('Age', 'Sex')], 
+                 .id = 'survey') %>%
   dplyr::filter(!is.na(Age)) %>%
 #  dplyr::mutate(Age = factor(Age)) %>%
   dplyr::group_by(Age) %>%
@@ -149,7 +151,8 @@ wcgbts_bio %>%
   geom_point() +
   geom_segment(aes(y = Pct_female - se, xend = Age, yend = Pct_female + se)) +
 #  geom_vline(xintercept = 19.5, col = 'red') +
-  geom_hline(yintercept = 0.5)
+  geom_hline(yintercept = 0.5) +
+  geom_vline(xintercept = 20.5)
 
 # Data workshop figures ---------------------------------------------------
 ## scatter plot of age-length-sex
@@ -312,10 +315,10 @@ ggsave(here('data_workshop_figs/presence_by_depth.png'), device = 'png',
 with(wcgbts_catch, sum(total_catch_wt_kg > 0 & Depth_m > 350) / sum(total_catch_wt_kg > 0))
 # Choose 350 as cutoff, includes 99.9% of all positive tows. 
 
-wcgbts_catch %>%
+triennial_catch %>%
   tibble::as_tibble() %>%
   dplyr::filter(total_catch_numbers > 0) %>%
-  dplyr::arrange(desc(Depth_m))
+  dplyr::arrange(desc(Depth_m)) %>% View
 # 350m depth excludes 1 fish in 1 tow.
 
 strata <- nwfscSurvey::CreateStrataDF.fn(
