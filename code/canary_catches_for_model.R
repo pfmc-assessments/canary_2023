@@ -304,29 +304,34 @@ wa_rec_avgW$avgW1 <- (1.04058E-08 * (wa_rec_avgW$avgL*10)^3.084136662)*0.001
 # removals[removals$Year %in% c(1967:2022),]$rec.W.mt.1 <- wa_rec_avgW$avgW*removals[removals$Year %in% c(1967:2022),"rec.W"]
 
 
-##2. Do borrowing for low sample years using weighted mean. Assume blocking based on rec regulations (2017-2022, 2004-2016, 2000-2003, <1999)
+##2. Do borrowing for low sample years (<25 per Dick et al 2021 definition of small sampmle size) using weighted mean. 
+#Assume blocking based on rec regulations (2017-2022, 2004-2016, 2000-2003, <1999)
 #Exception to weighted mean for the single datum in 1987. Its far enough away from other points so use overall mean for the block with no weighting
 wa_bds_len$avgL2 = wa_bds_len$avgL
-wa_bds_len[wa_bds_len$sample_year == 2014,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(2013,2014,2015),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(2012,2013,2014),]$N)
-wa_bds_len[wa_bds_len$sample_year == 2013,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(2012,2013,2014),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(2012,2013,2014),]$N)
-wa_bds_len[wa_bds_len$sample_year == 2012,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(2011,2012,2013),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(2011,2012,2013),]$N)
+for(i in 2006:2014){
+  wa_bds_len[wa_bds_len$sample_year == i,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
+}
 wa_bds_len[wa_bds_len$sample_year == 1998,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$N)
+for(i in 1996:1997){
+  wa_bds_len[wa_bds_len$sample_year == i,]$avgL2b = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
+}
 wa_bds_len[wa_bds_len$sample_year %in% c(1987),]$avgL2 = mean(wa_bds_len[wa_bds_len$sample_year <= 1999,]$avgL, na.rm = T)
 wa_bds_len[wa_bds_len$sample_year %in% c(1982:1983),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$N)
+wa_bds_len[wa_bds_len$sample_year %in% c(1980),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1979:1981),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1979:1981),]$N)
 
 par(mar = c(5, 4, 4, 4) + 0.3)
 h=barplot(height = wa_bds_len$N, names.arg = wa_bds_len$sample_year, xlab = "Year", ylab = "Number of samples (bars)")
 box()
 par(new = TRUE)
 plot(y = wa_bds_len$avgL, x = h, axes = FALSE, bty = "n", xlab = "", ylab = "", type = "b") #original
-points(y = wa_bds_len$avgL2, x = h, pch=19, col = as.numeric(wa_bds_len$N<10)+1) #adjusted based on borrowing
+points(y = wa_bds_len$avgL2, x = h, pch=19, col = as.numeric(wa_bds_len$N<25)+1) #adjusted based on borrowing
 segments(x0 = 0, x1 = 39, lty = 2, #have to convert year to location along the barplot
          y0 = mean(wa_bds_len[wa_bds_len$sample_year <= 1999,]$avgL, na.rm = T))
 segments(x0 = 39, x1 = 44, lty = 2, #have to convert year to location along the barplot
          y0 = mean(wa_bds_len[wa_bds_len$sample_year %in% c(2000:2003),]$avgL, na.rm = T))
 axis(side=4)
 mtext("Mean length in cm (points)", side=4, line=3)
-legend(x=25, y=47.5, c("Sample size <10 - Original L", "Sample size <10 - Adjusted L", "Sample size >=10 - Keep", "Non-weighted mean length by block"), 
+legend(x=25, y=47.5, c("Sample size <25 - Original L", "Sample size <25 - Adjusted L", "Sample size >=25 - Keep", "Non-weighted mean length by block"), 
        col=c(1,2,1,1), lty=c(NA,NA,NA,3), pch=c(1,19,19,NA), bty = "n", cex = 0.8)
 
 #Add average lengths in for years with missing length data and enter in this approach's estimate for WA rec in MT
@@ -345,8 +350,8 @@ removals[removals$Year %in% c(1967:2022),]$rec.W.mt.2 <- wa_rec_avgW$avgW2*remov
 #                                    sheet = "catch_N")
 # tmp <- data.frame("Year" = recMT$RECFIN_YEAR, "avgW" = rowSums(recMT[,c("W_OTH_sum_total","W_PC_sum_total","W_PR_sum_total")], na.rm = T) / 
 #   rowSums(recN[,c("W_OTH_sum_totalN","W_PC_sum_totalN","W_PR_sum_totalN")], na.rm = T))
-# wa_rec_avgW$avgW2 <- 0
-# wa_rec_avgW[wa_rec_avgW$sample_year %in% tmp$Year,]$avgW2 <- tmp$avgW
+# wa_rec_avgW$avgW3 <- 0
+# wa_rec_avgW[wa_rec_avgW$sample_year %in% tmp$Year,]$avgW3 <- tmp$avgW
 # #Need MRFSS values to complete this method
 
 
