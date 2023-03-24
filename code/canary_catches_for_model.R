@@ -133,6 +133,13 @@ ca_hist_out  <- rbind(ca_hist_com_out, ca_com_70s_out[,c("year","TWL","NTWL")])
 #write.csv(ca_hist_out, file = file.path(git_dir, "data", "canary_CA_hist_catch.csv"), row.names = FALSE)
 
 
+##
+#Washington historical commercial landings - file copied from 2015 assessment catch history file
+##
+
+wa_hist_com <- utils::read.csv(file = file.path(git_dir, "data-raw", "WA_canary_com_1932_1980_PulledFrom2015Assessment.csv"), header = TRUE)
+
+
 #################################################################################################################
 #---------------------------------------------------------------------------------------------------------------#
 # Load recreational data
@@ -209,8 +216,10 @@ removals[removals$Year %in% ca_hist_out$year,"TWL.C"] <- ca_hist_out$TWL
 
 
 ##
-#Add Washington commercial reconstruction years <2000 - TO DO
+#Add Washington commercial reconstruction years <1981
 ##
+
+removals[removals$Year %in% wa_hist_com$Year,"TWL.W"] <- wa_hist_com$TWL.W.mt
 
 
 ##
