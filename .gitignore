@@ -39,7 +39,6 @@ vignettes/*.pdf
 .Renviron
 
 # ignore data directory
-data/
 data-raw/
 
 # ignore literature 
@@ -53,3 +52,4 @@ literature/
 *.jpg
 *.jpeg
 data_workshop_figs/
+data_explore_figs/

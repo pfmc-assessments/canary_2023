@@ -47,7 +47,8 @@ pacfin_Ndealer <- googlesheets4::read_sheet('https://docs.google.com/spreadsheet
 #Discard estimates from PacFIN years based on GEMM report allocated based on WCGOP state proportions
 #This is output from canary_discard_exploration.R
 ##
-gemm_discard <- utils::read.csv(file = file.path(git_dir, "data", "canary_commercial_discard_mt.csv"), header = TRUE)
+gemm_discard <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/1vRYNjoXrnbQv79Jz1pezxyU5cZB9pKCDnSE0IWXVyhk/edit#gid=409042882',
+                                          sheet = "discard_mt")
 
 
 ##

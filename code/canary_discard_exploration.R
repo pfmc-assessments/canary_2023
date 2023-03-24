@@ -34,8 +34,6 @@ gemm = gemm[!gemm$Sector %in% c("Research",grep("At-Sea Hake", unique(gemm$Secto
 gemm$dis_mort_rate = round(gemm[,"Discard Mortality"] / gemm[,"Mortality (Landings and Discard Mortality)"], 3)
 data.frame(gemm[,c("Year","Sector","dis_mort_rate")])
 
-##<<<<<<<<<<<<< TO CONFIRM - KEEP OR REMOVE ANY OTHER SECTIONS (e.g. At-sea-hake, tribal)?? <<<<<<<<<<<<<<<
-
 #Summaries by sectors
 sector_val <- cbind(aggregate(Landings~Sector, data = gemm, FUN = function(x) round(sum(x),2)),
                     "Discards" = aggregate(Discards~Sector, data = gemm, FUN = function(x) round(sum(x),2))[,2],
@@ -259,7 +257,15 @@ dead = data.frame("Year" = ratio_all$Year,
                   "or_ntwl" = ratio_fix$or * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"],
                   "wa_ntwl" = ratio_fix$wa * all[which(all$grp_sector == "commercial_ntwl"), "Dead_Discard"]) 
 
-#write.csv(dead, file = file.path(git_dir, "data", "canary_commercial_discard_mt.csv"), row.names = FALSE)
+##
+#Upload to google drive because this can be used to back calculate PacFIN landings and thus should be 
+#considered confidential even though its not stricly confidential on its own
+##
+xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_commercial_discard_mt',
+                                path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB',
+                                type = 'spreadsheet', overwrite = TRUE)
+googlesheets4::sheet_write(dead, ss = xx, sheet = "discard_mt")
+googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
 
 
