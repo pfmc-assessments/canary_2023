@@ -11,13 +11,17 @@ theme_set(theme_classic(base_size = 16))
 
 # option to load data from disk
 # would be good to not have the dates hard coded in.
-load(here('data-raw/Catch__NWFSC.Combo_2023-02-13.rda'))
+
+wcgbts_date <- '2023-02-13'
+triennial_date <- '2023-01-23'
+
+load(here(paste0('data-raw/Catch__NWFSC.Combo_', wcgbts_date, '.rda')))
 wcgbts_catch <- Out
-load(here('data-raw/Catch__Triennial_2023-01-23.rda'))
+load(here(paste0('data-raw/Catch__Triennial_', triennial_date, '.rda')))
 triennial_catch <- Out
-load(here('data-raw/Bio_All_NWFSC.Combo_2023-02-13.rda'))
+load(here(paste0('data-raw/Bio_All_NWFSC.Combo_', wcgbts_date, '.rda')))
 wcgbts_bio <- Data
-load(here('data-raw/Bio_All_Triennial_2023-01-23.rda'))
+load(here(paste0('data-raw/Bio_All_Triennial_', triennial_date, '.rda')))
 triennial_bio <- Data
 
 # load data from gdrive
@@ -423,3 +427,18 @@ canary.converted$dat$catch %>%
   # ggplot() +
   # geom_line(aes(x = year, y = catch))
   write.csv(file = here('data/wa_historical.csv'), row.names = FALSE)
+
+
+library(sdmTMB)
+
+load(here('data-raw/NWFSC.Combo/index/lognormal/sdmTMB_save.rdata')) # this has the index
+data_with_residuals |>
+  ggplot() +
+  geom_point(aes(x = Lat, y = residuals, col = Year), alpha = 0.25)
+
+data_with_residuals |>
+  ggplot() +
+ggridges::geom_density_ridges(aes(x = residuals, y = factor(Year)), alpha = 0.25) +
+  geom_vline(xintercept = 0)
+
+head(predictions)
