@@ -11,13 +11,13 @@ theme_set(theme_classic(base_size = 16))
 
 # option to load data from disk
 # would be good to not have the dates hard coded in.
-load(here('data/Catch__NWFSC.Combo_2023-02-13.rda'))
+load(here('data-raw/Catch__NWFSC.Combo_2023-02-13.rda'))
 wcgbts_catch <- Out
-load(here('data/Catch__Triennial_2023-01-23.rda'))
+load(here('data-raw/Catch__Triennial_2023-01-23.rda'))
 triennial_catch <- Out
-load(here('data/Bio_All_NWFSC.Combo_2023-02-13.rda'))
+load(here('data-raw/Bio_All_NWFSC.Combo_2023-02-13.rda'))
 wcgbts_bio <- Data
-load(here('data/Bio_All_Triennial_2023-01-23.rda'))
+load(here('data-raw/Bio_All_Triennial_2023-01-23.rda'))
 triennial_bio <- Data
 
 # load data from gdrive

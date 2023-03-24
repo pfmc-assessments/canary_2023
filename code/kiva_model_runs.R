@@ -1,3 +1,5 @@
+# code to update ss3 files and run them. various exploratory runs.
+
 library(r4ss)
 library(here)
 
@@ -139,6 +141,80 @@ SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
 # This makes sense, changing ramp essentially decreases natural mortality of teenage fish.
 
 # I think updating the ramp in particular might improve wcgbts fits slightly if you squint?
+
+
+# Add catch data ----------------------------------------------------------
+
+r4ss::copy_SS_inputs(dir.old = here('models/updateM'),
+                     dir.new = here('models/update_catch'))
+update.catch <- r4ss::SS_read(dir = here('models/update_catch'))
+
+update.catch$dat$endyr <- 2022
+
+catches <- read.csv(here('data/canary_total_removals.csv')) 
+
+fleet.converter <- update.catch$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_')) |>
+  dplyr::select(fleetname, fleet_no_num)
+
+updated.catch.df <- catches |>
+  dplyr::select(-rec.W.N) |>
+  tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
+  tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |> 
+  # warning is ok, cuts off units in WA rec catch column name
+  dplyr::mutate(gear = stringr::str_to_upper(gear),
+                state = dplyr::case_when(state == 'W' ~ 'WA',
+                                         state == 'O' ~ 'OR',
+                                         state == 'C' ~ 'CA'),
+                fleet_no_num = paste(state, gear, sep = '_')) |>
+  dplyr::left_join(fleet.converter) |>
+  dplyr::mutate(fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+')),
+                seas = 1, 
+                catch_se = 0.01) |>
+  dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
+  rbind(c(-999, 1, 1, 0, 0.01)) |>
+  dplyr::arrange(fleet, year) |>
+  as.data.frame()
+
+update.catch$dat$catch <- updated.catch.df
+
+SS_write(update.catch, 
+         dir = here('models/update_catch'), 
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/update_catch'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+
+SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                subdir = c('no_research_catch',  'updateM_prior', 'updateM', 'update_catch'))) |>
+  SSsummarize() |>
+  SSplotComparisons(legendlabels = c('no research catch', 'update M prior', 'update M ramp', 'extend catch'),
+                    subplots = c(9,3,1))
+
+
+# extend wcgbts ------------------------------------------------------------
+
+update.catch$dat$CPUE |> head()
+
+wcgbts.cpue <- all_indices |>
+  dplyr::mutate(area = ifelse(area == 'coastwide',
+                       area,
+                       stringr::str_to_upper(area)),
+                fleet_no_num = paste0(area, '_NWFSC')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(index = as.numeric(stringr::str_extract(fleetname, '[:digit:]+')),
+                seas = 7) |>
+  dplyr::select(year = Year, seas, index, obs = est, se_log = se)
+           
+update.catch$dat$CPUE <- update.catch$dat$CPUE |>
+  dplyr::filter(!(index %in% wcgbts.cpue$index)) |>
+  dplyr::bind_rows(wcgbts.cpue) |>
+  dplyr::arrange(index, year) 
+
 
 # No triennial
 # Triennial combined

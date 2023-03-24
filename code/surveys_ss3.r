@@ -4,13 +4,13 @@ library(magrittr)
 library(ggplot2)
 library(here) 
 
-load(here('data/Catch__NWFSC.Combo_2023-02-13.rda'))
+load(here('data-raw/Catch__NWFSC.Combo_2023-02-13.rda'))
 wcgbts_catch <- Out
-load(here('data/Catch__Triennial_2023-01-23.rda'))
+load(here('data-raw/Catch__Triennial_2023-01-23.rda'))
 triennial_catch <- Out
-load(here('data/Bio_All_NWFSC.Combo_2023-02-13.rda'))
+load(here('data-raw/Bio_All_NWFSC.Combo_2023-02-13.rda'))
 wcgbts_bio <- Data
-load(here('data/Bio_All_Triennial_2023-01-23.rda'))
+load(here('data-raw/Bio_All_Triennial_2023-01-23.rda'))
 triennial_bio <- Data
 
 age_bins <- 1:35
@@ -51,6 +51,9 @@ wcgbts_age_freq <- SurveyAFs.fn(dir = here('data'),
                                 strat.df = strata, 
                                 ageBins = age_bins, 
                                 nSamps = age_n)
+
+load(here('data-raw/NWFSC.Combo/index/lognormal/sdmTMB_save.Rdata'))
+write.csv(all_indices, here('data/wcgbts_index.csv'), row.names = FALSE)
 
 # Triennial ---------------------------------------------------------------
 

@@ -4,7 +4,7 @@ library(magrittr)
 # catch
 wcgbts_catch <- nwfscSurvey::PullCatch.fn(Name = 'canary rockfish', 
                                           SurveyName = 'NWFSC.Combo', 
-                                          Dir = here('data'), 
+                                          Dir = here('data-raw'), 
                                           SaveFile = TRUE) %>%
   dplyr::mutate(Date = as.character(Date),
                 State = dplyr::case_when(Latitude_dd < 42 ~ 'CA',
@@ -13,7 +13,7 @@ wcgbts_catch <- nwfscSurvey::PullCatch.fn(Name = 'canary rockfish',
 
 triennial_catch <- nwfscSurvey::PullCatch.fn(Name = 'canary rockfish', 
                                              SurveyName = 'Triennial',
-                                             Dir = here('data'),
+                                             Dir = here('data-raw'),
                                              SaveFile = TRUE) %>%
   dplyr::mutate(Date = as.character(Date),
                 State = dplyr::case_when(Latitude_dd < 42 ~ 'CA',
@@ -24,7 +24,7 @@ triennial_catch <- nwfscSurvey::PullCatch.fn(Name = 'canary rockfish',
 # bio data
 wcgbts_bio <- nwfscSurvey::PullBio.fn(Name = 'canary rockfish', 
                                       SurveyName = 'NWFSC.Combo',
-                                      Dir = here('data'),
+                                      Dir = here('data-raw'),
                                       SaveFile = TRUE) %>%
   dplyr::mutate(Date = as.character(Date),
                 State = dplyr::case_when(Latitude_dd < 42 ~ 'CA',
@@ -33,17 +33,17 @@ wcgbts_bio <- nwfscSurvey::PullBio.fn(Name = 'canary rockfish',
 
 triennial_bio <- nwfscSurvey::PullBio.fn(Name = 'canary rockfish', 
                                        SurveyName = 'Triennial',
-                                       Dir = here('data'),
+                                       Dir = here('data-raw'),
                                        SaveFile = TRUE) %>%
   purrr::map(.f = function(df) dplyr::mutate(df, Date = as.character(Date)))
 
 
 # bio samples
 wcgbts_bio_samples <- nwfscSurvey::pull_biological_samples(common_name = 'canary rockfish', 
-                                                           dir = here('data'), 
+                                                           dir = here('data-raw'), 
                                                            survey = 'NWFSC.Combo')
 triennial_bio_samples <- nwfscSurvey::pull_biological_samples(common_name = 'canary rockfish', 
-                                                           dir = here('data'), 
+                                                           dir = here('data-raw'), 
                                                            survey = 'NWFSC.Combo')
 
 # Calculate total research catches

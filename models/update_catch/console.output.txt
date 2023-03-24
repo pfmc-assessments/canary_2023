@@ -1,0 +1,288 @@
+###
+console output
+2023-03-24 13:30:30
+###
+ 
+ reading from starter.ss
+ reading from data file
+Data read sucessful 999
+
+ reading forecast file 
+ reading from control file
+End of control file successful! 999
+Begin setting up parameters ...  end of parameter section 
+Evaluating biology calculations once ... done
+Starting optimization of 'ss_win' in phase 1 of 5 at Fri Mar 24 13:28:40 2023
+1 1 -log(L): 500528  Spbio: 7874.94 2691.7  crash 490666
+phase= 1 | nvar=  3 | iter=  0 | nll=5.01e+05 | mag=1.34e+07 | par[  1]=MGparm[25]
+1 2 -log(L): 500528  Spbio: 7874.94 2691.7  crash 490666
+1 3 -log(L): 500528  Spbio: 7874.94 2691.71  crash 490666
+1 4 -log(L): 500526  Spbio: 7874.94 2691.72  crash 490664
+1 5 -log(L): 500506  Spbio: 7874.95 2691.84  crash 490644
+1 6 -log(L): 500306  Spbio: 7875.05 2693.07  crash 490444
+1 7 -log(L): 498283  Spbio: 7876.11 2705.29  crash 488422
+1 8 -log(L): 479338  Spbio: 7886.65 2821.6  crash 469485
+1 9 -log(L): 441221  Spbio: 7948.77 2873.38  crash 431424
+1 10 -log(L): 7416.23  Spbio: 8607.57 4324.05  crash 0.829759
+1 11 -log(L): 1.02026e+06  Spbio: 3464.21 0.000188764  crash 1.002e+06
+1 12 -log(L): 1.01815e+06  Spbio: 3794.71 3077.06  crash 1.002e+06
+1 13 -log(L): 5952.97  Spbio: 10268.8 6788.78
+1 14 -log(L): 5949.47  Spbio: 10337.8 6878.54
+1 15 -log(L): 5944.9  Spbio: 10482.3 7056.61
+1 16 -log(L): 5944.34  Spbio: 10504.5 7081.82
+1 17 -log(L): 5943.28  Spbio: 10493.7 7066.42
+1 18 -log(L): 5941.74  Spbio: 10386.5 6908.33
+1 19 -log(L): 5939.66  Spbio: 10427.4 6969.81
+1 20 -log(L): 5930.88  Spbio: 10240.5 6715.38
+1 21 -log(L): 5919.44  Spbio: 9868.53 6140.97
+1 22 -log(L): 5919.03  Spbio: 9833.48 6084.84
+1 23 -log(L): 5918.92  Spbio: 9851.7 6115.6
+1 24 -log(L): 5918.92  Spbio: 9842.37 6098.69
+1 25 -log(L): 5918.91  Spbio: 9843.82 6101.32
+1 26 -log(L): 5918.91  Spbio: 9846.69 6106.53
+1 27 -log(L): 5918.91  Spbio: 9846.72 6106.6
+1 28 -log(L): 5918.91  Spbio: 9847.11 6107.31
+1 29 -log(L): 5918.91  Spbio: 9847.1 6107.28
+1 30 -log(L): 5918.91  Spbio: 9846.91 6106.97
+1 31 -log(L): 5918.9  Spbio: 9845.05 6103.85
+1 32 -log(L): 5918.89  Spbio: 9839.71 6094.82
+1 33 -log(L): 5918.89  Spbio: 9838.3 6092.42
+phase= 1 | nvar=  3 | iter= 18 | nll=5.92e+03 | mag=4.81e-01 | par[  1]=MGparm[25]
+1 34 -log(L): 5918.89  Spbio: 9838.3 6092.42
+2 35 -log(L): 5918.89  Spbio: 9838.3 6092.42
+phase= 2 | nvar= 15 | iter=  0 | nll=5.92e+03 | mag=9.43e+03 | par[  6]=MGparm[17]
+2 36 -log(L): 5918.87  Spbio: 9838.29 6092.26
+2 37 -log(L): 5918.67  Spbio: 9838.26 6090.57
+2 38 -log(L): 5917.28  Spbio: 9837.92 6073.58
+2 39 -log(L): 5915.42  Spbio: 9844.48 6067.32
+2 40 -log(L): 5913.48  Spbio: 9827.87 6067.38
+2 41 -log(L): 5911.47  Spbio: 9799.41 6042.82
+2 42 -log(L): 5908.98  Spbio: 9786.12 6024.95
+2 43 -log(L): 5904.71  Spbio: 9841.56 6084.85
+2 44 -log(L): 5902.11  Spbio: 9670.68 5780.55
+2 45 -log(L): 5901.94  Spbio: 9777.5 6012.27
+2 46 -log(L): 5901.62  Spbio: 9773.44 6010.85
+2 47 -log(L): 5899.27  Spbio: 9732.4 5995.76
+2 48 -log(L): 5899  Spbio: 9816.54 6031.37
+2 49 -log(L): 5897.83  Spbio: 9776.74 6014.38
+2 50 -log(L): 5896.61  Spbio: 9804.28 6014.01
+2 51 -log(L): 5896.48  Spbio: 9785 6018.66
+2 52 -log(L): 5895.95  Spbio: 9794.01 6016.44
+2 53 -log(L): 5896.14  Spbio: 9794.84 6021.51
+2 54 -log(L): 5895.62  Spbio: 9794.4 6018.86
+2 55 -log(L): 5895.35  Spbio: 9794.04 6017.63
+2 56 -log(L): 5895.26  Spbio: 9800.84 6027.29
+2 57 -log(L): 5895.07  Spbio: 9801.65 6028.31
+2 58 -log(L): 5893.42  Spbio: 9809.72 6038.47
+2 59 -log(L): 5890.92  Spbio: 9826.46 6062.37
+2 60 -log(L): 5890.49  Spbio: 9833.95 6075.59
+2 61 -log(L): 5890.49  Spbio: 9833.16 6075.34
+phase= 2 | nvar= 15 | iter= 19 | nll=5.89e+03 | mag=2.72e+00 | par[ 10]=MGparm[25]
+2 62 -log(L): 5890.49  Spbio: 9833.16 6075.34
+3 63 -log(L): 5890.49  Spbio: 9833.16 6075.34
+phase= 3 | nvar= 16 | iter=  0 | nll=5.89e+03 | mag=6.32e+01 | par[  1]=MGparm[2]
+3 64 -log(L): 5890.47  Spbio: 9831.95 6073.25
+3 65 -log(L): 5890.45  Spbio: 9830.69 6073.07
+3 66 -log(L): 5890.25  Spbio: 9818.12 6071.29
+3 67 -log(L): 5889.81  Spbio: 9797.49 6062.97
+3 68 -log(L): 5886.56  Spbio: 9603.05 5984.13
+3 69 -log(L): 5883.43  Spbio: 9417.88 6000.83
+3 70 -log(L): 5880.83  Spbio: 9382.2 6135.43
+3 71 -log(L): 5880.61  Spbio: 9435.64 6341.86
+3 72 -log(L): 5880.29  Spbio: 9412.92 6313.06
+3 73 -log(L): 5882.78  Spbio: 9387.67 6338.2
+3 74 -log(L): 5880.25  Spbio: 9410.31 6315.75
+3 75 -log(L): 5880.24  Spbio: 9405.86 6311.99
+3 76 -log(L): 5880.24  Spbio: 9415.61 6315.92
+3 77 -log(L): 5880.23  Spbio: 9410.01 6313.68
+3 78 -log(L): 5880.23  Spbio: 9413.01 6315.11
+3 79 -log(L): 5880.22  Spbio: 9412.23 6314.74
+3 80 -log(L): 5880.2  Spbio: 9412.22 6314.47
+3 81 -log(L): 5880.06  Spbio: 9412.05 6311.78
+3 82 -log(L): 5879.79  Spbio: 9407.67 6303.46
+3 83 -log(L): 5879.25  Spbio: 9398.55 6285.32
+3 84 -log(L): 5876.3  Spbio: 9310.59 6098.35
+3 85 -log(L): 5901.45  Spbio: 9209.03 5838.33
+3 86 -log(L): 5876.08  Spbio: 9296.98 6066.27
+3 87 -log(L): 5876.53  Spbio: 9288.54 6057.99
+3 88 -log(L): 5876.04  Spbio: 9295.27 6064.6
+3 89 -log(L): 5875.96  Spbio: 9293.36 6065.05
+3 90 -log(L): 5875.2  Spbio: 9275.15 6069.9
+3 91 -log(L): 5873.76  Spbio: 9234.81 6083.4
+3 92 -log(L): 5871.76  Spbio: 9182.54 6111
+phase= 3 | nvar= 16 | iter= 20 | nll=5.87e+03 | mag=1.37e+03 | par[  7]=MGparm[17]
+3 93 -log(L): 5871.1  Spbio: 9160.17 6108.88
+3 94 -log(L): 5871.04  Spbio: 9152.25 6104.93
+3 95 -log(L): 5870.97  Spbio: 9148.21 6096.83
+3 96 -log(L): 5870.97  Spbio: 9147.77 6095.78
+3 97 -log(L): 5870.97  Spbio: 9147.46 6095.25
+3 98 -log(L): 5870.97  Spbio: 9147.44 6095.22
+phase= 3 | nvar= 16 | iter= 26 | nll=5.87e+03 | mag=7.45e-01 | par[ 11]=MGparm[25]
+3 99 -log(L): 5870.97  Spbio: 9147.44 6095.22
+4 100 -log(L): 5870.97  Spbio: 9147.44 6095.22
+phase= 4 | nvar= 26 | iter=  0 | nll=5.87e+03 | mag=6.24e+02 | par[ 19]=selparm[13]
+4 101 -log(L): 5870.95  Spbio: 9147.44 6095.24
+4 102 -log(L): 5870.75  Spbio: 9147.44 6095.38
+4 103 -log(L): 5869.04  Spbio: 9147.42 6096.74
+4 104 -log(L): 5868.42  Spbio: 9142.12 6061.98
+4 105 -log(L): 5868.04  Spbio: 9137.15 6068.9
+4 106 -log(L): 5868.79  Spbio: 9151.64 6092.9
+4 107 -log(L): 5867.95  Spbio: 9140.61 6074.87
+4 108 -log(L): 5867.82  Spbio: 9154.67 6096.69
+4 109 -log(L): 5867.61  Spbio: 9172.57 6119
+4 110 -log(L): 5867.34  Spbio: 9154.81 6085.18
+4 111 -log(L): 5866.93  Spbio: 9144.99 6074.45
+4 112 -log(L): 5867.81  Spbio: 9128.02 6045.93
+4 113 -log(L): 5866.83  Spbio: 9140.86 6067.49
+4 114 -log(L): 5866.72  Spbio: 9140.05 6070.64
+4 115 -log(L): 5866.6  Spbio: 9151.31 6076.85
+4 116 -log(L): 5866.55  Spbio: 9139.11 6064.51
+4 117 -log(L): 5866.5  Spbio: 9141.87 6069.61
+4 118 -log(L): 5866.42  Spbio: 9144.26 6071.59
+4 119 -log(L): 5866.47  Spbio: 9134.23 6064.56
+4 120 -log(L): 5866.4  Spbio: 9140.76 6069.14
+4 121 -log(L): 5866.42  Spbio: 9138.03 6066.17
+4 122 -log(L): 5866.39  Spbio: 9139.87 6068.17
+4 123 -log(L): 5866.37  Spbio: 9140.1 6069.18
+4 124 -log(L): 5866.35  Spbio: 9144.93 6071.54
+4 125 -log(L): 5866.32  Spbio: 9145.02 6072.03
+4 126 -log(L): 5866.26  Spbio: 9143.51 6072.47
+phase= 4 | nvar= 26 | iter= 20 | nll=5.87e+03 | mag=8.90e+03 | par[  7]=MGparm[17]
+4 127 -log(L): 5866.15  Spbio: 9144.49 6073.39
+4 128 -log(L): 5865.94  Spbio: 9145.89 6075.12
+4 129 -log(L): 5864.59  Spbio: 9160.17 6092.53
+4 130 -log(L): 5863.06  Spbio: 9158.63 6102.48
+4 131 -log(L): 6061.07  Spbio: 11197.4 7096.95
+4 132 -log(L): 5863.06  Spbio: 9158.64 6102.71
+4 133 -log(L): 5863.05  Spbio: 9158.18 6102.35
+4 134 -log(L): 5863.03  Spbio: 9158.3 6102.58
+4 135 -log(L): 5863  Spbio: 9158.87 6103.36
+4 136 -log(L): 5862.71  Spbio: 9165.43 6111.5
+4 137 -log(L): 5862.94  Spbio: 9180.36 6127.38
+4 138 -log(L): 5862.61  Spbio: 9170.16 6116.74
+4 139 -log(L): 5862.5  Spbio: 9175.35 6123.16
+4 140 -log(L): 5862.44  Spbio: 9182.78 6131.54
+4 141 -log(L): 5862.43  Spbio: 9180.82 6130.17
+4 142 -log(L): 5862.43  Spbio: 9180.77 6130.31
+4 143 -log(L): 5862.43  Spbio: 9180.77 6130.35
+4 144 -log(L): 5862.43  Spbio: 9180.76 6130.33
+4 145 -log(L): 5862.43  Spbio: 9180.74 6130.31
+phase= 4 | nvar= 26 | iter= 35 | nll=5.86e+03 | mag=2.76e-01 | par[ 11]=MGparm[25]
+4 146 -log(L): 5862.43  Spbio: 9180.74 6130.31
+5 147 -log(L): 5862.43  Spbio: 9180.74 6130.31
+phase= 5 | nvar=312 | iter=  0 | nll=5.86e+03 | mag=3.25e+02 | par[ 88]=recdev1[48]
+5 148 -log(L): 5862.41  Spbio: 9180.74 6130.28
+5 149 -log(L): 5862.21  Spbio: 9180.74 6129.96
+5 150 -log(L): 5860.22  Spbio: 9180.73 6126.83
+5 151 -log(L): 5841.31  Spbio: 9180.64 6098.25
+5 152 -log(L): 5753.77  Spbio: 9179.78 6088.09
+5 153 -log(L): 6777.93  Spbio: 9287.25 7412.29
+5 154 -log(L): 5752.32  Spbio: 9187.14 6183.11
+5 155 -log(L): 5750.61  Spbio: 9206.34 6207.57
+5 156 -log(L): 5747.92  Spbio: 9223.21 6249.97
+5 157 -log(L): 5743.49  Spbio: 9279.41 6336.97
+5 158 -log(L): 5738.67  Spbio: 9270.55 6316.49
+5 159 -log(L): 5732.47  Spbio: 9149.73 6145.65
+5 160 -log(L): 5723.25  Spbio: 9135.72 6175.6
+5 161 -log(L): 5719.32  Spbio: 9245.31 6240.79
+5 162 -log(L): 5712.46  Spbio: 9254.36 6252.77
+5 163 -log(L): 5704.8  Spbio: 9312.5 6290.87
+5 164 -log(L): 5694.63  Spbio: 9301.72 6254.36
+5 165 -log(L): 5684.44  Spbio: 9154.46 6063.47
+5 166 -log(L): 5693.29  Spbio: 9235.46 6208.01
+5 167 -log(L): 5680.68  Spbio: 9184.33 6111.53
+5 168 -log(L): 5676.44  Spbio: 9055.94 6031.61
+5 169 -log(L): 5675.86  Spbio: 9024.42 6038.83
+5 170 -log(L): 5674.83  Spbio: 9012.15 6024.4
+5 171 -log(L): 5673.22  Spbio: 8986.34 6007.42
+5 172 -log(L): 5670.76  Spbio: 8969.04 6021.88
+5 173 -log(L): 5667.08  Spbio: 8939.09 6064.07
+phase= 5 | nvar=312 | iter= 20 | nll=5.67e+03 | mag=3.78e+03 | par[  7]=MGparm[17]
+5 174 -log(L): 5662.66  Spbio: 8901.14 6120.3
+5 175 -log(L): 5660.63  Spbio: 8836.14 6238.21
+5 176 -log(L): 5657.94  Spbio: 8859.79 6192.43
+5 177 -log(L): 5663.17  Spbio: 8888.02 6334.97
+5 178 -log(L): 5655.88  Spbio: 8869.38 6239.01
+5 179 -log(L): 5657.65  Spbio: 8802.03 6141.37
+5 180 -log(L): 5655.16  Spbio: 8845.55 6202.8
+5 181 -log(L): 5654.62  Spbio: 8831.62 6171.45
+5 182 -log(L): 5654.1  Spbio: 8857.98 6189.78
+5 183 -log(L): 5653.84  Spbio: 8899.41 6262.53
+5 184 -log(L): 5653.61  Spbio: 8918.87 6298.27
+5 185 -log(L): 5653.27  Spbio: 8932.42 6323.84
+5 186 -log(L): 5652.84  Spbio: 8954.29 6361.6
+5 187 -log(L): 5652.45  Spbio: 8996.43 6432.78
+5 188 -log(L): 5652.04  Spbio: 9035.84 6487.79
+5 189 -log(L): 5651.82  Spbio: 9064.36 6521.02
+5 190 -log(L): 5651.52  Spbio: 9071.89 6528.09
+5 191 -log(L): 5651.68  Spbio: 9064.23 6511.87
+5 192 -log(L): 5651.4  Spbio: 9068.82 6521.38
+5 193 -log(L): 5651.27  Spbio: 9066.12 6521.92
+5 194 -log(L): 5651.13  Spbio: 9064.46 6521.57
+5 195 -log(L): 5650.93  Spbio: 9063.43 6516.44
+5 196 -log(L): 5650.74  Spbio: 9055.65 6508.95
+5 197 -log(L): 5650.39  Spbio: 9051.06 6508.04
+phase= 5 | nvar=312 | iter= 40 | nll=5.65e+03 | mag=4.87e+03 | par[  7]=MGparm[17]
+5 198 -log(L): 5649.94  Spbio: 9056.9 6503.05
+5 199 -log(L): 5649.62  Spbio: 9049.67 6479.54
+5 200 -log(L): 5649.27  Spbio: 9034.13 6457.77
+5 201 -log(L): 5648.99  Spbio: 9027.66 6444.23
+5 202 -log(L): 5648.53  Spbio: 9046.91 6467
+5 203 -log(L): 5648.2  Spbio: 9078.01 6481.59
+5 204 -log(L): 5647.81  Spbio: 9087.79 6478.84
+5 205 -log(L): 5647.57  Spbio: 9079.6 6472.17
+5 206 -log(L): 5647.32  Spbio: 9060.82 6459.17
+5 207 -log(L): 5646.92  Spbio: 9046.35 6426.07
+5 208 -log(L): 5646.39  Spbio: 8976.02 6329.38
+5 209 -log(L): 5645.79  Spbio: 8906.16 6235.33
+5 210 -log(L): 5645.17  Spbio: 8850.89 6162.89
+5 211 -log(L): 5644.31  Spbio: 8819.68 6109.44
+5 212 -log(L): nan  Spbio: 8803.97 6085.1
+5 213 -log(L): nan  Spbio: nan nan
+5 214 -log(L): nan  Spbio: nan nan
+5 215 -log(L): nan  Spbio: nan nan
+5 216 -log(L): nan  Spbio: nan nan
+5 217 -log(L): nan  Spbio: nan nan
+5 218 -log(L): nan  Spbio: nan nan
+5 219 -log(L): nan  Spbio: nan nan
+5 220 -log(L): nan  Spbio: nan nan
+5 221 -log(L): nan  Spbio: nan nan
+5 222 -log(L): nan  Spbio: nan nan
+5 223 -log(L): nan  Spbio: nan nan
+5 224 -log(L): nan  Spbio: nan nan
+5 225 -log(L): nan  Spbio: nan nan
+5 226 -log(L): nan  Spbio: nan nan
+5 227 -log(L): nan  Spbio: nan nan
+5 228 -log(L): nan  Spbio: nan nan
+5 229 -log(L): nan  Spbio: nan nan
+5 230 -log(L): nan  Spbio: nan nan
+5 231 -log(L): nan  Spbio: nan nan
+5 232 -log(L): nan  Spbio: nan nan
+5 233 -log(L): nan  Spbio: nan nan
+5 234 -log(L): nan  Spbio: nan nan
+5 235 -log(L): nan  Spbio: nan nan
+5 236 -log(L): nan  Spbio: nan nan
+5 237 -log(L): nan  Spbio: nan nan
+5 238 -log(L): nan  Spbio: nan nan
+5 239 -log(L): nan  Spbio: nan nan
+5 240 -log(L): nan  Spbio: nan nan
+5 241 -log(L): nan  Spbio: nan nan
+5 242 -log(L): nan  Spbio: nan nan
+phase= 5 | nvar=312 | iter= 55 | nll=nan | mag=2.45e+03 | par[  7]=MGparm[17]
+Optimization completed after 1 m 42 s with final statistics:
+  nll=nan | mag=2.44682e+03 | par[  7]=MGparm[17]
+
+5 243 -log(L): 5644.31  Spbio: 8819.68 6109.44
+Iterations: 243
+Finished calculating benchmarks
+Finished forecast
+Writing wtatage.ss_new
+Finished posteriors
+Finished final writing of report.sso
+
+ N parameters that are on or within 1% of min-max bound: 5
+
+!!  Run has completed  !! 
+!!  See warning.sso for 27 warnings  and 4 notes 
+
+Finished running model 'ss_win' after 1 m 49 s.

@@ -1,6 +1,6 @@
 ###
 console output
-2023-03-22 17:02:07
+2023-03-24 13:28:32
 ###
  
  reading from starter.ss
@@ -12,7 +12,7 @@ Data read sucessful 999
 End of control file successful! 999
 Begin setting up parameters ...  end of parameter section 
 Evaluating biology calculations once ... done
-Starting optimization of 'ss_win' in phase 1 of 5 at Wed Mar 22 16:55:49 2023
+Starting optimization of 'ss_win' in phase 1 of 5 at Fri Mar 24 13:22:05 2023
 1 1 -log(L): 847265  Spbio: 5153.8 56.3646  crash 834236
 phase= 1 | nvar=  3 | iter=  0 | nll=8.47e+05 | mag=5.17e+06 | par[  1]=MGparm[25]
 1 2 -log(L): 847265  Spbio: 5153.8 56.3646  crash 834236
@@ -969,7 +969,7 @@ phase= 5 | nvar=304 | iter=540 | nll=5.61e+03 | mag=7.01e-04 | par[  7]=MGparm[1
 5 915 -log(L): 5610.95  Spbio: 12677 10769
 5 916 -log(L): 5610.95  Spbio: 12677 10769
 phase= 5 | nvar=304 | iter=541 | nll=5.61e+03 | mag=7.01e-04 | par[  7]=MGparm[17]
-Optimization completed after 6 m 11 s with final statistics:
+Optimization completed after 6 m 19 s with final statistics:
   nll=5610.946685 | mag=7.01089e-04 | par[  7]=MGparm[17]
 
 Warning: the following parameters had issues
@@ -990,4 +990,4 @@ Finished final writing of report.sso
 !!  Run has completed  !! 
 !!  See warning.sso for 29 warnings  and 4 notes 
 
-Finished running model 'ss_win' after 6 m 17 s.
+Finished running model 'ss_win' after 6 m 25 s.
