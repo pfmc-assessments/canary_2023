@@ -58,7 +58,7 @@ table(pacfin$AGENCY_CODE, pacfin$FISH_LENGTH_TYPE_DESC)
 pacfin <- pacfin[which(pacfin$FISH_LENGTH_TYPE_CODE != "S"),]
 
 #Assign NA sex to unknown
-pacfin$SEX_CODE <- case_when(is.na(pacfin$SEX_CODE) ~ "U", TRUE ~ pacfin$SEX_CODE)
+pacfin$SEX_CODE <- dplyr::case_when(is.na(pacfin$SEX_CODE) ~ "U", TRUE ~ pacfin$SEX_CODE)
 
 ##
 #Incorporate the changes from cleanPacFIN but 
