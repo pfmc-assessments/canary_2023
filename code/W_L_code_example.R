@@ -14,7 +14,9 @@ ggplot(Data) +
 
 # Estimate
 W_L_pars <- Data |>
-  dplyr::mutate(Sex = ifelse(is.na(Sex), 'U', Sex)) |>
+  dplyr::mutate(Sex = 'B') |>
+  dplyr::bind_rows(Data) |>
+  dplyr::filter(Sex %in% c('F', 'M', 'B')) |>
   tidyr::nest(data = -Sex) |> 
                                          # Fit model
   dplyr::mutate(fit = purrr::map(data, ~ lm(log(Weight) ~ log(Length_cm), data = .)),
