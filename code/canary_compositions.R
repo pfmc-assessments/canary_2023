@@ -100,7 +100,7 @@ myLbins = c(seq(12, 66, 2))
 Lcomps = getComps(Pdata_exp, Comps = "LEN")
 
 writeComps(inComps = Lcomps, 
-           fname = file.path(git_dir, "data", "forSS", "Canary_PacFIN_LengthComps.csv"), 
+           fname = file.path(git_dir, "data", "Canary_PacFIN_LengthComps.csv"), 
            lbins = myLbins, 
            partition = 0, 
            sum1 = TRUE,
@@ -112,10 +112,10 @@ writeComps(inComps = Lcomps,
 # PdataCoast_exp <- getExpansion_1(Pdata = PdataCoast,
 #                             fa = fa, fb = fb, ma = ma, mb = mb, ua = ua, ub = ub)
 # 
-# PdataCoast_exp <- getExpansion_2(Pdata = PdataCoast_exp, 
-#                             Catch = data.frame("year" = catch.file$year, 
-#                                                "NTWL" = rowSums(catch.file[,c("NTWL.C","NTWL.O","NTWL.W")],na.rm=T), 
-#                                                "TWL" = rowSums(catch.file[,c("TWL.C","TWL.O","TWL.W")],na.rm=T)), 
+# PdataCoast_exp <- getExpansion_2(Pdata = PdataCoast_exp,
+#                             Catch = data.frame("year" = catch.file$year,
+#                                                "NTWL" = rowSums(catch.file[,c("NTWL.C","NTWL.O","NTWL.W")],na.rm=T),
+#                                                "TWL" = rowSums(catch.file[,c("TWL.C","TWL.O","TWL.W")],na.rm=T)),
 #                             Units = "MT",
 #                             maxExp = 0.95,
 #                             stratification.cols = "fleet")
@@ -127,10 +127,10 @@ writeComps(inComps = Lcomps,
 # 
 # LcompsCoast = getComps(PdataCoast_exp, Comps = "LEN")
 # 
-# writeComps(inComps = LcompsCoast, 
-#            fname = file.path(git_dir, "data", "forSS", "Canary_PacFIN_Coastal_LengthComps.csv"), 
-#            lbins = myLbins, 
-#            partition = 0, 
+# writeComps(inComps = LcompsCoast,
+#            fname = file.path(git_dir, "data", "Canary_PacFIN_Coastal_LengthComps.csv"),
+#            lbins = myLbins,
+#            partition = 0,
 #            sum1 = TRUE,
 #            digits = 4)
 
@@ -140,7 +140,7 @@ writeComps(inComps = Lcomps,
 
 #Have to use header = FALSE here because when TRUE I cant read each set of comps, and the variable
 #names are fixed as the ones for the combined comps
-out = read.csv(file.path(git_dir, "data", "forSS", "Canary_PacFIN_LengthComps.csv"), skip = 3, header = FALSE)
+out = read.csv(file.path(git_dir, "data", "Canary_PacFIN_LengthComps.csv"), skip = 3, header = FALSE)
 
 ##
 #Extract Unsexed fish
@@ -162,10 +162,6 @@ ca_comps = format[format$state == "C", ]
 or_comps = format[format$state == "O", ]
 wa_comps = format[format$state == "W", ]
 
-# write.csv(ca_comps, file = file.path(git_dir, "data", "forSS","CA_PacFIN_Lcomps_unsexed_12_66_formatted.csv"), row.names = FALSE)
-# write.csv(or_comps, file = file.path(git_dir, "data", "forSS","OR_PacFIN_Lcomps_unsexed_12_66_formatted.csv"), row.names = FALSE)
-# write.csv(wa_comps, file = file.path(git_dir, "data", "forSS","WA_PacFIN_Lcomps_unsexed_12_66_formatted.csv"), row.names = FALSE)
-
 ##
 #Extract sexed fish
 ##
@@ -182,19 +178,28 @@ colnames(format) = c("state", "fishyr", "month", "fleet", "sex", "part", "Ntows"
 format$state <- sub("^.*\\.","", format$state) #keep only stuff after "."
 format$fleet <- sub("\\..*", "", format$fleet) #keep only stuff before "."
 
-ca_comps = format[format$state == "C", ]
-or_comps = format[format$state == "O", ]
-wa_comps = format[format$state == "W", ]
+ca_sexed_comps = format[format$state == "C", ]
+or_sexed_comps = format[format$state == "O", ]
+wa_sexed_comps = format[format$state == "W", ]
 
-# write.csv(ca_comps, file = file.path(git_dir, "data", "forSS","CA_PacFIN_Lcomps_Sexed_12_66_formatted.csv"), row.names = FALSE)
-# write.csv(or_comps, file = file.path(git_dir, "data", "forSS","OR_PacFIN_Lcomps_Sexed_12_66_formatted.csv"), row.names = FALSE)
-# write.csv(wa_comps, file = file.path(git_dir, "data", "forSS","WA_PacFIN_Lcomps_Sexed_12_66_formatted.csv"), row.names = FALSE)
+#Set up same names so as to combine unsexed and sexed comps
+colnames(ca_comps) <- colnames(ca_sexed_comps)
+colnames(or_comps) <- colnames(or_sexed_comps)
+colnames(wa_comps) <- colnames(wa_sexed_comps)
 
+ca_all_comps = rbind(ca_comps, ca_sexed_comps)
+or_all_comps = rbind(or_comps, or_sexed_comps)
+wa_all_comps = rbind(wa_comps, wa_sexed_comps)
+
+# write.csv(ca_all_comps, file = file.path(git_dir, "data", "forSS","CA_PacFIN_Lcomps_12_66_formatted.csv"), row.names = FALSE)
+# write.csv(or_all_comps, file = file.path(git_dir, "data", "forSS","OR_PacFIN_Lcomps_12_66_formatted.csv"), row.names = FALSE)
+# write.csv(wa_all_comps, file = file.path(git_dir, "data", "forSS","WA_PacFIN_Lcomps_12_66_formatted.csv"), row.names = FALSE)
+# 
 
 # ##
 # #Coastal expansion
 # ##
-# out = read.csv(file.path(git_dir, "data", "forSS", "Canary_PacFIN_Coastal_LengthComps.csv"), skip = 3, header = FALSE)
+# out = read.csv(file.path(git_dir, "data", "Canary_PacFIN_Coastal_LengthComps.csv"), skip = 3, header = FALSE)
 # 
 # ##Extract Unsexed fish
 # start = which(as.character(out[,1]) %in% c(" Usexed only ")) + 2
@@ -203,13 +208,11 @@ wa_comps = format[format$state == "W", ]
 # colnames(cut_out) <- out[start-1,]
 # 
 # ind = which(colnames(cut_out) %in% "U12"):which(colnames(cut_out) %in% "U.66") #For 2 sex model need to go to U.66
-# format = cbind(cut_out$fleet, cut_out$year, cut_out$month, cut_out$fleet, cut_out$sex, cut_out$partition, 
+# format = cbind(cut_out$fleet, cut_out$year, cut_out$month, cut_out$fleet, cut_out$sex, cut_out$partition,
 #                cut_out$Ntows, cut_out$Nsamps, cut_out$InputN, cut_out[,ind])
 # colnames(format) = c("state", "fishyr", "month", "fleet", "sex", "part", "Ntows", "Nsamps", "InputN", colnames(cut_out[ind]))
 # 
 # format$state <- "coastal"
-# 
-# # write.csv(format, file = file.path(git_dir, "data", "forSS","Coastal_PacFIN_Lcomps_unsexed_12_66_formatted.csv"), row.names = FALSE)
 # 
 # ##Extract sexed fish
 # start = 1 + 1
@@ -218,19 +221,18 @@ wa_comps = format[format$state == "W", ]
 # colnames(cut_out) <- out[1,]
 # 
 # ind = which(colnames(cut_out) %in% "F12"):which(colnames(cut_out) %in% "M66")
-# format = cbind(cut_out$fleet, cut_out$year, cut_out$month, cut_out$fleet, cut_out$sex, cut_out$partition, 
+# format_coastal = cbind(cut_out$fleet, cut_out$year, cut_out$month, cut_out$fleet, cut_out$sex, cut_out$partition,
 #                cut_out$Ntows, cut_out$Nsamps, cut_out$InputN, cut_out[,ind])
-# colnames(format) = c("state", "fishyr", "month", "fleet", "sex", "part", "Ntows", "Nsamps", "InputN", colnames(cut_out[ind]))
+# colnames(format_coastal) = c("state", "fishyr", "month", "fleet", "sex", "part", "Ntows", "Nsamps", "InputN", colnames(cut_out[ind]))
 # 
-# format$state <- "coastal"
+# format_coastal$state <- "coastal"
 # 
-# # write.csv(ca_comps, file = file.path(git_dir, "data", "forSS","Coastal_PacFIN_Lcomps_Sexed_12_66_formatted.csv"), row.names = FALSE)
-
-
-
-
-
-
+# #Set up same names so as to combine unsexed and sexed comps
+# colnames(format) <- colnames(format_coastal)
+# 
+# coastal_all_comps = rbind(format, format_coastal)
+# 
+# # write.csv(coastal_all_comps, file = file.path(git_dir, "data", "forSS","Coastal_PacFIN_Lcomps_12_66_formatted.csv"), row.names = FALSE)
 
 
 
@@ -277,3 +279,9 @@ wa_bds_research <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_Ca
                                       sheet = "Research")
 
 wa_bds <- rbind(wa_bds_sport, wa_bds_research[,which(names(wa_bds_research)!="fish_sample_date")])
+
+
+
+
+
+
