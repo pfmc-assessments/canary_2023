@@ -38,11 +38,13 @@ catch.file <- data.frame(googlesheets4::read_sheet('https://docs.google.com/spre
 colnames(catch.file)[1] = c("year")
 
 # Clean up length data
+#Remove records with only surface reads (see github issue #11 and pre-assessment workshop presentation)
 pacfin[pacfin$FISH_LENGTH_UNITS %in% "UNK", "FISH_LENGTH_UNITS"] = "CM" #these are CMs - need to do first so cleanPacFIN runs
 Pdata = cleanPacFIN(Pdata = pacfin, 
                     CLEAN = TRUE,
                     keep_length_type = c("", "F", "A", "U", NA), #removes the 2 standard length samples
                     keep_sample_type = c("M","S"), #keep ALL special project samples
+                    keep_age_method = c("B"),
                     verbose = TRUE)
 Pdata <- Pdata[!(Pdata$SAMPLE_TYPE %in% c("S") & Pdata$SAMPLE_YEAR>1986),] #Filter out oregon special project data after 1986
 
@@ -57,6 +59,8 @@ state <- dplyr::case_when(Pdata$state == "WA" ~ "W",
 Pdata$fleet <- paste(fleet, state, sep = ".")
 
 PdataAge = Pdata #set up for age comps later
+rmNoFin <- which(!is.na(PdataAge$Age) & is.na(PdataAge$FISH_AGE_YEARS_FINAL)) #remove ages without FINAL_AGE assigned (see github issue #11)
+PdataAge <- PdataAge[-rmNoFin,]
 PdataAge <- PdataAge[!is.na(PdataAge[,"Age"]),]
 
 # PdataAgeCoast <- PdataAge #set up coast age comps for later
@@ -415,3 +419,67 @@ wa_all_comps = rbind(wa_comps, wa_sexed_comps)
 # Plot the comps
 ##############################################################################################################
 
+library(nwfscSurvey)
+
+ca <- read.csv(file.path(git_dir, "data", "forSS", "CA_PacFIN_Lcomps_12_66_formatted.csv"))
+or <- read.csv(file.path(git_dir, "data", "forSS", "OR_PacFIN_Lcomps_12_66_formatted.csv"))
+wa <- read.csv(file.path(git_dir, "data", "forSS", "WA_PacFIN_Lcomps_12_66_formatted.csv"))
+
+ca_mf <- ca[ca$sex == 3, ]
+ca_u <- ca[ca$sex == 0, ]
+index <- grep("InputN", colnames(ca_u)) + 1
+colnames(ca_u)[index:ncol(ca_u)] <- c(paste0('U', length_bins), paste0("U.", length_bins)) 
+
+
+south_mf <- south[south$sex == 3, ]
+south_u <- south[south$sex == 0, ]
+index <- grep("InputN", colnames(south_u)) + 1
+colnames(south_u)[index:ncol(south_u)] <- c(paste0('U', length_bins), paste0("U.", length_bins)) 
+
+south_ulive <- south_u[south_u$fleet == "south.live", ]
+south_udead <- south_u[south_u$fleet == "south.dead", ]
+
+nwfscSurvey::plot_comps(
+  data = south_ulive, 
+  dir = dir, 
+  add_save_name = "south_live",
+  add_0_ylim = TRUE)
+
+nwfscSurvey::plot_comps(
+  data = south_udead, 
+  dir = dir, 
+  add_save_name = "south_dead",
+  add_0_ylim = TRUE)
+
+nwfscSurvey::plot_comps(
+  data = south_mf, 
+  dir = dir, 
+  add_save_name = "south",
+  add_0_ylim = TRUE)
+
+colnames(north)[1] = "year"
+north_mf <- north[north$sex == 3, ]
+north_u  <- north[north$sex == 0, ]
+index <- grep("InputN", colnames(north_u)) + 1
+colnames(north_u)[index:ncol(north_u)] <- c(paste0('U', length_bins), paste0("U.", length_bins)) 
+
+north_ulive <- north_u[north_u$fleet == "north.live", ]
+north_udead <- north_u[north_u$fleet == "north.dead", ]
+
+nwfscSurvey::plot_comps(
+  data = north_ulive, 
+  dir = dir, 
+  add_save_name = "north_live",
+  add_0_ylim = TRUE)
+
+nwfscSurvey::plot_comps(
+  data = north_udead, 
+  dir = dir, 
+  add_save_name = "north_dead",
+  add_0_ylim = TRUE)
+
+nwfscSurvey::plot_comps(
+  data = north_mf, 
+  dir = dir, 
+  add_save_name = "north",
+  add_0_ylim = TRUE)
