@@ -22,7 +22,7 @@ r4ss::SS_writedat(converted$dat, outfile = here('models/converted/data.ss'),
 
 # prerecruit survey needs to be redefined for 3.30
 converted$ctl$size_selex_types$Pattern <- sapply(converted$ctl$size_selex_types$Pattern, 
-                                                     function(x) ifelse(x == 32, 0, x))
+                                                 function(x) ifelse(x == 32, 0, x))
 
 # Change fishing mortality to year-round, gets rid of ss3 warnings
 converted$dat$fleetinfo$surveytiming[converted$dat$fleetinfo$type==1] <- -1
@@ -42,7 +42,7 @@ r4ss::run(dir = here('models/converted_rec_dist3'),
           skipfinished = FALSE)
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                subdir = c('2015base', 'converted')))
+                                      subdir = c('2015base', 'converted')))
 
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015', 'update SS3 version'))
@@ -69,7 +69,7 @@ r4ss::run(dir = here('models/no_research_catch'),
           skipfinished = FALSE)
 
 SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('2015base', 'converted', 'no_research_catch'))) |>
+                                subdir = c('2015base', 'converted', 'no_research_catch'))) |>
   SSsummarize() |>
   SSplotComparisons(legendlabels = c('2015', 'update SS3 version', 'no research catch'))
 # Differences are generally not discernible.
@@ -154,8 +154,9 @@ update.catch$dat$endyr <- 2022
 catches <- read.csv(here('data/canary_total_removals.csv')) 
 
 fleet.converter <- update.catch$dat$fleetinfo |>
-  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_')) |>
-  dplyr::select(fleetname, fleet_no_num)
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
 
 updated.catch.df <- catches |>
   dplyr::select(-rec.W.N) |>
@@ -168,8 +169,7 @@ updated.catch.df <- catches |>
                                          state == 'C' ~ 'CA'),
                 fleet_no_num = paste(state, gear, sep = '_')) |>
   dplyr::left_join(fleet.converter) |>
-  dplyr::mutate(fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+')),
-                seas = 1, 
+  dplyr::mutate(seas = 1, 
                 catch_se = 0.01) |>
   dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
   rbind(c(-999, 1, 1, 0, 0.01)) |>
@@ -198,23 +198,108 @@ SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
 
 # extend wcgbts ------------------------------------------------------------
 
-update.catch$dat$CPUE |> head()
+r4ss::copy_SS_inputs(dir.old = here('models/update_catch'),
+                     dir.new = here('models/update_wcgbts'), overwrite = TRUE)
+update.wcgbts <- r4ss::SS_read(dir = here('models/update_wcgbts'))
 
-wcgbts.cpue <- all_indices |>
+wcgbts.cpue <- read.csv(here('data/wcgbts_index.csv')) |>
   dplyr::mutate(area = ifelse(area == 'coastwide',
-                       area,
-                       stringr::str_to_upper(area)),
+                              area,
+                              stringr::str_to_upper(area)),
                 fleet_no_num = paste0(area, '_NWFSC')) |>
   dplyr::left_join(fleet.converter) |> 
-  dplyr::mutate(index = as.numeric(stringr::str_extract(fleetname, '[:digit:]+')),
-                seas = 7) |>
-  dplyr::select(year = Year, seas, index, obs = est, se_log = se)
-           
-update.catch$dat$CPUE <- update.catch$dat$CPUE |>
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year = Year, seas, index = fleet, obs = est, se_log = se)
+
+update.wcgbts$dat$CPUE <- update.wcgbts$dat$CPUE |>
   dplyr::filter(!(index %in% wcgbts.cpue$index)) |>
   dplyr::bind_rows(wcgbts.cpue) |>
   dplyr::arrange(index, year) 
 
+SS_write(update.wcgbts,
+         dir = here('models/update_wcgbts'), 
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/update_wcgbts'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                subdir = c('no_research_catch',  'updateM', 'update_catch', 'update_wcgbts'))) |>
+  SSsummarize() |>
+  SSplotComparisons(legendlabels = c('no research catch', 'update M', 'extend catch', 'extend wcgbts'),
+                    subplots = c(9,3,1))
+
+# Update wcgbts comps -----------------------------------------------------
+r4ss::copy_SS_inputs(dir.old = here('models/update_catch'),
+                     dir.new = here('models/update_wcgbts_comps'), overwrite = TRUE)
+update.wcgbts <- r4ss::SS_read(dir = here('models/update_wcgbts_comps'))
+
+
+length.min <- min(update.wcgbts$dat$lbin_vector)
+length.max <- max(update.wcgbts$dat$lbin_vector)
+age.min <- min(update.wcgbts$dat$agebin_vector)
+age.max <- max(update.wcgbts$dat$agebin_vector)
+
+caal <- list()
+for(ii in 1:4) {
+  area <- c('CA', 'OR', 'WA', 'coastwide')[ii]
+  caal[[area]] <- purrr::map(list(`F` = 'Female', M = 'Male'), function(.x) {
+    out <- read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_CAAL_{sex}_Bins_{lmin}_{lmax}_{amin}_{amax}.csv',
+                                    area = area,
+                                    sex = .x,
+                                    lmin = length.min,
+                                    lmax = length.max,
+                                    amin = age.min,
+                                    amax = age.max)))
+    out$Fleet <- fleet.converter$fleet[grep(x = fleet.converter$fleet_no_num,
+                                            pattern = paste0(area, '_NWFSC'))]
+    names(out) <- names(update.wcgbts$dat$agecomp)
+    return(out)
+  })
+}
+
+# need to add marginal ages as -surveys
+
+caal.dfr <- caal |>
+  purrr::list_flatten() |>
+  purrr::list_rbind() |> 
+  dplyr::mutate(dplyr::across(f1:f35, ~ ifelse(Gender == 1, .x, 0)),
+                dplyr::across(m1:m35, ~ ifelse(Gender == 2, .x, 0))) |> # checked row sums, this works
+  dplyr::filter(FltSvy != 28, Lbin_lo > 0) |> # This is not a good long-term thing to do!
+  # caal table is in absolute length, update.wcgbts is in length index.
+  # Updating caal to be in length index
+  dplyr::mutate(dplyr::across(Lbin_lo:Lbin_hi, ~ match(.x, update.wcgbts$dat$lbin_vector))) 
+
+update.wcgbts$dat$agecomp <- update.wcgbts$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(caal.dfr$FltSvy))) |>
+  dplyr::bind_rows(caal.dfr)
+
+SS_write(update.wcgbts,
+         dir = here('models/update_wcgbts_comps'), 
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/update_wcgbts_comps'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                subdir = c('no_research_catch',  'updateM', 'update_catch', 
+                                           'update_wcgbts', 'update_wcgbts_comps'))) |>
+  SSsummarize() |>
+  SSplotComparisons(legendlabels = c('no research catch', 'update M', 'update catch', 
+                                     'update wcgbts', 'update wcgbts comps'),
+                    subplots = c(9,3,1))
+
+# survey alone did not move anything!
+# 2015 comps have age comps in length bins that I do not think were observed! 
+# At least not observed and aged.
 
 # No triennial
 # Triennial combined

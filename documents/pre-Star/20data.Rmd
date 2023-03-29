@@ -3,21 +3,20 @@
 ## Data sources used in this assessment
 This assessment uses data from the following sources, which includes all data that was used in the 2011 update assessment and additional data that have not previously been included in any canary assessment.  All data sources (including abundance index, length composition, age composition, and catch time series) are split among three spatial strata.  We split data sources among strata to allow for examination of strata-specific patterns in model residuals (Punt et al., 2015), and because subsequent comparison demonstrates that spatial partitioning improves fit to the available data.  Each data sources is summarized here, and then discussed in more detail below:
 
-1.	Data regarding total removals of canary rockfish, from all fisheries and surveys, are reconstructed for years 1892-2014.  These data are obtained from several sources:
-a.	Landed catch for commercial fisheries are compiled by PacFIN (1981-2014)
-b.	Recreational catches are compiled by RecFIN for Oregon and California (1981-2014) with recreational estimates provided by California for earlier years (1928-1979). Recreational catches for Washington were compiled from information provided by WDFW (1967-2014).
-c.	State provided historical catch reconstructions for Oregon (1892-1986) and California (1916-1980).  Washington historical catches (1935-1980) for the trawl fleet were based on estimates from the previous full assessment in 2007, published by Hongskul (1975), Tagart and Kimura (1982), and WDFW fish ticket estimates.
+1.	Data regarding total removals of canary rockfish, from all fisheries and surveys, are reconstructed for years 1892-2022.  These data are obtained from several sources:
+a. In California catches came from state reconstructions, \gls{calcom}, \gls{recfin}, and \gls{pacfin}. 
+b. In Oregon, catches were provided directly by \gls{odfw} and come from state reconstructions, \gls{pacfin}, and \gls{recfin}
+c. In Washington, recreational catches were provided directly by \gls{wdfw}. Historical commercial catches up to 1980 are based on those used in the previous assessment. Commercial catches from 1981--present are from \gls{pacfin}.
 d.	Foreign trawl fleet catches from 1966-1976.  
 e.	Total discards for recent years (2003-2014) are estimated in the annual mortality report using data from a variety of sources including the West Coast Groundfish Observer Program, and are publicly available: http://www.nwfsc.noaa.gov/research/divisions/fram/observation/data_products/species_management.cfm.
 f.	Discard rates for 1981-1994 are obtained from the Pikitch study as analyzed by J. Wallace.
-g.	Catches from triennial and WCGBT surveys are available from their respective repositories.
 
 2.	Fishery-independent data are included from three different surveys: 
 a.	The Triennial survey conducted by the Alaska Fisheries Science Center provides abundance index, length composition, and age-composition samples and was included for years 1980-2001; 
-b.	The West Coast Groundfish Bottom Trawl Survey (WCGBTS) conducted by the Northwest Fisheries Science Center also provides abundance index, length composition, and age-composition samples, and was available for years 2003-2014; 
-c.	The pre-recruit survey, which combines data collected by the Southwest Fisheries Science Center, Northwest Fisheries Science Center, and Pacific Whiting Conservation Cooperative provides a relative index of density for pre-recruit fish, and was included for years 2001-2013.
+b.	The \gls{s-wcgbts} conducted by the \gls{nwfsc} also provides abundance index, length composition, and age-composition samples, and was available for years 2003-2022, with the exception of 2020 due to the COVID-19 pandemic; 
+c.	The pre-recruit survey, which combines data collected by the \gls{swfsc}, \gls{nwfsc}, and Pacific Whiting Conservation Cooperative provides a relative index of density for pre-recruit fish, and was included for most years from 2001-2022.
 
-3.	Fishery-dependent data are included from the following sources:
+3.	Fishery-dependent composition data are included from the following sources:
 a.	Length and age data from PacFIN
 b.	Length data from RecFIN 
 c.	Length and age data from state sampling programs for Oregon and Washington
@@ -25,10 +24,10 @@ d.	Length and age data from at-sea hake bycatch
 
 4.	Estimates of life history parameters are generated from various sources, and include:
 a.	Updated maturity schedule, which now incorporates the average rate of skipped spawning, wherein mature individuals do not spawn in every year
-b.	Updated fecundity information as provided by E.J. Dick 
-c.	Updated prior for natural mortality rate as provided by O. Hamel
-d.	Updated prior on steepness, as computed by J. Thorson following methods developed by M. Dorn 
-e.	Updated weight-at-length relationship as estimated from fishery independent data sources listed above
+b.	Fecundity information is similar to the previous assessment, as provided by E.J. Dick 
+c.	Updated prior for natural mortality rate
+d.	Updated prior on steepness 
+e.	Updated weight-at-length relationship as estimated from the \gls{wcgbts}
 f.	Updated estimates of ageing error, which now estimates bias and imprecision for surface-read otoliths, as necessary for their inclusion in the current assessment
 
 These data sources are illustrated in Figure 3.
