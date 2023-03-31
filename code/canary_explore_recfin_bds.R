@@ -574,7 +574,91 @@ ggplot(wa_bds, aes(best_age, fill = mode, color = mode)) +
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 
+################################
+#Load California provided MRFSS data, check for any issues
+#This occurred after the pre-assessment data workshop
+#################################
 
+#Only need to pull from googledrive once
+# googledrive::drive_download(file = "CONFIDENTIAL_MRFSS_CA/conf_CanLenMRFSS.xlsx",
+#                             path = file.path(git_dir,"data-raw","CONF_CA_MRFSS_Lengths_1980-2003.xlsx"))
+ca_bds_mrfss <- readxl::read_excel(path = file.path(git_dir,"data-raw","CONF_CA_MRFSS_Lengths_1980-2003.xlsx"),
+                                   sheet = "CanLenMRFSS")
+#Multiple length columns are present (per github issue #5 in california-data repo - should use LNGTH)
+table(ca_bds_mrfss$LEN)
+table(ca_bds_mrfss$LENGTH)
+table(ca_bds_mrfss$T_LEN)
+table(ca_bds_mrfss$LNGTH)
+table(ca_bds_mrfss$LEN_FLAG,useNA="always") #there are only 0. No clear documentation
+plot(as.numeric(ca_bds_mrfss$T_LEN) - as.numeric(ca_bds_mrfss$LNGTH)) #T_LEN is always larger
+#Could assume lengths with decimals are inferred and those without are measured
+table(ca_bds_mrfss$YEAR,nchar(ca_bds_mrfss$LNGTH)) #started being measured in 1993
+table(ca_bds_mrfss$YEAR,nchar(ca_bds_mrfss$T_LEN)) #mostly measured before 1993
+#But if use relationship in Echeverria and Lenarz 1986
+#it looks like for T_LEN is converted from LNGTH even though LNGTH had decimals before 1993 
+tlen <- (-4.107+1.070*as.numeric(ca_bds_mrfss$LNGTH))
+plot(ca_bds_mrfss$YEAR, as.numeric(ca_bds_mrfss$T_LEN)-tlen)
+#Converting the other way suggests that LNGTH was not converted from T_LEN
+flen <- (4.108+0.934*as.numeric(ca_bds_mrfss$T_LEN))
+plot(ca_bds_mrfss$YEAR, as.numeric(ca_bds_mrfss$LNGTH)-flen)
+#Canary have a fork so differences in fork and total are expected.
+#I think the most straight forward approach is to use LNGTH regardless of the number of decimals
+ca_bds_mrfss$LNGTH <- as.numeric(ca_bds_mrfss$LNGTH)
+
+#Other fields
+table(ca_bds_mrfss$MODE_FX,useNA="always") #6 = PC #7 = PR
+table(ca_bds_mrfss$AREA_X,useNA="always") 
+table(ca_bds_mrfss$AREA,useNA="always") #4-5 = inland, #6 = Mexico 
+table(ca_bds_mrfss$GEAR,useNA="always") #4 = gill, #6 = trawl, #8 = spear, #10 = Other
+table(ca_bds_mrfss$WGT_FLAG,useNA="always") 
+table(ca_bds_mrfss$ST,useNA="always") 
+table(ca_bds_mrfss$DISPO,useNA="always") 
+table(ca_bds_mrfss$F_SEX,useNA="always") #Should be 1-3. Not sure what 8 is. Assume all "U"
+
+#Exclude the 45 samples from man made (1) and beach/bank mode (2). Keep just PC/PR
+ca_bds_mrfss <- ca_bds_mrfss[which(ca_bds_mrfss$MODE_FX %in% c(6,7)),]
+
+#Exclude the 1 sample from Mexico
+ca_bds_mrfss <- ca_bds_mrfss[-which(ca_bds_mrfss$AREA == 6),]
+
+#Exclude the 38 non Hook and Line gears
+ca_bds_mrfss <- ca_bds_mrfss[-which(ca_bds_mrfss$GEAR != 1),]
+
+#add length in cm based on fork length
+ca_bds_mrfss$lengthcm <- ca_bds_mrfss$LNGTH/10
+
+#Add shorter mode name
+ca_bds_mrfss$mode = dplyr::case_when(ca_bds_mrfss$MODE_FX == 6 ~ "PC",
+                                     ca_bds_mrfss$MODE_FX == 7 ~ "PR")
+
+#Add sex (which is all unknown)
+ca_bds_mrfss$sex = "U"
+
+#Remove the 309 samples without any length provided
+ca_bds_mrfss = ca_bds_mrfss[!is.na(ca_bds_mrfss$lengthcm),]
+
+ca_bds_mrfss$state <- "C"
+
+
+##
+#Plots for CA MRFSS lengths - These were done after the pre-assessment workshop
+##
+
+#Length - Maybe a little more PR in the 80s and PC in the 90s 
+ggplot(dplyr::filter(ca_bds_mrfss, mode%in%c("PC","PR")), aes(fill=mode, x=YEAR)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Lengths by mode - In contrast to recfin, PC tends to catch larger fish
+ggplot(ca_bds_mrfss, aes(lengthcm, fill = mode, color = mode)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 
 
