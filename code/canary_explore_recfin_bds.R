@@ -813,7 +813,7 @@ ggplot(agg_oldCA %>% filter(source %in% c("ccrs", "dockside", "mrfss")), aes(x=Y
   xlab("Year") +
   ylab("Mean length +/- one sd")
 ggsave(file.path(git_dir,"data_explore_figs","CA_historical_recLen_comparison_noDebWV.png"),
-       width = 6, height = 8)
+       width = 8, height = 6)
 
 #Exclude southern CA data when plotting average length 
 ggplot(agg_oldCA %>% filter(source %in% c("mrfss", "debWV")), aes(x=YEAR, y=avg, color = source)) + 
@@ -823,7 +823,7 @@ ggplot(agg_oldCA %>% filter(source %in% c("mrfss", "debWV")), aes(x=YEAR, y=avg,
   xlab("Year") +
   ylab("Mean length +/- one sd")
 ggsave(file.path(git_dir,"data_explore_figs","CA_historical_recLen_comparison_withDebWV.png"),
-       width = 6, height = 8)
+       width = 8, height = 6)
 
 #Length densities are very similar between mrfss and debwv
 ggplot(rbind(ca_bds_mrfss[,c("YEAR","source","lengthcm")],
