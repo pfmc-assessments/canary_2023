@@ -152,7 +152,6 @@ table(or_bds_mrfss$Length_Flag,or_bds_mrfss$Total.Length_Flag, or_bds_mrfss$WGT_
 table(or_bds_mrfss$Fleet,useNA="always")
 table(or_bds_mrfss$Year,useNA="always")
 
-
 #add length in cm based on fork length
 or_bds_mrfss$lengthcm <- or_bds_mrfss$Length/10
 
@@ -581,8 +580,8 @@ ggplot(wa_bds, aes(best_age, fill = mode, color = mode)) +
 
 #Only need to pull from googledrive once
 # googledrive::drive_download(file = "CONFIDENTIAL_MRFSS_CA/conf_CanLenMRFSS.xlsx",
-#                             path = file.path(git_dir,"data-raw","CONF_CA_MRFSS_Lengths_1980-2003.xlsx"))
-ca_bds_mrfss <- readxl::read_excel(path = file.path(git_dir,"data-raw","CONF_CA_MRFSS_Lengths_1980-2003.xlsx"),
+#                             path = file.path(git_dir,"data-raw","conf_CA_MRFSS_Lengths_1980-2003.xlsx"))
+ca_bds_mrfss <- readxl::read_excel(path = file.path(git_dir,"data-raw","conf_CA_MRFSS_Lengths_1980-2003.xlsx"),
                                    sheet = "CanLenMRFSS")
 #Multiple length columns are present (per github issue #5 in california-data repo - should use LNGTH)
 table(ca_bds_mrfss$LEN)
@@ -638,6 +637,7 @@ ca_bds_mrfss$sex = "U"
 ca_bds_mrfss = ca_bds_mrfss[!is.na(ca_bds_mrfss$lengthcm),]
 
 ca_bds_mrfss$state <- "C"
+ca_bds_mrfss$source <- "mrfss"
 
 
 ##
@@ -659,6 +659,191 @@ ggplot(ca_bds_mrfss, aes(lengthcm, fill = mode, color = mode)) +
   xlab("Fish Length (cm)") +
   ylab("Proportion") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Get average and sd lengths across years
+agg_ca_mrfss <- ca_bds_mrfss %>% group_by(YEAR) %>% 
+  summarise("avg"= mean(lengthcm), "sd" = sd(lengthcm), N = length(lengthcm))
+agg_ca_mrfss$source <- "mrfss"
+ggplot(agg_ca_mrfss, aes(x=YEAR, y=avg)) + 
+  geom_errorbar(aes(ymin=avg-sd, ymax=avg+sd), width=.1, position = position_dodge(0.5)) +
+  geom_line(position = position_dodge(0.5)) +
+  geom_point(position = position_dodge(0.5))
+
+
+################################
+#Load historical California data, check for any issues
+#This occurred after the pre-assessment data workshop
+#################################
+
+##
+#CCRS data from 1977-1986
+#This is the same data as in the lingcod_2021 folder (CCRS_LF_77-86.mdb)
+##
+
+#Only need to pull from googledrive once
+# googledrive::drive_download(file = "CONFIDENTIAL_historical_CA/conf_CCRS.xlsx",
+#                             path = file.path(git_dir,"data-raw","conf_CCRS.xlsx"))
+ccrs_bds <- readxl::read_excel(path = file.path(git_dir,"data-raw","conf_CCRS.xlsx"),
+                                   sheet = "Data")
+ccrs_bds$YEAR <- as.numeric(ccrs_bds$Year) + 1900
+table(ccrs_bds$Fish_Type) #1 = PC
+table(ccrs_bds$Flag) #no idea what this is
+ccrs_bds$mode <- "PC"
+ccrs_bds$sex <- ccrs_bds$Sex
+ccrs_bds[which(!ccrs_bds$sex %in% c("M","F")),]$sex <- "U"
+ccrs_bds$lengthcm <- ccrs_bds$Length/10
+ccrs_bds$state <- "C"
+
+
+##
+#Dockside data from the 50s-60s data from 1977-1986
+#This is the same data as in the lingcod_2021 folder (FPB_LF_59-72 AND Skiff_LF_59-72)
+##
+
+#Only need to pull from googledrive once
+# googledrive::drive_download(file = "CONFIDENTIAL_historical_CA/conf_California PRPC Dockside 1950s-60s.xlsx",
+#                             path = file.path(git_dir,"data-raw","conf_California PRPC Dockside 1950s-60s.xlsx"))
+dockside_bds_skiff <- readxl::read_excel(path = file.path(git_dir,"data-raw","conf_California PRPC Dockside 1950s-60s.xlsx"),
+                               sheet = "PRLen")
+dockside_bds_fpb <- readxl::read_excel(path = file.path(git_dir,"data-raw","conf_California PRPC Dockside 1950s-60s.xlsx"),
+                                         sheet = "PCLen")
+#can combine because Fish_Type separates these two
+dockside_bds = rbind(dockside_bds_skiff, dockside_bds_fpb)
+
+#These two datasets have length and count. Need to duplicate lengths by "count" times to get 
+#full distribution of lengths. I did not do this for lingcod.
+dockside_bds <- dockside_bds[rep(1:(dim(dockside_bds)[1]), dockside_bds$Count),]
+
+#Update fields
+dockside_bds$YEAR <- dockside_bds$Year + 1900
+table(dockside_bds$Sex) #no information
+table(dockside_bds$Fish_Type) #1 = PC, 3 = PR bottomfish, 4 = PR troll, 5 = PR bottomfish and troll
+dockside_bds$mode <- dplyr::case_when(dockside_bds$Fish_Type %in% c(1,2) ~ "PC",
+                                      dockside_bds$Fish_Type %in% c(3,4,5) ~ "PR")
+dockside_bds$lengthcm <- dockside_bds$Length/10
+dockside_bds$sex <- "U"
+dockside_bds$state <- "C"
+
+#CCRS Length - Mostly unsexed fish. I suggest just reading in as unsexed if used
+#This really only adds about 3 years (1977-1979) and around 50 samples per year other than 1977. 
+ggplot(ccrs_bds, aes(fill=sex, x=Year)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#CCRS Lengths by mode - Unsexed a little smaller. Male and Female are similar is the key.
+ggplot(ccrs_bds, aes(lengthcm, fill = sex)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Dockside Length - Lots of samples but few years
+ggplot(dockside_bds, aes(fill=mode, x=Year)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Dockside Lengths by mode - Similar to mrfss with PC catching larger fish
+ggplot(dockside_bds, aes(lengthcm, fill = mode)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Get average and sd lengths across years
+agg_ccrs <- ccrs_bds %>% filter(!is.na(lengthcm)) %>% group_by(YEAR) %>% 
+  summarise("avg"= mean(lengthcm), "sd" = sd(lengthcm), N = length(lengthcm))
+agg_ccrs$source = "ccrs"
+agg_dockside <- dockside_bds %>% filter(!is.na(lengthcm)) %>% group_by(YEAR) %>% 
+  summarise("avg"= mean(lengthcm), "sd" = sd(lengthcm), N = length(lengthcm))
+agg_dockside$source = "dockside"
+
+
+##
+#Other historical data from access files. 
+#Data in southern california come from Crooke and Alley
+#Didn't think south of Pt. Conception would be relevant but there are
+#some samples of canary in these data
+#
+#Data in north/central california come from Deb Wilson-Vandenberg
+##
+
+oldCA_access <- utils::read.csv(file.path(git_dir,"data-raw","CA_rec_historical_length_accessFiles.csv"), header = T)
+oldCA_access$state = "C"
+
+#Length - Lots of debWV samples
+ggplot(oldCA_access, aes(fill=source, x=YEAR)) + 
+  geom_bar(position="stack", stat="count") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Length distributions are odd
+ggplot(oldCA_access, aes(lengthcm, fill = source)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Get average and sd lengths across years
+agg_access <- oldCA_access %>% filter(!is.na(lengthcm)) %>% group_by(YEAR, source) %>% 
+  summarise("avg"= mean(lengthcm), "sd" = sd(lengthcm), N = length(lengthcm))
+
+
+##
+#Combine historical averages and sd across all older CA datasets
+##
+
+agg_oldCA <- rbind(agg_ca_mrfss, agg_ccrs, agg_dockside, agg_access[,c("YEAR","avg","sd","N","source")]) %>% arrange(YEAR)
+
+#Exclude southern CA data when plotting average length 
+ggplot(agg_oldCA %>% filter(source %in% c("ccrs", "dockside", "mrfss")), aes(x=YEAR, y=avg, color = source)) + 
+  geom_errorbar(aes(ymin=avg-sd, ymax=avg+sd), width=.1, position = position_dodge(0.5)) +
+  geom_line(position = position_dodge(0.5)) +
+  geom_point(position = position_dodge(0.5)) +
+  xlab("Year") +
+  ylab("Mean length +/- one sd")
+ggsave(file.path(git_dir,"data_explore_figs","CA_historical_recLen_comparison_noDebWV.png"),
+       width = 6, height = 8)
+
+#Exclude southern CA data when plotting average length 
+ggplot(agg_oldCA %>% filter(source %in% c("mrfss", "debWV")), aes(x=YEAR, y=avg, color = source)) + 
+  geom_errorbar(aes(ymin=avg-sd, ymax=avg+sd), width=.1, position = position_dodge(0.5)) +
+  geom_line(position = position_dodge(0.5)) +
+  geom_point(position = position_dodge(0.5)) +
+  xlab("Year") +
+  ylab("Mean length +/- one sd")
+ggsave(file.path(git_dir,"data_explore_figs","CA_historical_recLen_comparison_withDebWV.png"),
+       width = 6, height = 8)
+
+#Length densities are very similar between mrfss and debwv
+ggplot(rbind(ca_bds_mrfss[,c("YEAR","source","lengthcm")],
+             oldCA_access[oldCA_access$source == "debWV",c("YEAR","source","lengthcm")]),
+       aes(lengthcm, fill = source)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(git_dir,"data_explore_figs","CA_lengths_comparison_MRFSS_DebWV.png"),
+       width = 6, height = 8)
+
+#Show sample sizes of ALL data
+ggplot(agg_oldCA, aes(x=YEAR, y=N, fill=source)) +
+  geom_col()
+oldCA_sampleSizes <- agg_oldCA %>% select(c(YEAR,N,source)) %>% 
+  pivot_wider(names_from = c(source), values_from = N) %>%
+  data.frame()
+write.csv(oldCA_sampleSizes, file.path(git_dir,"data","canary_CAhistorical_recLength_samples.csv"), row.names=F)
+            
 
 
 
