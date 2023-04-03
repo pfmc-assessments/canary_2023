@@ -1,6 +1,6 @@
 ##################################################################################################
 #
-#	Create composition data for commercial and recreational fleets
+#	Create composition data for commercial fleets
 # 		
 #		Written by Brian Langseth
 #
@@ -370,8 +370,8 @@ or_all_comps = rbind(or_comps, or_sexed_comps)
 wa_all_comps = rbind(wa_comps, wa_sexed_comps)
 
 # write.csv(ca_all_comps, file = file.path(git_dir, "data", "forSS","CA_PacFIN_Acomps_1_35_formatted.csv"), row.names = FALSE)
-# write.csv(or_all_comps, file = file.path(git_dir, "data", "forSS","OR_PacFIN_Lcomps_1_35_formatted.csv"), row.names = FALSE)
-# write.csv(wa_all_comps, file = file.path(git_dir, "data", "forSS","WA_PacFIN_Lcomps_1_35_formatted.csv"), row.names = FALSE)
+# write.csv(or_all_comps, file = file.path(git_dir, "data", "forSS","OR_PacFIN_Acomps_1_35_formatted.csv"), row.names = FALSE)
+# write.csv(wa_all_comps, file = file.path(git_dir, "data", "forSS","WA_PacFIN_Acomps_1_35_formatted.csv"), row.names = FALSE)
 
 
 # ##
@@ -419,67 +419,3 @@ wa_all_comps = rbind(wa_comps, wa_sexed_comps)
 # Plot the comps
 ##############################################################################################################
 
-library(nwfscSurvey)
-
-ca <- read.csv(file.path(git_dir, "data", "forSS", "CA_PacFIN_Lcomps_12_66_formatted.csv"))
-or <- read.csv(file.path(git_dir, "data", "forSS", "OR_PacFIN_Lcomps_12_66_formatted.csv"))
-wa <- read.csv(file.path(git_dir, "data", "forSS", "WA_PacFIN_Lcomps_12_66_formatted.csv"))
-
-ca_mf <- ca[ca$sex == 3, ]
-ca_u <- ca[ca$sex == 0, ]
-index <- grep("InputN", colnames(ca_u)) + 1
-colnames(ca_u)[index:ncol(ca_u)] <- c(paste0('U', length_bins), paste0("U.", length_bins)) 
-
-
-south_mf <- south[south$sex == 3, ]
-south_u <- south[south$sex == 0, ]
-index <- grep("InputN", colnames(south_u)) + 1
-colnames(south_u)[index:ncol(south_u)] <- c(paste0('U', length_bins), paste0("U.", length_bins)) 
-
-south_ulive <- south_u[south_u$fleet == "south.live", ]
-south_udead <- south_u[south_u$fleet == "south.dead", ]
-
-nwfscSurvey::plot_comps(
-  data = south_ulive, 
-  dir = dir, 
-  add_save_name = "south_live",
-  add_0_ylim = TRUE)
-
-nwfscSurvey::plot_comps(
-  data = south_udead, 
-  dir = dir, 
-  add_save_name = "south_dead",
-  add_0_ylim = TRUE)
-
-nwfscSurvey::plot_comps(
-  data = south_mf, 
-  dir = dir, 
-  add_save_name = "south",
-  add_0_ylim = TRUE)
-
-colnames(north)[1] = "year"
-north_mf <- north[north$sex == 3, ]
-north_u  <- north[north$sex == 0, ]
-index <- grep("InputN", colnames(north_u)) + 1
-colnames(north_u)[index:ncol(north_u)] <- c(paste0('U', length_bins), paste0("U.", length_bins)) 
-
-north_ulive <- north_u[north_u$fleet == "north.live", ]
-north_udead <- north_u[north_u$fleet == "north.dead", ]
-
-nwfscSurvey::plot_comps(
-  data = north_ulive, 
-  dir = dir, 
-  add_save_name = "north_live",
-  add_0_ylim = TRUE)
-
-nwfscSurvey::plot_comps(
-  data = north_udead, 
-  dir = dir, 
-  add_save_name = "north_dead",
-  add_0_ylim = TRUE)
-
-nwfscSurvey::plot_comps(
-  data = north_mf, 
-  dir = dir, 
-  add_save_name = "north",
-  add_0_ylim = TRUE)
