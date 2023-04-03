@@ -617,7 +617,9 @@ table(ca_bds_mrfss$AREA,useNA="always") #4-5 = inland, #6 = Mexico
 table(ca_bds_mrfss$GEAR,useNA="always") #4 = gill, #6 = trawl, #8 = spear, #10 = Other
 table(ca_bds_mrfss$WGT_FLAG,useNA="always") 
 table(ca_bds_mrfss$ST,useNA="always") 
-table(ca_bds_mrfss$DISPO,useNA="always") 
+table(ca_bds_mrfss$DISPO,useNA="always")
+#Seem like most fish are retained as no obvious released DISP3
+table(ca_bds_mrfss$DISP3,useNA="always") #3 = eat, 4 = bait, 5 = gave, 6 = rel/ded, 7 = other, 9 = refused 
 table(ca_bds_mrfss$F_SEX,useNA="always") #Should be 1-3. Not sure what 8 is. Assume all "U"
 
 #Exclude the 45 samples from man made (1) and beach/bank mode (2). Keep just PC/PR
@@ -850,6 +852,5 @@ oldCA_sampleSizes <- agg_oldCA %>% select(c(YEAR,N,source)) %>%
   data.frame()
 write.csv(oldCA_sampleSizes, file.path(git_dir,"data","canary_CAhistorical_recLength_samples.csv"), row.names=F)
             
-
 
 
