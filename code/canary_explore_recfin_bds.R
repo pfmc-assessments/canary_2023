@@ -592,6 +592,12 @@ table(ca_bds_mrfss$LEN_FLAG,useNA="always") #there are only 0. No clear document
 plot(as.numeric(ca_bds_mrfss$T_LEN) - as.numeric(ca_bds_mrfss$LNGTH)) #T_LEN is always larger
 #Could assume lengths with decimals are inferred and those without are measured
 table(ca_bds_mrfss$YEAR,nchar(ca_bds_mrfss$LNGTH)) #started being measured in 1993
+  #The 1997 and 1998 samples that have decimals were found to be converted from TL measurements in DebWV data for copper
+  oddones <- ca_bds_mrfss[which(nchar(ca_bds_mrfss$LNGTH)>3 & ca_bds_mrfss$YEAR %in% c(1997,1998)),]
+  #I cannot confirm because the DATE1 entry for the mrfss data is weird and doesn't align with YEAR
+  #so cant determine that month and day are comparable to those from DebWV. 
+  #However, these data would be candidates to be removed IF also using DebWV data
+  #For copper rockfish they remove all PC samples in mrfss data for 1997 and 1998 
 table(ca_bds_mrfss$YEAR,nchar(ca_bds_mrfss$T_LEN)) #mostly measured before 1993
 #But if use relationship in Echeverria and Lenarz 1986
 #it looks like for T_LEN is converted from LNGTH even though LNGTH had decimals before 1993 
