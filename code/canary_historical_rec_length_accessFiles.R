@@ -41,7 +41,9 @@ deb.data$source = "debWV"
 deb.data$lengthcm = (4.108 + 0.934*deb.data$TL)/10 #get to FL. From echeverria and lenarz 1984
 plot(deb.data$lengthcm-deb.data$TL/10)
 deb.data$sex = "U"
-deb.out = deb.data[,c("YEAR", "lengthcm", "sex", "disp", "source")]
+deb.data$trip= paste0(deb.data$YEAR, deb.data$AllTRPID)
+
+deb.out = deb.data[,c("YEAR", "lengthcm", "sex", "disp", "source", "trip")]
 
 
 #################
@@ -68,8 +70,9 @@ ca.data$YEAR = format(ca.data$date, format="%Y")
 ca.data$source = "Crooke-CPFV"
 ca.data$lengthcm <- ca.data$Length/10
 ca.data$sex = "U"
+ca.data$trip <- paste0(ca.data$YEAR, ca.data$TripID)
 
-ca.70.out <- ca.data[,c("YEAR", "lengthcm", "sex", "disp", "source")]
+ca.70.out <- ca.data[,c("YEAR", "lengthcm", "sex", "disp", "source", "trip")]
 
 
 #Data from 1980s
@@ -87,8 +90,9 @@ ca.data.can$YEAR = ca.data.can$L_DATE_YY + 1900
 ca.data.can$lengthcm = ca.data.can$L_LENGTH1/10
 ca.data.can$source = "Crooke-86-88"
 ca.data.can$sex = "U"
+ca.data.can$trip <- NA #boatnum has some NAs
 
-ca.80.out = ca.data.can[,c("YEAR", "lengthcm", "sex", "disp","source")]
+ca.80.out = ca.data.can[,c("YEAR", "lengthcm", "sex", "disp","source","trip")]
 
 
 #################

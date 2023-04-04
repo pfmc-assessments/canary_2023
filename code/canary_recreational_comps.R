@@ -118,6 +118,11 @@ recfin_bds$mode <- dplyr::case_when(recfin_bds$RECFIN_MODE_NAME == "PARTY/CHARTE
                                     recfin_bds$RECFIN_MODE_NAME == "NOT KNOWN" ~ "Unk")
 recfin_bds$disp <- recfin_bds$IS_RETAINED
 recfin_bds$source <- "recfin"
+#Trip following the approach for recfin (as was used for copper rockfish). 
+#Im adding mode here beacuse copper seperates these out for their fleets
+recfin_bds$trip <- paste0(recfin_bds$RECFIN_DATE, recfin_bds$COUNTY_NUMBER, 
+                          recfin_bds$AGENCY_WATER_AREA_NAME, recfin_bds$mode,
+                          recfin_bds$source)
 
 
 #WA sport data
@@ -134,6 +139,11 @@ wa_bds_sport$mode <- dplyr::case_when(wa_bds_sport$boat_mode_code == "C" ~ "PC",
 wa_bds_sport$disp <- "RETAINED"
 wa_bds_sport$state <- "W"
 wa_bds_sport$source <- "wa_sport"
+#Trip roughly following the approach for mrfss (as was used for copper rockfish). 
+#Including mode and port_name doesn't change anything here (sequence number covers that)
+wa_bds_sport$trip <- paste0(wa_bds_sport$year,wa_bds_sport$sequence_number, 
+                            wa_bds_sport$mfbds_v_sample.punch_card_area_code,
+                            wa_bds_sport$source)
 
 
 #OR provided MRFSS data
@@ -145,6 +155,11 @@ or_bds_mrfss$mode = dplyr::case_when(or_bds_mrfss$Mode_FX_Name == "charter" ~ "P
 or_bds_mrfss$disp <- "RETAINED" #assume all are retained
 or_bds_mrfss$state <- "O" 
 or_bds_mrfss$source <- "or_mrfss"
+#Trip roughly following approach for CA MRFSS (as was used for copper rockfish)
+#Im adding mode here because copper separates these out for their fleets
+or_bds_mrfss$trip <- paste0(or_bds_mrfss$year, or_bds_mrfss$id_code, 
+                            or_bds_mrfss$ORBS_Port, or_bds_mrfss$MRFSS_AREA_X,
+                            or_bds_mrfss$mode, or_bds_mrfss$source)
 
 
 #OR provided RecFIN data
@@ -157,6 +172,12 @@ or_bds_recfin$disp <- dplyr::case_when(or_bds_recfin$IS_RETAINED ~ "RETAINED",
                                        !or_bds_recfin$IS_RETAINED ~ "RELEASED")
 or_bds_recfin$state <- "O" 
 or_bds_recfin$source <- "or_recfin"
+#Trip following approach for CA recfin (as was used for copper rockfish)
+#There is no county number in OR so use Port. Angler ID (hidden to preserve confidentiality)
+#covers fished area and mode
+or_bds_recfin$trip <- paste0(or_bds_recfin$RECFIN_DATE, or_bds_recfin$RECFIN_PORT_NAME, 
+                             as.numeric(as.factor(or_bds_recfin$ANGLER_ID)),
+                             or_bds_recfin$source)
 
 
 #CA provided MRFSS data
@@ -168,6 +189,9 @@ ca_bds_mrfss$mode = dplyr::case_when(ca_bds_mrfss$MODE_FX == 6 ~ "PC",
 ca_bds_mrfss$disp <- "RETAINED" #assumed based on lack of released in DISP3
 ca_bds_mrfss$state <- "C" 
 ca_bds_mrfss$source <- "ca_mrfss"
+ca_bds_mrfss$trip <- paste0(ca_bds_mrfss$year, ca_bds_mrfss$ID_CODE, 
+                            ca_bds_mrfss$INTSITE, ca_bds_mrfss$AREA_X,
+                            ca_bds_mrfss$source)
 
 
 #CA Deb Wilson-Vandenberg data - already is format needed
@@ -180,7 +204,7 @@ colnames(oldCA_access)[1] <- "year"
 #Combine into single data set
 ##
 
-colnam <- c("year", "state", "source", "lengthcm", "sex", "mode", "disp")
+colnam <- c("year", "state", "source", "lengthcm", "sex", "mode", "disp", "trip")
 out <- rbind(recfin_bds[,colnam], 
              wa_bds_sport[,colnam], 
              or_bds_recfin[,colnam], 
@@ -239,11 +263,12 @@ out <- out[-which(out$disp == "RELEASED"),]
 out_sample_size <- out %>%
   dplyr::group_by(year, state, source, sex) %>%
   dplyr::summarise(
-    #ntrip = length(unique(trip)),
+    ntrip = length(unique(trip)),
     N = length(lengthcm)) %>%
-  tidyr::pivot_wider(names_from = c(source, state,sex), values_from = N, 
-              names_glue = "{state}_{source}_{sex}", names_sort = TRUE) %>%
+  tidyr::pivot_wider(names_from = c(source, state,sex), values_from = c(N,ntrip), 
+              names_glue = "{state}_{source}_{sex}_{.value}", names_sort = TRUE) %>%
   data.frame()
+out_sample_size[is.na(out_sample_size)] <- 0
 write.csv(out_sample_size, file = file.path(git_dir,"data", "Canary_recLen_sample_size_allSources.csv"), row.names = FALSE)
 
 #Based on data to use in SS3
@@ -251,10 +276,11 @@ write.csv(out_sample_size, file = file.path(git_dir,"data", "Canary_recLen_sampl
 out_sample_size_ss3 <- out %>% filter(!is.na(sourceSS3)) %>%
   dplyr::group_by(year, sourceSS3, sex) %>%
   dplyr::summarise(
-    #ntrip = length(unique(trip)),
+    ntrip = length(unique(trip)),
     N = length(lengthcm)) %>%
-  tidyr::pivot_wider(names_from = c(sourceSS3, sex), values_from = N) %>%
+  tidyr::pivot_wider(names_from = c(sourceSS3, sex), values_from = c(N,ntrip)) %>%
   data.frame()
+out_sample_size_ss3[is.na(out_sample_size_ss3)] <- 0
 write.csv(out_sample_size, file = file.path(git_dir,"data", "forSS", "Canary_recLen_sample_size_forSS.csv"), row.names = FALSE)
 
 
@@ -273,7 +299,7 @@ out$sex_group[out$sex %in% c("M", "F")] <- 'b'
 n <- out %>% filter(!is.na(sourceSS3)) %>%
   dplyr::group_by(year, sourceSS3, sex_group) %>%
   dplyr::summarise(
-    #ntrip = length(unique(trip)),
+    ntrip = length(unique(trip)),
     N = length(lengthcm))
 
 #This creates the composition data for each SS3 fleet. 
@@ -294,23 +320,23 @@ for(s in unique(na.omit(out$sourceSS3))) {
       month = 7)
     
     if(!is.null(lfs$unsexed) & is.null(lfs$sexed)){
-      #lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
-      write.csv(lfs$unsexed, 
+      lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+      write.csv(lfs$unsexed[,c(1:6,63,7:62)], 
                 file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Lcomp",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
                 row.names = FALSE) 
     } 
     if(!is.null(lfs$sexed) & is.null(lfs$unsexed)){
-      #lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
-      write.csv(lfs$sexed, 
+      lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+      write.csv(lfs$sexed[,c(1:6,63,7:62)], 
                 file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Lcomp",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
                 row.names = FALSE) 
     }
     
     if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
-      #lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
-      #lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+      lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+      lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
       colnames(lfs$unsexed) <- colnames(lfs$sexed)
-      write.csv(rbind(lfs$unsexed, lfs$sexed), 
+      write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)], 
                 file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Lcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
                 row.names = FALSE) 
     }
@@ -328,7 +354,7 @@ for(s in unique(na.omit(out$sourceSS3))) {
 n <- out %>% filter(!is.na(sourceSS3)) %>%
   dplyr::group_by(year, sex_group) %>%
   dplyr::summarise(
-    #ntrip = length(unique(trip)),
+    ntrip = length(unique(trip)),
     N = length(lengthcm))
 
 #This creates the composition data for each SS3 fleet. 
@@ -347,10 +373,10 @@ lfs <-  nwfscSurvey::UnexpandedLFs.fn(
   month = 7)
 
 if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
-  #lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
-  #lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+  lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+  lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
   colnames(lfs$unsexed) <- colnames(lfs$sexed)
-  write.csv(rbind(lfs$unsexed, lfs$sexed), 
+  write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)], 
             file = file.path(git_dir, "data", "forSS", paste0("Coastwide_rec_not_expanded_Lcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
             row.names = FALSE) 
 }
@@ -365,7 +391,7 @@ if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
 n <- out %>% filter(!is.na(sourceSS3_2)) %>%
   dplyr::group_by(year, sourceSS3_2, sex_group) %>%
   dplyr::summarise(
-    #ntrip = length(unique(trip)),
+    ntrip = length(unique(trip)),
     N = length(lengthcm))
 
 use_n <- n[n$sourceSS3_2 %in% "CA", ]
@@ -381,8 +407,8 @@ lfs <-  nwfscSurvey::UnexpandedLFs.fn(
   fleet = "CA", 
   month = 7)
 
-#lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
-write.csv(lfs$unsexed, 
+lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+write.csv(lfs$unsexed[,c(1:6,63,7:62)], 
           file = file.path(git_dir, "data", "forSS", paste0("CA_rec_not_expanded_noDebWV_Lcomp",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
           row.names = FALSE) 
  
@@ -395,7 +421,7 @@ write.csv(lfs$unsexed,
 n <- out %>% filter(!is.na(sourceSS3_2)) %>%
   dplyr::group_by(year, sex_group) %>%
   dplyr::summarise(
-    #ntrip = length(unique(trip)),
+    ntrip = length(unique(trip)),
     N = length(lengthcm))
 
 #This creates the composition data for each SS3 fleet. 
@@ -414,62 +440,10 @@ lfs <-  nwfscSurvey::UnexpandedLFs.fn(
   month = 7)
 
 if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
-  #lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
-  #lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+  lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+  lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
   colnames(lfs$unsexed) <- colnames(lfs$sexed)
-  write.csv(rbind(lfs$unsexed, lfs$sexed), 
+  write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)], 
             file = file.path(git_dir, "data", "forSS", paste0("Coastwide_rec_not_expanded_noDebWVLcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
             row.names = FALSE) 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# create a table of the samples available by year
-wa$Trawl_id = 1:nrow(wa)
-GetN.fn(dir = file.path(dir, "data"), dat = wa, type = "length", species = 'others')
-n = read.csv(file.path(dir, "data", "forSS", "length_SampleSize.csv"))
-n = n[,c('Year', 'All_Fish', 'Sexed_Fish', 'Unsexed_Fish')]
-write.csv(n, file = file.path(dir, "data", "forSS", "wa_rec_samples.csv"), row.names = FALSE)
-
-GetN.fn(dir = file.path(dir, "data"), dat = wa, type = "age", species = 'others')
-n = read.csv(file.path(dir, "data", "forSS", "age_SampleSize.csv"))
-n = n[,c('Year', 'All_Fish', 'Sexed_Fish', 'Unsexed_Fish')]
-write.csv(n, file = file.path(dir, "data", "forSS", "wa_rec_age_samples.csv"), row.names = FALSE)
-
-wa$Sex = "U" #UnexpandedLFs.fn and UnexpandedAFs.fn will only do comps for Unsexed fish in sex = 0 and ignore male and female. So assign all as U
-
-lfs = UnexpandedLFs.fn(dir = file.path(dir, "data"), #puts into "forSS" folder in this location
-                       datL = wa, lgthBins = len_bin,
-                       sex = 0,  partition = 0, fleet = 1, month = 1) #Fleet is 1 for WA
-file.rename(from = file.path(dir, "data", "forSS", "Survey_notExpanded_Length_comp_Sex_0_bin=10-50.csv"), 
-            to= file.path(dir, "data", "forSS", "wa_rec_notExpanded_Length_comp_Sex_0_bin=10-50_Feb2021.csv")) 
-
-PlotFreqData.fn(dir = file.path(dir, "data", "forSS"), 
-                dat = lfs$comps, ylim=c(0, max(len_bin)+4), 
-                main = "WA Recreational - Unsexed_Feb2021", yaxs="i", ylab="Length (cm)", dopng = TRUE)
-
-#Washington length comps 10-56
-lfs = UnexpandedLFs.fn(dir = file.path(dir, "data"), #puts into "forSS" folder in this location
-                       datL = wa, lgthBins = seq(10,56,2),
-                       sex = 0,  partition = 0, fleet = 1, month = 1) #Fleet is 1 for WA
-file.rename(from = file.path(dir, "data", "forSS", "Survey_notExpanded_Length_comp_Sex_0_bin=10-56.csv"), 
-            to= file.path(dir, "data", "forSS", "wa_rec_notExpanded_Length_comp_Sex_0_bin=10-56.csv")) 
-
-
-#Washington age comps
-afs = UnexpandedAFs.fn(dir = file.path(dir, "data"), #puts into "forSS" folder in this location
-                       datA = wa, ageBins = 5:70,
-                       sex = 0,  partition = 0, fleet = 1, month = 1, ageErr = 1) #Fleet is 1 for WA
-file.rename(from = file.path(dir, "data", "forSS", "Survey_notExpanded_Age_comp_Sex_0_bin=5-70.csv"), 
-            to= file.path(dir, "data", "forSS", "wa_rec_notExpanded_Age_comp_Sex_0_bin=5-70_Feb2021.csv")) 
