@@ -337,7 +337,7 @@ for(s in unique(na.omit(out$sourceSS3))) {
       lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
       colnames(lfs$unsexed) <- colnames(lfs$sexed)
       write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)], 
-                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Lcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
+                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Lcomp",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
                 row.names = FALSE) 
     }
     
