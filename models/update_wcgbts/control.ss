@@ -34,7 +34,7 @@
 #
 1 #_natM_type:_0=1Parm; 1=N_breakpoints;_2=Lorenzen;_3=agespecific;_4=agespec_withseasinterpolate;_5=Maunder_M;_6=Age-range_Lorenzen
 2 #_N_breakpoints
-20 21 # age(real) at M breakpoints
+6 14 # age(real) at M breakpoints
 1 # GrowthModel: 1=vonBert with L1&L2; 2=Richards with L1&L2; 3=age_specific_K_incr; 4=age_specific_K_decr;5=age_specific_K_each; 6=NA; 7=NA; 8=growth cessation
 1 #_Age(post-settlement)_for_L1;linear growth below this
 30 #_Growth_Age_for_L2 (999 to use as Linf)
@@ -54,35 +54,35 @@
 #
 #_growth_parms
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env_var&link	dev_link	dev_minyr	dev_maxyr	dev_PH	Block	Block_Fxn
- 0.04	    0.08	   0.0643	   -2.74	0.31	3	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Fem_GP_1  
-    0	     0.9	 0.671027	     0.4	  50	0	  3	0	0	   0	   0	0.5	0	0	#_NatM_p_2_Fem_GP_1  
-    2	      15	   9.0468	       4	  50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amin_Fem_GP_1 
-   50	      70	  60.0427	      60	  50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amax_Fem_GP_1 
- 0.02	    0.21	 0.128749	    0.14	  50	0	  2	0	0	   0	   0	0.5	0	0	#_VonBert_K_Fem_GP_1 
- 0.02	    0.21	 0.109118	    0.15	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_young_Fem_GP_1  
-   -3	       3	 -1.35857	    -1.3	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_old_Fem_GP_1    
-    0	       1	 1.18e-05	1.55e-05	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_1_Fem_GP_1   
-    2	       4	    3.094	    3.03	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_2_Fem_GP_1   
-   40	      41	     40.5	    40.5	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat50%_Fem_GP_1    
-   -3	       3	    -0.25	   -0.25	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat_slope_Fem_GP_1 
-   -3	       3	   0.2619	       1	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Eggs_alpha_Fem_GP_1
-   -1	       1	   0.0217	       0	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Eggs_beta_Fem_GP_1 
-   -3	       3	        0	       0	  50	6	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Mal_GP_1  
-   -3	       3	        0	       0	  50	6	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_2_Mal_GP_1  
-   -3	       3	        0	       0	  50	6	-50	0	0	   0	   0	0.5	0	0	#_L_at_Amin_Mal_GP_1 
-   -3	       3	-0.114165	       0	  50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amax_Mal_GP_1 
-   -3	       3	 0.224564	       0	  50	0	  2	0	0	   0	   0	0.5	0	0	#_VonBert_K_Mal_GP_1 
-   -3	       3	0.0423839	       0	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_young_Mal_GP_1  
-   -3	       3	 -1.18523	       0	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_old_Mal_GP_1    
-    0	       1	1.064e-05	1.55e-05	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_1_Mal_GP_1   
-    2	       4	    3.123	    3.03	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_2_Mal_GP_1   
-    0	     999	        1	       1	  50	6	-50	0	0	   0	   0	0.5	0	0	#_RecrDist_GP_1      
-   -7	       7	        0	       1	  50	0	 -1	0	0	   0	   0	  0	0	0	#_RecrDist_Area_1    
-   -7	       7	  1.10278	       1	  50	0	  1	0	1	1933	2014	  5	0	0	#_RecrDist_Area_2    
-   -7	       7	 0.536153	       1	  50	0	  1	0	1	1933	2014	  5	0	0	#_RecrDist_Area_3    
-    0	     999	        1	       1	  50	6	-50	0	0	   0	   0	0.5	0	0	#_RecrDist_month_1   
-   -1	       1	        1	       1	  50	6	-50	0	0	1980	1983	0.5	0	0	#_CohortGrowDev      
-1e-06	0.999999	      0.5	     0.5	 0.5	0	-99	0	0	   0	   0	  0	0	0	#_FracFemale_GP_1    
+ 0.04	    0.08	   0.0521	 -2.9551	0.5323	3	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Fem_GP_1  
+    0	     0.9	 0.671027	     0.4	    50	0	  3	0	0	   0	   0	0.5	0	0	#_NatM_p_2_Fem_GP_1  
+    2	      15	   9.0468	       4	    50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amin_Fem_GP_1 
+   50	      70	  60.0427	      60	    50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amax_Fem_GP_1 
+ 0.02	    0.21	 0.128749	    0.14	    50	0	  2	0	0	   0	   0	0.5	0	0	#_VonBert_K_Fem_GP_1 
+ 0.02	    0.21	 0.109118	    0.15	    50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_young_Fem_GP_1  
+   -3	       3	 -1.35857	    -1.3	    50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_old_Fem_GP_1    
+    0	       1	 1.18e-05	1.55e-05	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_1_Fem_GP_1   
+    2	       4	    3.094	    3.03	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_2_Fem_GP_1   
+   40	      41	     40.5	    40.5	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat50%_Fem_GP_1    
+   -3	       3	    -0.25	   -0.25	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat_slope_Fem_GP_1 
+   -3	       3	   0.2619	       1	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Eggs_alpha_Fem_GP_1
+   -1	       1	   0.0217	       0	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Eggs_beta_Fem_GP_1 
+   -3	       3	        0	       0	    50	6	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Mal_GP_1  
+   -3	       3	        0	       0	    50	6	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_2_Mal_GP_1  
+   -3	       3	        0	       0	    50	6	-50	0	0	   0	   0	0.5	0	0	#_L_at_Amin_Mal_GP_1 
+   -3	       3	-0.114165	       0	    50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amax_Mal_GP_1 
+   -3	       3	 0.224564	       0	    50	0	  2	0	0	   0	   0	0.5	0	0	#_VonBert_K_Mal_GP_1 
+   -3	       3	0.0423839	       0	    50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_young_Mal_GP_1  
+   -3	       3	 -1.18523	       0	    50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_old_Mal_GP_1    
+    0	       1	1.064e-05	1.55e-05	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_1_Mal_GP_1   
+    2	       4	    3.123	    3.03	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_2_Mal_GP_1   
+    0	     999	        1	       1	    50	6	-50	0	0	   0	   0	0.5	0	0	#_RecrDist_GP_1      
+   -7	       7	        0	       1	    50	0	 -1	0	0	   0	   0	  0	0	0	#_RecrDist_Area_1    
+   -7	       7	  1.10278	       1	    50	0	  1	0	1	1933	2014	  5	0	0	#_RecrDist_Area_2    
+   -7	       7	 0.536153	       1	    50	0	  1	0	1	1933	2014	  5	0	0	#_RecrDist_Area_3    
+    0	     999	        1	       1	    50	6	-50	0	0	   0	   0	0.5	0	0	#_RecrDist_month_1   
+   -1	       1	        1	       1	    50	6	-50	0	0	1980	1983	0.5	0	0	#_CohortGrowDev      
+1e-06	0.999999	      0.5	     0.5	   0.5	0	-99	0	0	   0	   0	  0	0	0	#_FracFemale_GP_1    
 #_timevary MG parameters
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE
 1e-04	   2	0.5	0.5	0.5	6	-5	#_RecrDist_Area_2_dev_se      

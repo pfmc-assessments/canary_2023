@@ -114,7 +114,8 @@ for(survey in 1:2) {
     
     for(sex in 1:2){
       length_n <- GetN.fn(dat = lengths, 
-                          type = 'length')
+                          type = 'length', 
+                          species = 'shelfrock')
       length_freq <- SurveyLFs.fn(dir = here('Data'), 
                                   datL = lengths, 
                                   datTows = catch_subset, 
@@ -127,7 +128,8 @@ for(survey in 1:2) {
                                   printfolder = printfolder)
       
       age_n <- length.n <- GetN.fn(dat = ages, 
-                                   type = 'age')
+                                   type = 'age', 
+                                   species = 'shelfrock')
       age_freq <- SurveyAFs.fn(dir = here('data'), 
                                datA = ages,
                                datTows = catch_subset,
@@ -143,6 +145,18 @@ for(survey in 1:2) {
   }
 }
 # whew!
+
+# Also write table for document
+wcgbts_catch |>
+  dplyr::group_by(Year) |>
+  dplyr::summarise(n_tows = dplyr::n(),
+                   n_pos_tows = sum(total_catch_numbers > 0),
+                   n_caught = sum(total_catch_numbers)) |>
+  dplyr::mutate(eff_n_age = GetN.fn(dat = wcgbts_bio, 
+                               type = 'age',
+                               species = 'shelfrock',
+                               verbose = FALSE))
+
 
 # Write index to csv
 load(here('data-raw/NWFSC.Combo/index/lognormal/sdmTMB_save.Rdata'))

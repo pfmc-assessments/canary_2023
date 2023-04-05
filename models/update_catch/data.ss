@@ -14,37 +14,37 @@
 31 #_Nfleets
 #_fleetinfo
 #_type	surveytiming	area	units	need_catch_mult	fleetname
-1	1	1	 1	0	1_CA_TWL              	#_1 
-1	1	2	 1	0	2_OR_TWL              	#_2 
-1	1	3	 1	0	3_WA_TWL              	#_3 
-1	1	1	 1	0	4_CA_NTWL             	#_4 
-1	1	2	 1	0	5_OR_NTWL             	#_5 
-1	1	3	 1	0	6_WA_NTWL             	#_6 
-1	1	1	 1	0	7_CA_REC              	#_7 
-1	1	2	 1	0	8_OR_REC              	#_8 
-1	1	3	 1	0	9_WA_REC              	#_9 
-1	1	1	 1	0	10_CA_AHSOP           	#_10
-1	1	2	 1	0	11_OR_ASHOP           	#_11
-1	1	3	 1	0	12_WA_ASHOP           	#_12
-1	1	1	 1	0	13_CA_FOR             	#_13
-1	1	2	 1	0	14_OR_FOR             	#_14
-1	1	3	 1	0	15_WA_FOR             	#_15
-1	1	1	 1	0	16_CA_NWFSC           	#_16
-1	1	2	 1	0	17_OR_NWFSC           	#_17
-1	1	3	 1	0	18_WA_NWFSC           	#_18
-1	1	1	 1	0	19_CA_Tri_early       	#_19
-1	1	2	 1	0	20_OR_Tri_early       	#_20
-1	1	3	 1	0	21_WA_Tri_early       	#_21
-1	1	1	 1	0	22_CA_Tri_late        	#_22
-1	1	2	 1	0	23_OR_Tri_late        	#_23
-1	1	3	 1	0	24_WA_Tri_late        	#_24
-3	1	1	32	0	25_CA_prerec          	#_25
-3	1	2	32	0	26_OR_prerec          	#_26
-3	1	3	32	0	27_WA_prerec          	#_27
-3	1	1	 2	0	28_coastwide_NWFSC    	#_28
-3	1	1	 2	0	29_coastwide_Tri_early	#_29
-3	1	1	 2	0	30_coastwide_Tri_late 	#_30
-3	1	1	32	0	31_coastwide_prerec   	#_31
+1	-1	1	 1	0	1_CA_TWL              	#_1 
+1	-1	2	 1	0	2_OR_TWL              	#_2 
+1	-1	3	 1	0	3_WA_TWL              	#_3 
+1	-1	1	 1	0	4_CA_NTWL             	#_4 
+1	-1	2	 1	0	5_OR_NTWL             	#_5 
+1	-1	3	 1	0	6_WA_NTWL             	#_6 
+1	-1	1	 1	0	7_CA_REC              	#_7 
+1	-1	2	 1	0	8_OR_REC              	#_8 
+1	-1	3	 1	0	9_WA_REC              	#_9 
+1	-1	1	 1	0	10_CA_AHSOP           	#_10
+1	-1	2	 1	0	11_OR_ASHOP           	#_11
+1	-1	3	 1	0	12_WA_ASHOP           	#_12
+1	-1	1	 1	0	13_CA_FOR             	#_13
+1	-1	2	 1	0	14_OR_FOR             	#_14
+1	-1	3	 1	0	15_WA_FOR             	#_15
+3	 1	1	 1	0	16_CA_NWFSC           	#_16
+3	 1	2	 1	0	17_OR_NWFSC           	#_17
+3	 1	3	 1	0	18_WA_NWFSC           	#_18
+3	 1	1	 1	0	19_CA_Tri_early       	#_19
+3	 1	2	 1	0	20_OR_Tri_early       	#_20
+3	 1	3	 1	0	21_WA_Tri_early       	#_21
+3	 1	1	 1	0	22_CA_Tri_late        	#_22
+3	 1	2	 1	0	23_OR_Tri_late        	#_23
+3	 1	3	 1	0	24_WA_Tri_late        	#_24
+3	 1	1	32	0	25_CA_prerec          	#_25
+3	 1	2	32	0	26_OR_prerec          	#_26
+3	 1	3	32	0	27_WA_prerec          	#_27
+3	 1	1	 2	0	28_coastwide_NWFSC    	#_28
+3	 1	1	 2	0	29_coastwide_Tri_early	#_29
+3	 1	1	 2	0	30_coastwide_Tri_late 	#_30
+3	 1	1	32	0	31_coastwide_prerec   	#_31
 #_Catch data
 #_year	season	fleet	catch	catch_se
  -999	1	 1	      0	0.01	#_1         
