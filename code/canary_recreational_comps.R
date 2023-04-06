@@ -191,7 +191,7 @@ ca_bds_mrfss$state <- "C"
 ca_bds_mrfss$source <- "ca_mrfss"
 ca_bds_mrfss$trip <- paste0(ca_bds_mrfss$year, ca_bds_mrfss$ID_CODE, 
                             ca_bds_mrfss$INTSITE, ca_bds_mrfss$AREA_X,
-                            ca_bds_mrfss$source)
+                            ca_bds_mrfss$mode, ca_bds_mrfss$source)
 
 
 #CA Deb Wilson-Vandenberg data - already is format needed
@@ -269,11 +269,11 @@ out_sample_size <- out %>%
               names_glue = "{state}_{source}_{sex}_{.value}", names_sort = TRUE) %>%
   data.frame()
 out_sample_size[is.na(out_sample_size)] <- 0
-write.csv(out_sample_size, file = file.path(git_dir,"data", "Canary_recLen_sample_size_allSources.csv"), row.names = FALSE)
+#write.csv(out_sample_size, file = file.path(git_dir,"data", "Canary_recLen_sample_size_allSources.csv"), row.names = FALSE)
 
 #Based on data to use in SS3
 #Based on using debWV data to replace some MRFSS data
-out_sample_size_ss3 <- out %>% filter(!is.na(sourceSS3)) %>%
+out_sample_size_ss3 <- out %>% dplyr::filter(!is.na(sourceSS3)) %>%
   dplyr::group_by(year, sourceSS3, sex) %>%
   dplyr::summarise(
     ntrip = length(unique(trip)),
@@ -281,7 +281,7 @@ out_sample_size_ss3 <- out %>% filter(!is.na(sourceSS3)) %>%
   tidyr::pivot_wider(names_from = c(sourceSS3, sex), values_from = c(N,ntrip)) %>%
   data.frame()
 out_sample_size_ss3[is.na(out_sample_size_ss3)] <- 0
-write.csv(out_sample_size, file = file.path(git_dir,"data", "forSS", "Canary_recLen_sample_size_forSS.csv"), row.names = FALSE)
+#write.csv(out_sample_size, file = file.path(git_dir,"data", "forSS", "Canary_recLen_sample_size_forSS.csv"), row.names = FALSE)
 
 
 ############################################################################################
@@ -296,7 +296,7 @@ out$sex_group <- "u"
 out$sex_group[out$sex %in% c("M", "F")] <- 'b'
 
 #get sample size by sex group
-n <- out %>% filter(!is.na(sourceSS3)) %>%
+n <- out %>% dplyr::filter(!is.na(sourceSS3)) %>%
   dplyr::group_by(year, sourceSS3, sex_group) %>%
   dplyr::summarise(
     ntrip = length(unique(trip)),
@@ -304,8 +304,8 @@ n <- out %>% filter(!is.na(sourceSS3)) %>%
 
 #This creates the composition data for each SS3 fleet. 
 #Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
-#so need to navigate to their and then load_all
-# devtools::load_all("U:/Other github repos/nwfscSurvey")
+#so need to navigate to there and then load_all
+# devtools::load_all("U:/Other github repos/nwfscSurvey") ###IMPORTANT TO UNCOMMENT THIS IF RERUN
 for(s in unique(na.omit(out$sourceSS3))) {
 
   use_n <- n[n$sourceSS3 %in% s, ]
@@ -337,7 +337,7 @@ for(s in unique(na.omit(out$sourceSS3))) {
       lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
       colnames(lfs$unsexed) <- colnames(lfs$sexed)
       write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)], 
-                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Lcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
+                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Lcomp",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
                 row.names = FALSE) 
     }
     
@@ -346,40 +346,40 @@ for(s in unique(na.omit(out$sourceSS3))) {
 }
 
 
-############################################################################################
-#	Create COASTAL un-weighted composition data for recreational lengths
-############################################################################################
-
-#get sample size by sex group
-n <- out %>% filter(!is.na(sourceSS3)) %>%
-  dplyr::group_by(year, sex_group) %>%
-  dplyr::summarise(
-    ntrip = length(unique(trip)),
-    N = length(lengthcm))
-
-#This creates the composition data for each SS3 fleet. 
-#Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
-#so need to navigate to their and then load_all
-# devtools::load_all("U:/Other github repos/nwfscSurvey")
-
-use_n <- n
-df <- out[!is.na(out$sourceSS3), -which(colnames(out)=="sex_group")]
-
-lfs <-  nwfscSurvey::UnexpandedLFs.fn(
-  datL = df, 
-  lgthBins = length_bins,
-  partition = 0, 
-  fleet = "Coast", 
-  month = 7)
-
-if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
-  lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
-  lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
-  colnames(lfs$unsexed) <- colnames(lfs$sexed)
-  write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)], 
-            file = file.path(git_dir, "data", "forSS", paste0("Coastwide_rec_not_expanded_Lcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
-            row.names = FALSE) 
-}
+# ############################################################################################
+# #	Create COASTAL un-weighted composition data for recreational lengths
+# ############################################################################################
+# 
+# #get sample size by sex group
+# n <- out %>% dplyr::filter(!is.na(sourceSS3)) %>%
+#   dplyr::group_by(year, sex_group) %>%
+#   dplyr::summarise(
+#     ntrip = length(unique(trip)),
+#     N = length(lengthcm))
+# 
+# #This creates the composition data for each SS3 fleet. 
+# #Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
+# #so need to navigate to their and then load_all
+# # devtools::load_all("U:/Other github repos/nwfscSurvey")
+# 
+# use_n <- n
+# df <- out[!is.na(out$sourceSS3), -which(colnames(out)=="sex_group")]
+# 
+# lfs <-  nwfscSurvey::UnexpandedLFs.fn(
+#   datL = df, 
+#   lgthBins = length_bins,
+#   partition = 0, 
+#   fleet = "Coast", 
+#   month = 7)
+# 
+# if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
+#   lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+#   lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+#   colnames(lfs$unsexed) <- colnames(lfs$sexed)
+#   write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)], 
+#             file = file.path(git_dir, "data", "forSS", paste0("Coastwide_rec_not_expanded_Lcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
+#             row.names = FALSE) 
+# }
 
 
 ############################################################################################
@@ -388,7 +388,7 @@ if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
 
 #Only need to do for CA because thats the only one we would be replacing
 
-n <- out %>% filter(!is.na(sourceSS3_2)) %>%
+n <- out %>% dplyr::filter(!is.na(sourceSS3_2)) %>%
   dplyr::group_by(year, sourceSS3_2, sex_group) %>%
   dplyr::summarise(
     ntrip = length(unique(trip)),
@@ -413,37 +413,37 @@ write.csv(lfs$unsexed[,c(1:6,63,7:62)],
           row.names = FALSE) 
  
 
-############################################################################################
-#	Create COASTAL un-weighted composition data for recreational lengths WITHOUT Deb's data
-############################################################################################
-
-#get sample size by sex group
-n <- out %>% filter(!is.na(sourceSS3_2)) %>%
-  dplyr::group_by(year, sex_group) %>%
-  dplyr::summarise(
-    ntrip = length(unique(trip)),
-    N = length(lengthcm))
-
-#This creates the composition data for each SS3 fleet. 
-#Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
-#so need to navigate to their and then load_all
-# devtools::load_all("U:/Other github repos/nwfscSurvey")
-
-use_n <- n
-df <- out[!is.na(out$sourceSS3_2), -which(colnames(out)=="sex_group")]
-
-lfs <-  nwfscSurvey::UnexpandedLFs.fn(
-  datL = df, 
-  lgthBins = length_bins,
-  partition = 0, 
-  fleet = "Coast", 
-  month = 7)
-
-if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
-  lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
-  lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
-  colnames(lfs$unsexed) <- colnames(lfs$sexed)
-  write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)], 
-            file = file.path(git_dir, "data", "forSS", paste0("Coastwide_rec_not_expanded_noDebWVLcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
-            row.names = FALSE) 
-}
+# ############################################################################################
+# #	Create COASTAL un-weighted composition data for recreational lengths WITHOUT Deb's data
+# ############################################################################################
+# 
+# #get sample size by sex group
+# n <- out %>% dplyr::filter(!is.na(sourceSS3_2)) %>%
+#   dplyr::group_by(year, sex_group) %>%
+#   dplyr::summarise(
+#     ntrip = length(unique(trip)),
+#     N = length(lengthcm))
+# 
+# #This creates the composition data for each SS3 fleet.
+# #Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
+# #so need to navigate to their and then load_all
+# # devtools::load_all("U:/Other github repos/nwfscSurvey")
+# 
+# use_n <- n
+# df <- out[!is.na(out$sourceSS3_2), -which(colnames(out)=="sex_group")]
+# 
+# lfs <-  nwfscSurvey::UnexpandedLFs.fn(
+#   datL = df,
+#   lgthBins = length_bins,
+#   partition = 0,
+#   fleet = "Coast",
+#   month = 7)
+# 
+# if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
+#   lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+#   lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+#   colnames(lfs$unsexed) <- colnames(lfs$sexed)
+#   write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)],
+#             file = file.path(git_dir, "data", "forSS", paste0("Coastwide_rec_not_expanded_noDebWVLcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
+#             row.names = FALSE)
+# }
