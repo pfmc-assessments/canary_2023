@@ -33,7 +33,7 @@ mb = wlcoef[wlcoef$Sex=="M","B"]
 ub = wlcoef[wlcoef$Sex=="U","B"] 
 
 # Read in the PacFIN catch data to based expansion on
-catch.file <- data.frame(googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/17x0PT_vqTv1kvHAwaqgz7jmKvCvRwm7OcFb4jrh_AWo/edit#gid=2086044691',
+catch.file <- data.frame(googlesheets4::read_sheet(googledrive::drive_get("pacfin_catch"),
                                                    sheet = "catch_mt"))
 colnames(catch.file)[1] = c("year")
 

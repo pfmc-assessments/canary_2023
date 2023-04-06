@@ -36,18 +36,18 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 #PacFIN LANDINGS in MT (entrys with <3 veseels or dealers are CONFIDENTIAL)
 #This is output from canary_catches_com.R
 ##
-pacfin <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/17x0PT_vqTv1kvHAwaqgz7jmKvCvRwm7OcFb4jrh_AWo/edit#gid=2086044691',
+pacfin <- googlesheets4::read_sheet(googledrive::drive_get("pacfin_catch"),
                                     sheet = "catch_mt")
-pacfin_Nvessel <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/17x0PT_vqTv1kvHAwaqgz7jmKvCvRwm7OcFb4jrh_AWo/edit#gid=2086044691',
+pacfin_Nvessel <- googlesheets4::read_sheet(googledrive::drive_get("pacfin_catch"),
                                     sheet = c("unique_vessels"))
-pacfin_Ndealer <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/17x0PT_vqTv1kvHAwaqgz7jmKvCvRwm7OcFb4jrh_AWo/edit#gid=2086044691',
+pacfin_Ndealer <- googlesheets4::read_sheet(googledrive::drive_get("pacfin_catch"),
                                             sheet = c("unique_dealers"))
 
 ##
 #Discard estimates from PacFIN years based on GEMM report allocated based on WCGOP state proportions
 #This is output from canary_discard_exploration.R
 ##
-gemm_discard <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/1vRYNjoXrnbQv79Jz1pezxyU5cZB9pKCDnSE0IWXVyhk/edit#gid=409042882',
+gemm_discard <- googlesheets4::read_sheet(googledrive::drive_get("CONFIDENTIAL_canary_commercial_discard_mt"),
                                           sheet = "discard_mt")
 
 
@@ -55,9 +55,9 @@ gemm_discard <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/
 #Oregon commercial reconstruction - landings in MT
 ##
 #Only need to pull from googledrive once
-# googledrive::drive_download(file = "Oregon data/Oregon Commercial landings_451_2022.csv",
-#                             path = file.path(git_dir,"data-raw","Oregon Commercial landings_451_2022.csv"))
-or_com <- utils::read.csv(file = file.path(git_dir,"data-raw","Oregon Commercial landings_451_2022.csv"), header = TRUE)
+# googledrive::drive_download(file = "Oregon data/Oregon Commercial landings_451_2022_FINAL.csv",
+#                             path = file.path(git_dir,"data-raw","Oregon Commercial landings_451_2022_FINAL.csv"))
+or_com <- utils::read.csv(file = file.path(git_dir,"data-raw","Oregon Commercial landings_451_2022_FINAL.csv"), header = TRUE)
 
 
 ##
@@ -185,13 +185,13 @@ removals[which(removals$Year %in% gemm_discard$Year),-1] <- removals[which(remov
 #This differs slightly from last assessment which took sums across ALL fleets within a year
 dis_rat_late <- colSums(gemm_discard[which(gemm_discard$Year %in% c(2019:2021)),c("ca_ntwl","or_ntwl","wa_ntwl","ca_twl","or_twl","wa_twl")]) /
   colSums(removals[which(removals$Year %in% c(2019:2021)),-1])
-#matplot((dis_rat),x=2019:2021,type="b",xlab="Years",ylab="Proportion", main = "Discard rates over time by fleet (lines)") #plot rates across years if remove colSums in line above
+#matplot((dis_rat_late),x=2019:2021,type="b",xlab="Years",ylab="Proportion", main = "Discard rates over time by fleet (lines)") #plot rates across years if remove colSums in line above
 
 #Do the same for 2000 and 2001
 #QUESTION: I wonder whether for 2000 its better to use the 1999 ratio (20%) since the stock was declared overfished in 2001
 dis_rat_early <- colSums(gemm_discard[which(gemm_discard$Year %in% c(2002:2004)),c("ca_ntwl","or_ntwl","wa_ntwl","ca_twl","or_twl","wa_twl")]) /
   colSums(removals[which(removals$Year %in% c(2002:2004)),-1])
-#matplot((dis_rat),x=2002:2004,type="b",xlab="Years",ylab="Proportion", main = "Discard rates over time by fleet (lines)") #plot rates across years if remove colSums in line above
+#matplot((dis_rat_early),x=2002:2004,type="b",xlab="Years",ylab="Proportion", main = "Discard rates over time by fleet (lines)") #plot rates across years if remove colSums in line above
 
 #Add 2000, 2001, and 2022 discards based on calculated discard ratios
 removals[removals$Year %in% c(2000,2001),-1] <- round(rbind((1+dis_rat_early),(1+dis_rat_early)) * removals[removals$Year %in% c(2000,2001),-1], 3)
@@ -323,7 +323,7 @@ for(i in 2006:2014){
 }
 wa_bds_len[wa_bds_len$sample_year == 1998,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$N)
 for(i in 1996:1997){
-  wa_bds_len[wa_bds_len$sample_year == i,]$avgL2b = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
+  wa_bds_len[wa_bds_len$sample_year == i,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
 }
 wa_bds_len[wa_bds_len$sample_year %in% c(1987),]$avgL2 = mean(wa_bds_len[wa_bds_len$sample_year <= 1999,]$avgL, na.rm = T)
 wa_bds_len[wa_bds_len$sample_year %in% c(1982:1983),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$N)
@@ -354,9 +354,9 @@ removals[removals$Year %in% c(1967:2022),]$rec.W.mt.2 <- wa_rec_avgW$avgW2*remov
 
 
 # ##3. Use the average weight that comes from recfin (2004-2022)
-# recMT <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/1lFM2QPOE-YX7tQpr7h-GKRZMssn3EX0rWoVqNjfysAg/edit#gid=1743641035',
+# recMT <- googlesheets4::read_sheet(googledrive::drive_get("recfin_catch"),
 #                                    sheet = "catch_mt")
-# recN <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/1lFM2QPOE-YX7tQpr7h-GKRZMssn3EX0rWoVqNjfysAg/edit#gid=1743641035',
+# recN <- googlesheets4::read_sheet(googledrive::drive_get("recfin_catch"),
 #                                    sheet = "catch_N")
 # tmp <- data.frame("Year" = recMT$RECFIN_YEAR, "avgW" = rowSums(recMT[,c("W_OTH_sum_total","W_PC_sum_total","W_PR_sum_total")], na.rm = T) / 
 #   rowSums(recN[,c("W_OTH_sum_totalN","W_PC_sum_totalN","W_PR_sum_totalN")], na.rm = T))

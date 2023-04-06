@@ -25,8 +25,7 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 #---------------------------------------------------------------------------------------------------------------#
 #################################################################################################################
 # PacFIN Commercial - 1981-2022 Landings mtons
-# 2022 is incomplete yet
-load(file.path(dir, "PacFIN.CNRY.CompFT.01.Sep.2022.RData"))
+load(file.path(dir, "PacFIN.CNRY.CompFT.23.Mar.2023.RData"))
 com = catch.pacfin
 
 
@@ -36,6 +35,7 @@ com = catch.pacfin
 
 catch = com 
 catch = catch[!catch$REMOVAL_TYPE_CODE %in% c("R"),] #remove research catches
+catch = catch[!catch$LANDING_YEAR == 2023,]
 
 #Confirm that no Puget sound records are included
 #Issue #19 in github clarifies that state area 29 should be included. It was in PFMC area 4A
