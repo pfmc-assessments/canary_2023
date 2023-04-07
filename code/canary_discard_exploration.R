@@ -25,6 +25,10 @@ gemm_all <- readxl::read_excel(path = "//nwcfile/FRAM/Assessments/GEMM Report/GM
                              sheet = "Table 3", skip=2)
 gemm = gemm_all[gemm_all$Species == "Canary Rockfish", ]
 
+# #Load via nwfscSurvey - should do this in the future, but these produce the same data at the moment
+# library(nwfscSurvey)
+# gemm2 <- nwfscSurvey::pull_gemm("canary rockfish", dir = file.path(git_dir,"data"))
+
 # Remove the research removals -- 
 # Research removals are generally not included with commercial landings (although this does not need to be the case)
 # however, removing them here allows you to correctly calculate the discard rate based on commercial data only
@@ -95,7 +99,14 @@ all[is.na(all)] = 0
 all$Discard_Mort_Rate = round(all[,"Dead_Discard"] / all[,"Tot_Dead"], 3)
 all[is.na(all)] = 0
 
-#write.csv(all, file = file.path(git_dir, "data", "canary_gemm_mortality_and_discard.csv"), row.names = FALSE)
+# ##
+# #Upload to google drive because this can be used to back calculate PacFIN landings
+# ##
+# xx <- googledrive::drive_create(name = 'canary_gemm_mortality_and_discard',
+#                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB',
+#                                 type = 'spreadsheet', overwrite = TRUE)
+# googlesheets4::sheet_write(all, ss = xx, sheet = "gemm_mt")
+# googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
 
 #-----------------------------------------------------------------------------------
@@ -181,8 +192,15 @@ ggsave(file.path(git_dir,"data_explore_figs","WCGOP_discard_rates_cs plus ncs_ne
 
 wcgop_ratios = pivot_wider(tot_tot[,-c(4,5)], 
                      names_from = c(State,gear2), values_from = ratio)
-#write.csv(wcgop_ratios, file = file.path(git_dir, "data", "canary_wcgop_discardRatios.csv"), row.names = FALSE)
 
+# ##
+# #Upload to google drive because this can be used to back calculate PacFIN landings
+# ##
+# xx <- googledrive::drive_create(name = 'canary_wcgop_discardRatios',
+#                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB',
+#                                 type = 'spreadsheet', overwrite = TRUE)
+# googlesheets4::sheet_write(wcgop_ratios, ss = xx, sheet = "wcgop_ratios")
+# googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
 
 #-----------------------------------------------------------------------------------
