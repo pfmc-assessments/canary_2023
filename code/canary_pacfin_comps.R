@@ -20,7 +20,7 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 ################################
 #Load PacFIN BDS data and set up data
 ################################
-load(file.path(dir, "PacFIN.CNRY.bds.01.Sep.2022.RData"))
+load(file.path(dir, "PacFIN.CNRY.bds.28.Mar.2023.RData"))
 pacfin <- bds.pacfin
 
 # Load in the current weight-at-length estimates by sex
@@ -269,7 +269,7 @@ wa_all_comps = rbind(wa_comps, wa_sexed_comps)
 # write.csv(ca_all_comps, file = file.path(git_dir, "data", "forSS","CA_PacFIN_Lcomps_12_66_formatted.csv"), row.names = FALSE)
 # write.csv(or_all_comps, file = file.path(git_dir, "data", "forSS","OR_PacFIN_Lcomps_12_66_formatted.csv"), row.names = FALSE)
 # write.csv(wa_all_comps, file = file.path(git_dir, "data", "forSS","WA_PacFIN_Lcomps_12_66_formatted.csv"), row.names = FALSE)
-# 
+
 
 # ##
 # #Coastal expansion

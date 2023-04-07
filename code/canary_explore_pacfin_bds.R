@@ -22,28 +22,34 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 ################################
 #Load PacFIN BDS data, check for any issues
 ################################
-load(file.path(dir, "PacFIN.CNRY.bds.01.Sep.2022.RData"))
+
+### <-------For this file, Im keeping in the older PacFIN data. 
+
+### The new PacFIN adds some data in 2021 and 2022, and updates other elements. 
+### Notably, there is only 12 Purposive in washington now
+
+load(file.path(dir, "PacFIN.CNRY.bds.28.Mar.2023.RData")) 
 pacfin <- bds.pacfin
 
 # pacfin2 <- cleanPacFIN(Pdata=pacfin,CLEAN=TRUE,verbose=TRUE)
 # N SAMPLE_TYPEs changed from M to S for special samples from OR: 0
-# N not in keep_sample_type (SAMPLE_TYPE): 9108
+# N not in keep_sample_type (SAMPLE_TYPE): 9108 (9111 in new data)
 # N with SAMPLE_TYPE of NA: 0
-# N not in keep_sample_method (SAMPLE_METHOD): 199
+# N not in keep_sample_method (SAMPLE_METHOD): 199 (12 in new data)
 # N with SAMPLE_NO of NA: 0
-# N without length: 148
-# N without Age: 61600
-# N without length and Age: 61614
-# N sample weights not available for OR: 584
-# N records: 133621
-# N remaining if CLEAN: 115486
-# N removed if CLEAN: 18135
+# N without length: 148 (149 in new data)
+# N without Age: 61600 (63120 in new data)
+# N without length and Age: 61614 (63134 in new data)
+# N sample weights not available for OR: 584 (587) in new data)
+# N records: 133621 (136347 in new data)
+# N remaining if CLEAN: 115486 (118396 in new data)
+# N removed if CLEAN: 18135 (17951 in new data)
 
 #cleanPacFIN removes:
-#9108 samples from special request data (from Oregon) and commercial on-board samples (from Washington)
-#199 samples with purposive sample (from Washington)
+#9108 (9111 in new data) samples from special request data (from Oregon) and commercial on-board samples (from Washington)
+#199 (12 in new data) samples with purposive sample (from Washington)
 #8830 samples from non-US areas 1412-5A, 1726-5B, 15-4A, and 5677-3D
-#Total is 18135 (because 2 of the Commercial on-board samples were in area 4A)
+#Total is 18135 (19751 in new data) (because 2 of the Commercial on-board samples were in area 4A)
 
 #Assign a new field with lengths in cm - unk are cm's
 table(pacfin$FISH_LENGTH_UNITS, pacfin$AGENCY_CODE)
@@ -83,7 +89,7 @@ pacfin$Age <- PacFIN.Utilities::getAge(pacfin,
                                     verbose=TRUE,
                                     keep=unique(unlist(pacfin[, grep("AGE_METHOD[0-9]*$", colnames(pacfin))])),
                                     col.bestage="FINAL_FISH_AGE_IN_YEARS")
-  #Of these 696 samples with adjusted ages, all are from WA, and 211 are surface reads (which are from 1980 and 1981)
+  #Of these 696 (700 in new data) samples with adjusted ages, all are from WA, and 211 are surface reads (which are from 1980 and 1981)
   #There are some large differences between surface reads and break and burn reads and break and burn and break and burn
   a=pacfin[which(is.na(pacfin$FINAL_FISH_AGE_IN_YEARS) & !is.na(pacfin$Age)),]
   table(a$SAMPLE_YEAR,a$AGE_METHOD1,a$AGE_METHOD2,a$AGE_METHOD3,useNA="always")
@@ -129,7 +135,7 @@ Nage <- pacfin %>% filter(.,!is.na(FINAL_FISH_AGE_IN_YEARS)) %>%
   arrange(SAMPLE_YEAR)
 
 # ##
-# #Upload sample sizes to googledrive
+# #Upload sample sizes to googledrive - deleted since we dont use. Do this again in comp calcs
 # ##
 # xx <- googledrive::drive_create(name = 'pacfin_bds_N',
 #                                 path = 'https://drive.google.com/drive/folders/1fleYIaLvdIYMLv14--P1804akQvnWu5J',
