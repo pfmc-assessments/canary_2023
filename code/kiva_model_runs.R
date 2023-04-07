@@ -520,6 +520,7 @@ beepr::beep()
 # Need to deal with selectivity now. Probably:
 # 1. free up selectivity by area
 # 2. Fix a third double normal parameter. (I think standard is to fix three?)
+
 # No triennial
 # Triennial combined
 # Estimate state by state or CA selectivity

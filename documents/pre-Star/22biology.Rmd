@@ -26,7 +26,7 @@ where li is the length of individual i, Bernoulli(pi) is a Bernoulli probability
 
 #### Fecundity
 
-Fecundity information was updated based on the dissertation of E.J. Dick (Dick, 2009).  Comparison of old and new fecundity relationships (Figure 35) illustrates that the new relationship has a somewhat increased benefit of old and large females relative to young and small females in terms of contribution to spawning output.  The new relationship has also decreased spawning output somewhat overall, but this has no effect on model results given that spawning output is defined relative to unfished levels and hence the absolute scale is unimportant.
+Fecundity information was based on the dissertation of E.J. Dick (Dick, 2009).  Comparison of old and new fecundity relationships (Figure 35) illustrates that the new relationship has a somewhat increased benefit of old and large females relative to young and small females in terms of contribution to spawning output.  The new relationship has also decreased spawning output somewhat overall, but this has no effect on model results given that spawning output is defined relative to unfished levels and hence the absolute scale is unimportant.
 
 ### Steepness
 
