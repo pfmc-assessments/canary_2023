@@ -21,7 +21,7 @@ Marginal commercial age-frequency distributions were compiled and are presented 
 
 In aggregate, the biological data from fishery sources shows no evidence of strong year-classes moving through the population. This could be due to low recruitment variability, noisy data, or both. Further, declines in mean size and age seem to show a latitudinal cline, with more extreme declines to the south, and limited declines observed in Washington and Oregon.
 
-### Commercial data by State
+### Commercial landings by State
 
 #### Washington
 
@@ -38,9 +38,10 @@ Historical commercial fishery landings of canary rockfish from 1916-1980 were ob
 ### Recreational landings by state
 
 #### Washington
-Washington recreational landings came from Washington Sport Catches provided by \gls{wdfw} for 1967 and 1975-2022. Catch estimates from 1990 forward were completely reworked by the \gls{wdfw} sport sampling unit since the previous assessment. For 1968-1975, a linear ramp between the values in 1967 and 1976 was used to approximate removals. Recreational catches were assumed zero prior to 1967. Number of released fish is available for 2002-2022, with release rate by depth available for 2005-2022. We used the average release rate by depth from 2005-2007 for 2000-2004 when no depth-specific information was available. We used the total release rate from 2002 for 2000 and 2001, which had no release information. All three years shared a two canary daily bag limit per state regulations. We assumed zero recreational releases prior to 2000 when canary rockfish was included as part of a ten rockfish daily limit, and release rates were generally low (P. Anderson, personal communication, 3/20/23).
 
-The release mortality by depth was determined HOW.
+Washington recreational landings came from Washington Sport Catches provided by \gls{wdfw} for 1967 and 1975-2022. Catch estimates from 1990 forward were completely reworked by the \gls{wdfw} sport sampling unit since the previous assessment. For 1968-1975, a linear ramp between the values in 1967 and 1976 was used to approximate removals. Recreational catches were assumed zero prior to 1967.
+
+Number of released fish is available for 2002-2022, with release rate by depth available for 2005-2022. We used the average release rate by depth from 2005-2007 for 2000-2004 when no depth-specific information was available. We used the total release rate from 2002 for 2000 and 2001, which had no release information. All three years shared a two canary daily bag limit per state regulations. We assumed zero recreational releases prior to 2000 when canary rockfish was included as part of a ten rockfish daily limit, and release rates were generally low (P. Anderson, personal communication, 3/20/23). The release mortality by depth was based on agreed upon rates for canary rockfish [@pfmc2014status; Table 1-10]. This assumes all fish were released at the surface.
 
 Catches were converted from numbers to weight HOW.
 
@@ -61,21 +62,18 @@ Ocean boat estimates from 1979 -- 2000 in numbers of fish of canary rockfish fro
 Recreational landings for ocean boat modes from 2001 -- 2022 are available from RecFIN. Both retained and released estimates of mortality are included, though retained mortality contributes the vast majority to total mortality in years outside the overfished designation for canary rockfish. Release mortality is estimated from angler-reported release rates and the application of discard mortality rates from the PFMC. The average proportion of canary rockfish discarded was averaged 4.5% from 2001 -- 2003 and 2017 -- 2022. During years where canary rockfish retention was prohibited, discard rates increased to 96.1% on average (2004 -- 2016). From 2001 -- 2022, total landings averaged 16.0 mt, ranging from 1.7 to 60.6 mt. In 2022, estimated ocean boat landings were 55.7 mt.
 
 #### California
-This first paragraph from last assessment:
-Historical estimates of California recreational landings from 1928-1979 were obtained from the California historical catch reconstruction available through CALCOM. Recreational catches for California from 1981-1989 and 1993-2013 were obtained from RecFIN. Missing data from 1990-1992 were interpolated based on adjacent years for Oregon and California. The removals for 1980 contained in RecFIN were not used due to survey quality problems (Karpov et al. 1995, Cope and Key 2009). The catch for this year for California and Oregon were estimated by extrapolating between the removals in 1979 and 1981.
 
-California recreational landings came from  \gls{recfin} via \gls{mrfss} (1980-2003) and \gls{crfs} (2005-2022) sampling programs. Because of the transition from \gls{mrfss} to \gls{crfs}, no estimate was available in either database in 2004. \Gls{cdfw} provided a value of 10.59 mt for 2004 [J. Budrick, personal communication, 3/18/23, based on @monk2019gopher]. There were no estimates for either the party/charter (PC) or private/rental (PR) modes from 1990-1992, so total catches were linearly interpolated between 1989 and 1993. No or minimal PC estimates were available from 1993-1995, so we based the PC value on the average ratio of PR to PC modes across all years with \gls{mrfss} data.
+This first paragraph from last assessment: Historical estimates of California recreational landings from 1928-1979 were obtained from the California historical catch reconstruction available through CALCOM. Recreational catches for California from 1981-1989 and 1993-2013 were obtained from RecFIN. Missing data from 1990-1992 were interpolated based on adjacent years for Oregon and California. The removals for 1980 contained in RecFIN were not used due to survey quality problems (Karpov et al. 1995, Cope and Key 2009). The catch for this year for California and Oregon were estimated by extrapolating between the removals in 1979 and 1981.
+
+California recreational landings came from \gls{recfin} via \gls{mrfss} (1980-2003) and \gls{crfs} (2005-2022) sampling programs. Because of the transition from \gls{mrfss} to \gls{crfs}, no estimate was available in either database in 2004. \Gls{cdfw} provided a value of 10.59 mt for 2004 [J. Budrick, personal communication, 3/18/23, based on @monk2019gopher]. There were no estimates for either the party/charter (PC) or private/rental (PR) modes from 1990-1992, so total catches were linearly interpolated between 1989 and 1993. No or minimal PC estimates were available from 1993-1995, so we based the PC value on the average ratio of PR to PC modes across all years with \gls{mrfss} data.
 
 ##### CA Recreational data impacted by COVID-19 pandemic
 
 The COVID-19 pandemic impacted recreational port sampling in 2020 and 2021. No sampling occurred at all in April-June, 2020. \Gls{cdfw} provided proxy values for these months (M. Parker, CDFW, personal communication). In addition, California recreational total mortality estimates in the "rockfish genus" were inflated due to \gls{crfs} samplers being unable to closely examine catch and identify catch to species. This was a problem for both PR and PC modes in 2020 and primarily for the PC mode in 2021. An effort was made to allocate some of the rockfish genus mortality to other rockfish species for these modes and years (J. Coates, CDFW, personal communication). An expected value of rockfish genus mortality in 2020 and 2021 was generated by mode and year according to the average proportion to the total rockfish mortality this category represented in 2018 and 2019, when regulations were consistent with 2020 and 2021. Mortality above this expected value was attributed to the other species also based on proportions each species represented to the total from 2018 and 2019. Calculations were made by year, mode, and district. The shore-based modes were grouped in with the PR mode. Calculations were initially made in numbers of fish because rockfish genus mortality is only recorded this way. Numbers of fish by species were then converted to weight in kilograms based on average weights of fish recorded by the \gls{crfs} program by district in 2019.
 
-
-
-
 #### Length Compositions
 
-California: 
+California:
 
 Recreational length-frequency distributions were compiled from data available through RecFIN for California, while data were obtained from Oregon (A. Dauble, personal communication) and Washington (P. Weyland, personal communication). Age-frequencies were only available for Washington (P. Weyland, personal
 
@@ -83,20 +81,17 @@ Recreational length samples were obtained from two primary sources: MRFSS and Re
 
 #### Washington
 
-
 Length compositions were provided by \gls{wdfw}, as well. At least one sample is available from 1981-1983, 1987, 1995-1998, and 2002-2022.
 
 Washington sport catches were available in numbers of fish. We converted numbers of fish to biomass using length composition data from WDFW. BRIAN HOW DID YOU DO THIS? We used the applicable \gls{recfin} length-weight relationship of $W = aL^b$ where $a = 1.04058\text{E}-08$ and $b = 3.084136662$.
 
 #### Oregon
 
-
 ##### Length compositions
 
 Recreational length samples were obtained from two primary sources: \gls{mrfss} and \gls{recfin} (\gls{orbs}). \Gls{odfw} special project sampling data were considered but given the high sample sizes available from standard sampling, these data were not utilized. From 1980 -- 1989 and from 1993 -- 2000, the \gls{mrfss} program collected samples from both ocean and inland (estuary) areas (n = 46,656). \Gls{odfw} provided \gls{mrfss} samples with the addition of a column that flagged length values imputed from weights to allow for selection of directly measured values (n = 7,176). From 1980 -- 1989, total lengths (mm) were collected by \gls{mrfss}, which were converted to fork length. From 1993 -- 2000, fork length (mm) was collected. Length samples from 2001 -- 2022 from the \gls{orbs} sampling program are available on \gls{recfin} (n = 27,135). All \gls{orbs} samples are by fork length (mm). The vast majority (99.4%) of these samples are from ocean trips (n = 26,985). Table X details sample sizes by year and recreational fleet.
 
 #### California
-
 
 ### At Sea Hake Fishery
 

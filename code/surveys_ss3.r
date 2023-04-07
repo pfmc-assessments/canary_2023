@@ -112,36 +112,35 @@ for(survey in 1:2) {
                               month = '7', ageErr = '1',
                               verbose = FALSE)
     
-    for(sex in 1:2){
-      length_n <- GetN.fn(dat = lengths, 
-                          type = 'length', 
-                          species = 'shelfrock')
-      length_freq <- SurveyLFs.fn(dir = here('Data'), 
-                                  datL = lengths, 
-                                  datTows = catch_subset, 
-                                  strat.df = strata, 
-                                  nSamps = length_n,
-                                  lgthBins = length_bins, 
-                                  sex = sex, 
-                                  month = '7',
-                                  verbose = FALSE,
-                                  printfolder = printfolder)
-      
-      age_n <- length.n <- GetN.fn(dat = ages, 
-                                   type = 'age', 
-                                   species = 'shelfrock')
-      age_freq <- SurveyAFs.fn(dir = here('data'), 
-                               datA = ages,
-                               datTows = catch_subset,
-                               strat.df = strata, 
-                               ageBins = age_bins, 
-                               nSamps = age_n,
-                               sex = sex,
-                               printfolder = printfolder,
-                               month = '7', ageErr = '1',
-                               verbose = FALSE)
-      
-    }
+    length_n <- GetN.fn(dat = lengths, 
+                        type = 'length', 
+                        species = 'shelfrock')
+    length_freq <- SurveyLFs.fn(dir = here('Data'), 
+                                datL = lengths, 
+                                datTows = catch_subset, 
+                                strat.df = strata, 
+                                nSamps = length_n,
+                                lgthBins = length_bins, 
+                                sex = 3, 
+                                month = '7',
+                                verbose = FALSE,
+                                printfolder = printfolder)
+    
+    age_n <- length.n <- GetN.fn(dat = ages, 
+                                 type = 'age', 
+                                 species = 'shelfrock')
+    age_freq <- SurveyAFs.fn(dir = here('data'), 
+                             datA = ages,
+                             datTows = catch_subset,
+                             strat.df = strata, 
+                             ageBins = age_bins, 
+                             nSamps = age_n,
+                             sex = 3,
+                             printfolder = printfolder,
+                             month = '7', ageErr = '1',
+                             verbose = FALSE)
+    
+    
   }
 }
 # whew!
@@ -153,9 +152,9 @@ wcgbts_catch |>
                    n_pos_tows = sum(total_catch_numbers > 0),
                    n_caught = sum(total_catch_numbers)) |>
   dplyr::mutate(eff_n_age = GetN.fn(dat = wcgbts_bio, 
-                               type = 'age',
-                               species = 'shelfrock',
-                               verbose = FALSE))
+                                    type = 'age',
+                                    species = 'shelfrock',
+                                    verbose = FALSE))
 
 
 # Write index to csv
