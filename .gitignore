@@ -90,3 +90,12 @@ ss.r0*
 ss.rep
 ss.std
 suggested_tuning.ss
+
+# rmarkdown / latex files
+*.aux
+*.log
+*.out
+*.tex
+*.upa
+*.md
+*.pdf
