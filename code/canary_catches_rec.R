@@ -193,14 +193,20 @@ ca_mrfss_tot = rbind(ca_mrfss_tot,impute_catch) %>% arrange(.,YEAR_)
 #################################################################################################################
 
 rec_df <- data.frame("Year" = min(unique(c(wa_rec$YEAR, or_rec$Year, recfin$RECFIN_YEAR, ca_mrfss$YEAR_))):2022)
+split_df <- rec_df #for splitting out discards and non-discards for Washington
 
 #Add washington - in numbers
 rec_df$wa_N <- 0
 rec_df[rec_df$Year %in% wa_rec$YEAR,]$wa_N <- rowSums(wa_rec[,c("RETAINED_N","DEAD_RELEASED_TOTAL_N")],na.rm=T)
+split_df$wa_N <- 0
+split_df$wa_N_dis <- 0
+split_df[split_df$Year %in% wa_rec$YEAR,]$wa_N <- wa_rec$RETAINED_N
+split_df[split_df$Year %in% wa_rec$YEAR,]$wa_N_dis <- wa_rec$DEAD_RELEASED_TOTAL_N
 
 #Add oregon - >2000 are releases and dead releases, <2001 can assume no discards
 rec_df$or_MT <- 0
 rec_df[rec_df$Year %in% or_rec$Year,]$or_MT <- or_rec$Total_MT
+split_df$or_MT = rec_df$or_MT
 
 #Add california recfin
 rec_df$ca_MT <- 0
@@ -210,8 +216,10 @@ rec_df[rec_df$Year %in% ca_recfin$RECFIN_YEAR,]$ca_MT <- ca_recfin$sum_total
 
 #Add california mrfss
 rec_df[rec_df$Year %in% ca_mrfss_tot$YEAR_,]$ca_MT <- rowSums(ca_mrfss_tot[,-1],na.rm=T)
+split_df$ca_MT <- rec_df$ca_MT
 
 #write.csv(rec_df, file = file.path(git_dir, "data", "canary_rec_catch.csv"), row.names = FALSE)
+#write.csv(split_df, file = file.path(git_dir, "data", "canary_rec_catch_splitOut.csv"), row.names = FALSE)
 
 
 #################################################################################################################
