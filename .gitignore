@@ -99,3 +99,5 @@ suggested_tuning.ss
 *.upa
 *.md
 *.pdf
+!input_accessability.tex
+!sa4ss_glossaries.tex
