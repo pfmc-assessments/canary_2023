@@ -1,5 +1,7 @@
 ## Biological Data
 
+\gls{nwfsc}
+
 The stock assessment model requires specifying several life history parameters from analyses external to the model.  These parameters include the maturity schedule, fecundity (the relationship between female weight and egg production), the natural mortality rate for males, the steepness of the stock-recruit relationship, individual condition (the relationship between individual weight and length), and estimates of error for determinations of individual age from reading otoliths.
 
 ### Natural Mortality

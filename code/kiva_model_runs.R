@@ -513,7 +513,7 @@ SS_write(mod, dir = here('models/coastwide'), overwrite = TRUE)
 r4ss::run(dir = here('models/coastwide'), 
           exe = here('models/ss_win.exe'), 
           extras = '-nohess', 
-          show_in_console = TRUE,
+          # show_in_console = TRUE,
           skipfinished = FALSE)
 beepr::beep()
 
