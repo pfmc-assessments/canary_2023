@@ -350,7 +350,7 @@ removals[removals$Year %in% for_fleet$Year, c("FOR.C","FOR.O","FOR.W")] <- for_f
 # #Upload to googledrive
 # #Break out of commercial data so CONFIDENTIAL
 # ##
-# xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_removals_forStateApproval',
+# xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_removals_forStateApproval_April14',
 #                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(round(removals,2), ss = xx, sheet = "catch_summary")
