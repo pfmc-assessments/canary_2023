@@ -22,21 +22,21 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 ################################
 
 ##
-#Length data
+#Length data - Use new pull updating 2022 and other year data. Use SD501 because some fields removed from SD001
 ##
-recfin_bdsWA = read.csv(file.path(dir, "RecFIN_SD001_WA_canary_1983_2021.csv"),header=TRUE)
-recfin_bdsOR = read.csv(file.path(dir, "RecFIN_SD001_OR_canary_1999_2021.csv"),header=TRUE)
-recfin_bdsCA = read.csv(file.path(dir, "RecFIN_SD001_CA_canary_2003_2021.csv"),header=TRUE)
+recfin_bdsWA = read.csv(file.path(dir, "conf_RecFIN_SD501_WA_canary_1983_2022.csv"),header=TRUE)
+recfin_bdsOR = read.csv(file.path(dir, "conf_RecFIN_SD501_OR_canary_1999_2022.csv"),header=TRUE)
+recfin_bdsCA = read.csv(file.path(dir, "conf_RecFIN_SD501_CA_canary_2003_2022.csv"),header=TRUE)
 recfin_bds = rbind(recfin_bdsWA,recfin_bdsOR,recfin_bdsCA)
 
-#Exclude 16 inland and 24 estuary fish
+#Exclude 20 inland and 18 estuary fish
 recfin_bds <- recfin_bds[-which(recfin_bds$AGENCY_WATER_AREA_NAME %in% c("ESTUARY","IN")),]
 
 
 ##
 #Age data for later
 ##
-recfin_bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2021.csv"),header=TRUE)
+recfin_bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2022.csv"),header=TRUE)
 
 
 ################################
@@ -254,7 +254,7 @@ out[out$source == "recfin" & out$state == "C", "sourceSS3_2"] <- "CA"
 #Remove any NA lengths or unusual lengths
 out <- out[!is.na(out$lengthcm),]
 
-#Remove the five samples below 10 cm and one sample above 80 cm that are clearly off. 
+#Remove the two samples below 10 cm and one sample above 80 cm that are clearly off. 
 #The 70-75 cm fish are questionable but keeping in based on max size of 76cm in Love
 head(out[order(out$lengthcm),],20)
 tail(out[order(out$lengthcm),],50)
@@ -266,8 +266,8 @@ out <- out[out$lengthcm > 10 & out$lengthcm < 80,]
 #                     out$year %in% 1997:1998 &
 #                     out$mode == "PC"), ]
 
-#Remove 6135 released fish from recfin (based on pre-assessment workshop these are likely to little effect)
-#Of these 3880 are from CA - and these are the only impact because the OR state provided recfin
+#Remove 6223 released fish from recfin (based on pre-assessment workshop these are likely to little effect)
+#Of these 3905 are from CA - and these are the only impact because the OR state provided recfin
 #data do not have released fish included
 #Also remove the 2318 OR CPFV released fish
 out <- out[-which(out$disp == "RELEASED"),]
@@ -324,7 +324,7 @@ n <- out %>% dplyr::filter(!is.na(sourceSS3)) %>%
 #This creates the composition data for each SS3 fleet. 
 #Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
 #so need to navigate to there and then load_all
-# devtools::load_all("U:/Other github repos/nwfscSurvey") ###IMPORTANT TO UNCOMMENT THIS IF RERUN
+ devtools::load_all("U:/Other github repos/nwfscSurvey") ###IMPORTANT TO UNCOMMENT THIS IF RERUN
 for(s in unique(na.omit(out$sourceSS3))) {
 
   use_n <- n[n$sourceSS3 %in% s, ]
