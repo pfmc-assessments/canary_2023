@@ -344,8 +344,8 @@ r4ss::SS_output(here('models/update_wcgbts_comps')) |>
 # Add fishery comps -------------------------------------------------------
 
 r4ss::copy_SS_inputs(dir.old = here('models/update_wcgbts_comps'),
-                     dir.new = here('models/update_commerical_comps'), overwrite = TRUE)
-mod <- r4ss::SS_read(dir = here('models/update_commerical_comps'))
+                     dir.new = here('models/update_commercial_comps'), overwrite = TRUE)
+mod <- r4ss::SS_read(dir = here('models/update_commercial_comps'))
 
 
 length.min <- min(mod$dat$lbin_vector)
@@ -405,10 +405,10 @@ mod$dat$lencomp <- mod$dat$lencomp |>
 
 
 SS_write(mod,
-         dir = here('models/update_commerical_comps'), 
+         dir = here('models/update_commercial_comps'), 
          overwrite = TRUE)
 
-r4ss::run(dir = here('models/update_commerical_comps'), 
+r4ss::run(dir = here('models/update_commercial_comps'), 
           exe = here('models/ss_win.exe'), 
           extras = '-nohess', 
           # show_in_console = TRUE, 
@@ -417,7 +417,7 @@ beepr::beep()
 
 out <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                        subdir = c('no_research_catch',  'update_catch', 
-                                                  'update_wcgbts_comps','update_commerical_comps'))) |>
+                                                  'update_wcgbts_comps','update_commercial_comps'))) |>
   SSsummarize()
 
 SSplotComparisons(out, legendlabels = c('no research catch', 'update catch', 
@@ -427,16 +427,21 @@ SSplotComparisons(out, legendlabels = c('no research catch', 'update catch',
 SStableComparisons(out, modelnames = c('no research catch', 'update catch', 
                                        'update wcgbts', 'update wcgbts comps'))
 
-SS_output(dir = here('models/update_commerical_comps')) |>
+SS_output(dir = here('models/update_commercial_comps')) |>
   SS_plots()
 
 
 # coastwide model ---------------------------------------------------------
 
-r4ss::copy_SS_inputs(dir.old = here('models/update_commerical_comps'),
+r4ss::copy_SS_inputs(dir.old = here('models/update_commercial_comps'),
                      dir.new = here('models/coastwide'), overwrite = TRUE)
 mod <- r4ss::SS_read(dir = here('models/coastwide'))
 
+# oopsies
+mod$ctl$MainRdevYrLast <- 2022
+mod$ctl$last_yr_fullbias_adj <- 2020
+
+######## CHANGE NUMBER OF AREAS
 mod$ctl$N_areas <- mod$dat$N_areas <- 1
 mod$ctl$recr_dist_read <- 1
 mod$ctl$recr_dist_pattern <- mod$ctl$recr_dist_pattern[1,]
@@ -448,34 +453,15 @@ mod$dat$fleetinfo$area <- 1
 mod$dat$areas <- rep(1, mod$dat$Nfleets)
 mod$dat$fleetinfo1['areas',] <- 1
 
+######## SWITCH TO COASTWIDE SURVEYS
 state.surveys <- stringr::str_which(fleet.converter$fleet_no_num,
                                     '(?<!coastwide_)(NWFSC|Tri|prerec)')
 # returns index for fleet names with NWFSC, Tri, or prerec NOT preceded by coastwide_
 coastwide.surveys <- stringr::str_which(fleet.converter$fleet_no_num, 'coastwide')
 
-# Set lambda = 0 for cpue, length, age comps for state surveys (use coastwide instead)
-new.lambdas <- purrr::map(list(c('Surv', ''), 
-                               c('length', '_sizefreq_method_1'), 
-                               c('age', '')), 
-                          function(.x){
-                            data.frame(like_comp = dplyr::case_when(.x[1] == 'Surv' ~ 1,
-                                                                    .x[1] == 'length' ~ 4,
-                                                                    .x[1] == 'age' ~ 5),
-                                       fleet = fleet.converter$fleet[state.surveys],
-                                       phase = 1,
-                                       value = 0, 
-                                       sizefreq_method = 1) |>
-                              
-                              `rownames<-`(glue::glue('{type}_{fleet}{other}_Phz1',
-                                                      type = .x[1],
-                                                      fleet = fleet.converter$fleetname[state.surveys],
-                                                      other = .x[2]))
-                          }) |>
-  purrr::list_rbind()
-
+# Add coastwide surveys back into likelihood
 mod$ctl$lambdas <- mod$ctl$lambdas |>
-  dplyr::filter(!(fleet %in% fleet.converter$fleet[coastwide.surveys])) |>
-  dplyr::bind_rows(new.lambdas)
+  dplyr::filter(!(fleet %in% fleet.converter$fleet[coastwide.surveys]))
 
 mod$ctl$N_lambdas <- nrow(mod$ctl$lambdas)
 
@@ -506,20 +492,169 @@ caal.tri <- purrr::map(list('Female', 'Male'), function(.x) {
                 dplyr::across(Lbin_lo:Lbin_hi, ~ match(.x, mod$dat$lbin_vector)))
                            
 mod$dat$agecomp <- mod$dat$agecomp |> 
-  dplyr::filter(!(FltSvy %in% fleet.converter$fleet[state.surveys])) |>
+  # using negative year method instead
+  # dplyr::filter(!(FltSvy %in% fleet.converter$fleet[state.surveys])) |>
   dplyr::bind_rows(caal.dfr, caal.tri)
 
-SS_write(mod, dir = here('models/coastwide'), overwrite = TRUE)
+# Negative out year of state survey data
+# CPUE
+mod$dat$CPUE$year[mod$dat$CPUE$index %in% state.surveys] <- -1 * 
+  mod$dat$CPUE$year[mod$dat$CPUE$index %in% state.surveys]
+# age comp
+mod$dat$agecomp$Yr[mod$dat$agecomp$FltSvy %in% state.surveys] <- -1 *
+  mod$dat$agecomp$Yr[mod$dat$agecomp$FltSvy %in% state.surveys]
+# length comp
+mod$dat$lencomp$Yr[mod$dat$lencomp$FltSvy %in% state.surveys] <- -1 *
+  mod$dat$lencomp$Yr[mod$dat$lencomp$FltSvy %in% state.surveys]
+
+######## CATCHABILITY SETTINGS
+# Get rid of catchability for state surveys
+# And add extra_se to coastwide prerec
+mod$ctl$Q_options <- mod$ctl$Q_options |>
+  dplyr::filter(!(fleet %in% fleet.converter$fleet[state.surveys]))
+mod$ctl$Q_options[grep('prerec', rownames(mod$ctl$Q_options)),'extra_se'] <- 1
+
+extra.se.row <- mod$ctl$Q_parms[grep('extraSD', rownames(mod$ctl$Q_parms))[1],]
+rownames(extra.se.row) <- stringr::str_replace(rownames(extra.se.row), 'CA', 'coastwide') |>
+  stringr::str_replace_all('[:digit:]+',
+                           as.character(fleet.converter$fleet[fleet.converter$fleet_no_num == 'coastwide_prerec']))
+mod$ctl$Q_parms <- mod$ctl$Q_parms |>
+  dplyr::filter(grepl('coastwide', rownames(mod$ctl$Q_parms))) |>
+  dplyr::bind_rows(extra.se.row)
+
+######## CHANGE SELECTIVITY FOR COASTWIDE MODEL
+
+# Un-mirror TWL, NTWL, REC selectivities
+mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
+mod$ctl$size_selex_types$Special[grep('TWL|REC', fleet.converter$fleetname)] <- 0
+
+# Except WA NTWL which is very small fleet, it mirrors TWL (more similar to WA TWL than OR NTWL)
+mod$ctl$size_selex_types$Pattern[fleet.converter$fleet_no_num=='WA_NTWL'] <- 15
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_NTWL'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# Foreign fleets mirror respective state TWL fleet
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='OR_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='OR_TWL']
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# State surveys have no length selectivity (to eliminate parameter lines)
+mod$ctl$size_selex_types$Pattern[grep('NWFSC|Tri', fleet.converter$fleetname)] <- 0
+mod$ctl$size_selex_types$Special[grep('NWFSC|Tri', fleet.converter$fleetname)] <- 0
+
+# coastwide surveys get their own selectivity, no mirroring
+mod$ctl$size_selex_types$Pattern[grep('coastwide_(NWFSC|Tri)', fleet.converter$fleetname)] <- 24
+
+### Now fix up selectivity parameter table
+selex_fleets <- rownames(mod$ctl$size_selex_types)[mod$ctl$size_selex_types$Pattern == 24] |>
+  as.list()
+
+selex_names <- purrr::map(selex_fleets,
+                          ~ glue::glue('SizeSel_P_{par}_{fleet_name}({fleet_no})',
+                                       par = 1:6,
+                                       fleet_name = .x,
+                                       fleet_no = fleet.converter$fleet[fleet.converter$fleetname == .x])) |>
+  unlist()
+
+selex_new <- matrix(0, nrow = length(selex_names), 
+                    ncol = ncol(mod$ctl$size_selex_parms), 
+                    dimnames = list(selex_names, names(mod$ctl$size_selex_parms))) |>
+  as.data.frame()
+
+# default lo and hi
+selex_new$LO <- -99
+selex_new$HI <- 99
+
+# No prior applied, so just need to fill in a number
+selex_new$PR_SD <- 99
+selex_new$PRIOR <- 99
+
+# Fix three parameters of double normal
+selex_new$INIT[grep('P_2', rownames(selex_new))] <- -15
+selex_new$INIT[grep('P_5', rownames(selex_new))] <- -999
+selex_new$INIT[grep('P_6', rownames(selex_new))] <- -999
+selex_new$PHASE[grep('P_2', rownames(selex_new))] <- -99
+selex_new$PHASE[grep('P_5', rownames(selex_new))] <- -99
+selex_new$PHASE[grep('P_6', rownames(selex_new))] <- -99
+
+# calculate initial values for p1, p3, p4 for each fleet
+# based on recommendations in assessment handbook
+selex_modes <- mod$dat$lencomp |>
+  dplyr::arrange(FltSvy) |>
+  dplyr::group_by(FltSvy) |>
+  dplyr::summarise(dplyr::across(f12:m66, ~ sum(Nsamp*.x)/sum(Nsamp))) |> 
+  tidyr::pivot_longer(cols = -FltSvy, names_to = 'len_bin', values_to = 'dens') |>
+  tidyr::separate(col = len_bin, into = c('sex', 'length'), sep = 1) |>
+  dplyr::group_by(FltSvy, sex) |> 
+  dplyr::summarise(mode = length[which.max(dens)]) |>
+  dplyr::summarise(mode = mean(as.numeric(mode))) |>
+  dplyr::mutate(asc.slope = log(8*(mode - 12)),
+                desc.slope = log(8*(66-mode)))
+
+# P_1
+p1.ind <- grep('P_1', rownames(selex_new))
+selex_new$LO[p1.ind] <- 13.001
+selex_new$HI[p1.ind] <- 65
+selex_new$PHASE[p1.ind] <- 4
+selex_new$INIT[p1.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$mode[selex_modes$FltSvy == 
+                                                          fleet.converter$fleet[fleet.converter$fleetname == .x]]) |>
+  unlist()
+# Hard coding this in, do not use CA as basis for mode of ASHOP selectivity
+selex_new['SizeSel_P_1_10_CA_AHSOP(10)', 'INIT'] <- 48
+
+### P_3
+p3.ind <- grep('P_3', rownames(selex_new))
+selex_new$PHASE[p3.ind] <- 5
+selex_new$LO[p3.ind] <- 0
+selex_new$HI[p3.ind] <- 9
+selex_new$INIT[p3.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$asc.slope[selex_modes$FltSvy == 
+                                                               fleet.converter$fleet[fleet.converter$fleetname == 
+                                                                                       .x]]) |>
+  unlist()
+
+### P_4
+p4.ind <- grep('P_4', rownames(selex_new))
+selex_new$PHASE[p4.ind] <- 5
+selex_new$LO[p4.ind] <- 0
+selex_new$HI[p4.ind] <- 9
+selex_new$INIT[p4.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$desc.slope[selex_modes$FltSvy == 
+                                                                fleet.converter$fleet[fleet.converter$fleetname == 
+                                                                                        .x]]) |>
+  unlist()
+
+# just copying blocks from Jim for now
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+selex_new[grepl('_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, 'Block'] <- 1
+selex_new[grepl('_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, 'Block_Fxn'] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(Block, .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', 10*selex_tv_pars$id + 1990)
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+SS_write(mod,
+         dir = here('models/coastwide'), 
+         overwrite = TRUE)
+
 r4ss::run(dir = here('models/coastwide'), 
           exe = here('models/ss_win.exe'), 
           extras = '-nohess', 
-          # show_in_console = TRUE,
+          show_in_console = TRUE,
           skipfinished = FALSE)
 beepr::beep()
 
-# Need to deal with selectivity now. Probably:
-# 1. free up selectivity by area
-# 2. Fix a third double normal parameter. (I think standard is to fix three?)
+SS_output(dir = here('models/coastwide')) |>
+  SS_plots()
 
 # No triennial
 # Triennial combined
@@ -531,3 +666,25 @@ beepr::beep()
 # Update M ramp
 
 # Expand survey data comps
+
+# Set lambda = 0 for cpue, length, age comps for state surveys (use coastwide instead)
+# Not using this approach, using negative year and no selectivity instead
+# Keeping code for posterity, because I don't have the heart to delete it.
+new.lambdas <- purrr::map(list(c('Surv', ''),
+                               c('length', '_sizefreq_method_1'),
+                               c('age', '')),
+                          function(.x){
+                            data.frame(like_comp = dplyr::case_when(.x[1] == 'Surv' ~ 1,
+                                                                    .x[1] == 'length' ~ 4,
+                                                                    .x[1] == 'age' ~ 5),
+                                       fleet = fleet.converter$fleet[state.surveys],
+                                       phase = 1,
+                                       value = 0,
+                                       sizefreq_method = 1) |>
+
+                              `rownames<-`(glue::glue('{type}_{fleet}{other}_Phz1',
+                                                      type = .x[1],
+                                                      fleet = fleet.converter$fleetname[state.surveys],
+                                                      other = .x[2]))
+                          }) |>
+  purrr::list_rbind()

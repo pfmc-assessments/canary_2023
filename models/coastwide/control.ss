@@ -101,7 +101,7 @@
 #_no timevary SR parameters
 1 #do_recdev:  0=none; 1=devvector (R=F(SSB)+dev); 2=deviations (R=F(SSB)+dev); 3=deviations (R=R0*dev; dev2=R-f(SSB)); 4=like 3 with sum(dev2) adding penalty
 1960 # first year of main recr_devs; early devs can preceed this era
-2014 # last year of main recr_devs; forecast devs start in following year
+2022 # last year of main recr_devs; forecast devs start in following year
 5 #_recdev phase
 1 # (0/1) to read 13 advanced options
 1933 #_recdev_early_start (0=none; neg value makes relative to recdev_start)
@@ -110,7 +110,7 @@
 1 #_lambda for Fcast_recr_like occurring before endyr+1
 1965.76 #_last_yr_nobias_adj_in_MPD; begin of ramp
 1978 #_first_yr_fullbias_adj_in_MPD; begin of plateau
-2012 #_last_yr_fullbias_adj_in_MPD
+2020 #_last_yr_fullbias_adj_in_MPD
 2014 #_end_yr_for_ramp_in_MPD (can be in forecast to shape ramp, but SS sets bias_adj to 0.0 for fcast yrs)
 0.8025 #_max_bias_adj_in_MPD (-1 to override ramp and set biasadj=1.0 for all estimated recdevs)
 0 #_period of cycles in recruitment (N parms read below)
@@ -133,78 +133,52 @@
 #
 #_Q_setup for fleets with cpue or survey data
 #_fleet	link	link_info	extra_se	biasadj	float  #  fleetname
-   16	1	0	0	0	1	#_16_CA_NWFSC           
-   17	1	0	0	0	1	#_17_OR_NWFSC           
-   18	1	0	0	0	1	#_18_WA_NWFSC           
-   19	1	0	0	0	1	#_19_CA_Tri_early       
-   20	1	0	0	0	1	#_20_OR_Tri_early       
-   21	1	0	0	0	1	#_21_WA_Tri_early       
-   22	1	0	0	0	1	#_22_CA_Tri_late        
-   23	1	0	0	0	1	#_23_OR_Tri_late        
-   24	1	0	0	0	1	#_24_WA_Tri_late        
-   25	1	0	1	0	1	#_25_CA_prerec          
-   26	1	0	1	0	1	#_26_OR_prerec          
-   27	1	0	1	0	1	#_27_WA_prerec          
    28	1	0	0	0	1	#_28_coastwide_NWFSC    
    29	1	0	0	0	1	#_29_coastwide_Tri_early
    30	1	0	0	0	1	#_30_coastwide_Tri_late 
-   31	1	0	0	0	1	#_31_coastwide_prerec   
+   31	1	0	1	0	1	#_31_coastwide_prerec   
 -9999	0	0	0	0	0	#_terminator            
 #_Q_parms(if_any);Qunits_are_ln(q)
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn  #  parm_name
--25	25	  0.355139	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_16_CA_NWFSC(16)           
--25	25	 -0.603442	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_17_OR_NWFSC(17)           
--25	25	-0.0907719	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_18_WA_NWFSC(18)           
--25	25	   2.04584	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_19_CA_Tri_early(19)       
--25	25	  -0.60096	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_20_OR_Tri_early(20)       
--25	25	 -0.538458	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_21_WA_Tri_early(21)       
--25	25	   3.91123	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_22_CA_Tri_late(22)        
--25	25	  -0.46186	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_23_OR_Tri_late(23)        
--25	25	 -0.989914	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_24_WA_Tri_late(24)        
--25	25	  -8.34504	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_25_CA_prerec(25)          
-  0	 3	  0.514511	0.1	99	0	 2	0	0	0	0	0	0	0	#_Q_extraSD_25_CA_prerec(25)         
--25	25	  -8.29858	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_26_OR_prerec(26)          
-  0	 3	  0.391149	0.1	99	0	 2	0	0	0	0	0	0	0	#_Q_extraSD_26_OR_prerec(26)         
--25	25	  -9.04758	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_27_WA_prerec(27)          
-  0	 3	   0.98698	0.1	99	0	 2	0	0	0	0	0	0	0	#_Q_extraSD_27_WA_prerec(27)         
--25	25	   2.42704	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_28_coastwide_NWFSC(28)    
--25	25	   3.27912	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_29_coastwide_Tri_early(29)
--25	25	   5.13859	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_30_coastwide_Tri_late(30) 
--25	25	  -6.60196	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_31_coastwide_prerec(31)   
+-25	25	 2.42704	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_28_coastwide_NWFSC(28)    
+-25	25	 3.27912	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_29_coastwide_Tri_early(29)
+-25	25	 5.13859	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_30_coastwide_Tri_late(30) 
+-25	25	-6.60196	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_31_coastwide_prerec(31)   
+  0	 3	0.514511	0.1	99	0	 2	0	0	0	0	0	0	0	#_Q_extraSD_31_coastwide_prerec(31)  
 #_no timevary Q parameters
 #
 #_size_selex_patterns
 #_Pattern	Discard	Male	Special
 24	0	0	 0	#_1 1_CA_TWL               
-15	0	0	 1	#_2 2_OR_TWL               
-15	0	0	 1	#_3 3_WA_TWL               
+24	0	0	 0	#_2 2_OR_TWL               
+24	0	0	 0	#_3 3_WA_TWL               
 24	0	0	 0	#_4 4_CA_NTWL              
-15	0	0	 4	#_5 5_OR_NTWL              
-15	0	0	 4	#_6 6_WA_NTWL              
+24	0	0	 0	#_5 5_OR_NTWL              
+15	0	0	 3	#_6 6_WA_NTWL              
 24	0	0	 0	#_7 7_CA_REC               
-15	0	0	 7	#_8 8_OR_REC               
-15	0	0	 7	#_9 9_WA_REC               
+24	0	0	 0	#_8 8_OR_REC               
+24	0	0	 0	#_9 9_WA_REC               
 24	0	0	 0	#_10 10_CA_AHSOP           
 15	0	0	10	#_11 11_OR_ASHOP           
 15	0	0	10	#_12 12_WA_ASHOP           
 15	0	0	 1	#_13 13_CA_FOR             
-15	0	0	13	#_14 14_OR_FOR             
-15	0	0	13	#_15 15_WA_FOR             
-24	0	0	 0	#_16 16_CA_NWFSC           
-15	0	0	16	#_17 17_OR_NWFSC           
-15	0	0	16	#_18 18_WA_NWFSC           
-24	0	0	 0	#_19 19_CA_Tri_early       
-15	0	0	19	#_20 20_OR_Tri_early       
-15	0	0	19	#_21 21_WA_Tri_early       
-24	0	0	 0	#_22 22_CA_Tri_late        
-15	0	0	22	#_23 23_OR_Tri_late        
-15	0	0	22	#_24 24_WA_Tri_late        
+15	0	0	 2	#_14 14_OR_FOR             
+15	0	0	 3	#_15 15_WA_FOR             
+ 0	0	0	 0	#_16 16_CA_NWFSC           
+ 0	0	0	 0	#_17 17_OR_NWFSC           
+ 0	0	0	 0	#_18 18_WA_NWFSC           
+ 0	0	0	 0	#_19 19_CA_Tri_early       
+ 0	0	0	 0	#_20 20_OR_Tri_early       
+ 0	0	0	 0	#_21 21_WA_Tri_early       
+ 0	0	0	 0	#_22 22_CA_Tri_late        
+ 0	0	0	 0	#_23 23_OR_Tri_late        
+ 0	0	0	 0	#_24 24_WA_Tri_late        
  0	0	0	 0	#_25 25_CA_prerec          
  0	0	0	 0	#_26 26_OR_prerec          
  0	0	0	 0	#_27 27_WA_prerec          
-15	0	0	16	#_28 28_coastwide_NWFSC    
-15	0	0	19	#_29 29_coastwide_Tri_early
-15	0	0	22	#_30 30_coastwide_Tri_late 
+24	0	0	 0	#_28 28_coastwide_NWFSC    
+24	0	0	 0	#_29 29_coastwide_Tri_early
+24	0	0	 0	#_30 30_coastwide_Tri_late 
  0	0	0	 0	#_31 31_coastwide_prerec   
 #
 #_age_selex_patterns
@@ -243,64 +217,106 @@
 #
 #_SizeSelex
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn  #  parm_name
-  13.1	65	  48.8575	 50	50	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_1_CA_TWL(1)        
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_1_CA_TWL(1)        
-     0	 9	   4.2986	4.2	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_1_CA_TWL(1)        
-     0	 9	  0.01082	2.6	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_1_CA_TWL(1)        
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_1_CA_TWL(1)        
-    -5	 5	  1.17553	  5	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_6_1_CA_TWL(1)        
-13.001	65	  43.2071	 50	50	0	  4	0	0	0	0	0	1	2	#_SizeSel_P_1_4_CA_NTWL(4)       
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_4_CA_NTWL(4)       
-     0	 9	  5.00821	4.2	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_3_4_CA_NTWL(4)       
-     0	 9	   7.3054	2.6	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_4_4_CA_NTWL(4)       
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_4_CA_NTWL(4)       
-    -5	 5	  4.55253	  5	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_6_4_CA_NTWL(4)       
-13.001	65	  32.3937	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_7_CA_REC(7)        
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_7_CA_REC(7)        
-     0	 9	  3.75467	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_7_CA_REC(7)        
-     0	 9	  3.40759	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_7_CA_REC(7)        
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_7_CA_REC(7)        
-    -5	 5	 -1.66869	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_7_CA_REC(7)        
-13.001	65	  45.9334	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_10_CA_AHSOP(10)    
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_10_CA_AHSOP(10)    
-     0	 9	  2.99325	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_10_CA_AHSOP(10)    
-     0	 9	0.0064059	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_10_CA_AHSOP(10)    
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_10_CA_AHSOP(10)    
-    -5	 5	 0.605481	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_10_CA_AHSOP(10)    
-13.001	65	  13.0174	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_16_CA_NWFSC(16)    
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_16_CA_NWFSC(16)    
-     0	 9	  4.50915	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_16_CA_NWFSC(16)    
-     0	 9	  8.94034	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_16_CA_NWFSC(16)    
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_16_CA_NWFSC(16)    
-    -5	 5	  2.25288	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_16_CA_NWFSC(16)    
-13.001	65	  53.9843	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_19_CA_Tri_early(19)
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_19_CA_Tri_early(19)
-     0	 9	  6.56392	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_19_CA_Tri_early(19)
-     0	 9	 0.425038	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_19_CA_Tri_early(19)
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_19_CA_Tri_early(19)
-    -5	 5	  0.53673	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_19_CA_Tri_early(19)
-13.001	65	  51.1148	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_22_CA_Tri_late(22) 
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_22_CA_Tri_late(22) 
-     0	 9	  5.66969	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_22_CA_Tri_late(22) 
-     0	 9	  4.25381	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_22_CA_Tri_late(22) 
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_22_CA_Tri_late(22) 
-    -5	 5	-0.218186	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_22_CA_Tri_late(22) 
+13.001	65	     44	99	99	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_1_CA_TWL(1)               
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_1_CA_TWL(1)               
+     0	 9	5.54518	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_1_CA_TWL(1)               
+     0	 9	5.17048	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_1_CA_TWL(1)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_1_CA_TWL(1)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_1_CA_TWL(1)               
+13.001	65	     47	99	99	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_2_OR_TWL(2)               
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_2_OR_TWL(2)               
+     0	 9	5.63479	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_2_OR_TWL(2)               
+     0	 9	5.02388	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_2_OR_TWL(2)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_2_OR_TWL(2)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_2_OR_TWL(2)               
+13.001	65	     48	99	99	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_3_WA_TWL(3)               
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_3_WA_TWL(3)               
+     0	 9	5.66296	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_3_WA_TWL(3)               
+     0	 9	4.96981	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_3_WA_TWL(3)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_3_WA_TWL(3)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_3_WA_TWL(3)               
+13.001	65	     36	99	99	0	  4	0	0	0	0	0	1	2	#_SizeSel_P_1_4_CA_NTWL(4)              
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_4_CA_NTWL(4)              
+     0	 9	 5.2575	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_3_4_CA_NTWL(4)              
+     0	 9	5.48064	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_4_4_CA_NTWL(4)              
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_4_CA_NTWL(4)              
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_4_CA_NTWL(4)              
+13.001	65	     35	99	99	0	  4	0	0	0	0	0	1	2	#_SizeSel_P_1_5_OR_NTWL(5)              
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_5_OR_NTWL(5)              
+     0	 9	5.21494	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_3_5_OR_NTWL(5)              
+     0	 9	5.51343	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_4_5_OR_NTWL(5)              
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_5_OR_NTWL(5)              
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_5_OR_NTWL(5)              
+13.001	65	     34	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_7_CA_REC(7)               
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_7_CA_REC(7)               
+     0	 9	5.17048	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_7_CA_REC(7)               
+     0	 9	5.54518	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_7_CA_REC(7)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_7_CA_REC(7)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_7_CA_REC(7)               
+13.001	65	     34	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_8_OR_REC(8)               
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_8_OR_REC(8)               
+     0	 9	5.17048	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_8_OR_REC(8)               
+     0	 9	5.54518	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_8_OR_REC(8)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_8_OR_REC(8)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_8_OR_REC(8)               
+13.001	65	     35	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_9_WA_REC(9)               
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_9_WA_REC(9)               
+     0	 9	5.21494	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_9_WA_REC(9)               
+     0	 9	5.51343	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_9_WA_REC(9)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_9_WA_REC(9)               
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_9_WA_REC(9)               
+13.001	65	     48	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_10_CA_AHSOP(10)           
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_10_CA_AHSOP(10)           
+     0	 9	5.51343	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_10_CA_AHSOP(10)           
+     0	 9	5.21494	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_10_CA_AHSOP(10)           
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_10_CA_AHSOP(10)           
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_10_CA_AHSOP(10)           
+13.001	65	     50	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_28_coastwide_NWFSC(28)    
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_28_coastwide_NWFSC(28)    
+     0	 9	5.71703	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_28_coastwide_NWFSC(28)    
+     0	 9	4.85203	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_28_coastwide_NWFSC(28)    
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_28_coastwide_NWFSC(28)    
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_28_coastwide_NWFSC(28)    
+13.001	65	     30	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_29_coastwide_Tri_early(29)
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_29_coastwide_Tri_early(29)
+     0	 9	4.96981	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_29_coastwide_Tri_early(29)
+     0	 9	5.66296	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_29_coastwide_Tri_early(29)
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_29_coastwide_Tri_early(29)
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_29_coastwide_Tri_early(29)
+13.001	65	     37	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_30_coastwide_Tri_late(30) 
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_30_coastwide_Tri_late(30) 
+     0	 9	5.29832	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_30_coastwide_Tri_late(30) 
+     0	 9	5.44674	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_30_coastwide_Tri_late(30) 
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_30_coastwide_Tri_late(30) 
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_30_coastwide_Tri_late(30) 
 #_AgeSelex
 #_No age_selex_parm
 # timevary selex parameters 
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE
-13.001	65	  43.6755	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2000 
-13.001	65	  43.2338	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2011 
-     0	 9	  4.25156	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2000 
-     0	 9	  5.03648	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2011 
-     0	 9	   1.5833	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2000 
-     0	 9	  1.58696	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2011 
-    -5	 5	 0.189738	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK2repl_2000 
-    -5	 5	-0.782065	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK2repl_2011 
-13.001	65	  40.6674	 50	50	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK1repl_2000
-     0	 9	  4.31903	4.2	50	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK1repl_2000
-     0	 9	  6.62311	2.6	50	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK1repl_2000
-    -5	 5	  4.21716	  5	50	0	5	#_SizeSel_P_6_4_CA_NTWL(4)_BLK1repl_2000
+13.001	65	     44	99	99	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2000 
+13.001	65	     44	99	99	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2010 
+     0	 9	5.54518	99	99	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2000 
+     0	 9	5.54518	99	99	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2010 
+     0	 9	5.17048	99	99	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2000 
+     0	 9	5.17048	99	99	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2010 
+13.001	65	     47	99	99	0	4	#_SizeSel_P_1_2_OR_TWL(2)_BLK2repl_2000 
+13.001	65	     47	99	99	0	4	#_SizeSel_P_1_2_OR_TWL(2)_BLK2repl_2010 
+     0	 9	5.63479	99	99	0	5	#_SizeSel_P_3_2_OR_TWL(2)_BLK2repl_2000 
+     0	 9	5.63479	99	99	0	5	#_SizeSel_P_3_2_OR_TWL(2)_BLK2repl_2010 
+     0	 9	5.02388	99	99	0	5	#_SizeSel_P_4_2_OR_TWL(2)_BLK2repl_2000 
+     0	 9	5.02388	99	99	0	5	#_SizeSel_P_4_2_OR_TWL(2)_BLK2repl_2010 
+13.001	65	     48	99	99	0	4	#_SizeSel_P_1_3_WA_TWL(3)_BLK2repl_2000 
+13.001	65	     48	99	99	0	4	#_SizeSel_P_1_3_WA_TWL(3)_BLK2repl_2010 
+     0	 9	5.66296	99	99	0	5	#_SizeSel_P_3_3_WA_TWL(3)_BLK2repl_2000 
+     0	 9	5.66296	99	99	0	5	#_SizeSel_P_3_3_WA_TWL(3)_BLK2repl_2010 
+     0	 9	4.96981	99	99	0	5	#_SizeSel_P_4_3_WA_TWL(3)_BLK2repl_2000 
+     0	 9	4.96981	99	99	0	5	#_SizeSel_P_4_3_WA_TWL(3)_BLK2repl_2010 
+13.001	65	     36	99	99	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK1repl_2000
+     0	 9	 5.2575	99	99	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK1repl_2000
+     0	 9	5.48064	99	99	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK1repl_2000
+13.001	65	     35	99	99	0	4	#_SizeSel_P_1_5_OR_NTWL(5)_BLK1repl_2000
+     0	 9	5.21494	99	99	0	5	#_SizeSel_P_3_5_OR_NTWL(5)_BLK1repl_2000
+     0	 9	5.51343	99	99	0	5	#_SizeSel_P_4_5_OR_NTWL(5)_BLK1repl_2000
 # info on dev vectors created for selex parms are reported with other devs after tag parameter section
 #
 0 #  use 2D_AR1 selectivity(0/1):  experimental feature
@@ -345,69 +361,33 @@
 #
 1 #_maxlambdaphase
 1 #_sd_offset; must be 1 if any growthCV, sigmaR, or survey extraSD is an estimated parameter
-# read 60 changes to default Lambdas (default value is 1.0)
+# read 24 changes to default Lambdas (default value is 1.0)
 #_like_comp	fleet	phase	value	sizefreq_method
-    4	 1	1	0.7034	1	#_length_1_CA_TWL_sizefreq_method_1_Phz1       
-    4	 2	1	0.4561	1	#_length_2_OR_TWL_sizefreq_method_1_Phz1       
-    4	 3	1	0.4429	1	#_length_3_WA_TWL_sizefreq_method_1_Phz1       
-    4	 4	1	0.9871	1	#_length_4_CA_NTWL_sizefreq_method_1_Phz1      
-    4	 5	1	0.7753	1	#_length_5_OR_NTWL_sizefreq_method_1_Phz1      
-    4	 6	1	0.5091	1	#_length_6_WA_NTWL_sizefreq_method_1_Phz1      
-    4	 7	1	     1	1	#_length_7_CA_REC_sizefreq_method_1_Phz1       
-    4	 8	1	     1	1	#_length_8_OR_REC_sizefreq_method_1_Phz1       
-    4	 9	1	0.8585	1	#_length_9_WA_REC_sizefreq_method_1_Phz1       
-    4	10	1	0.8889	1	#_length_10_CA_AHSOP_sizefreq_method_1_Phz1    
-    4	11	1	0.5509	1	#_length_11_OR_ASHOP_sizefreq_method_1_Phz1    
-    4	12	1	0.5351	1	#_length_12_WA_ASHOP_sizefreq_method_1_Phz1    
-    5	 1	1	0.2966	1	#_age_1_CA_TWL_Phz1                            
-    5	 2	1	0.5439	1	#_age_2_OR_TWL_Phz1                            
-    5	 3	1	0.5571	1	#_age_3_WA_TWL_Phz1                            
-    5	 4	1	0.0129	1	#_age_4_CA_NTWL_Phz1                           
-    5	 5	1	0.2247	1	#_age_5_OR_NTWL_Phz1                           
-    5	 6	1	0.4909	1	#_age_6_WA_NTWL_Phz1                           
-    5	 7	1	     0	1	#_age_7_CA_REC_Phz1                            
-    5	 8	1	     0	1	#_age_8_OR_REC_Phz1                            
-    5	 9	1	0.1415	1	#_age_9_WA_REC_Phz1                            
-    5	10	1	0.1111	1	#_age_10_CA_AHSOP_Phz1                         
-    5	11	1	0.4491	1	#_age_11_OR_ASHOP_Phz1                         
-    5	12	1	0.4649	1	#_age_12_WA_ASHOP_Phz1                         
-    1	16	1	     0	1	#_Surv_16_CA_NWFSC_Phz1                        
-    1	17	1	     0	1	#_Surv_17_OR_NWFSC_Phz1                        
-    1	18	1	     0	1	#_Surv_18_WA_NWFSC_Phz1                        
-    1	19	1	     0	1	#_Surv_19_CA_Tri_early_Phz1                    
-    1	20	1	     0	1	#_Surv_20_OR_Tri_early_Phz1                    
-    1	21	1	     0	1	#_Surv_21_WA_Tri_early_Phz1                    
-    1	22	1	     0	1	#_Surv_22_CA_Tri_late_Phz1                     
-    1	23	1	     0	1	#_Surv_23_OR_Tri_late_Phz1                     
-    1	24	1	     0	1	#_Surv_24_WA_Tri_late_Phz1                     
-    1	25	1	     0	1	#_Surv_25_CA_prerec_Phz1                       
-    1	26	1	     0	1	#_Surv_26_OR_prerec_Phz1                       
-    1	27	1	     0	1	#_Surv_27_WA_prerec_Phz1                       
-    4	16	1	     0	1	#_length_16_CA_NWFSC_sizefreq_method_1_Phz1    
-    4	17	1	     0	1	#_length_17_OR_NWFSC_sizefreq_method_1_Phz1    
-    4	18	1	     0	1	#_length_18_WA_NWFSC_sizefreq_method_1_Phz1    
-    4	19	1	     0	1	#_length_19_CA_Tri_early_sizefreq_method_1_Phz1
-    4	20	1	     0	1	#_length_20_OR_Tri_early_sizefreq_method_1_Phz1
-    4	21	1	     0	1	#_length_21_WA_Tri_early_sizefreq_method_1_Phz1
-    4	22	1	     0	1	#_length_22_CA_Tri_late_sizefreq_method_1_Phz1 
-    4	23	1	     0	1	#_length_23_OR_Tri_late_sizefreq_method_1_Phz1 
-    4	24	1	     0	1	#_length_24_WA_Tri_late_sizefreq_method_1_Phz1 
-    4	25	1	     0	1	#_length_25_CA_prerec_sizefreq_method_1_Phz1   
-    4	26	1	     0	1	#_length_26_OR_prerec_sizefreq_method_1_Phz1   
-    4	27	1	     0	1	#_length_27_WA_prerec_sizefreq_method_1_Phz1   
-    5	16	1	     0	1	#_age_16_CA_NWFSC_Phz1                         
-    5	17	1	     0	1	#_age_17_OR_NWFSC_Phz1                         
-    5	18	1	     0	1	#_age_18_WA_NWFSC_Phz1                         
-    5	19	1	     0	1	#_age_19_CA_Tri_early_Phz1                     
-    5	20	1	     0	1	#_age_20_OR_Tri_early_Phz1                     
-    5	21	1	     0	1	#_age_21_WA_Tri_early_Phz1                     
-    5	22	1	     0	1	#_age_22_CA_Tri_late_Phz1                      
-    5	23	1	     0	1	#_age_23_OR_Tri_late_Phz1                      
-    5	24	1	     0	1	#_age_24_WA_Tri_late_Phz1                      
-    5	25	1	     0	1	#_age_25_CA_prerec_Phz1                        
-    5	26	1	     0	1	#_age_26_OR_prerec_Phz1                        
-    5	27	1	     0	1	#_age_27_WA_prerec_Phz1                        
--9999	 0	0	     0	0	#_terminator                                   
+    4	 1	1	0.7034	1	#_length_1_CA_TWL_sizefreq_method_1_Phz1   
+    4	 2	1	0.4561	1	#_length_2_OR_TWL_sizefreq_method_1_Phz1   
+    4	 3	1	0.4429	1	#_length_3_WA_TWL_sizefreq_method_1_Phz1   
+    4	 4	1	0.9871	1	#_length_4_CA_NTWL_sizefreq_method_1_Phz1  
+    4	 5	1	0.7753	1	#_length_5_OR_NTWL_sizefreq_method_1_Phz1  
+    4	 6	1	0.5091	1	#_length_6_WA_NTWL_sizefreq_method_1_Phz1  
+    4	 7	1	     1	1	#_length_7_CA_REC_sizefreq_method_1_Phz1   
+    4	 8	1	     1	1	#_length_8_OR_REC_sizefreq_method_1_Phz1   
+    4	 9	1	0.8585	1	#_length_9_WA_REC_sizefreq_method_1_Phz1   
+    4	10	1	0.8889	1	#_length_10_CA_AHSOP_sizefreq_method_1_Phz1
+    4	11	1	0.5509	1	#_length_11_OR_ASHOP_sizefreq_method_1_Phz1
+    4	12	1	0.5351	1	#_length_12_WA_ASHOP_sizefreq_method_1_Phz1
+    5	 1	1	0.2966	1	#_age_1_CA_TWL_Phz1                        
+    5	 2	1	0.5439	1	#_age_2_OR_TWL_Phz1                        
+    5	 3	1	0.5571	1	#_age_3_WA_TWL_Phz1                        
+    5	 4	1	0.0129	1	#_age_4_CA_NTWL_Phz1                       
+    5	 5	1	0.2247	1	#_age_5_OR_NTWL_Phz1                       
+    5	 6	1	0.4909	1	#_age_6_WA_NTWL_Phz1                       
+    5	 7	1	     0	1	#_age_7_CA_REC_Phz1                        
+    5	 8	1	     0	1	#_age_8_OR_REC_Phz1                        
+    5	 9	1	0.1415	1	#_age_9_WA_REC_Phz1                        
+    5	10	1	0.1111	1	#_age_10_CA_AHSOP_Phz1                     
+    5	11	1	0.4491	1	#_age_11_OR_ASHOP_Phz1                     
+    5	12	1	0.4649	1	#_age_12_WA_ASHOP_Phz1                     
+-9999	 0	0	     0	0	#_terminator                               
 #
 0 # 0/1 read specs for more stddev reporting
 #

@@ -1,0 +1,2 @@
+Note 1 Suggestion: This model has just one settlement event. Changing to recr_dist_method 4 and removing the recruitment distribution parameters at the end of the MG parms section (below growth parameters) will produce identical results and simplify the model.
+Note 2 Information: Max harvest rate typically is >1.0 for F_method 2, 3 or 4 0.9
