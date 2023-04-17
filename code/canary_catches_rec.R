@@ -23,9 +23,9 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 # Load RecFIN and state provided data
 #---------------------------------------------------------------------------------------------------------------#
 #################################################################################################################
-# RecFIN - 2001-2021 Removals mtons
-# 2022 is incomplete yet
-recfin <- read.csv(file.path(dir, "RecFIN_CTE001_canary_2001_2021.csv"),header=TRUE)
+# RecFIN - 2001-2022 Removals mtons
+#recfin <- read.csv(file.path(dir, "RecFIN_CTE001_canary_2001_2021.csv"),header=TRUE)
+recfin <- read.csv(file.path(dir, "RecFIN_CTE001_canary_2001_2022.csv"),header=TRUE) #updated April 12, 2023
 
 #WA sport catch - 1967-2022 Landings and Releases N
 #Only need to pull from googledrive once
@@ -37,10 +37,9 @@ wa_rec <- readxl::read_excel(path = file.path(git_dir,"data-raw","Canary_WA_RecC
 
 #OR rec catch - 1979-2022 Removals mtons
 #Only need to pull from googledrive once
-# googledrive::drive_download(file = "Oregon data/Oregon Recreational landings_451_2022.xlsx",
-#                             path = file.path(git_dir,"data-raw","Oregon Recreational landings_451_2022.xlsx"))
-or_rec <- readxl::read_excel(path = file.path(git_dir,"data-raw","Oregon Recreational landings_451_2022.xlsx"),
-                             sheet = "Oregon Recreational landings_45")
+# googledrive::drive_download(file = "Oregon data/Oregon Recreational landings_451_2022_FINAL.csv",
+#                             path = file.path(git_dir,"data-raw","Oregon Recreational landings_451_2022_FINAL.csv"))
+or_rec <- utils::read.csv(file = file.path(git_dir,"data-raw","Oregon Recreational landings_451_2022_FINAL.csv"))
 
 #CA mrfss catch - actually from all states -  1980-2003 Landings mtons
 #Only need to pull from googledrive once

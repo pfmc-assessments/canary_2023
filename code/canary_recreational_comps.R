@@ -22,21 +22,21 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 ################################
 
 ##
-#Length data
+#Length data - Use new pull updating 2022 and other year data. Use SD501 because some fields removed from SD001
 ##
-recfin_bdsWA = read.csv(file.path(dir, "RecFIN_SD001_WA_canary_1983_2021.csv"),header=TRUE)
-recfin_bdsOR = read.csv(file.path(dir, "RecFIN_SD001_OR_canary_1999_2021.csv"),header=TRUE)
-recfin_bdsCA = read.csv(file.path(dir, "RecFIN_SD001_CA_canary_2003_2021.csv"),header=TRUE)
+recfin_bdsWA = read.csv(file.path(dir, "conf_RecFIN_SD501_WA_canary_1983_2022.csv"),header=TRUE)
+recfin_bdsOR = read.csv(file.path(dir, "conf_RecFIN_SD501_OR_canary_1999_2022.csv"),header=TRUE)
+recfin_bdsCA = read.csv(file.path(dir, "conf_RecFIN_SD501_CA_canary_2003_2022.csv"),header=TRUE)
 recfin_bds = rbind(recfin_bdsWA,recfin_bdsOR,recfin_bdsCA)
 
-#Exclude 16 inland and 24 estuary fish
+#Exclude 20 inland and 18 estuary fish
 recfin_bds <- recfin_bds[-which(recfin_bds$AGENCY_WATER_AREA_NAME %in% c("ESTUARY","IN")),]
 
 
 ##
 #Age data for later
 ##
-recfin_bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2021.csv"),header=TRUE)
+recfin_bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2022.csv"),header=TRUE)
 
 
 ################################
@@ -59,6 +59,12 @@ or_bds_recfin <- read.csv(file = file.path(git_dir,"data-raw","OR_RecFIN_OceanBo
 
 #Remove 24 estuary fish
 or_bds_recfin <- or_bds_recfin[-which(or_bds_recfin$RECFIN_WATER_AREA_NAME=="ESTUARY"),]
+
+
+##
+#Additional CPFV fish (all released) for sensitivity of including released fish
+##
+or_bds_cpfv <- readxl::read_excel(path = file.path(git_dir,"data-raw","OR_At_Sea_releasedCanaryRF.xlsx"))
 
 
 ##
@@ -180,6 +186,17 @@ or_bds_recfin$trip <- paste0(or_bds_recfin$RECFIN_DATE, or_bds_recfin$RECFIN_POR
                              or_bds_recfin$source)
 
 
+#OR provided CPFV data
+or_bds_cpfv$year <- as.numeric(format(or_bds_cpfv$Date,'%Y'))
+or_bds_cpfv$lengthcm <- or_bds_cpfv$Length/10
+or_bds_cpfv$sex <- "U"
+or_bds_cpfv$mode <- "PC"
+or_bds_cpfv$disp <- "RELEASED"
+or_bds_cpfv$state <- "O"
+or_bds_cpfv$source <- "or_cpfv"
+or_bds_cpfv$trip <- paste0(or_bds_cpfv$Date, or_bds_cpfv$Port, or_bds_cpfv$TripNum)
+
+
 #CA provided MRFSS data
 ca_bds_mrfss$year <- ca_bds_mrfss$YEAR
 ca_bds_mrfss$lengthcm <- ca_bds_mrfss$LNGTH/10
@@ -207,7 +224,8 @@ colnames(oldCA_access)[1] <- "year"
 colnam <- c("year", "state", "source", "lengthcm", "sex", "mode", "disp", "trip")
 out <- rbind(recfin_bds[,colnam], 
              wa_bds_sport[,colnam], 
-             or_bds_recfin[,colnam], 
+             or_bds_recfin[,colnam],
+             or_bds_cpfv[,colnam],
              or_bds_mrfss[,colnam],
              ca_bds_mrfss[,colnam],
              oldCA_access[,colnam])
@@ -219,7 +237,7 @@ out <- rbind(recfin_bds[,colnam],
 # and combine with recfin for CA
 out$sourceSS3 <- NA
 out[out$source == "wa_sport","sourceSS3"] <- "WA"
-out[out$source %in% c("or_mrfss", "or_recfin"),"sourceSS3"] <- "OR"
+out[out$source %in% c("or_mrfss", "or_recfin", "or_cpfv"),"sourceSS3"] <- "OR"
 out[out$source == "ca_mrfss" & out$year %in% c(1979:1987,1999:2022), "sourceSS3"] <- "CA"
 out[out$source == "ca_mrfss" & out$year %in% c(1988:1998) & out$mode == "PR", "sourceSS3"] <- "CA"
 out[out$source == "debWV" & !out$year == 1987, "sourceSS3"] <- "CA"
@@ -229,14 +247,14 @@ out[out$source == "recfin" & out$state == "C", "sourceSS3"] <- "CA"
 #that keeps all MRFSS data as is. Only need to do this for california
 out$sourceSS3_2 <- NA
 out[out$source == "wa_sport","sourceSS3_2"] <- "WA"
-out[out$source %in% c("or_mrfss", "or_recfin"),"sourceSS3_2"] <- "OR"
+out[out$source %in% c("or_mrfss", "or_recfin", "or_cpfv"),"sourceSS3_2"] <- "OR"
 out[out$source == "ca_mrfss", "sourceSS3_2"] <- "CA"
 out[out$source == "recfin" & out$state == "C", "sourceSS3_2"] <- "CA"
 
 #Remove any NA lengths or unusual lengths
 out <- out[!is.na(out$lengthcm),]
 
-#Remove the five samples below 10 cm and one sample above 80 cm that are clearly off. 
+#Remove the two samples below 10 cm and one sample above 80 cm that are clearly off. 
 #The 70-75 cm fish are questionable but keeping in based on max size of 76cm in Love
 head(out[order(out$lengthcm),],20)
 tail(out[order(out$lengthcm),],50)
@@ -248,9 +266,10 @@ out <- out[out$lengthcm > 10 & out$lengthcm < 80,]
 #                     out$year %in% 1997:1998 &
 #                     out$mode == "PC"), ]
 
-#Remove 6135 released fish from recfin (based on pre-assessment workshop these are likely to little effect)
-#Of these 3880 are from CA - and these are the only impact because the OR state provided recfin
+#Remove 6223 released fish from recfin (based on pre-assessment workshop these are likely to little effect)
+#Of these 3905 are from CA - and these are the only impact because the OR state provided recfin
 #data do not have released fish included
+#Also remove the 2318 OR CPFV released fish
 out <- out[-which(out$disp == "RELEASED"),]
 
 
@@ -305,7 +324,7 @@ n <- out %>% dplyr::filter(!is.na(sourceSS3)) %>%
 #This creates the composition data for each SS3 fleet. 
 #Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
 #so need to navigate to there and then load_all
-# devtools::load_all("U:/Other github repos/nwfscSurvey") ###IMPORTANT TO UNCOMMENT THIS IF RERUN
+ devtools::load_all("U:/Other github repos/nwfscSurvey") ###IMPORTANT TO UNCOMMENT THIS IF RERUN
 for(s in unique(na.omit(out$sourceSS3))) {
 
   use_n <- n[n$sourceSS3 %in% s, ]

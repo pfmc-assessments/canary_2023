@@ -195,8 +195,8 @@ dis_rat_early <- colSums(gemm_discard[which(gemm_discard$Year %in% c(2002:2004))
   (colSums(removals[which(removals$Year %in% c(2002:2004)), land_names]) + colSums(removals[which(removals$Year %in% c(2002:2004)), disc_names]))
 
 #Add 2000, 2001, and 2022 discards based on calculated discard ratios
-removals[removals$Year %in% c(2000,2001), disc_names] <- round(rbind((1+dis_rat_early),(1+dis_rat_early)) * removals[removals$Year %in% c(2000,2001), land_names], 3)
-removals[removals$Year %in% c(2022), disc_names] <- round((1+dis_rat_late) * removals[removals$Year %in% c(2022), land_names], 3)
+removals[removals$Year %in% c(2000,2001), disc_names] <- round(rbind((dis_rat_early),(dis_rat_early)) * removals[removals$Year %in% c(2000,2001), land_names], 3)
+removals[removals$Year %in% c(2022), disc_names] <- round((dis_rat_late) * removals[removals$Year %in% c(2022), land_names], 3)
 
 
 ##
@@ -230,9 +230,9 @@ removals[removals$Year %in% wa_hist_com$Year,"TWL.W"] <- wa_hist_com$TWL.W.mt
 #1995-1999 = 20%
 #1981-1994 = 5%
 #<1981 = 1%
-removals[removals$Year %in% c(1892:1980), disc_names] = (1+0.01) * removals[removals$Year %in% c(1892:1980), land_names]
-removals[removals$Year %in% c(1981:1994), disc_names] = (1+0.05) * removals[removals$Year %in% c(1981:1994), land_names]
-removals[removals$Year %in% c(1995:1999), disc_names] = (1+0.2) * removals[removals$Year %in% c(1995:1999), land_names]
+removals[removals$Year %in% c(1892:1980), disc_names] = (0.01) * removals[removals$Year %in% c(1892:1980), land_names]
+removals[removals$Year %in% c(1981:1994), disc_names] = (0.05) * removals[removals$Year %in% c(1981:1994), land_names]
+removals[removals$Year %in% c(1995:1999), disc_names] = (0.2) * removals[removals$Year %in% c(1995:1999), land_names]
 
 
 #################################################################################################################
@@ -350,7 +350,7 @@ removals[removals$Year %in% for_fleet$Year, c("FOR.C","FOR.O","FOR.W")] <- for_f
 # #Upload to googledrive
 # #Break out of commercial data so CONFIDENTIAL
 # ##
-# xx <- googledrive::drive_create(name = 'canary_total_removals_forStateApproval',
+# xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_removals_forStateApproval_April14',
 #                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(round(removals,2), ss = xx, sheet = "catch_summary")

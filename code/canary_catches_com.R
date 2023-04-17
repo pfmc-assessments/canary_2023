@@ -34,7 +34,7 @@ com = catch.pacfin
 #################################################################################################################
 
 catch = com 
-catch = catch[!catch$REMOVAL_TYPE_CODE %in% c("R"),] #remove research catches
+#catch = catch[!catch$REMOVAL_TYPE_CODE %in% c("R"),] #remove research catches
 catch = catch[!catch$LANDING_YEAR == 2023,]
 
 #Confirm that no Puget sound records are included
@@ -93,7 +93,7 @@ tmp_wider_groupDealer <- pivot_wider(tmpDealer, names_from = c(fleet.comb,AGENCY
 
 #There are years (2003-2016) for NTWL gear where less than 3 vessels are fishing. 
 #Vessel names show WA VesselID's are ALL NA. 
-#One more years is added for CA if dealer ID is used.
+#More years are added for CA if dealer ID is used.
 
 
 # ##
