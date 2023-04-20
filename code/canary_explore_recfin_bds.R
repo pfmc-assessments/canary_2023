@@ -134,13 +134,13 @@ Nage <- recfin_bdsage %>% filter(., !is.na(USE_THIS_AGE)) %>% group_by(mode, sta
 # googledrive::drive_download(file = "Oregon data/OR_MRFSS_Lengths_1980-2003.xlsx",
 #                             path = file.path(git_dir,"data-raw","OR_MRFSS_Lengths_1980-2003.xlsx"))
 or_bds_mrfss <- readxl::read_excel(path = file.path(git_dir,"data-raw","OR_MRFSS_Lengths_1980-2003.xlsx"),
-                             sheet = "OR_MRFSS_Lengths_1980-2003")
+                             sheet = "OR_MRFSS_Lengths_1980-2003", guess_max = Inf)
 or_bds_mrfss$Length <- as.numeric(or_bds_mrfss$Length)
 or_bds_mrfss$Total.Length <- as.numeric(or_bds_mrfss$Total.Length)
 
 table(or_bds_mrfss$MRFSS_MODE_FX,useNA="always") #6 = PC #7 = PR
 table(or_bds_mrfss$Area_X_Name,useNA="always")
-table(or_bds_mrfss$Gear,useNA="always") #some spear/spear gun, all are ocean so keep
+table(or_bds_mrfss$Gear,useNA="always") #some spear/spear gun, all are ocean so keep. Removed in final comp calcs
 table(or_bds_mrfss$Length_Flag,useNA="always") #appears to be fork length
 table(or_bds_mrfss$Total.Length_Flag,useNA="always") #appears to be total length
 plot(or_bds_mrfss$Total.Length-or_bds_mrfss$Length)
@@ -225,9 +225,9 @@ or_bds$state <- "O"
 # googledrive::drive_download(file = "WA_CanaryBiodata2023_Feb7version.xlsx",
 #                             path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"))
 wa_bds_sport <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"),
-                                   sheet = "Sport")
+                                   sheet = "Sport", guess_max = Inf)
 wa_bds_research <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"),
-                                   sheet = "Research")
+                                   sheet = "Research", guess_max = Inf)
 
 wa_bds <- rbind(wa_bds_sport, wa_bds_research[,which(names(wa_bds_research)!="fish_sample_date")])
 
@@ -253,7 +253,8 @@ table(wa_bds$sample_year, wa_bds$gear_name, wa_bds$data_type_code,useNA="always"
 #Compared to bdsWA (my recfin pull) this dataset is missing some 1990s data.
 #Other than sport missing some 1990s data (which Theresa and Kristen say they 
 #can reproduce only if they pull Puget Sound fish), and recfin missing 1980s data and 2006, 
-#the sport sample sizes only differ by 2 fewer samples in 2017 and 3 fewer in 2018
+#the sport sample sizes only differ by 2 fewer samples in 2017 and 3 fewer in 2018.
+#Note that the new updated recfin data that includes 2022 includes 2006 data
 table(wa_bds[wa_bds$data_type_code=="S",]$sample_year,useNA="always") #sport only
 table(recfin_bdsWA$RECFIN_YEAR,useNA="always")
 
@@ -582,13 +583,13 @@ ggplot(wa_bds, aes(best_age, fill = mode, color = mode)) +
 # googledrive::drive_download(file = "CONFIDENTIAL_MRFSS_CA/conf_CanLenMRFSS.xlsx",
 #                             path = file.path(git_dir,"data-raw","conf_CA_MRFSS_Lengths_1980-2003.xlsx"))
 ca_bds_mrfss <- readxl::read_excel(path = file.path(git_dir,"data-raw","conf_CA_MRFSS_Lengths_1980-2003.xlsx"),
-                                   sheet = "CanLenMRFSS")
+                                   sheet = "CanLenMRFSS", guess_max = Inf)
 #Multiple length columns are present (per github issue #5 in california-data repo - should use LNGTH)
 table(ca_bds_mrfss$LEN)
 table(ca_bds_mrfss$LENGTH)
 table(ca_bds_mrfss$T_LEN)
 table(ca_bds_mrfss$LNGTH)
-table(ca_bds_mrfss$LEN_FLAG,useNA="always") #there are only 0. No clear documentation
+table(ca_bds_mrfss$LEN_FLAG,useNA="always") #there are mostly only 0. No clear documentation
 plot(as.numeric(ca_bds_mrfss$T_LEN) - as.numeric(ca_bds_mrfss$LNGTH)) #T_LEN is always larger
 #Could assume lengths with decimals are inferred and those without are measured
 table(ca_bds_mrfss$YEAR,nchar(ca_bds_mrfss$LNGTH)) #started being measured in 1993
@@ -692,7 +693,7 @@ ggplot(agg_ca_mrfss, aes(x=YEAR, y=avg)) +
 # googledrive::drive_download(file = "CONFIDENTIAL_historical_CA/conf_CCRS.xlsx",
 #                             path = file.path(git_dir,"data-raw","conf_CCRS.xlsx"))
 ccrs_bds <- readxl::read_excel(path = file.path(git_dir,"data-raw","conf_CCRS.xlsx"),
-                                   sheet = "Data")
+                                   sheet = "Data", guess_max = Inf)
 ccrs_bds$YEAR <- as.numeric(ccrs_bds$Year) + 1900
 table(ccrs_bds$Fish_Type) #1 = PC
 table(ccrs_bds$Flag) #no idea what this is
@@ -712,9 +713,9 @@ ccrs_bds$state <- "C"
 # googledrive::drive_download(file = "CONFIDENTIAL_historical_CA/conf_California PRPC Dockside 1950s-60s.xlsx",
 #                             path = file.path(git_dir,"data-raw","conf_California PRPC Dockside 1950s-60s.xlsx"))
 dockside_bds_skiff <- readxl::read_excel(path = file.path(git_dir,"data-raw","conf_California PRPC Dockside 1950s-60s.xlsx"),
-                               sheet = "PRLen")
+                               sheet = "PRLen", guess_max = Inf)
 dockside_bds_fpb <- readxl::read_excel(path = file.path(git_dir,"data-raw","conf_California PRPC Dockside 1950s-60s.xlsx"),
-                                         sheet = "PCLen")
+                                         sheet = "PCLen", guess_max = Inf)
 #can combine because Fish_Type separates these two
 dockside_bds = rbind(dockside_bds_skiff, dockside_bds_fpb)
 

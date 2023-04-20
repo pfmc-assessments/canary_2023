@@ -45,7 +45,7 @@ recfin_bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2022.csv"
 
 #Dont need research data per "canary_explore_recfin_bds.R"
 wa_bds_sport <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"),
-                                   sheet = "Sport")
+                                   sheet = "Sport", guess_max = Inf)
 
 
 ################################
@@ -64,19 +64,22 @@ or_bds_recfin <- or_bds_recfin[-which(or_bds_recfin$RECFIN_WATER_AREA_NAME=="EST
 ##
 #Additional CPFV fish (all released) for sensitivity of including released fish
 ##
-or_bds_cpfv <- readxl::read_excel(path = file.path(git_dir,"data-raw","OR_At_Sea_releasedCanaryRF.xlsx"))
+or_bds_cpfv <- readxl::read_excel(path = file.path(git_dir,"data-raw","OR_At_Sea_releasedCanaryRF.xlsx"), guess_max = Inf)
 
 
 ##
 #State provided mrfss data
 ##
 or_bds_mrfss <- readxl::read_excel(path = file.path(git_dir,"data-raw","OR_MRFSS_Lengths_1980-2003.xlsx"),
-                                   sheet = "OR_MRFSS_Lengths_1980-2003")
+                                   sheet = "OR_MRFSS_Lengths_1980-2003", guess_max = Inf)
 or_bds_mrfss$Length <- as.numeric(or_bds_mrfss$Length)
 or_bds_mrfss$Total.Length <- as.numeric(or_bds_mrfss$Total.Length)
 
 #Remove 18 samples with lengths based on weight to length conversions (16 with measured weight and 2 with computed weight)
 or_bds_mrfss = or_bds_mrfss[-which(or_bds_mrfss$Length_Flag=="computed" & or_bds_mrfss$Total.Length_Flag=="computed"),]
+
+#Remove the 4 non hook and line gears
+or_bds_mrfss = or_bds_mrfss[-which(or_bds_mrfss$Gear != 'Hook & Line'),]
 
 
 ################################
@@ -88,12 +91,12 @@ or_bds_mrfss = or_bds_mrfss[-which(or_bds_mrfss$Length_Flag=="computed" & or_bds
 ##
 
 ca_bds_mrfss <- readxl::read_excel(path = file.path(git_dir,"data-raw","conf_CA_MRFSS_Lengths_1980-2003.xlsx"),
-                                   sheet = "CanLenMRFSS")
+                                   sheet = "CanLenMRFSS", guess_max = Inf)
 
 #Exclude the 45 samples from man made (1) and beach/bank mode (2). Keep just PC/PR
 ca_bds_mrfss <- ca_bds_mrfss[which(ca_bds_mrfss$MODE_FX %in% c(6,7)),]
-#Exclude the 1 sample from Mexico
-ca_bds_mrfss <- ca_bds_mrfss[-which(ca_bds_mrfss$AREA == 6),]
+#Exclude the 1 sample from Mexico and 64 samples from inland
+ca_bds_mrfss <- ca_bds_mrfss[-which(ca_bds_mrfss$AREA %in% c(4,5,6)),]
 #Exclude the 38 non Hook and Line gears
 ca_bds_mrfss <- ca_bds_mrfss[-which(ca_bds_mrfss$GEAR != 1),]
 
@@ -145,10 +148,15 @@ wa_bds_sport$mode <- dplyr::case_when(wa_bds_sport$boat_mode_code == "C" ~ "PC",
 wa_bds_sport$disp <- "RETAINED"
 wa_bds_sport$state <- "W"
 wa_bds_sport$source <- "wa_sport"
-#Trip roughly following the approach for mrfss (as was used for copper rockfish). 
+#Trip definition based on discussion in github discussion #55. Trip defined as 
+#combination of fish-sample-date (not yet available) and location 
+#(based on the combination of mfbds...sample.punch and mfbds...fish.punch)
 #Including mode and port_name doesn't change anything here (sequence number covers that)
-wa_bds_sport$trip <- paste0(wa_bds_sport$year,wa_bds_sport$sequence_number, 
-                            wa_bds_sport$mfbds_v_sample.punch_card_area_code,
+wa_bds_sport$loc <- dplyr::case_when(!is.na(wa_bds_sport$mfbds_v_sample.punch_card_area_code) ~ 
+                                       wa_bds_sport$mfbds_v_sample.punch_card_area_code,
+                                     is.na(wa_bds_sport$mfbds_v_sample.punch_card_area_code) ~ 
+                                       wa_bds_sport$mfbds_v_fish.punch_card_area_code)
+wa_bds_sport$trip <- paste0(wa_bds_sport$year,wa_bds_sport$sequence_number, wa_bds_sport$loc,
                             wa_bds_sport$source)
 
 
@@ -178,11 +186,11 @@ or_bds_recfin$disp <- dplyr::case_when(or_bds_recfin$IS_RETAINED ~ "RETAINED",
                                        !or_bds_recfin$IS_RETAINED ~ "RELEASED")
 or_bds_recfin$state <- "O" 
 or_bds_recfin$source <- "or_recfin"
-#Trip following approach for CA recfin (as was used for copper rockfish)
-#There is no county number in OR so use Port. Angler ID (hidden to preserve confidentiality)
-#covers fished area and mode
-or_bds_recfin$trip <- paste0(or_bds_recfin$RECFIN_DATE, or_bds_recfin$RECFIN_PORT_NAME, 
-                             as.numeric(as.factor(or_bds_recfin$ANGLER_ID)),
+#Trip roughly following approach for CA MRFSS (as was used for copper rockfish) and 
+#updated based on discussion in github discussion #55. Same number of trips
+#if include date and RECFIN_PORT_NAME (i.e. Angler ID (hidden to preserve confidentiality)
+#covers date, fished area, and mode)
+or_bds_recfin$trip <- paste0(as.numeric(as.factor(or_bds_recfin$ANGLER_ID)),
                              or_bds_recfin$source)
 
 
