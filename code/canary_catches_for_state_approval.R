@@ -243,6 +243,7 @@ removals[removals$Year %in% c(1995:1999), disc_names] = (0.2) * removals[removal
 
 #CA MRFSS 1990-1992 already filled in in "canary_catches_rec.R"
 #and was an average of previous 3 years of data for 1990, previous 3 and later 3 for 1991, and later 3 for 1992
+#CA proxy values already applied in "canary_catches_rec.R"
 
 #Ramp down OR rec to 0 in 1972
 or_ramp <- rec[rec$Year == 1979,]$or_MT/(1979-1972) * length(1973:1978):1
@@ -265,15 +266,6 @@ rec[rec$Year == 1980, c("ca_MT")] <- mean(rec[rec$Year %in% c(1979,1981), c("ca_
 #Last assessment appears to have only used landings, not landings + otherwise dead
 #Thus use value provided by John Budrick (via email on 3/16) based on download for another species when 2004 data were present
 rec[rec$Year == 2004,]$ca_MT <- 10.59
-
-#Add 2020 CA updated values to account for undersampling to the CA recfin estimate.
-#Updated values pulled on March 21, 2023 from 
-#https://github.com/pfmc-assessments/california-data/blob/main/recreational-fishery/proxy%202020%20data/genus_allocate.csv
-#See discussion #8 for guidance (https://github.com/pfmc-assessments/california-data/discussions/8)
-update2020 <- utils::read.csv(file = file.path(git_dir, "data-raw", "CA_rec_genus_allocate_2020.csv"), header = TRUE)
-alloc_val <- update2020 %>% filter(orig_allocated == "allocated") %>% 
-  group_by(year) %>% summarize(sum = sum(canary_kg) * 0.001) #0.001 to get into MT
-rec[rec$Year %in% c(2020, 2021),]$ca_MT <- alloc_val$sum + rec[rec$Year %in% c(2020, 2021),]$ca_MT
 
 #Add in rec fleets
 removals$rec.C <- 0
@@ -350,7 +342,7 @@ removals[removals$Year %in% for_fleet$Year, c("FOR.C","FOR.O","FOR.W")] <- for_f
 # #Upload to googledrive
 # #Break out of commercial data so CONFIDENTIAL
 # ##
-# xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_removals_forStateApproval_April14',
+# xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_removals_forStateApproval_April24',
 #                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(round(removals,2), ss = xx, sheet = "catch_summary")

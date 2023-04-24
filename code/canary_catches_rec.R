@@ -215,6 +215,19 @@ rec_df[rec_df$Year %in% ca_recfin$RECFIN_YEAR,]$ca_MT <- ca_recfin$sum_total
 
 #Add california mrfss
 rec_df[rec_df$Year %in% ca_mrfss_tot$YEAR_,]$ca_MT <- rowSums(ca_mrfss_tot[,-1],na.rm=T)
+
+#Replace 2020 CA values with updated values and add 2021 CA PR values to updated PC values
+#to account for undersampling to the CA recfin estimate.
+#Updated values pulled on March 21, 2023 from 
+#https://github.com/pfmc-assessments/california-data/blob/main/recreational-fishery/proxy%202020%20data/genus_allocate.csv
+#See discussion #8 for guidance (https://github.com/pfmc-assessments/california-data/discussions/8)
+update2020 <- utils::read.csv(file = file.path(git_dir, "data-raw", "CA_rec_genus_allocate_2020.csv"), header = TRUE)
+alloc_val <- update2020 %>% filter(orig_allocated == "allocated") %>% 
+  group_by(year, mode) %>% summarize(sum = sum(canary_kg) * 0.001) #0.001 to get into MT
+rec_df[rec_df$Year %in% c(2020),]$ca_MT <- sum(alloc_val[alloc_val$year == 2020,]$sum) 
+pr2021 <- recfin %>% dplyr::filter(AGENCY=="C" & RECFIN_YEAR == 2021) %>% 
+  group_by(mode) %>% summarize(sum_total = sum(SUM_TOTAL_MORTALITY_MT))
+rec_df[rec_df$Year %in% c(2021),]$ca_MT <- alloc_val[alloc_val$year == 2021,]$sum + pr2021[pr2021$mode=="PR",]$sum_total
 split_df$ca_MT <- rec_df$ca_MT
 
 #write.csv(rec_df, file = file.path(git_dir, "data", "canary_rec_catch.csv"), row.names = FALSE)
