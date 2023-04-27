@@ -30,7 +30,7 @@ recfin_bdsCA = read.csv(file.path(dir, "conf_RecFIN_SD501_CA_canary_2003_2022.cs
 recfin_bds = rbind(recfin_bdsWA,recfin_bdsOR,recfin_bdsCA)
 
 #Exclude 20 inland and 18 estuary fish
-recfin_bds <- recfin_bds[-which(recfin_bds$AGENCY_WATER_AREA_NAME %in% c("ESTUARY","IN")),]
+recfin_bds <- recfin_bds[-which(recfin_bds$AGENCY_WATER_AREA_NAME %in% c("ESTUARY","INLAND")),]
 
 
 ##
@@ -332,7 +332,7 @@ n <- out %>% dplyr::filter(!is.na(sourceSS3)) %>%
 #This creates the composition data for each SS3 fleet. 
 #Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
 #so need to navigate to there and then load_all
- devtools::load_all("U:/Other github repos/nwfscSurvey") ###IMPORTANT TO UNCOMMENT THIS IF RERUN
+# devtools::load_all("U:/Other github repos/nwfscSurvey") ###IMPORTANT TO UNCOMMENT THIS IF RERUN
 for(s in unique(na.omit(out$sourceSS3))) {
 
   use_n <- n[n$sourceSS3 %in% s, ]
