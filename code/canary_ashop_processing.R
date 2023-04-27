@@ -48,7 +48,6 @@ age <- readxl::read_excel(path = file.path(git_dir,"data-raw","ASHOP_Canary_Age_
                              sheet = "Canary Age Data 2003-2022", guess_max = Inf)
 
 
-
 #################################################################################################################
 #---------------------------------------------------------------------------------------------------------------#
 # Process Catch data
@@ -80,6 +79,12 @@ late <- left_join(late, late_exp, join_by("year" == "YEAR"))
 early <- early[early$year < 1990,]
 #Remove data without year from late dataset
 late <- late[!is.na(late$year),]
+
+#Plot locations
+early$LATDD = as.numeric(substr(early$LATITUDE,1,2)) + as.numeric(substr(early$LATITUDE,3,4))/60
+early$LONDD = as.numeric(substr(early$LONGITUDE,1,3)) + as.numeric(substr(early$LONGITUDE,4,5))/60
+plot(-early$LONDD, early$LATDD, col = as.factor(early$state))
+plot(late$LONDD_END, late$LATDD_END, col = as.factor(late$state))
 
 
 #Sum total catches
