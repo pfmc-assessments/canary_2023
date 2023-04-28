@@ -68,7 +68,7 @@ Pdata$fleet <- paste(fleet, state, sep = ".")
       (!is.na(age2) & !is.na(age3)) == TRUE ~ 2,
       (!is.na(age1) & !is.na(age3)) == TRUE ~ 2,
       TRUE ~ 1)) %>%
-    dplyr::filter(mult > 1 & !(AGE_METHOD1 == "S" & mult == 2))
+    dplyr::filter(mult > 1 & !(AGE_METHOD1 %in% c("S") & mult == 2))
   #---------------------------------------------------------------------
 
 PdataAge = Pdata #set up for age comps later
