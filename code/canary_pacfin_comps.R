@@ -58,6 +58,19 @@ state <- dplyr::case_when(Pdata$state == "WA" ~ "W",
                           Pdata$state == "CA" ~ "C")
 Pdata$fleet <- paste(fleet, state, sep = ".")
 
+  #---------------------------------------------------------------------
+  #Pull out WDFW aged fish that have multiple reads to use for ageing error
+  wa_dReads <- Pdata %>% 
+    dplyr::filter(state=="WA" & !(is.na(age1) & is.na(age2) & is.na(age3))) %>% 
+    dplyr::mutate(mult = dplyr::case_when(
+      (is.na(age1) & is.na(age2) & is.na(age3)) == TRUE ~ "no",
+      (is.na(age1) & is.na(age2)) == TRUE ~ "no",
+      (is.na(age2) & is.na(age3)) == TRUE ~ "no",
+      (is.na(age1) & is.na(age3)) == TRUE ~ "no",
+      TRUE ~ "yes")) %>%
+    dplyr::filter(mult == "yes")
+  #---------------------------------------------------------------------
+
 PdataAge = Pdata #set up for age comps later
 rmNoFin <- which(!is.na(PdataAge$Age) & is.na(PdataAge$FISH_AGE_YEARS_FINAL)) #remove ages without FINAL_AGE assigned (see github issue #11)
 PdataAge <- PdataAge[-rmNoFin,]
