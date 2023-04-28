@@ -59,16 +59,16 @@ state <- dplyr::case_when(Pdata$state == "WA" ~ "W",
 Pdata$fleet <- paste(fleet, state, sep = ".")
 
   #---------------------------------------------------------------------
-  #Pull out WDFW aged fish that have multiple reads to use for ageing error
+  #Pull out WDFW aged fish that have multiple reads of B&B to use for ageing error
   wa_dReads <- Pdata %>% 
     dplyr::filter(state=="WA" & !(is.na(age1) & is.na(age2) & is.na(age3))) %>% 
     dplyr::mutate(mult = dplyr::case_when(
-      (is.na(age1) & is.na(age2) & is.na(age3)) == TRUE ~ "no",
-      (is.na(age1) & is.na(age2)) == TRUE ~ "no",
-      (is.na(age2) & is.na(age3)) == TRUE ~ "no",
-      (is.na(age1) & is.na(age3)) == TRUE ~ "no",
-      TRUE ~ "yes")) %>%
-    dplyr::filter(mult == "yes")
+      (!is.na(age1) & !is.na(age2) & !is.na(age3)) == TRUE ~ 3,
+      (!is.na(age1) & !is.na(age2)) == TRUE ~ 2,
+      (!is.na(age2) & !is.na(age3)) == TRUE ~ 2,
+      (!is.na(age1) & !is.na(age3)) == TRUE ~ 2,
+      TRUE ~ 1)) %>%
+    dplyr::filter(mult > 1 & !(AGE_METHOD1 == "S" & mult == 2))
   #---------------------------------------------------------------------
 
 PdataAge = Pdata #set up for age comps later
