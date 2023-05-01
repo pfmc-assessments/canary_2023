@@ -40,11 +40,11 @@ recfin_bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2022.csv"
 
 
 ################################
-#Load Washington provided Sport length data and set up
+#Load Washington provided Sport length and age data and set up
 #################################
 
 #Dont need research data per "canary_explore_recfin_bds.R"
-wa_bds_sport <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"),
+wa_bds_sport <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023_Apr27Version.xlsx"),
                                    sheet = "Sport", guess_max = Inf)
 
 
@@ -80,6 +80,15 @@ or_bds_mrfss = or_bds_mrfss[-which(or_bds_mrfss$Length_Flag=="computed" & or_bds
 
 #Remove the 4 non hook and line gears
 or_bds_mrfss = or_bds_mrfss[-which(or_bds_mrfss$Gear != 'Hook & Line'),]
+
+
+##
+#State provided age data - these have lengths and ages, 
+#and the lengths are not included in the length files so need to combine
+##
+# googledrive::drive_download(file = "Oregon data/Canaryrockfish_RecFIN_Ages_04282023.csv",
+#                             path = file.path(git_dir,"data-raw","Canary_OR_RecFIN_Ages_04282023.csv"))
+or_age <- read.csv(file = file.path(git_dir,"data-raw","Canary_OR_RecFIN_Ages_04282023.csv"),header=TRUE)
 
 
 ################################
@@ -133,10 +142,26 @@ recfin_bds$trip <- paste0(recfin_bds$RECFIN_DATE, recfin_bds$COUNTY_NUMBER,
                           recfin_bds$AGENCY_WATER_AREA_NAME, recfin_bds$mode,
                           recfin_bds$source)
 
+#RecFIN ages
+recfin_bdsage$year <- recfin_bdsage$SAMPLE_YEAR
+recfin_bdsage$age <- recfin_bdsage$USE_THIS_AGE
+recfin_bdsage$sex <- recfin_bdsage$RECFIN_SEX_CODE
+recfin_bdsage$state <- dplyr::case_when(recfin_bdsage$SAMPLING_AGENCY_NAME == "ODFW" ~ "O",
+                                        recfin_bdsage$SAMPLING_AGENCY_NAME == "WDFW" ~ "W")
+recfin_bdsage$mode <- dplyr::case_when(recfin_bdsage$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC",
+                                       recfin_bdsage$RECFIN_MODE_NAME == "PRIVATE/RENTAL BOATS" ~ "PR")
+recfin_bdsage$source <- "recfin"
+#Trip following the approach for recfin lengths (as was used for copper rockfish). 
+#Im adding mode here beacuse copper seperates these out for their fleets
+recfin_bdsage$trip <- paste0(recfin_bdsage$SAMPLE_DATE, recfin_bdsage$PORT_NAME, 
+                             recfin_bdsage$VESSEL_NAME, recfin_bdsage$mode,
+                             recfin_bdsage$source)
+
 
 #WA sport data
 wa_bds_sport$year <- wa_bds_sport$sample_year
 wa_bds_sport$lengthcm <- wa_bds_sport$fish_length_cm
+wa_bds_sport$age <- wa_bds_sport$best_age
 wa_bds_sport$sex <- dplyr::case_when(wa_bds_sport$sex_name == "Female" ~ "F",
                                wa_bds_sport$sex_name == "Male" ~ "M",
                                wa_bds_sport$sex_name == "Unknown" ~ "U",
@@ -149,15 +174,17 @@ wa_bds_sport$disp <- "RETAINED"
 wa_bds_sport$state <- "W"
 wa_bds_sport$source <- "wa_sport"
 #Trip definition based on discussion in github discussion #55. Trip defined as 
-#combination of fish-sample-date (not yet available) and location 
-#(based on the combination of mfbds...sample.punch and mfbds...fish.punch)
-#Including mode and port_name doesn't change anything here (sequence number covers that)
+#combination of fish-sample-date (or sample_date if blank) and location where location is 
+#based on the combination of mfbds...sample.punch and mfbds...fish.punch.
 wa_bds_sport$loc <- dplyr::case_when(!is.na(wa_bds_sport$mfbds_v_sample.punch_card_area_code) ~ 
                                        wa_bds_sport$mfbds_v_sample.punch_card_area_code,
                                      is.na(wa_bds_sport$mfbds_v_sample.punch_card_area_code) ~ 
                                        wa_bds_sport$mfbds_v_fish.punch_card_area_code)
-wa_bds_sport$trip <- paste0(wa_bds_sport$year,wa_bds_sport$sequence_number, wa_bds_sport$loc,
-                            wa_bds_sport$source)
+wa_bds_sport$time <- dplyr::case_when(!is.na(wa_bds_sport$fish_sample_date) ~ 
+                                        wa_bds_sport$fish_sample_date,
+                                      is.na(wa_bds_sport$fish_sample_date) ~ 
+                                        wa_bds_sport$sample_date)
+wa_bds_sport$trip <- paste0(wa_bds_sport$time, wa_bds_sport$loc, wa_bds_sport$mode, wa_bds_sport$source)
 
 
 #OR provided MRFSS data
@@ -205,6 +232,21 @@ or_bds_cpfv$source <- "or_cpfv"
 or_bds_cpfv$trip <- paste0(or_bds_cpfv$Date, or_bds_cpfv$Port, or_bds_cpfv$TripNum)
 
 
+#OR provided age data
+or_age$year <- or_age$SAMPLE_YEAR
+or_age$lengthcm <- or_age$RECFIN_LENGTH_MM/10
+or_age$age <- or_age$USE_THIS_AGE
+or_age$sex <- or_age$RECFIN_SEX_CODE
+or_age$mode <- dplyr::case_when(or_age$RECFIN_MODE_NAME == "PARTY/CHARTER BOATS" ~ "PC",
+                                or_age$RECFIN_MODE_NAME == "PRIVATE/RENTAL BOATS" ~ "PR")
+or_age$disp <- "RETAINED" #assumed
+or_age$state <- "O"
+or_age$source <- "or_ora"
+#Trip roughly following approach for CA MRFSS (as was used for copper rockfish) and 
+#updated based on discussion in github discussion #55.
+or_age$trip <- paste0(or_age$SAMPLE_DATE, or_age$PORT_NAME, or_age$mode, or_age$source)
+
+
 #CA provided MRFSS data
 ca_bds_mrfss$year <- ca_bds_mrfss$YEAR
 ca_bds_mrfss$lengthcm <- ca_bds_mrfss$LNGTH/10
@@ -226,7 +268,7 @@ colnames(oldCA_access)[1] <- "year"
 
 
 ##
-#Combine into single data set
+#Combine into single data set for lengths
 ##
 
 colnam <- c("year", "state", "source", "lengthcm", "sex", "mode", "disp", "trip")
@@ -235,17 +277,18 @@ out <- rbind(recfin_bds[,colnam],
              or_bds_recfin[,colnam],
              or_bds_cpfv[,colnam],
              or_bds_mrfss[,colnam],
+             or_age[,colnam],
              ca_bds_mrfss[,colnam],
              oldCA_access[,colnam])
 #Add final SS3 grouping
 #Use state provided Sport biodata for WA
 #Combine across state provided MRFSS and recfin data for OR - 
-# combining overlapping years
+# combining overlapping years and adding lengths from age data
 #Use MRFSS data, but replace PC data from 1988-1998 with data from DebWV, 
 # and combine with recfin for CA
 out$sourceSS3 <- NA
 out[out$source == "wa_sport","sourceSS3"] <- "WA"
-out[out$source %in% c("or_mrfss", "or_recfin", "or_cpfv"),"sourceSS3"] <- "OR"
+out[out$source %in% c("or_mrfss", "or_recfin", "or_cpfv", "or_ora"),"sourceSS3"] <- "OR"
 out[out$source == "ca_mrfss" & out$year %in% c(1979:1987,1999:2022), "sourceSS3"] <- "CA"
 out[out$source == "ca_mrfss" & out$year %in% c(1988:1998) & out$mode == "PR", "sourceSS3"] <- "CA"
 out[out$source == "debWV" & !out$year == 1987, "sourceSS3"] <- "CA"
@@ -255,20 +298,20 @@ out[out$source == "recfin" & out$state == "C", "sourceSS3"] <- "CA"
 #that keeps all MRFSS data as is. Only need to do this for california
 out$sourceSS3_2 <- NA
 out[out$source == "wa_sport","sourceSS3_2"] <- "WA"
-out[out$source %in% c("or_mrfss", "or_recfin", "or_cpfv"),"sourceSS3_2"] <- "OR"
+out[out$source %in% c("or_mrfss", "or_recfin", "or_cpfv", "or_ora"),"sourceSS3_2"] <- "OR"
 out[out$source == "ca_mrfss", "sourceSS3_2"] <- "CA"
 out[out$source == "recfin" & out$state == "C", "sourceSS3_2"] <- "CA"
 
 #Remove any NA lengths or unusual lengths
 out <- out[!is.na(out$lengthcm),]
 
-#Remove the two samples below 10 cm and one sample above 80 cm that are clearly off. 
+#Remove the two samples below 10 cm that are clearly off. 
 #The 70-75 cm fish are questionable but keeping in based on max size of 76cm in Love
 head(out[order(out$lengthcm),],20)
 tail(out[order(out$lengthcm),],50)
 out <- out[out$lengthcm > 10 & out$lengthcm < 80,]
 
-# #Commenting these out here to have the full MRFSS set because these are replaced later
+# #Commenting these out here to have the full MRFSS set because these are replaced earlier
 # #Remove the MRFSS lengths from 1997-98 since they are the same as those in Deb's data
 # out <- out[-which(out$source == "ca_mrfss" &
 #                     out$year %in% 1997:1998 &
@@ -281,12 +324,30 @@ out <- out[out$lengthcm > 10 & out$lengthcm < 80,]
 out <- out[-which(out$disp == "RELEASED"),]
 
 
+##
+#Combine into single data set for ages
+##
+
+colnam_age <- c("year", "state", "source", "age", "sex", "mode", "trip")
+out_age <- rbind(recfin_bdsage[,colnam_age], 
+             wa_bds_sport[,colnam_age], 
+             or_age[,colnam_age])
+
+#Remove any NA ages
+out_age <- out_age[!is.na(out_age$age),]
+
+#Add final SS3 grouping
+#Use state provided Sport biodata for WA and state provided data for OR
+out_age$sourceSS3 <- NA
+out_age[out_age$source %in% c("wa_sport"),"sourceSS3"] <- "WA"
+out_age[out_age$source %in% c("or_ora"),"sourceSS3"] <- "OR"
+
 
 ############################################################################################
 #	Convert into format for SS3 model to use
 ############################################################################################
 
-#Based on non duplicated data across datasets
+#Based on non duplicated (for Deb data) data across datasets
 out_sample_size <- out %>%
   dplyr::group_by(year, state, source, sex) %>%
   dplyr::summarise(
@@ -309,6 +370,31 @@ out_sample_size_ss3 <- out %>% dplyr::filter(!is.na(sourceSS3)) %>%
   data.frame()
 out_sample_size_ss3[is.na(out_sample_size_ss3)] <- 0
 #write.csv(out_sample_size, file = file.path(git_dir,"data", "forSS", "Canary_recLen_sample_size_forSS.csv"), row.names = FALSE)
+
+
+#For ages based on all data sources (recfin is duplicated by state provided data)
+out_sample_size_age <- out_age %>%
+  dplyr::group_by(year, state, source, sex) %>%
+  dplyr::summarise(
+    ntrip = length(unique(trip)),
+    N = length(age)) %>%
+  tidyr::pivot_wider(names_from = c(source, state,sex), values_from = c(N,ntrip), 
+                     names_glue = "{state}_{source}_{sex}_{.value}", names_sort = TRUE) %>%
+  data.frame()
+out_sample_size_age[is.na(out_sample_size_age)] <- 0
+#write.csv(out_sample_size_age, file = file.path(git_dir,"data", "Canary_recAge_sample_size_allSources.csv"), row.names = FALSE)
+
+#For ages based on data to use in SS3
+out_sample_size_age_ss3 <- out_age %>% dplyr::filter(!is.na(sourceSS3)) %>%
+  dplyr::group_by(year, state, source, sex) %>%
+  dplyr::summarise(
+    ntrip = length(unique(trip)),
+    N = length(age)) %>%
+  tidyr::pivot_wider(names_from = c(source, state,sex), values_from = c(N,ntrip), 
+                     names_glue = "{state}_{source}_{sex}_{.value}", names_sort = TRUE) %>%
+  data.frame()
+out_sample_size_age_ss3[is.na(out_sample_size_age_ss3)] <- 0
+#write.csv(out_sample_size_age_ss3, file = file.path(git_dir,"data", "Canary_recAge_sample_size_forSS.csv"), row.names = FALSE)
 
 
 ############################################################################################
@@ -474,3 +560,67 @@ write.csv(lfs$unsexed[,c(1:6,63,7:62)],
 #             file = file.path(git_dir, "data", "forSS", paste0("Coastwide_rec_not_expanded_noDebWVLcomp_",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
 #             row.names = FALSE)
 # }
+
+
+############################################################################################
+#	Create un-weighted composition data for recreational ages
+############################################################################################
+
+# Add expected column names to work with nwfscSurvey package
+out_age$lengthcm <- NA
+age_bins <- c(seq(1, 35, 1))
+
+out_age$sex_group <- "u"
+out_age$sex_group[out_age$sex %in% c("M", "F")] <- 'b'
+
+#get sample size by sex group
+n <- out_age %>% dplyr::filter(!is.na(sourceSS3)) %>%
+  dplyr::group_by(year, sourceSS3, sex_group) %>%
+  dplyr::summarise(
+    ntrip = length(unique(trip)),
+    N = length(age))
+
+#This creates the composition data for each SS3 fleet. 
+#Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
+#so need to navigate to there and then load_all
+# devtools::load_all("U:/Other github repos/nwfscSurvey") ###IMPORTANT TO UNCOMMENT THIS IF RERUN
+for(s in unique(na.omit(out_age$sourceSS3))) {
+  
+  use_n <- n[n$sourceSS3 %in% s, ]
+  df <- out_age[out_age$sourceSS3 %in% s, -which(colnames(out_age)=="sex_group")]
+  
+  if(dim(df)[1] > 0) {
+    afs <-  nwfscSurvey::UnexpandedAFs.fn(
+      datA = df, 
+      ageBins = age_bins,
+      partition = 0, 
+      fleet = s, 
+      month = 7)
+    
+    if(!is.null(afs$unsexed) & is.null(afs$sexed)){
+      afs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+      write.csv(afs$unsexed[,c(1:9,80,10:79)], 
+                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Acomp",age_bins[1],"_", tail(age_bins,1),"_formatted.csv")),
+                row.names = FALSE) 
+    } 
+    if(!is.null(afs$sexed) & is.null(afs$unsexed)){
+      afs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+      write.csv(afs$sexed[,c(1:9,80,10:79)], 
+                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Acomp",age_bins[1],"_", tail(age_bins,1),"_formatted.csv")),
+                row.names = FALSE) 
+    }
+    
+    if(!is.null(afs$sexed) & !is.null(afs$unsexed)){
+      afs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+      afs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+      colnames(afs$unsexed) <- colnames(afs$sexed)
+      write.csv(rbind(afs$unsexed, afs$sexed)[,c(1:9,80,10:79)], 
+                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_Acomp",age_bins[1],"_", tail(age_bins,1),"_formatted.csv")),
+                row.names = FALSE) 
+    }
+    
+    afs <- NULL
+  } #if loop from dim(df)
+}
+
+
