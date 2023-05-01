@@ -13,7 +13,7 @@ theme_set(theme_classic(base_size = 16))
 # would be good to not have the dates hard coded in.
 
 wcgbts_date <- '2023-02-13'
-triennial_date <- '2023-01-23'
+triennial_date <- '2023-04-27'
 
 load(here(paste0('data-raw/Catch__NWFSC.Combo_', wcgbts_date, '.rda')))
 wcgbts_catch <- Out

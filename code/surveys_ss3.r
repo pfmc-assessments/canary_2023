@@ -14,7 +14,7 @@ load(here('data-raw/Catch__Triennial_2023-01-23.rda'))
 triennial_catch <- Out
 load(here('data-raw/Bio_All_NWFSC.Combo_2023-02-13.rda'))
 wcgbts_bio <- Data
-load(here('data-raw/Bio_All_Triennial_2023-01-23.rda'))
+load(here('data-raw/Bio_All_Triennial_2023-04-27.rda'))
 triennial_bio <- Data
 
 # define age and length bins
