@@ -29,8 +29,10 @@ early <- readxl::read_excel(path = file.path(git_dir,"data-raw","ASHOP_Canary_Ca
                             sheet = "1975-1989", guess_max = Inf)
 early_exp <- readxl::read_excel(path = file.path(git_dir,"data-raw","ASHOP_Canary_Catch_1975-1990_040323.xlsx"), 
                                 sheet = "Expansion factors", range = "A1:B15", guess_max = Inf) %>% arrange(YEAR)
-#Add 1975 expansion value same as 1976-1983 values
-early_exp <- rbind(cbind("YEAR" = 1975,early_exp[2,2]), early_exp)
+#Add 1975 and 1990 expansion value same as 1976-1983 values and as from form A-SHOP Expansion factors_updated_050123 in google drive
+early_exp <- rbind(cbind("YEAR" = 1975, early_exp[2,2]),
+                   early_exp,
+                   cbind("YEAR" = 1990, "HAULS_SAMPLED_EXPANSION_FACTOR" = 1.478930759))
 
 late <- readxl::read_excel(path = file.path(git_dir,"data-raw","ASHOP_Canary_Catch_1990-2022_033123.xlsx"), 
                             sheet = "1990-2022", guess_max = Inf)
@@ -44,7 +46,7 @@ length <- readxl::read_excel(path = file.path(git_dir,"data-raw","ASHOP_Canary_L
 
 ##Ages
 
-age <- readxl::read_excel(path = file.path(git_dir,"data-raw","ASHOP_Canary_Age_040423.xlsx"), 
+age <- readxl::read_excel(path = file.path(git_dir,"data-raw","ASHOP_Canary_Age_updated_050123.xlsx"), 
                              sheet = "Canary Age Data 2003-2022", guess_max = Inf)
 
 
@@ -60,7 +62,7 @@ table(early$LOCATION_ID)
 table(is.na(late$LATDD_END),is.na(late$LATDD_START))
 
 early$year <- as.numeric(format(early$HAUL_DATE, "%Y"))
-late$year <- as.numeric(format(late$RETRIEVAL_DATE, "%Y"))
+late$year <- late$YEAR
 
 early$state <- dplyr::case_when(early$LATITUDE < 4200 ~ "CA", #order of these is crucial
                                 early$LATITUDE < 4615 ~ "OR", 
@@ -75,30 +77,42 @@ late$PERCENT_RETAINED[is.na(late$PERCENT_RETAINED)] = 100 #assume all retained i
 early <- left_join(early, early_exp, join_by("year" == "YEAR"))
 late <- left_join(late, late_exp, join_by("year" == "YEAR"))
 
-#Remove 1990s data from early year dataset
-early <- early[early$year < 1990,]
-#Remove data without year from late dataset
-late <- late[!is.na(late$year),]
-
-#Plot locations
+#Plot locations - regulations changed in 1992. No CA processing starting in 1992
 early$LATDD = as.numeric(substr(early$LATITUDE,1,2)) + as.numeric(substr(early$LATITUDE,3,4))/60
 early$LONDD = as.numeric(substr(early$LONGITUDE,1,3)) + as.numeric(substr(early$LONGITUDE,4,5))/60
 plot(-early$LONDD, early$LATDD, col = as.factor(early$state))
 plot(late$LONDD_END, late$LATDD_END, col = as.factor(late$state))
+ggplot(late, aes(x=LONDD_END, y=LATDD_END, col = as.factor(state))) + 
+  geom_point() + facet_wrap("year")
+ggplot(early, aes(x=LONDD, y=LATDD, col = as.factor(state))) + 
+  geom_point() + facet_wrap("year")
 
-
-#Sum total catches
+#Sum total catches and determine number of vessels
+#Confidentiality is based on vessel catching all species, but I only have vessels catching canary
 early_agg <- early %>% group_by(state,year) %>% 
   summarize(sum = sum(SPECIES_EXTRAPOLATED_WT_KG * HAULS_SAMPLED_EXPANSION_FACTOR)/1000)
+early_aggN <- early %>% group_by(state,year) %>%
+  summarize(N = length(unique(VESSEL_CODE)))
 late_agg <- late %>% group_by(state,year) %>% 
   summarize(sum = sum(EXTRAPOLATED_WEIGHT_KG * `WEIGHT-BASED_EXPANSION_FACTOR`)/1000, 
             "just_landed" = sum(EXTRAPOLATED_WEIGHT_KG * PERCENT_RETAINED/100 * `WEIGHT-BASED_EXPANSION_FACTOR`)/1000)
+late_aggN <- late %>% group_by(state,year) %>%
+  summarize(N = length(unique(PERMIT)))
+            
 
+#Combine and regroup because 1990 is in both datasets
 ashop_agg <- rbind(early_agg, late_agg[,c("state","year","sum")])
+ashop_agg <- ashop_agg %>% group_by(state,year) %>% summarize(sum = sum(sum))
 ashop_wider <- ashop_agg %>% pivot_wider(names_from = state, values_from = sum) %>% arrange(year)
 ashop_wider[is.na(ashop_wider)] <- 0
 
-#write.csv(ashop_wider, file = file.path(git_dir, "data", "canary_ashop_catch.csv"), row.names = FALSE)
+#Starting in 1992, no hake processing was allowed south of 42 degrees (in CA). 
+#Combine CA landings after 1992 into Oregon
+ashop_final <- ashop_wider
+ashop_final[ashop_wider$year >= 1992,"OR"] <- ashop_wider[ashop_wider$year >= 1992, "CA"] + ashop_wider[ashop_wider$year >= 1992, "OR"]
+ashop_final[ashop_wider$year >= 1992,"CA"] <- 0
+
+#write.csv(ashop_final, file = file.path(git_dir, "data", "canary_ashop_catch.csv"), row.names = FALSE)
 
 
 #################################################################################################################
@@ -108,7 +122,7 @@ ashop_wider[is.na(ashop_wider)] <- 0
 #################################################################################################################
 
 #Add needed variables (state)
-length$state <- dplyr::case_when(length$LATDD_END < 42.00 ~ "CA",
+length$state <- dplyr::case_when(#length$LATDD_END < 42.00 ~ "CA", #These are recent years so no CA fleet
                                  length$LATDD_END < 46.25 ~ "OR", 
                                  length$LATDD_END < 49.00 ~ "WA")
 length$fleet <- length$state
@@ -119,14 +133,14 @@ length <- length[rep(1:(dim(length)[1]), length$FREQUENCY),]
 
 #Output number of lengths
 trips_sample <- length %>%
-  dplyr::group_by(state, YEAR) %>%
+  dplyr::group_by(YEAR, state) %>%
   dplyr::summarise(
     nhaul = length(unique(HAUL_JOIN)),
     N = length(LENGTH_CM)) %>%
   tidyr::pivot_wider(names_from = c(state), values_from = c(N,nhaul), 
                    names_glue = "{state}_{.value}", names_sort = TRUE)
-  
-colnames(trips_sample)[2] <- "Year"
+trips_sample[is.na(trips_sample)] <- 0
+colnames(trips_sample)[1] <- "Year"
 # write.csv(trips_sample, row.names = FALSE, file = file.path(git_dir, "data", "Canary_ashop_LengthComps_hauls_and_samples.csv"))
 
 
@@ -208,7 +222,7 @@ for(s in unique(na.omit(out$fleet))) {
 #################################################################################################################
 
 #Add needed variables (state)
-age$state <- dplyr::case_when(age$LATDD_END < 42.00 ~ "CA",
+age$state <- dplyr::case_when(#age$LATDD_END < 42.00 ~ "CA", #These are recent years so no CA fleet
                               age$LATDD_END < 46.25 ~ "OR", 
                               age$LATDD_END < 49.00 ~ "WA")
 age$fleet <- age$state
@@ -219,13 +233,14 @@ age <- age[!is.na(age$AGE),]
 
 #Output number of ages
 trips_sample <- age %>%
-  dplyr::group_by(state, YEAR) %>%
+  dplyr::group_by(YEAR, state) %>%
   dplyr::summarise(
     nhaul = length(unique(HAUL_JOIN)),
     N = length(AGE)) %>%
   tidyr::pivot_wider(names_from = c(state), values_from = c(N,nhaul), 
                      names_glue = "{state}_{.value}", names_sort = TRUE)
-colnames(trips_sample)[2] <- "Year"
+trips_sample[is.na(trips_sample)] <- 0
+colnames(trips_sample)[1] <- "Year"
 # write.csv(trips_sample, row.names = FALSE, file = file.path(git_dir, "data", "Canary_ashop_AgeComps_hauls_and_samples.csv"))
 
 ####
