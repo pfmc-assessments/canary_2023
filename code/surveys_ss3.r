@@ -10,16 +10,30 @@ library(nwfscSurvey)
 # load survey data
 load(here('data-raw/Catch__NWFSC.Combo_2023-02-13.rda'))
 wcgbts_catch <- Out
-load(here('data-raw/Catch__Triennial_2023-01-23.rda'))
+load(here('data-raw/Catch__Triennial_2023-05-01.rda'))
 triennial_catch <- Out
 load(here('data-raw/Bio_All_NWFSC.Combo_2023-02-13.rda'))
 wcgbts_bio <- Data
-load(here('data-raw/Bio_All_Triennial_2023-04-27.rda'))
+load(here('data-raw/Bio_All_Triennial_2023-05-01.rda'))
 triennial_bio <- Data
 
 # define age and length bins
 age_bins <- 1:35
 length_bins <- seq(12, 66, by = 2)
+
+# randomly assign unsexed fish a sex
+set.seed(29380)
+wcgbts_bio <- wcgbts_bio |>
+  dplyr::mutate(Sex = ifelse(Sex == 'U', 
+                                 sample(c('F', 'M'), size = 1),
+                                 Sex))
+triennial_bio$Lengths <- triennial_bio$Lengths |>
+  dplyr::mutate(Sex = ifelse(Sex == 'U', 
+                             sample(c('F', 'M'), size = 1),
+                             Sex))
+# There is only one unsexed but aged fish in the triennial data. Throw it out.
+triennial_bio$Ages <- triennial_bio$Ages |>
+  dplyr::filter(Sex != 'U')
 
 # define strata for wcgbts, triennial surveys
 wcgbts_strata <- nwfscSurvey::CreateStrataDF.fn(
