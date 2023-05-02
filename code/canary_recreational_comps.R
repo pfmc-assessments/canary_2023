@@ -47,6 +47,22 @@ recfin_bdsage = read.csv(file.path(dir, "conf_RecFIN_SD506_canary_1993_2022.csv"
 wa_bds_sport <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023_Apr27Version.xlsx"),
                                    sheet = "Sport", guess_max = Inf)
 
+  #---------------------------------------------------------------------
+  #Pull out sport WDFW aged fish that have multiple reads of B&B to use for ageing error
+  #All samples are break and burn
+  wa_dReads_sport <- wa_bds_sport %>% 
+    dplyr::filter(!(is.na(age_1) & is.na(age_2) & is.na(age_3))) %>% 
+    dplyr::mutate(mult = dplyr::case_when(
+      (!is.na(age_1) & !is.na(age_2) & !is.na(age_3)) == TRUE ~ 3,
+      (!is.na(age_1) & !is.na(age_2)) == TRUE ~ 2,
+      (!is.na(age_2) & !is.na(age_3)) == TRUE ~ 2,
+      (!is.na(age_1) & !is.na(age_3)) == TRUE ~ 2,
+      TRUE ~ 1)) %>% 
+    dplyr::filter(mult > 1) %>%
+    dplyr::select(sample_year, best_age, sex_name, best_age, mult,
+                  age_1, age_2, age_3, age_reader_code_1,  age_reader_code_2, age_reader_code_3) 
+  #---------------------------------------------------------------------
+
 
 ################################
 #Load Oregon provided data from RecFIN and MRFSS
