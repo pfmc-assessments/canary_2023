@@ -89,16 +89,18 @@ ggplot(early, aes(x=LONDD, y=LATDD, col = as.factor(state))) +
 
 #Sum total catches and determine number of vessels
 #Confidentiality is based on vessel catching all species, but I only have vessels catching canary
+#Based on email from Vanessa Tuttle, CA 1975 and 1976 are the only year-region combos that are truly confidential
 early_agg <- early %>% group_by(state,year) %>% 
   summarize(sum = sum(SPECIES_EXTRAPOLATED_WT_KG * HAULS_SAMPLED_EXPANSION_FACTOR)/1000)
 early_aggN <- early %>% group_by(state,year) %>%
-  summarize(N = length(unique(VESSEL_CODE)))
+  summarize(Nv = length(unique(VESSEL_CODE)), #Catcher boats aren't recorded until 1984 so still have issues with CA < 1984
+            Nc = length(unique(CATCHER_BOAT_ADFG))) 
 late_agg <- late %>% group_by(state,year) %>% 
   summarize(sum = sum(EXTRAPOLATED_WEIGHT_KG * `WEIGHT-BASED_EXPANSION_FACTOR`)/1000, 
             "just_landed" = sum(EXTRAPOLATED_WEIGHT_KG * PERCENT_RETAINED/100 * `WEIGHT-BASED_EXPANSION_FACTOR`)/1000)
 late_aggN <- late %>% group_by(state,year) %>%
-  summarize(N = length(unique(PERMIT)))
-            
+  summarize(Np = length(unique(PERMIT)),
+            Nc = length(unique(CATCHER_BOAT_ADFG)))
 
 #Combine and regroup because 1990 is in both datasets
 ashop_agg <- rbind(early_agg, late_agg[,c("state","year","sum")])
@@ -111,6 +113,9 @@ ashop_wider[is.na(ashop_wider)] <- 0
 ashop_final <- ashop_wider
 ashop_final[ashop_wider$year >= 1992,"OR"] <- ashop_wider[ashop_wider$year >= 1992, "CA"] + ashop_wider[ashop_wider$year >= 1992, "OR"]
 ashop_final[ashop_wider$year >= 1992,"CA"] <- 0
+#Due to confidentiality concerns remove 1975 and combine 1976 CA and OR
+ashop_final[ashop_wider$year %in% c(1976),"OR"] <- ashop_final[ashop_wider$year %in% c(1976),"OR"] + ashop_final[ashop_wider$year %in% c(1976),"CA"]
+ashop_final[ashop_wider$year %in% c(1975,1976),"CA"] <- 0
 
 #write.csv(ashop_final, file = file.path(git_dir, "data", "canary_ashop_catch.csv"), row.names = FALSE)
 

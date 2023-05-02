@@ -35,6 +35,20 @@ wa_rec <- readxl::read_excel(path = file.path(git_dir,"data-raw","Canary_WA_RecC
                              col_names = c("YEAR","RETAINED_N","RELEASED_TOTAL_N","REL1_10ftm",
                                            "REL10_20ftm","REL20_30ftm","REL30plusftm","RELUNKftm"),skip=3)
 
+#WA descender device usage for 2016-2022
+# googledrive::drive_download(file = "WA_rec_2016-2022CanaryDescenderDevice.xlsx",
+#                             path = file.path(git_dir,"data-raw","WA_rec_2016-2022CanaryDescenderDevice.xlsx"))
+wa_rec_dd <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_rec_2016-2022CanaryDescenderDevice.xlsx"),
+                                guess_max = Inf)
+
+#WA historical sport catch from RecFIN, which is same as 'wa_rec' above with exception that it includes 1987-1989
+# googledrive::drive_download(file = "RecFIN_CTE503_WA_historical_1967_2002.csv",
+#                             path = file.path(dir,"RecFIN_CTE503_WA_historical_1967_2002.csv"))
+wa_rec_hist <- utils::read.csv(file = file.path(dir,"RecFIN_CTE503_WA_historical_1967_2002.csv"), header = TRUE)
+#Reduce to canary in areas 1-4 (coastal) for 1987-1989 only
+wa_rec_hist_87_89 <- wa_rec_hist %>% filter(SPECIES_NAME == "CANARY ROCKFISH" & AREA < 5 & RECFIN_YEAR %in% c(1987:1989)) %>%
+  group_by(RECFIN_YEAR) %>% summarise(sum = sum(RETAINED_NUM))
+
 #OR rec catch - 1979-2022 Removals mtons
 #Only need to pull from googledrive once
 # googledrive::drive_download(file = "Oregon data/Oregon Recreational landings_451_2022_FINAL.csv",
@@ -101,14 +115,27 @@ tmpN_wider <- tmpN_wider %>% select(c("RECFIN_YEAR",sort(colnames(tmpN_wider[,-1
 
 ## WA provided data
 
-#Add discard by depth amounts
-#Discard rates are found in Table 1-10 of Council doc linked in issue #10
-#Use surface rates. Dont have information on amount of releases at depth
-wa_rec$DEAD_RELEASED_TOTAL_N = wa_rec$REL1_10ftm*0.21 + 
-                               wa_rec$REL10_20ftm*0.37 + 
-                               wa_rec$REL20_30ftm*0.53 + 
-                               wa_rec$REL30plusftm*1.00 +
-                               #Divide unknown depths based on proportions of releases for each known depth
+#Get percent of releases by depth with descender devices
+#There are no DD releases at unknown depth
+dd_perc_val <- wa_rec_dd %>% filter(Specname == "CANARYRELEASED") %>% group_by(Year) %>% 
+  summarize(perc1to10 = sum(Bin1Credit, na.rm=T) / sum(`Depth(1-10fm)`, na.rm=T),
+            perc10to20 = sum(Bin2Credit, na.rm=T) / sum(`Depth(10-20fm)`, na.rm=T),
+            perc20to30 = sum(Bin3Credit, na.rm=T) / sum(`Depth(20-30fm)`, na.rm=T),
+            perc30plus = sum(Bin4Credit, na.rm=T) / sum(`Depth(30+fm)`, na.rm=T))
+#Extend to years based in wa_rec
+dd_perc <- rbind(data.frame("Year" = wa_rec[!wa_rec$YEAR %in% dd_perc_val$Year,]$YEAR, 
+                            "perc1to10"= 0, "perc10to20" = 0, "perc20to30" = 0, "perc30plus" = 0),
+                 dd_perc_val)
+
+#Add discard by depth amounts, incoporating descender devices
+#Discard rates at surface are found in Table 1-10 of Council doc linked in issue #10
+#Rates with descender devices are found in Table 1-13 of that document. Assume average of rates in 30-50 and 50-100 for 30+
+wa_rec$DEAD_RELEASED_TOTAL_N = wa_rec$REL1_10ftm*(1-dd_perc$perc1to10)*0.21 + wa_rec$REL1_10ftm*(dd_perc$perc1to10)*0.21 +
+                               wa_rec$REL10_20ftm*(1-dd_perc$perc10to20)*0.37 + wa_rec$REL10_20ftm*(dd_perc$perc10to20)*0.25 +
+                               wa_rec$REL20_30ftm*(1-dd_perc$perc20to30)*0.53 + wa_rec$REL20_30ftm*(dd_perc$perc20to30)*0.25 +
+                               wa_rec$REL30plusftm*(1-dd_perc$perc30plus)*1.00 + wa_rec$REL30plusftm*(dd_perc$perc30plus)*((0.48+0.57)/2) +
+                               #Divide unknown depths based on proportions of releases for each known depth.
+                               #No descender devices at unknown depth so assume only applies to surface releases
                                wa_rec$RELUNKftm*(wa_rec$REL1_10ftm/(wa_rec$RELEASED_TOTAL_N-wa_rec$RELUNKftm))*0.21 +
                                wa_rec$RELUNKftm*(wa_rec$REL10_20ftm/(wa_rec$RELEASED_TOTAL_N-wa_rec$RELUNKftm))*0.37 +
                                wa_rec$RELUNKftm*(wa_rec$REL20_30ftm/(wa_rec$RELEASED_TOTAL_N-wa_rec$RELUNKftm))*0.53 +
@@ -120,7 +147,7 @@ plot(x=wa_rec$YEAR, rel_mort_rate, type="b", xlab= "Year", "ylab" = "Release Mor
 abline(h=avg_rate2005_2007,lty=2) #mean over most recent three years of data
 wa_rec[wa_rec$YEAR%in%c(2002:2004),]$DEAD_RELEASED_TOTAL_N <- avg_rate2005_2007 * wa_rec[wa_rec$YEAR%in%c(2002:2004),]$RELEASED_TOTAL_N
 #Fill in discards 2000 and 2001 with same release rate as for 2002 (see issue #42 in github)
-#Assume same mortality for released fish as for 2002 (which was average of 2005-2007). Similar to 2017-2022
+#Assume same mortality for released fish as for 2002 (which was average of 2005-2007). Similar to 2017-2022 if no descender device rates were applied
 rel_rate <- wa_rec$RELEASED_TOTAL_N/wa_rec$RETAINED_N
 plot(x=wa_rec$YEAR, rel_rate, type="b", xlab= "Year", "ylab" = "Proportion of fish released")
 wa_rec[wa_rec$YEAR %in% c(2000:2001),]$RELEASED_TOTAL_N <- wa_rec[wa_rec$YEAR %in% c(2000:2001),]$RETAINED_N * rel_rate[26]
@@ -194,12 +221,15 @@ ca_mrfss_tot = rbind(ca_mrfss_tot,impute_catch) %>% arrange(.,YEAR_)
 rec_df <- data.frame("Year" = min(unique(c(wa_rec$YEAR, or_rec$Year, recfin$RECFIN_YEAR, ca_mrfss$YEAR_))):2022)
 split_df <- rec_df #for splitting out discards and non-discards for Washington
 
-#Add washington - in numbers
+#Add washington - in numbers, 
+#Fill in years 1987-1989 with data from historical RecFIN pull
 rec_df$wa_N <- 0
 rec_df[rec_df$Year %in% wa_rec$YEAR,]$wa_N <- rowSums(wa_rec[,c("RETAINED_N","DEAD_RELEASED_TOTAL_N")],na.rm=T)
+rec_df[rec_df$Year %in% c(1987:1989),]$wa_N <- wa_rec_hist_87_89$sum
 split_df$wa_N <- 0
 split_df$wa_N_dis <- 0
 split_df[split_df$Year %in% wa_rec$YEAR,]$wa_N <- wa_rec$RETAINED_N
+split_df[split_df$Year %in% c(1987:1989),]$wa_N <- wa_rec_hist_87_89$sum
 split_df[split_df$Year %in% wa_rec$YEAR,]$wa_N_dis <- wa_rec$DEAD_RELEASED_TOTAL_N
 
 #Add oregon - >2000 are releases and dead releases, <2001 can assume no discards

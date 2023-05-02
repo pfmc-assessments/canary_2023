@@ -249,12 +249,13 @@ removals[removals$Year %in% c(1995:1999), disc_names] = (0.2) * removals[removal
 or_ramp <- rec[rec$Year == 1979,]$or_MT/(1979-1972) * length(1973:1978):1
 rec[rec$Year %in% c(1973:1978),]$or_MT <- rec[rec$Year==1979,]$or_MT - or_ramp
 
-#Linear ramps for WA in 1987-1989 and 1968-1974 - doesn't apply to discards because assumed 0 then
+#Linear ramps for WA in 1968-1974 - doesn't apply to discards because assumed 0 then
+#Values for 1987-1989 filled in by RecFIN form CTE503
 wa_ramp_early <- (rec[rec$Year == 1975,]$wa_N - rec[rec$Year == 1967,]$wa_N)/(1975-1967) * length(1968:1974):1
 rec[rec$Year %in% c(1968:1974),]$wa_N <- rec[rec$Year==1975,]$wa_N - wa_ramp_early
 
-wa_ramp_late <- (rec[rec$Year == 1990,]$wa_N - rec[rec$Year == 1986,]$wa_N)/(1990-1986) * length(1987:1989):1
-rec[rec$Year %in% c(1987:1989),]$wa_N <- rec[rec$Year==1990,]$wa_N - wa_ramp_late
+#wa_ramp_late <- (rec[rec$Year == 1990,]$wa_N - rec[rec$Year == 1986,]$wa_N)/(1990-1986) * length(1987:1989):1
+#rec[rec$Year %in% c(1987:1989),]$wa_N <- rec[rec$Year==1990,]$wa_N - wa_ramp_late
 
 #Add CA historical estimates
 rec[rec$Year %in% ca_hist_rec$Year, c("ca_MT")] <- ca_hist_rec$ca_MT
@@ -282,7 +283,7 @@ removals[removals$Year %in% rec$Year, c("rec.W.N","rec.W.N.dis","rec.O","rec.C")
 #################################################################################################################
 
 #Read in sport bio data - samples sizes differ slightly with recfin, and are low in most years
-wa_bds <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"), sheet = "Sport")
+wa_bds <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023_Apr27version.xlsx"), sheet = "Sport")
 wa_bds_len <- wa_bds %>% group_by(sample_year) %>% summarize(avgL = mean(fish_length_cm, na.rm=T), N = length(fish_length_cm)) %>% data.frame()
 table(wa_bds$sample_year,is.na(wa_bds$fish_length_cm))
 wa_bds_len <- right_join(x = wa_bds_len, y = data.frame("sample_year" = c(1967:2022))) %>% arrange(sample_year)
@@ -295,10 +296,11 @@ wa_bds_len$avgL2 = wa_bds_len$avgL
 for(i in 2006:2014){
   wa_bds_len[wa_bds_len$sample_year == i,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
 }
-wa_bds_len[wa_bds_len$sample_year == 1998,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$N)
-for(i in 1996:1997){
-  wa_bds_len[wa_bds_len$sample_year == i,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
-}
+# wa_bds_len[wa_bds_len$sample_year == 1998,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$N)
+# for(i in 1996:1997){
+#   wa_bds_len[wa_bds_len$sample_year == i,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
+# }
+wa_bds_len[wa_bds_len$sample_year %in% c(1996:1997),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1995,1996,1997),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1995,1996,1997),]$N)
 wa_bds_len[wa_bds_len$sample_year %in% c(1987),]$avgL2 = mean(wa_bds_len[wa_bds_len$sample_year <= 1999,]$avgL, na.rm = T)
 wa_bds_len[wa_bds_len$sample_year %in% c(1982:1983),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$N)
 wa_bds_len[wa_bds_len$sample_year %in% c(1980),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1979:1981),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1979:1981),]$N)
@@ -342,7 +344,7 @@ removals[removals$Year %in% for_fleet$Year, c("FOR.C","FOR.O","FOR.W")] <- for_f
 # #Upload to googledrive
 # #Break out of commercial data so CONFIDENTIAL
 # ##
-# xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_removals_forStateApproval_April24',
+# xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_removals_forStateApproval_May2',
 #                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(round(removals,2), ss = xx, sheet = "catch_summary")

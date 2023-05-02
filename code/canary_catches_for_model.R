@@ -10,6 +10,7 @@
 #     canary_catches_com.R
 #     canary_catches_rec.R
 #     canary_discard_exploration.R
+#     canary_ashop_processing.R
 #
 #   See discussion #47 in github repo for descriptions
 #     https://github.com/pfmc-assessments/canary_2023/discussions/47
@@ -248,12 +249,12 @@ removals[removals$Year %in% c(1995:1999),-1] = (1+0.2) * removals[removals$Year 
 or_ramp <- rec[rec$Year == 1979,]$or_MT/(1979-1972) * length(1973:1978):1
 rec[rec$Year %in% c(1973:1978),]$or_MT <- rec[rec$Year==1979,]$or_MT - or_ramp
 
-#Linear ramps for WA in 1987-1989 and 1968-1974
+#Linear ramps for WA in 1968-1974. Values for 1987-1989 filled in by RecFIN form CTE503
 wa_ramp_early <- (rec[rec$Year == 1975,]$wa_N - rec[rec$Year == 1967,]$wa_N)/(1975-1967) * length(1968:1974):1
 rec[rec$Year %in% c(1968:1974),]$wa_N <- rec[rec$Year==1975,]$wa_N - wa_ramp_early
 
-wa_ramp_late <- (rec[rec$Year == 1990,]$wa_N - rec[rec$Year == 1986,]$wa_N)/(1990-1986) * length(1987:1989):1
-rec[rec$Year %in% c(1987:1989),]$wa_N <- rec[rec$Year==1990,]$wa_N - wa_ramp_late
+#wa_ramp_late <- (rec[rec$Year == 1990,]$wa_N - rec[rec$Year == 1986,]$wa_N)/(1990-1986) * length(1987:1989):1
+#rec[rec$Year %in% c(1987:1989),]$wa_N <- rec[rec$Year==1990,]$wa_N - wa_ramp_late
 
 #Add CA historical estimates
 rec[rec$Year %in% ca_hist_rec$Year, c("ca_MT")] <- ca_hist_rec$ca_MT
@@ -280,7 +281,7 @@ removals[removals$Year %in% rec$Year, c("rec.W.N","rec.O","rec.C")] <- rec[,-1]
 #################################################################################################################
 
 #Read in sport bio data - samples sizes differ slightly with recfin, and are low in most years
-wa_bds <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023.xlsx"), sheet = "Sport")
+wa_bds <- readxl::read_excel(path = file.path(git_dir,"data-raw","WA_CanaryBiodata2023_Apr27version.xlsx"), sheet = "Sport")
 wa_bds_len <- wa_bds %>% group_by(sample_year) %>% summarize(avgL = mean(fish_length_cm, na.rm=T), N = length(fish_length_cm)) %>% data.frame()
 table(wa_bds$sample_year,is.na(wa_bds$fish_length_cm))
 wa_bds_len <- right_join(x = wa_bds_len, y = data.frame("sample_year" = c(1967:2022))) %>% arrange(sample_year)
@@ -313,10 +314,11 @@ wa_bds_len$avgL2 = wa_bds_len$avgL
 for(i in 2006:2014){
   wa_bds_len[wa_bds_len$sample_year == i,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
 }
-wa_bds_len[wa_bds_len$sample_year == 1998,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$N)
-for(i in 1996:1997){
-  wa_bds_len[wa_bds_len$sample_year == i,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
-}
+# wa_bds_len[wa_bds_len$sample_year == 1998,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1996,1997,1998),]$N)
+# for(i in 1996:1997){
+#   wa_bds_len[wa_bds_len$sample_year == i,]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(i-1, i, i+1),]$N)
+# }
+wa_bds_len[wa_bds_len$sample_year %in% c(1996:1997),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1995,1996,1997),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1995,1996,1997),]$N)
 wa_bds_len[wa_bds_len$sample_year %in% c(1987),]$avgL2 = mean(wa_bds_len[wa_bds_len$sample_year <= 1999,]$avgL, na.rm = T)
 wa_bds_len[wa_bds_len$sample_year %in% c(1982:1983),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1981:1983),]$N)
 wa_bds_len[wa_bds_len$sample_year %in% c(1980),]$avgL2 = weighted.mean(wa_bds_len[wa_bds_len$sample_year %in% c(1979:1981),]$avgL, wa_bds_len[wa_bds_len$sample_year %in% c(1979:1981),]$N)
@@ -373,6 +375,21 @@ removals$FOR.C <- 0
 removals$FOR.O <- 0
 removals$FOR.W <- 0
 removals[removals$Year %in% for_fleet$Year, c("FOR.C","FOR.O","FOR.W")] <- for_fleet[,-1]
+
+
+#################################################################################################################
+#---------------------------------------------------------------------------------------------------------------#
+# Load ASHOP removals (from canary_ashop_processing.R)
+#---------------------------------------------------------------------------------------------------------------#
+#################################################################################################################
+
+ashop <- utils::read.csv(file = file.path(git_dir,"data","canary_ashop_catch.csv"), header = TRUE)
+
+#Add to rest of removals
+removals$ASHOP.C <- 0
+removals$ASHOP.O <- 0
+removals$ASHOP.W <- 0
+removals[removals$Year %in% ashop$year, c("ASHOP.C","ASHOP.O","ASHOP.W")] <- ashop[,-1]
 
 
 #################################################################################################################
