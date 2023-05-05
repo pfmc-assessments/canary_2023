@@ -98,7 +98,7 @@ SS_plots(base.1)
 setwd(wd)
 new_mod <- "1_inputs"
 copy_SS_inputs(dir.old = '0_0_coastwide', 
-               dir.new = new_mod, use_ss_new = TRUE)
+               dir.new = new_mod, use_ss_new = FALSE, overwrite = TRUE)
 mod <- SS_read(new_mod)
 
 #Make changes to starter
@@ -133,17 +133,25 @@ mod$dat$len_info$minsamplesize <- 0.01 #Manual says CAAL oculd have sample size 
 mod$dat$age_info$minsamplesize <- 0.01 #Manual says CAAL oculd have sample size < 1 so setting lower
 #TO DO: UPDATE AGE COMP DATA LINKING TO AGEING ERROR MATRICS
 
-
-
-
-
 #Make changes to control
-
-
-
-
-
-
+mod$ctl$recr_dist_method <- 4 #WOULD NEED TO CHANGE IF GO WITH SPATIAL MODEL. COULD STICK WITH 2. IF HAVE 4 CHECK WHETHER THE RECR PARAMETERS ARE NULLIFIED - THEY ARE NOT AUTOMATICALLY REMOVED
+mod$ctl$recr_dist_pattern[1:4] <- c(1,1,1,0) #TO DO: DISCUSS CHANGE OF SETTLEMENT TO SPRING-SUMMER? 
+#TO DO: FINALIZE BLOCKING
+mod$ctl$natM_type <- 0 #TO DO: CONFIRM M SET UP
+mod$ctl$M_ageBreakPoints[1:2] <- c(6,14) #TO DO: CONFIRM VALUES and apporach for M set up
+mod$ctl$Growth_Age_for_L2 <- 999 #set equivalent to Linf
+mod$ctl$maturity_option <- 3 #TO DO: FINALIZE AGE (?OR LENGTH?) MATURITY VALUES
+mod$ctl$First_Mature_Age <- 2 #Keep at 2. IGNORED when maturity option is 3 but Id like to set it to whatever it is in case we change maturity option
+mod$ctl$fecundity_option <- 2 #TO DO: confirm linear or not and values
+mod$ctl$parameter_offset_approach <- 2 #TO DO: confirm apporach with M 
+mod$ctl$Use_steep_init_equi <- 1
+mod$ctl$Fcast_recr_phase <- mod$ctl$recdev_phase+1
+mod$ctl$F_Method <- 3 #TO DO: RECOMMENDED APPROACH IS 4 but IM NOT SURE WHAT DIFFERENCE IS. Looks like its useful if the model has issues (fleet specific F phases)
+mod$ctl$maxF <- 4
+mod$ctl$F_iter <-  5
+#TO DO: CONFIRM Q SETUP
+#mod$ctl$Variance_adjustment_list$Value <- 1 #TO DO: CONFIRM HOW WE WISH TO HANDLE THESE FOR DEVELOPMENT
+#mod$ctl$lambdas$value <- 1 #TO DO: CONFIRM HOW WE WISH TO HANDLE THESE FOR DEVELOPMENT
 
 #Output changes and run model
 r4ss::SS_write(mod, dir = new_mod, overwrite = TRUE)
