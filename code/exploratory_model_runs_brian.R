@@ -125,7 +125,7 @@ mod$fore$ForeCatch <- data.frame("Year" = rep(2023:2024, each = mod$dat$Nfleet),
 #Make changes to data
 mod$dat$area <- 1 #already one but setting up here for spatial model
 mod$dat$catch$catch_se <- 0.05
-mod$dat$catch[-which(mod$dat$catch$year == -999),] #remove the equilibrium catch value
+mod$dat$catch <- mod$dat$catch[-which(mod$dat$catch$year == -999),] #remove the equilibrium catch value
 #TO DO: NEED TO UPDATE SURVEY DATA
 mod$dat$len_info$minsamplesize <- 0.01 #Manual says CAAL oculd have sample size < 1 so setting lower
 #TO DO: UPDATE LENGTH COMP DATA
@@ -135,18 +135,22 @@ mod$dat$age_info$minsamplesize <- 0.01 #Manual says CAAL oculd have sample size 
 
 #Make changes to control
 mod$ctl$recr_dist_method <- 4 #WOULD NEED TO CHANGE IF GO WITH SPATIAL MODEL. COULD STICK WITH 2. IF HAVE 4 CHECK WHETHER THE RECR PARAMETERS ARE NULLIFIED - THEY ARE NOT AUTOMATICALLY REMOVED
+if(mod$ctl$recr_dist_method==4){ #Comment out RecrDist parameters
+  recLine <- grep("RecrDist",rownames(mod$ctl$MG_parms))
+  mod$ctl$MG_parms$LO[recLine] <- paste("#",mod$ctl$MG_parms$LO[recLine])
+}
 mod$ctl$recr_dist_pattern[1:4] <- c(1,1,1,0) #TO DO: DISCUSS CHANGE OF SETTLEMENT TO SPRING-SUMMER? 
 #TO DO: FINALIZE BLOCKING
-mod$ctl$natM_type <- 0 #TO DO: CONFIRM M SET UP
+mod$ctl$natM_type <- 1 #TO DO: CONFIRM M SET UP (CHANGE TO 0 UNLESS WANT breakpoints)
 mod$ctl$M_ageBreakPoints[1:2] <- c(6,14) #TO DO: CONFIRM VALUES and apporach for M set up
 mod$ctl$Growth_Age_for_L2 <- 999 #set equivalent to Linf
-mod$ctl$maturity_option <- 3 #TO DO: FINALIZE AGE (?OR LENGTH?) MATURITY VALUES
+mod$ctl$maturity_option <- 6 #TO DO: CHANGE TO AGE AT MATURITY (3) (AND CHANGE VECTOR)
 mod$ctl$First_Mature_Age <- 2 #Keep at 2. IGNORED when maturity option is 3 but Id like to set it to whatever it is in case we change maturity option
 mod$ctl$fecundity_option <- 2 #TO DO: confirm linear or not and values
-mod$ctl$parameter_offset_approach <- 2 #TO DO: confirm apporach with M 
+mod$ctl$parameter_offset_approach <- 3 #TO DO: confirm apporach with M - IF NO BREAKPOINTS SET THIS TO 2. RIGHT NOW KEEP AT 3 BECAUSE SETTING TO 2 CAUSES MODEL TO CRASH 
 mod$ctl$Use_steep_init_equi <- 1
 mod$ctl$Fcast_recr_phase <- mod$ctl$recdev_phase+1
-mod$ctl$F_Method <- 3 #TO DO: RECOMMENDED APPROACH IS 4 but IM NOT SURE WHAT DIFFERENCE IS. Looks like its useful if the model has issues (fleet specific F phases)
+mod$ctl$F_Method <- 3 #TO DO: RECOMMENDED APPROACH IS 4 but IM NOT SURE WHAT DIFFERENCE IS. Looks like its useful if the model has issues (fleet specific F phases). THIS SLOWS DOWN RUNTIME A BIT
 mod$ctl$maxF <- 4
 mod$ctl$F_iter <-  5
 #TO DO: CONFIRM Q SETUP
