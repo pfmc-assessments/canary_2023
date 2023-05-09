@@ -20,8 +20,9 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 ################################
 #Load PacFIN BDS data and set up data
 ################################
-load(file.path(dir, "PacFIN.CNRY.bds.28.Mar.2023.RData"))
+load(file.path(dir, "PacFIN.CNRY.bds.08.May.2023.RData"))
 pacfin <- bds.pacfin
+pacfin <- pacfin[pacfin$SAMPLE_YEAR < 2023,] #remove 2023
 
 # Load in the current weight-at-length estimates by sex
 wlcoef <- utils::read.csv(file.path(git_dir, "data", "W_L_pars.csv"), header = TRUE)
@@ -85,7 +86,7 @@ PdataAge <- PdataAge[!is.na(PdataAge[,"Age"]),]
 # PdataAgeCoast <- PdataAge #set up coast age comps for later
 # PdataAgeCoast$fleet <- sub("\\..*", "", PdataAgeCoast$fleet) #keep only stuff before "."
 
-Pdata <- Pdata[!is.na(Pdata[, 'length']),] #Remove fish without lengths. Do this here because some of these (11) have ages
+Pdata <- Pdata[!is.na(Pdata[, 'length']),] #Remove fish without lengths. Do this here because some of these (12) have ages
 
 # PdataCoast <- Pdata #set up coast length comps for later
 # PdataCoast$fleet <- sub("\\..*", "", PdataCoast$fleet) #keep only stuff before "."
