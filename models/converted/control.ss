@@ -191,7 +191,7 @@
 24	0	0	 0	#_7 7_CA_REC               
 15	0	0	 7	#_8 8_OR_REC               
 15	0	0	 7	#_9 9_WA_REC               
-24	0	0	 0	#_10 10_CA_AHSOP           
+24	0	0	 0	#_10 10_CA_ASHOP           
 15	0	0	10	#_11 11_OR_ASHOP           
 15	0	0	10	#_12 12_WA_ASHOP           
 15	0	0	 1	#_13 13_CA_FOR             
@@ -225,7 +225,7 @@
 10	0	0	0	#_7 7_CA_REC               
 10	0	0	0	#_8 8_OR_REC               
 10	0	0	0	#_9 9_WA_REC               
-10	0	0	0	#_10 10_CA_AHSOP           
+10	0	0	0	#_10 10_CA_ASHOP           
 10	0	0	0	#_11 11_OR_ASHOP           
 10	0	0	0	#_12 12_WA_ASHOP           
 10	0	0	0	#_13 13_CA_FOR             
@@ -268,12 +268,12 @@
      0	 9	  3.40759	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_7_CA_REC(7)        
     -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_7_CA_REC(7)        
     -5	 5	 -1.66869	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_7_CA_REC(7)        
-13.001	65	  45.9334	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_10_CA_AHSOP(10)    
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_10_CA_AHSOP(10)    
-     0	 9	  2.99325	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_10_CA_AHSOP(10)    
-     0	 9	0.0064059	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_10_CA_AHSOP(10)    
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_10_CA_AHSOP(10)    
-    -5	 5	 0.605481	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_10_CA_AHSOP(10)    
+13.001	65	  45.9334	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_10_CA_ASHOP(10)    
+    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_10_CA_ASHOP(10)    
+     0	 9	  2.99325	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_10_CA_ASHOP(10)    
+     0	 9	0.0064059	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_10_CA_ASHOP(10)    
+    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_10_CA_ASHOP(10)    
+    -5	 5	 0.605481	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_10_CA_ASHOP(10)    
 13.001	65	  13.0174	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_16_CA_NWFSC(16)    
     -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_16_CA_NWFSC(16)    
      0	 9	  4.50915	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_16_CA_NWFSC(16)    
@@ -375,7 +375,7 @@
     4	 7	1	     1	1	#_length_7_CA_REC_sizefreq_method_1_Phz1              
     4	 8	1	     1	1	#_length_8_OR_REC_sizefreq_method_1_Phz1              
     4	 9	1	0.8585	1	#_length_9_WA_REC_sizefreq_method_1_Phz1              
-    4	10	1	0.8889	1	#_length_10_CA_AHSOP_sizefreq_method_1_Phz1           
+    4	10	1	0.8889	1	#_length_10_CA_ASHOP_sizefreq_method_1_Phz1           
     4	11	1	0.5509	1	#_length_11_OR_ASHOP_sizefreq_method_1_Phz1           
     4	12	1	0.5351	1	#_length_12_WA_ASHOP_sizefreq_method_1_Phz1           
     5	 1	1	0.2966	1	#_age_1_CA_TWL_Phz1                                   
@@ -387,7 +387,7 @@
     5	 7	1	     0	1	#_age_7_CA_REC_Phz1                                   
     5	 8	1	     0	1	#_age_8_OR_REC_Phz1                                   
     5	 9	1	0.1415	1	#_age_9_WA_REC_Phz1                                   
-    5	10	1	0.1111	1	#_age_10_CA_AHSOP_Phz1                                
+    5	10	1	0.1111	1	#_age_10_CA_ASHOP_Phz1                                
     5	11	1	0.4491	1	#_age_11_OR_ASHOP_Phz1                                
     5	12	1	0.4649	1	#_age_12_WA_ASHOP_Phz1                                
 -9999	 0	0	     0	0	#_terminator                                          

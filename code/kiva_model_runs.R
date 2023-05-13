@@ -656,6 +656,65 @@ beepr::beep()
 SS_output(dir = here('models/coastwide')) |>
   SS_plots()
 
+
+# Dirichlet-multinomial ---------------------------------------------------
+r4ss::copy_SS_inputs(dir.old = here('models/coastwide'),
+                     dir.new = here('models/d-m_comps'), overwrite = TRUE)
+mod <- r4ss::SS_read(dir = here('models/d-m_comps'))
+
+# Need to check which fleets have which data in likelihood.
+# Specifically REC and NTWL
+
+# No comps for these fleets
+mod$dat$len_info[!grepl('prerec|FOR', fleet.converter$fleetname),'CompError'] <- 1
+mod$dat$age_info[!grepl('prerec|FOR', fleet.converter$fleetname),'CompError'] <- 1
+
+# Jim split up TWL / NTWL for data weighting. There are no NTWL ages I *think*.
+# PacFIN data
+mod$dat$len_info[grepl('TWL', fleet.converter$fleetname),'ParmSelect'] <- 1
+mod$dat$age_info[grepl('TWL', fleet.converter$fleetname),'ParmSelect'] <- 2
+
+# Rec data. Are there rec ages?
+mod$dat$len_info[grepl('REC', fleet.converter$fleetname),'ParmSelect'] <- 3
+mod$dat$age_info[grepl('REC', fleet.converter$fleetname),'ParmSelect'] <- 4
+
+# ASHOP
+# This could probably mirror trawl fleet if needed
+mod$dat$len_info[grepl('ASHOP|AHSOP', fleet.converter$fleetname),'ParmSelect'] <- 5
+mod$dat$age_info[grepl('ASHOP|AHSOP', fleet.converter$fleetname),'ParmSelect'] <- 6
+
+# combine surveys into one weight parameter if things get squirrely
+# Francis weight was very similar for all three.
+# NWFSC
+mod$dat$len_info[grepl('NWFSC', fleet.converter$fleetname),'ParmSelect'] <- 7
+
+# Triennial (both periods)
+mod$dat$len_info[grepl('Tri', fleet.converter$fleetname),'ParmSelect'] <- 8
+
+# make D-M parameter table
+n_dm_pars <- max(mod$dat$age_info$ParmSelect, mod$dat$len_info$ParmSelect)
+dm_table <- matrix(0, nrow = n_dm_pars,
+                   ncol = ncol(mod$ctl$size_selex_parms),
+                   dimnames = list(paste0('ln(DM_theta)_', 1:n_dm_pars),
+                                   colnames(mod$ctl$size_selex_parms))) |>
+  as.data.frame()
+
+dm_table$PHASE <- 2
+dm_table$LO <- -5
+dm_table$HI <- 5
+dm_table$INIT <- 0
+# normal(0, 1.813) prior to counteract parameter transformation 
+# i.e., ensure theta ~ uniform
+dm_table$PR_type <- 6
+dm_table$PRIOR <- 0
+dm_table$PR_SD <- 1.813
+
+# Get rid of Francis data weights
+mod$ctl$DoVar_adjust <- 0
+mod$ctl$Variance_adjustment_list <- NULL # is this even necessary given above line?
+
+tmp <- r4ss::SS_read(dir = 'Q:/Assessments/Archives/Pacific Hake_Whiting/PWhiting2022/MLE model files')
+tmp$ctl$age_selex_parms
 # No triennial
 # Triennial combined
 # Estimate state by state or CA selectivity
@@ -664,8 +723,7 @@ SS_output(dir = here('models/coastwide')) |>
 # Coastwide, no spatial
 # Update M prior
 # Update M ramp
-
-# Expand survey data comps
+# Update Selectivity blocks
 
 # Set lambda = 0 for cpue, length, age comps for state surveys (use coastwide instead)
 # Not using this approach, using negative year and no selectivity instead

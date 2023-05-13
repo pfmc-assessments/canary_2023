@@ -169,8 +169,3 @@ wcgbts_catch |>
                                     type = 'age',
                                     species = 'shelfrock',
                                     verbose = FALSE))
-
-
-# Write index to csv
-load(here('data-raw/NWFSC.Combo/index/lognormal/sdmTMB_save.Rdata'))
-write.csv(all_indices, here('data/wcgbts_index.csv'), row.names = FALSE)
