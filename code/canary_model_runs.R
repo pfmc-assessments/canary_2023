@@ -12,18 +12,26 @@ library(PEPtools)
 library(here)
 
 #Add file managing section here 
-#I will try to get 'here' to work but if I can I will go with what I had
-#if(Sys.getenv("USERNAME") == "Brian.Langseth") {
-#  wd = "C:/Users/Brian.Langseth/Desktop/canary_model_runs"
-#}
+#I will try to get 'here' to work but if I cant I will go with what I had
+if(Sys.getenv("USERNAME") == "Brian.Langseth") {
+ wd = "L:/"
+}
+if(Sys.getenv("USERNAME") == "Kiva.Oken") {
+  wd = "Q:/"
+}
 
 
 ##########################################################################################
 #                         Set up from 2015 base to current version
 ##########################################################################################
 
+####------------------------------------------------####
+### 0_1_1_update_data
+####------------------------------------------------####
 
-### Model name here with numbering (these should be all 0_X_Y) --------------------------------
+##
+#Copy inputs
+##
 
 # Kiva: happy to use a numbering scheme, but if it's not just 1, 2, 3, ..., 
 # I don't understand what kind of change increments which number.
@@ -42,6 +50,11 @@ fleet.converter <- mod$dat$fleetinfo |>
   dplyr::select(fleetname, fleet_no_num, fleet)
 
 
+##
+#Make Changes
+##
+
+#----
 # Extend catch time series ------------------------------------------------
 
 mod$dat$endyr <- 2022
@@ -61,7 +74,7 @@ updated.catch.df <- catches |>
   dplyr::mutate(seas = 1, 
                 catch_se = 0.05) |>
   dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
-  rbind(c(-999, 1, 1, 0, 0.05)) |>
+  #rbind(c(-999, 1, 1, 0, 0.05)) |>
   dplyr::arrange(fleet, year) |>
   as.data.frame()
 
@@ -76,13 +89,13 @@ mod$dat$fleetinfo$surveytiming[mod$dat$fleetinfo$type==1] <- -1
 
 # Update survey indices ----------------------------------------------------------
 
-wcgbts.cpue <- read.csv('Q:/Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_lognormal/index/est_by_area.csv') |>
+wcgbts.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_lognormal/index/est_by_area.csv')) |>
   dplyr::mutate(fleet_no_num = paste0(area, '_NWFSC')) |>
   dplyr::left_join(fleet.converter) |> 
   dplyr::mutate(seas = 7) |>
   dplyr::select(year, seas, index = fleet, obs = est, se_log = se)
 
-tri.cpue <- read.csv('Q:/Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_lognormal_mix/index/est_by_area.csv') |>
+tri.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_lognormal_mix/index/est_by_area.csv')) |>
   dplyr::mutate(fleet_no_num = paste0(area, ifelse(year <= 1992, '_Tri_early', '_Tri_late'))) |>
   dplyr::left_join(fleet.converter) |> 
   dplyr::mutate(seas = 7) |>
@@ -168,13 +181,19 @@ mod$dat$lencomp <- mod$dat$lencomp |>
   dplyr::bind_rows(marginal.lengths.dfr)
 
 # NAs in lbin low and lbin hi
+# These are all with ages in the first age bin so assume for now these are the first length bin
+# until can confirm what is going on
+mod$dat$agecomp[which(is.na(mod$dat$agecomp$Lbin_hi)),c("Lbin_lo","Lbin_hi")] <- 1
 
 # Not updating triennial comps, those have not changes nor have our methods.
 # Note: consider switching triennial to marginal ages.
 
+# TO DO: Update ageing error matrices ----------------------------------------------------
+
 # Update fishery comps ----------------------------------------------------
 
-# need to add ashop and rec ages
+#TO DO: Need to add correct ageerr values
+
 read.fishery.comps <- function(filename, exclude) {
   
 }
@@ -208,6 +227,19 @@ pacfin.lengths <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
 }) |>
   purrr::list_rbind()
 
+rec.ages <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Acomp{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)],
+                  ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
+    `names<-`(names(mod$dat$agecomp))
+}) |>
+  purrr::list_rbind()
+
 rec.lengths <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
   read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
                            area = .x,
@@ -220,38 +252,56 @@ rec.lengths <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
 }) |>
   purrr::list_rbind()
 
-# Can copy code from above and it should work:
+ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_ashop_not_expanded_Acomp{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)],
+                  ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
+    `names<-`(names(mod$dat$agecomp))
+}) |>
+  purrr::list_rbind()
 
-# rec.ages
+ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)]) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
 
-# ashop.lengths
-
-# ashop.ages
 
 mod$dat$agecomp <- mod$dat$agecomp |> 
-  dplyr::filter(!(FltSvy %in% unique(ages$FltSvy))) |>
-  dplyr::bind_rows(pacfin.ages)
+  dplyr::filter(!(FltSvy %in% unique(pacfin.ages$FltSvy)),
+                !(FltSvy %in% unique(rec.ages$FltSvy)),
+                !(FltSvy %in% unique(ashop.ages$FltSvy))) |>
+  dplyr::bind_rows(pacfin.ages, rec.ages, ashop.ages)
 
 mod$dat$lencomp <- mod$dat$lencomp |> 
-  dplyr::filter(!(FltSvy %in% unique(lengths$FltSvy)),
-                !(FltSvy %in% unique(rec.comps$FltSvy))) |>
-  dplyr::bind_rows(pacfin.lengths, rec.lengths)
+  dplyr::filter(!(FltSvy %in% unique(pacfin.lengths$FltSvy)),
+                !(FltSvy %in% unique(rec.lengths$FltSvy)),
+                !(FltSvy %in% unique(ashop.lengths$FltSvy))) |>
+  dplyr::bind_rows(pacfin.lengths, rec.lengths, ashop.lengths)
 
-SS_write(mod,
-         dir = here('models/0_1_1_update_data'),
-         overwrite = TRUE)
-##
-#Make Changes
-##
-
-#LOTS OF STUFF HERE
+#----
 
 
 ##
 #Output files and run
 ##
 
-r4ss::run(dir = here('models/update_wcgbts_comps'), 
+SS_write(mod,
+         dir = here('models/0_1_1_update_data'),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_1_1_update_data'), 
           exe = here('models/ss_win.exe'), 
           extras = '-nohess', 
           # show_in_console = TRUE, 
@@ -262,19 +312,17 @@ r4ss::run(dir = here('models/update_wcgbts_comps'),
 #Comparison plots
 ##
 
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = getwd(),
-                                      subdir = c('0_0_2015base', '0_0_coastwide', new_mod)))
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base', 'converted', '0_1_1_update_data')))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2023 coastwide', '2023 inputs changed'),
+  SSplotComparisons(legendlabels = c('2015', 'converted', '2023 data update'),
                     subplots = c(2,4))
 
 
+####------------------------------------------------####
+### 0_2_1_update_bio
+####------------------------------------------------####
 
-##########################################################################################
-#               Explorations with up-to-date current version to decide base
-##########################################################################################
-
-### Model name here with numbering (starting with 1_0_0) --------------------------------
 
 ##
 #Copy inputs
@@ -284,6 +332,46 @@ SSsummarize(xx) |>
 ##
 #Make Changes
 ##
+#----
+
+#----
+
+##
+#Output files and run
+##
+
+
+##
+#Comparison plots
+##
+
+
+####------------------------------------------------####
+### 0_2_1_model_inputs
+####------------------------------------------------####
+
+
+##########################################################################################
+#               Explorations with up-to-date current version to decide base
+##########################################################################################
+
+
+####------------------------------------------------####
+### Model name here with numbering (starting with 1_0_0)
+####------------------------------------------------####
+
+
+##
+#Copy inputs
+##
+
+
+##
+#Make Changes
+##
+#----
+
+#----
 
 
 ##
@@ -300,7 +388,7 @@ SSsummarize(xx) |>
 
 ##########################################################################################
 
-#Sensitivities on base can probably go into separate script
+#Sensitivities on base can probably go into separate script called sensitivities
 ##########################################################################################
 
 
