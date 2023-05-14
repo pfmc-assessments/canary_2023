@@ -281,7 +281,8 @@ for(s in unique(na.omit(out$fleet))) {
       datA = df, 
       ageBins = age_bins,
       partition = 0, 
-      fleet = s, 
+      fleet = s,
+      ageErr = 0,
       month = 7)
     
     if(!is.null(afs$unsexed) & is.null(afs$sexed)){
