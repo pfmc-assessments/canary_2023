@@ -76,3 +76,42 @@ xx <- nwfscAgeingError::RunFn(Data = all_for_estimation,
                         PlusAge = 30,
                         KnotAges = list(NA, NA, NA, NA, NA, NA, NA, NA),
                         SaveFile = here('data-raw'))
+
+#Figuring this out still
+save.image(file = here('data-raw/ageErr/ageerr_output.Rdata'))
+
+
+
+# Plot output
+PlotOutputFn(Data = all_for_estimation, MaxAge = 90,
+             SaveFile = here('data-raw/ageErr'), PlotType = "PDF"
+)
+
+#How do we get SearchMat?
+SearchMat <- array(NA,
+                   dim = c(Nreaders * 2 + 2, 7),
+                   dimnames = list(c(paste("Error_Reader", 1:Nreaders),
+                                     paste("Bias_Reader", 1:Nreaders), "MinusAge", "PlusAge"),
+                                   paste("Option", 1:7))
+)
+
+# Run model selection
+# This outputs a series of files
+# 1. "Stepwise - Model loop X.txt" --
+#   Shows the AIC/BIC/AICc value for all different combinations
+#   of parameters arising from changing one parameter at a time
+#   according to SearchMat during loop X
+# 2. "Stepwise - Record.txt" --
+#   The Xth row of IcRecord shows the record of the
+#   Information Criterion for all trials in loop X,
+#   while the Xth row of StateRecord shows the current selected values
+#   for all parameters at the end of loop X
+# 3. Standard plots for each loop
+# WARNING: One run of this stepwise model building example can take
+# 8+ hours, and should be run overnight
+StepwiseFn(SearchMat = SearchMat, Data = all_for_estimation,
+           NDataSets = 1, MinAge = 0, MaxAge = 90,
+           RefAge = 10, MaxSd = 40, MaxExpectedAge = MaxAge+10,
+           SaveFile = here('data-raw/ageErr'),
+           InformationCriterion = c("AIC", "AICc", "BIC")[3]
+)
