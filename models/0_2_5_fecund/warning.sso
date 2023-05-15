@@ -1,0 +1,22 @@
+Note 1 Suggestion:  recr_dist_method 3 is simpler and takes 1 parm for each settlement
+Note 2 Information: Max harvest rate typically is >1.0 for F_method 2, 3 or 4 0.9
+Warning 1 : Setting in starter does not request all priors, and 23 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 : Final gradient: 0.0068988 is larger than final_conv: 0.0001
+Warning 3 : Cannot do prior in log space for parm with min <=0.0
+Warning 4 : Cannot do prior in log space for parm with min <=0.0
+Warning 5 : Cannot do prior in log space for parm with min <=0.0
+Warning 6 : Cannot do prior in log space for parm with min <=0.0
+Warning 7 : Cannot do prior in log space for parm with min <=0.0
+Warning 8 : Cannot do prior in log space for parm with min <=0.0
+Warning 9 : Cannot do prior in log space for parm with min <=0.0
+Warning 10 : Cannot do prior in log space for parm with min <=0.0
+Warning 11 : Cannot do prior in log space for parm with min <=0.0
+Warning 12 : Cannot do prior in log space for parm with min <=0.0
+Warning 13 : Cannot do prior in log space for parm with min <=0.0
+Warning 14 : Cannot do prior in log space for parm with min <=0.0
+Warning 15 : Cannot do prior in log space for parm with min <=0.0
+Warning 16 : Cannot do prior in log space for parm with min <=0.0
+Note 3 Information: No *.ss_new and fewer *.sso files written after mceval
+Warning 17 : Reminder: Number of lamdas !=0.0 and !=1.0:  20
+Note 4 Information:  N parameters that are on or within 1% of min-max bound: 6; check results, variance may be suspect
+ 17 warnings  and 4 notes 

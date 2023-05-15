@@ -1,0 +1,148 @@
+Note 1 Suggestion:  recr_dist_method 3 is simpler and takes 1 parm for each settlement
+Note 2 Information: Max harvest rate typically is >1.0 for F_method 2, 3 or 4 0.9
+Warning 1 : Setting in starter does not request all priors, and 22 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1979 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 3 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1980 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 4 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1980 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 5 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1980 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 6 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1981 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 7 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1981 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 8 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1981 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 9 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1982 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 10 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1982 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 11 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1982 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 12 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1983 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 13 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1983 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 14 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1983 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 15 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1984 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 16 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1984 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 17 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1985 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 18 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1985 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 19 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1986 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 20 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1986 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 21 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1987 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 22 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1987 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 23 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1987 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 24 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1988 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 25 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1988 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 26 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1989 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 27 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1989 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 28 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1990 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 29 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1991 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 30 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1992 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 31 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1993 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 32 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1993 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 33 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1994 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 34 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1994 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 35 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1995 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 36 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1995 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 37 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1995 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 38 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1996 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 39 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1996 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 40 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1996 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 41 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1997 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 42 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1997 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 43 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1997 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 44 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1998 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 45 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1998 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 46 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1999 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 47 : 1 1warn in first call: Nil selected fish for year, seas, fleet 1999 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 48 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2000 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 49 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2000 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 50 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2001 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 51 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2001 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 52 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2002 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 53 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2002 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 54 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2002 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 55 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2003 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 56 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2003 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 57 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2003 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 58 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2004 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 59 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2004 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 60 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2004 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 61 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2005 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 62 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2005 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 63 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2005 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 64 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2006 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 65 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2006 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 66 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2006 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 67 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2007 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 68 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2007 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 69 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2007 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 70 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2008 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 71 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2008 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 72 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2008 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 73 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2009 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 74 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2009 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 75 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2009 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 76 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2010 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 77 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2010 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 78 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2010 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 79 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2011 1 1; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 80 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2011 1 2; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 81 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2011 1 3; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 82 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2011 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 83 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2011 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 84 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2011 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 85 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2012 1 1; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 86 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2012 1 2; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 87 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2012 1 3; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 88 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2012 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 89 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2012 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 90 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2012 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 91 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2013 1 1; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 92 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2013 1 2; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 93 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2013 1 3; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 94 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2013 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 95 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2013 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 96 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2013 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 97 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2014 1 1; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 98 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2014 1 2; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 99 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2014 1 3; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 100 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2014 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 101 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2014 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 102 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2014 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 103 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2015 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 104 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2015 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 105 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2015 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 106 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2016 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 107 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2016 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 108 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2016 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 109 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2017 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 110 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2017 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 111 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2017 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 112 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2018 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 113 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2018 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 114 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2018 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 115 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2019 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 116 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2019 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 117 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2019 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 118 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2020 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 119 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2020 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 120 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2021 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 121 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2021 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 122 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2021 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 123 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2022 1 7; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 124 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2022 1 8; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 125 : 1 1warn in first call: Nil selected fish for year, seas, fleet 2022 1 9; SS may recover; suggest check initial parm. values for selectivity and growth
+Warning 126 : Final gradient: 15691 is larger than final_conv: 0.0001
+Warning 127 : Forecast F capped by max possible F from control file0.9
+Warning 128 : Cannot do prior in log space for parm with min <=0.0
+Warning 129 : Cannot do prior in log space for parm with min <=0.0
+Warning 130 : Cannot do prior in log space for parm with min <=0.0
+Warning 131 : Cannot do prior in log space for parm with min <=0.0
+Warning 132 : Cannot do prior in log space for parm with min <=0.0
+Warning 133 : Cannot do prior in log space for parm with min <=0.0
+Warning 134 : Cannot do prior in log space for parm with min <=0.0
+Warning 135 : Cannot do prior in log space for parm with min <=0.0
+Warning 136 : Cannot do prior in log space for parm with min <=0.0
+Warning 137 : Cannot do prior in log space for parm with min <=0.0
+Warning 138 : Cannot do prior in log space for parm with min <=0.0
+Warning 139 : Cannot do prior in log space for parm with min <=0.0
+Warning 140 : Cannot do prior in log space for parm with min <=0.0
+Warning 141 : Cannot do prior in log space for parm with min <=0.0
+Warning 142 : Main recdev biasadj is >2 times ratio of rmse to sigmaR
+Note 3 Information: No *.ss_new and fewer *.sso files written after mceval
+Warning 143 : Reminder: Number of lamdas !=0.0 and !=1.0:  20
+Note 4 Information:  N parameters that are on or within 1% of min-max bound: 4; check results, variance may be suspect
+ 143 warnings  and 4 notes 

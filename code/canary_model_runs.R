@@ -55,6 +55,8 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 
 #----
+mod$start$detailed_age_structure <- 1 #all output
+
 # Extend catch time series ------------------------------------------------
 
 mod$dat$endyr <- 2022
@@ -312,11 +314,78 @@ r4ss::run(dir = here('models/0_1_1_update_data'),
 #Comparison plots
 ##
 
+pp <- SS_output(here('models/0_1_1_update_data'),covar=FALSE)
+SS_plots(pp)
+
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('2015base', 'converted', '0_1_1_update_data')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015', 'converted', '2023 data update'),
-                    subplots = c(2,4))
+                    subplots = c(2,4), print = TRUE, plotdir = here('models/0_1_1_update_data'))
+
+
+####------------------------------------------------####
+### 0_1_1_update_data_ageErr - NEED TO COMPLETE
+####------------------------------------------------####
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models/0_1_2_ageErr'),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models/0_1_2_ageErr'))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#----
+
+# TO DO: Update ageing error matrices ----------------------------------------------------
+
+#TO DO: Need to add correct ageerr values
+
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models/0_1_2_ageErr'),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_1_2_ageErr'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models/0_1_2_ageErr'),covar=FALSE)
+SS_plots(pp)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base', 'converted', '0_1_1_update_data', '0_1_2_ageErr')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', 'converted', '2023 data update', 'add ageErr'),
+                    subplots = c(2,4), print = TRUE, plotdir = here('models/0_1_2_ageErr'))
 
 
 ####------------------------------------------------####
@@ -327,12 +396,77 @@ SSsummarize(xx) |>
 ##
 #Copy inputs
 ##
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models/0_2_1_update_bio'),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models/0_2_1_update_bio'))
 
 
 ##
 #Make Changes
 ##
 #----
+# Update M as a single offset value ------------------------------------------------
+mod$ctl$natM_type <- 0
+mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
+#Remove second M breakpoint parameters
+mod$ctl$MG_parms <- mod$ctl$MG_parms[-grep("NatM_p_2",rownames(mod$ctl$MG_parms)),]
+
+max.age <- 84
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- c(
+  0.02, 0.2,
+  round(5.4/max.age, 4), 
+  round(log(5.4/max.age), 2), 
+  0.31
+)
+
+# Update maturity ------------------------------------------------
+a50_fxn <- 10.87
+slope_fxn <- -0.688
+mod$ctl$maturity_option <- 2 #age logistic
+mod$ctl$MG_parms['Mat50%_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- 
+  c(9, 12, a50_fxn, a50_fxn, 0.055)
+
+# Update steepness ------------------------------------------------
+#per best practices: https://www.pcouncil.org/documents/2023/03/accepted-practices-and-guidelines-for-groundfish-stock-assessments.pdf/
+mod$ctl$SR_parms['SR_BH_steep', c('INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- 
+  c(0.72, 0.72, 0.16, 2)
+
+# Update fecundity ------------------------------------------------
+mod$ctl$MG_parms['Eggs_alpha_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  0,0.1,
+  7.218E-08, log(7.218E-08), 
+  0.135, 3) #set prior sd for a as exp(~2) where 2 is about half the CI bound for A and use lognormal because alpha = exp(A)
+mod$ctl$MG_parms['Eggs_beta_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  2, 6, 
+  4.043, 4.043, 
+  0.3, 6) #set prior sd around half the CI bound for b (~0.6) and keep normal 
+
+# Update WL parameters ------------------------------------------------
+wlcoef <- utils::read.csv(here("data", "W_L_pars.csv"), header = TRUE)
+#Females
+mod$ctl$MG_parms['Wtlen_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  0, 0.1,
+  signif(wlcoef[wlcoef$Sex=="F","A"],3), 
+  signif(wlcoef[wlcoef$Sex=="F","A"],3),
+  50, 6) #keep same prior sd and distribution
+mod$ctl$MG_parms['Wtlen_2_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  2, 4,
+  round(wlcoef[wlcoef$Sex=="F","B"],3), 
+  round(wlcoef[wlcoef$Sex=="F","B"],3),
+  50, 6) #keep same prior sd and distribution
+#Males
+mod$ctl$MG_parms['Wtlen_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  0, 0.1,
+  signif(wlcoef[wlcoef$Sex=="M","A"],3), 
+  signif(wlcoef[wlcoef$Sex=="M","A"],3),
+  50, 6) #keep same prior sd and distribution
+mod$ctl$MG_parms['Wtlen_2_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  2, 4,
+  round(wlcoef[wlcoef$Sex=="M","B"],3), 
+  round(wlcoef[wlcoef$Sex=="M","B"],3),
+  50, 6)
 
 #----
 
@@ -340,15 +474,327 @@ SSsummarize(xx) |>
 #Output files and run
 ##
 
+SS_write(mod,
+         dir = here('models/0_2_1_update_bio'),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_2_1_update_bio'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
 
 ##
 #Comparison plots
 ##
 
+pp <- SS_output(here('models/0_2_1_update_bio'),covar=FALSE)
+SS_plots(pp)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base', '0_1_1_update_data', '0_2_1_update_bio')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio'),
+                    subplots = c(2,4), print = TRUE, plotdir = here('models/0_2_1_update_bio') )
+
 
 ####------------------------------------------------####
-### 0_2_1_model_inputs
+### 0_2_2_Mconstant update bio M individually
 ####------------------------------------------------####
+
+new_name <- "0_2_2_Mconstant"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+# Update M as a single offset value ------------------------------------------------
+mod$ctl$natM_type <- 0
+mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
+#Remove second M breakpoint parameters
+mod$ctl$MG_parms <- mod$ctl$MG_parms[-grep("NatM_p_2",rownames(mod$ctl$MG_parms)),]
+
+max.age <- 84
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- c(
+  0.02, 0.2,
+  round(5.4/max.age, 4), 
+  round(log(5.4/max.age), 2), 
+  0.31
+)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "Mconstant"),
+                    subplots = c(2,4))
+
+
+####------------------------------------------------####
+### 0_2_3_maturity update bio maturity individually
+####------------------------------------------------####
+
+new_name <- "0_2_3_maturity"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+# Update maturity ------------------------------------------------
+a50_fxn <- 10.87
+slope_fxn <- -0.688
+mod$ctl$maturity_option <- 2 #age logistic
+mod$ctl$MG_parms['Mat50%_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- 
+  c(9, 12, a50_fxn, a50_fxn, 0.055)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "maturity"),
+                    subplots = c(2,4))
+
+
+####------------------------------------------------####
+### 0_2_4_steepness update bio steepness individually
+####------------------------------------------------####
+
+new_name <- "0_2_4_steepness"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+# Update steepness ------------------------------------------------
+#per best practices: https://www.pcouncil.org/documents/2023/03/accepted-practices-and-guidelines-for-groundfish-stock-assessments.pdf/
+mod$ctl$SR_parms['SR_BH_steep', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- 
+  c(0.21, 0.99, 0.72, 0.72, 0.16, 2)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "steepness"),
+                    subplots = c(2,4))
+
+
+####------------------------------------------------####
+### 0_2_5_fecund update bio fecundity individually
+####------------------------------------------------####
+
+new_name <- "0_2_5_fecund"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+# Update fecundity ------------------------------------------------
+mod$ctl$MG_parms['Eggs_alpha_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  0,0.1,
+  7.218E-08, log(7.218E-08), 
+  0.135, 3) #set prior sd for a as exp(~2) where 2 is about half the CI bound for A and use lognormal because alpha = exp(A)
+mod$ctl$MG_parms['Eggs_beta_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  2, 6, 
+  4.043, 4.043, 
+  0.3, 6) #set prior sd around half the CI bound for b (~0.6) and keep normal 
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "fecundity"),
+                    subplots = c(2,4))
+
+
+####------------------------------------------------####
+### 0_2_6_WL update bio WL individually
+####------------------------------------------------####
+
+new_name <- "0_2_6_WL"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+# Update WL parameters ------------------------------------------------
+wlcoef <- utils::read.csv(here("data", "W_L_pars.csv"), header = TRUE)
+#Females
+mod$ctl$MG_parms['Wtlen_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  0, 0.1,
+  signif(wlcoef[wlcoef$Sex=="F","A"],3), 
+  signif(wlcoef[wlcoef$Sex=="F","A"],3),
+  50, 6) #keep same prior sd and distribution
+mod$ctl$MG_parms['Wtlen_2_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  2, 4,
+  round(wlcoef[wlcoef$Sex=="F","B"],3), 
+  round(wlcoef[wlcoef$Sex=="F","B"],3),
+  50, 6) #keep same prior sd and distribution
+#Males
+mod$ctl$MG_parms['Wtlen_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  0, 0.1,
+  signif(wlcoef[wlcoef$Sex=="M","A"],3), 
+  signif(wlcoef[wlcoef$Sex=="M","A"],3),
+  50, 6) #keep same prior sd and distribution
+mod$ctl$MG_parms['Wtlen_2_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  2, 4,
+  round(wlcoef[wlcoef$Sex=="M","B"],3), 
+  round(wlcoef[wlcoef$Sex=="M","B"],3),
+  50, 6)
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "weight-length"),
+                    subplots = c(2,4))
 
 
 ##########################################################################################
