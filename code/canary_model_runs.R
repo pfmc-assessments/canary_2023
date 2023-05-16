@@ -178,11 +178,6 @@ mod$dat$agecomp <- mod$dat$agecomp |>
 mod$dat$lencomp <- mod$dat$lencomp |> 
   dplyr::filter(!(FltSvy %in% unique(marginal.lengths.dfr$FltSvy))) |>
   dplyr::bind_rows(marginal.lengths.dfr)
-  
-# NAs in lbin low and lbin hi
-# These are all with ages in the first age bin so assume for now these are the first length bin
-# until can confirm what is going on
-mod$dat$agecomp[which(is.na(mod$dat$agecomp$Lbin_hi)),c("Lbin_lo","Lbin_hi")] <- 1
 
 # Update triennial survey comps -----------------------------------------------------
 

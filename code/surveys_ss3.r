@@ -17,6 +17,12 @@ wcgbts_bio <- Data
 load(here('data-raw/Bio_All_Triennial_2023-05-01.rda'))
 triennial_bio <- Data
 
+# hack to so there are no fish in the minus (-999) length bin
+wcgbts_bio <- wcgbts_bio |>
+  dplyr::mutate(Length_cm = ifelse(!is.na(Age) & Length_cm < 12, 12, Length_cm))
+triennial_bio$Ages <- triennial_bio$Ages |>
+  dplyr::mutate(Length_cm = ifelse(Length_cm < 12, 12, Length_cm))
+
 # define age and length bins
 age_bins <- 1:35
 length_bins <- seq(12, 66, by = 2)
@@ -121,7 +127,7 @@ for(survey in 1:2) {
                               datAL = ages, datTows = catch_subset, 
                               strat.df = strata, ageBins = age_bins,
                               lgthBins = length_bins,
-                              raw = TRUE,
+                              raw = TRUE, sex = 3,
                               printfolder = printfolder,
                               month = '7', ageErr = '1',
                               verbose = FALSE)
