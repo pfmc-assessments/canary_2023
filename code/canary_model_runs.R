@@ -33,9 +33,6 @@ if(Sys.getenv("USERNAME") == "Kiva.Oken") {
 #Copy inputs
 ##
 
-# Kiva: happy to use a numbering scheme, but if it's not just 1, 2, 3, ..., 
-# I don't understand what kind of change increments which number.
-
 # I suggest not touching converted, or transition. That was just for updating SS3
 # version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
 copy_SS_inputs(dir.old = here('models/converted'), 
@@ -115,7 +112,7 @@ mod$dat$CPUE <- dplyr::bind_rows(wcgbts.cpue, tri.cpue, prerecruit)
 # Triennial selectivity and Q should probably be mirrored!!!
 
 
-# Update survey comps -----------------------------------------------------
+# Update combo survey comps -----------------------------------------------------
 
 length.min <- min(mod$dat$lbin_vector)
 length.max <- max(mod$dat$lbin_vector)
@@ -126,7 +123,7 @@ caal <- marginal.ages <- marginal.lengths <- list()
 for(ii in 1:4) {
   area <- c('CA', 'OR', 'WA', 'coastwide')[ii]
   fleet_num <- fleet.converter$fleet[grep(x = fleet.converter$fleet_no_num, 
-                                          pattern = paste0(area, '_NWFSC'))]
+                                          pattern = paste0(area, "_NWFSC"))]
   caal[[area]] <- purrr::map(list(`F` = 'Female', M = 'Male'), function(.x) {
     read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_CAAL_{sex}_Bins_{lmin}_{lmax}_{amin}_{amax}.csv',
                              area = area,
@@ -181,13 +178,74 @@ mod$dat$agecomp <- mod$dat$agecomp |>
 mod$dat$lencomp <- mod$dat$lencomp |> 
   dplyr::filter(!(FltSvy %in% unique(marginal.lengths.dfr$FltSvy))) |>
   dplyr::bind_rows(marginal.lengths.dfr)
-
+  
 # NAs in lbin low and lbin hi
 # These are all with ages in the first age bin so assume for now these are the first length bin
 # until can confirm what is going on
 mod$dat$agecomp[which(is.na(mod$dat$agecomp$Lbin_hi)),c("Lbin_lo","Lbin_hi")] <- 1
 
-# Not updating triennial comps, those have not changes nor have our methods.
+# Update triennial survey comps -----------------------------------------------------
+
+caal <- marginal.ages <- marginal.lengths <- list()
+
+for(ii in 1:4) {
+  area <- c('CA', 'OR', 'WA', 'coastwide')[ii]
+  fleet_num <- fleet.converter$fleet[grep(x = fleet.converter$fleet_no_num, 
+                                          pattern = paste0(area, "_Tri"))]
+  caal[[area]] <- purrr::map(list(`F` = 'Female', M = 'Male'), function(.x) {
+    read.csv(here(glue::glue('data/{area}_tri_comps/Survey_CAAL_{sex}_Bins_{lmin}_{lmax}_{amin}_{amax}.csv',
+                             area = area,
+                             sex = .x,
+                             lmin = length.min,
+                             lmax = length.max,
+                             amin = age.min,
+                             amax = age.max))) |>
+      dplyr::mutate(Fleet = ifelse(year <= 1992, fleet_num[1], fleet_num[2])) |>
+      `names<-`(names(mod$dat$agecomp)) 
+  })
+
+  marginal.ages[[area]] <- read.csv(here(glue::glue('data/{area}_tri_comps/Survey_Sex3_Bins_{amin}_{amax}_AgeComps.csv',
+                                                    area = area,
+                                                    amin = age.min,
+                                                    amax = age.max))) |>
+    dplyr::mutate(fleet = -1 * ifelse(year <= 1992, fleet_num[1], fleet_num[2]),
+                  agelow = -1,
+                  agehigh = -1) |>
+    `names<-`(names(mod$dat$agecomp))
+  
+  marginal.lengths[[area]] <- read.csv(here(glue::glue('data/{area}_tri_comps/Survey_Sex3_Bins_{lmin}_{lmax}_LengthComps.csv',
+                                                       area = area,
+                                                       lmin = length.min,
+                                                       lmax = length.max))) |>
+    dplyr::mutate(fleet = ifelse(year <= 1992, fleet_num[1], fleet_num[2])) |>
+    `names<-`(names(mod$dat$lencomp))
+  
+}
+
+caal.dfr <- caal |>
+  purrr::list_flatten() |>
+  purrr::list_rbind() |> 
+  dplyr::mutate(Yr = ifelse(FltSvy %in% c(29,30), -1 * Yr, Yr)) |> # exclude coastwide survey from likelihood
+  # caal table is in absolute length, model is in length index.
+  # Updating caal to be in length index
+  dplyr::mutate(dplyr::across(Lbin_lo:Lbin_hi, ~ match(.x, mod$dat$lbin_vector)))
+
+marginal.ages.dfr <- marginal.ages |>
+  purrr::list_rbind() 
+# Marginal ages already have negative fleet number
+
+marginal.lengths.dfr <- marginal.lengths |>
+  purrr::list_rbind() |>
+  dplyr::mutate(Yr = ifelse(FltSvy %in% c(29,30), -1 * Yr, Yr)) # exclude coastwide survey from likelihood
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(caal.dfr$FltSvy)),
+                !(FltSvy %in% unique(marginal.ages.dfr$FltSvy))) |>
+  dplyr::bind_rows(caal.dfr, marginal.ages.dfr)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(marginal.lengths.dfr$FltSvy))) |>
+  dplyr::bind_rows(marginal.lengths.dfr)
 # Note: consider switching triennial to marginal ages.
 
 # TO DO: Update ageing error matrices ----------------------------------------------------
