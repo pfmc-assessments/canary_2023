@@ -78,7 +78,37 @@ Pdata$fleet <- paste(fleet, state, sep = ".")
                      by = dplyr::join_by("SAMPLE_NO" == "SAMPLE_NUMBER", "FISH_NO" == "FISH_SEQUENCE_NUMBER"))
   #---------------------------------------------------------------------
 
-PdataAge = Pdata #set up for age comps later
+#Join agedby to Pdata because cleaned data exclude this. Join based on SAMPLE_NUMBER and 
+#FISH_SEQUENCE_NUMBER from original data and SAMPLE_NO and FISH_NO in cleaned data. Does not
+#work for CA data.
+#2015 assessment used CAPS/ODFW (1), WDFW/ODFW (2), surface (4)
+Pdata2 <- Pdata %>%
+  dplyr::left_join(.,pacfin[pacfin$AGENCY_CODE%in%c("W","O"),
+                            c("SAMPLE_NUMBER","FISH_SEQUENCE_NUMBER","agedby1","agedby2","agedby3")],
+                   by = dplyr::join_by("SAMPLE_NO" == "SAMPLE_NUMBER", "FISH_NO" == "FISH_SEQUENCE_NUMBER")) %>%
+  dplyr::mutate(lab1 = dplyr::case_when(grepl("ODFW",agedby1) ~ "ODFW",
+                        grepl("WDFW",agedby1) ~ "WDFW",
+                        grepl("Unknown",agedby1) ~ "NMFS-unk", #assume NMFS, years are 1995-1998 and 2001. Previous model did not have WA there
+                        grepl("NMFS",agedby1) ~ "NMFS",
+                        is.na(agedby1) & !is.na(FISH_AGE_YEARS_FINAL) ~ "NMFS-na",
+                        is.na(agedby1) & is.na(FISH_AGE_YEARS_FINAL) ~ "NA",
+                        TRUE ~ "NMFS")) %>% #for betty and patrick
+  dplyr::mutate(lab2 = dplyr::case_when(grepl("ODFW",agedby2) ~ "ODFW",
+                                        grepl("WDFW",agedby2) ~ "WDFW",
+                                        grepl("Unknown",agedby2) ~ "NMFS-unk",
+                                        grepl("NMFS",agedby2) ~ "NMFS",
+                                        is.na(agedby2) & !is.na(FISH_AGE_YEARS_FINAL) ~ "NMFS-na",
+                                        is.na(agedby2) & is.na(FISH_AGE_YEARS_FINAL) ~ "NA",
+                                        TRUE ~ "NMFS")) %>% #for betty and patrick
+  dplyr::mutate(lab3 = dplyr::case_when(grepl("ODFW",agedby3) ~ "ODFW",
+                                        grepl("WDFW",agedby3) ~ "WDFW",
+                                        grepl("Unknown",agedby3) ~ "NMFS-unk",
+                                        grepl("NMFS",agedby3) ~ "NMFS",
+                                        is.na(agedby3) & !is.na(FISH_AGE_YEARS_FINAL) ~ "NMFS-na",
+                                        is.na(agedby3) & is.na(FISH_AGE_YEARS_FINAL) ~ "NA",
+                                        TRUE ~ "NMFS")) #for betty and patrick
+
+PdataAge = Pdata2 #set up for age comps later
 rmNoFin <- which(!is.na(PdataAge$Age) & is.na(PdataAge$FISH_AGE_YEARS_FINAL)) #remove ages without FINAL_AGE assigned (see github issue #11)
 PdataAge <- PdataAge[-rmNoFin,]
 PdataAge <- PdataAge[!is.na(PdataAge[,"Age"]),]
@@ -91,6 +121,23 @@ Pdata <- Pdata[!is.na(Pdata[, 'length']),] #Remove fish without lengths. Do this
 # PdataCoast <- Pdata #set up coast length comps for later
 # PdataCoast$fleet <- sub("\\..*", "", PdataCoast$fleet) #keep only stuff before "."
 
+table(PdataAge$lab1,PdataAge$lab2,PdataAge$state)
+table(PdataAge$lab1,PdataAge$lab3,PdataAge$state)
+#in CA -> NMFS
+#in OR -> NMFS
+table(PdataAge$lab1,PdataAge$lab2, PdataAge$lab3,PdataAge$state=="WA")
+#read in WA by lab1 = NMFS or NMFS-unk -> NMFS
+#read in WA by lab1=lab2=lab3 = NMFS-na -> NMFS
+#read in WA by lab1=NMFS-na but lab2 or lab3 = WDFW -> WDFW
+#read in WA by lab1 = ODFW or WDFW -> WDFW with exception of lab1 = ODFW and lab2=lab3 = NMFS-na -> ODFW
+#Order below matters
+PdataAge <- PdataAge %>% dplyr::mutate(
+  ageerr = dplyr::case_when((grepl("-na",lab1) & grepl("WDFW",lab2)) | (grepl("-na",lab1) & grepl("WDFW",lab3)) ~ 2,
+                            grepl("NMFS",lab1) ~ 1,
+                            grepl("WDFW",lab1) ~ 2,
+                            grepl("ODFW",lab1) & grepl("-na",lab2) & grepl("-na",lab3) ~ 1,
+                            grepl("ODFW",lab1) ~ 2)) 
+table(PdataAge$lab1,PdataAge$lab2,PdataAge$lab3,PdataAge$ageerr)
 
 
 #################################################################################
@@ -192,17 +239,23 @@ Adata_exp$Final_Sample_Size <- capValues(Adata_exp$Expansion_Factor_1_A * Adata_
 # Set up lengths bins based on length sizes for all comps
 myAbins = c(seq(1, 35, 1))
 
-Acomps = getComps(Adata_exp, Comps = "AGE")
+Acomps = getComps(Adata_exp, Comps = "AGE", defaults = c("fleet", "fishyr", "season", "ageerr"))
 
-writeComps(inComps = Acomps,
-           fname = file.path(git_dir, "data", "Canary_PacFIN_AgeComps.csv"),
-           abins = myAbins,
-           partition = 0,
-           sum1 = TRUE,
-           digits = 4)
+# loop across ageing error methods to get comps for that method
+for(ageerr in unique(Acomps$ageerr)) {
+  writeComps(
+    inComps = Acomps[Acomps$ageerr == ageerr,],
+      fname = file.path(git_dir, "data", paste0("Canary_PacFIN_AgeCompsAgeErr",ageerr,".csv")),
+      abins = myAbins,
+      partition = 0,
+      ageErr = ageerr,
+      sum1 = TRUE,
+      digits = 4)
+  print(paste("ageerr ",ageerr))
+}
 
 # ##
-# #Coastal expansion
+# #Coastal expansion - ageerr not applied
 # ##
 # AdataCoast_exp <- getExpansion_1(Pdata = PdataAgeCoast,
 #                             fa = fa, fb = fb, ma = ma, mb = mb, ua = ua, ub = ub)
@@ -336,58 +389,62 @@ wa_all_comps = rbind(wa_comps, wa_sexed_comps)
 
 #Have to use header = FALSE here because when TRUE I cant read each set of comps, and the variable
 #names are fixed as the ones for the combined comps
-out = read.csv(file.path(git_dir, "data", "Canary_PacFIN_AgeComps.csv"), skip = 3, header = FALSE)
+ca_all_comps = or_all_comps = wa_all_comps = NULL
 
-##
-#Extract Unsexed fish
-##
-start = which(as.character(out[,1]) %in% c(" Usexed only ")) + 2
-end   = nrow(out)
-cut_out = out[start:end,]
-colnames(cut_out) <- out[start-1,]
-
-ind = which(colnames(cut_out) %in% "U1"):which(colnames(cut_out) %in% "U.35") #For 2 sex model need to go to U.66
-format = cbind(cut_out$fleet, cut_out$year, cut_out$month, cut_out$fleet, cut_out$sex, cut_out$partition,
-               cut_out$ageErr, cut_out$LbinLo, cut_out$LbinHi,
-               cut_out$Ntows, cut_out$Nsamps, cut_out$InputN, cut_out[,ind])
-colnames(format) = c("state", "fishyr", "month", "fleet", "sex", "part", "ageerr", "Lbin_lo", "Lbin_hi", "Ntows", "Nsamps", "InputN", colnames(cut_out[ind]))
-
-format$state <- sub("^.*\\.","", format$state) #keep only stuff after "."
-format$fleet <- sub("\\..*", "", format$fleet) #keep only stuff before "."
-
-ca_comps = format[format$state == "C", ]
-or_comps = format[format$state == "O", ]
-wa_comps = format[format$state == "W", ]
-
-##
-#Extract sexed fish
-##
-start = 1 + 1
-end   = which(as.character(out[,1]) %in% c(" Females only "))
-cut_out = out[start:end,]
-colnames(cut_out) <- out[1,]
-
-ind = which(colnames(cut_out) %in% "F1"):which(colnames(cut_out) %in% "M35")
-format = cbind(cut_out$fleet, cut_out$year, cut_out$month, cut_out$fleet, cut_out$sex, cut_out$partition,
-               cut_out$ageErr, cut_out$LbinLo, cut_out$LbinHi,
-               cut_out$Ntows, cut_out$Nsamps, cut_out$InputN, cut_out[,ind])
-colnames(format) = c("state", "fishyr", "month", "fleet", "sex", "part", "ageerr", "Lbin_lo", "Lbin_hi", "Ntows", "Nsamps", "InputN", colnames(cut_out[ind]))
-
-format$state <- sub("^.*\\.","", format$state) #keep only stuff after "."
-format$fleet <- sub("\\..*", "", format$fleet) #keep only stuff before "."
-
-ca_sexed_comps = format[format$state == "C", ]
-or_sexed_comps = format[format$state == "O", ]
-wa_sexed_comps = format[format$state == "W", ]
-
-#Set up same names so as to combine unsexed and sexed comps
-colnames(ca_comps) <- colnames(ca_sexed_comps)
-colnames(or_comps) <- colnames(or_sexed_comps)
-colnames(wa_comps) <- colnames(wa_sexed_comps)
-
-ca_all_comps = rbind(ca_comps, ca_sexed_comps)
-or_all_comps = rbind(or_comps, or_sexed_comps)
-wa_all_comps = rbind(wa_comps, wa_sexed_comps)
+for(i in unique(Acomps$ageerr)){
+  out = read.csv(file.path(git_dir, "data", paste0("Canary_PacFIN_AgeCompsAgeErr",i,".csv")), skip = 3, header = FALSE)
+  
+  ##
+  #Extract Unsexed fish
+  ##
+  start = which(as.character(out[,1]) %in% c(" Usexed only ")) + 2
+  end   = nrow(out)
+  cut_out = out[start:end,]
+  colnames(cut_out) <- out[start-1,]
+  
+  ind = which(colnames(cut_out) %in% "U1"):which(colnames(cut_out) %in% "U.35") #For 2 sex model need to go to U.66
+  format = cbind(cut_out$fleet, cut_out$year, cut_out$month, cut_out$fleet, cut_out$sex, cut_out$partition,
+                 cut_out$ageErr, cut_out$LbinLo, cut_out$LbinHi,
+                 cut_out$Ntows, cut_out$Nsamps, cut_out$InputN, cut_out[,ind])
+  colnames(format) = c("state", "fishyr", "month", "fleet", "sex", "part", "ageerr", "Lbin_lo", "Lbin_hi", "Ntows", "Nsamps", "InputN", colnames(cut_out[ind]))
+  
+  format$state <- sub("^.*\\.","", format$state) #keep only stuff after "."
+  format$fleet <- sub("\\..*", "", format$fleet) #keep only stuff before "."
+  
+  ca_comps = format[format$state == "C", ]
+  or_comps = format[format$state == "O", ]
+  wa_comps = format[format$state == "W", ]
+  
+  ##
+  #Extract sexed fish
+  ##
+  start = 1 + 1
+  end   = which(as.character(out[,1]) %in% c(" Females only "))
+  cut_out = out[start:end,]
+  colnames(cut_out) <- out[1,]
+  
+  ind = which(colnames(cut_out) %in% "F1"):which(colnames(cut_out) %in% "M35")
+  format = cbind(cut_out$fleet, cut_out$year, cut_out$month, cut_out$fleet, cut_out$sex, cut_out$partition,
+                 cut_out$ageErr, cut_out$LbinLo, cut_out$LbinHi,
+                 cut_out$Ntows, cut_out$Nsamps, cut_out$InputN, cut_out[,ind])
+  colnames(format) = c("state", "fishyr", "month", "fleet", "sex", "part", "ageerr", "Lbin_lo", "Lbin_hi", "Ntows", "Nsamps", "InputN", colnames(cut_out[ind]))
+  
+  format$state <- sub("^.*\\.","", format$state) #keep only stuff after "."
+  format$fleet <- sub("\\..*", "", format$fleet) #keep only stuff before "."
+  
+  ca_sexed_comps = format[format$state == "C", ]
+  or_sexed_comps = format[format$state == "O", ]
+  wa_sexed_comps = format[format$state == "W", ]
+  
+  #Set up same names so as to combine unsexed and sexed comps
+  colnames(ca_comps) <- colnames(ca_sexed_comps)
+  colnames(or_comps) <- colnames(or_sexed_comps)
+  colnames(wa_comps) <- colnames(wa_sexed_comps)
+  
+  ca_all_comps = rbind(ca_all_comps, ca_comps, ca_sexed_comps)
+  or_all_comps = rbind(or_all_comps, or_comps, or_sexed_comps)
+  wa_all_comps = rbind(wa_all_comps, wa_comps, wa_sexed_comps)
+}
 
 # write.csv(ca_all_comps, file = file.path(git_dir, "data", "forSS","CA_PacFIN_Acomps_1_35_formatted.csv"), row.names = FALSE)
 # write.csv(or_all_comps, file = file.path(git_dir, "data", "forSS","OR_PacFIN_Acomps_1_35_formatted.csv"), row.names = FALSE)
@@ -395,7 +452,7 @@ wa_all_comps = rbind(wa_comps, wa_sexed_comps)
 
 
 # ##
-# #Coastal expansion
+# #Coastal expansion - ageerr values aren't updated here
 # ##
 # out = read.csv(file.path(git_dir, "data", "Canary_PacFIN_Coastal_AgeComps.csv"), skip = 3, header = FALSE)
 # 
