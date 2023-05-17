@@ -21,6 +21,7 @@ if(Sys.getenv("USERNAME") == "Kiva.Oken") {
 }
 
 
+
 ##########################################################################################
 #                         Set up from 2015 base to current version
 ##########################################################################################
@@ -243,11 +244,7 @@ mod$dat$lencomp <- mod$dat$lencomp |>
   dplyr::bind_rows(marginal.lengths.dfr)
 # Note: consider switching triennial to marginal ages.
 
-# TO DO: Update ageing error matrices ----------------------------------------------------
-
 # Update fishery comps ----------------------------------------------------
-
-#TO DO: Need to add correct ageerr values
 
 read.fishery.comps <- function(filename, exclude) {
   
@@ -262,8 +259,7 @@ pacfin.ages <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
     dplyr::mutate(fleet = sapply(fleet, function(.fleet)
       fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
                                                                        area = .x,
-                                                                       fleet = .fleet)]),
-      ageerr = 1) |> 
+                                                                       fleet = .fleet)])) |> 
     `names<-`(names(mod$dat$agecomp))
 }) |> 
   purrr::list_rbind() 
@@ -290,7 +286,8 @@ rec.ages <- purrr::map(list('OR', 'WA'), function(.x) {
     dplyr::select(-Nsamp) |>
     dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
                                                                                            area = .x)],
-                  ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
+                  ageErr = dplyr::case_when(grepl("OR",fleet.converter$fleet_no_num[fleet]) ~ 1, #non-expanded has different names than expanded so ageErr here
+                                            grepl("WA",fleet.converter$fleet_no_num[fleet]) ~ 2)) |> 
     `names<-`(names(mod$dat$agecomp))
 }) |>
   purrr::list_rbind()
@@ -374,99 +371,31 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                       subdir = c('2015base', 'converted', '0_1_1_update_data')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015', 'converted', '2023 data update'),
-                    subplots = c(2,4), print = TRUE, plotdir = here('models/0_1_1_update_data'))
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/0_1_1_update_data'))
 
 
 ####------------------------------------------------####
-### 0_1_2_ageErr ----
-####------------------------------------------------####
-
-#Match to what was used in 2015 assessment in this run
-#Ageerr = 1 (CAPS) 2 (WDFW) 3 (ODFW)
-
-##
-#Copy inputs
-##
-
-# I suggest not touching converted, or transition. That was just for updating SS3
-# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
-copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
-               dir.new = here('models/0_1_2_ageErr'),
-               overwrite = TRUE)
-
-mod <- SS_read(here('models/0_1_2_ageErr'))
-mod2015 <- SS_read(here('models/converted'))
-
-fleet.converter <- mod$dat$fleetinfo |>
-  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
-                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
-  dplyr::select(fleetname, fleet_no_num, fleet)
-
-
-##
-#Make Changes
-##
-
-#----
-
-
-# TO DO: Update ageing error matrices ----------------------------------------------------
-
-#TO DO: Need to add correct ageerr values
-#----
-
-
-##
-#Output files and run
-##
-
-SS_write(mod,
-         dir = here('models/0_1_2_ageErr'),
-         overwrite = TRUE)
-
-r4ss::run(dir = here('models/0_1_2_ageErr'), 
-          exe = here('models/ss_win.exe'), 
-          extras = '-nohess', 
-          # show_in_console = TRUE, 
-          skipfinished = FALSE)
-
-
-##
-#Comparison plots
-##
-
-pp <- SS_output(here('models/0_1_2_ageErr'),covar=FALSE)
-SS_plots(pp)
-
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('2015base', 'converted', '0_1_1_update_data', '0_1_2_ageErr')))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', 'converted', '2023 data update', 'add ageErr'),
-                    subplots = c(2,4), print = TRUE, plotdir = here('models/0_1_2_ageErr'))
-
-
-####------------------------------------------------####
-### 0_2_1_update_bio ----
+### 0_2_1_update_bio with M value changed----
 ####------------------------------------------------####
 
 ##
 #Copy inputs
 ##
 copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
-               dir.new = here('models/0_2_1_update_bio'),
+               dir.new = here('models/0_2_1_update_bio_Mval'),
                overwrite = TRUE)
 
-mod <- SS_read(here('models/0_2_1_update_bio'))
+mod <- SS_read(here('models/0_2_1_update_bio_Mval'))
 
 ##
 #Make Changes
 ##
 #----
 # Update M as a single offset value ------------------------------------------------
-mod$ctl$natM_type <- 0
-mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
+#mod$ctl$natM_type <- 0
+#mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
 #Remove second M breakpoint parameters
-mod$ctl$MG_parms <- mod$ctl$MG_parms[-grep("NatM_p_2",rownames(mod$ctl$MG_parms)),]
+#mod$ctl$MG_parms <- mod$ctl$MG_parms[-grep("NatM_p_2",rownames(mod$ctl$MG_parms)),]
 
 max.age <- 84
 mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- c(
@@ -531,10 +460,10 @@ mod$ctl$MG_parms['Wtlen_2_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR
 ##
 
 SS_write(mod,
-         dir = here('models/0_2_1_update_bio'),
+         dir = here('models/0_2_1_update_bio_Mval'),
          overwrite = TRUE)
 
-r4ss::run(dir = here('models/0_2_1_update_bio2'), 
+r4ss::run(dir = here('models/0_2_1_update_bio_Mval'), 
           exe = here('models/ss_win.exe'), 
           extras = '-nohess', 
           # show_in_console = TRUE, 
@@ -550,9 +479,9 @@ SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('2015base', 
                                                  '0_1_1_update_data', 
-                                                 '0_2_1_update_bio',
+                                                 '0_2_1_update_bio_Mval',
                                                  '0_2_2_Mconstant',
-                                                 '0_2_2_Mconstant_justValue',
+                                                 '0_2_2_M_justValue',
                                                  '0_2_3_maturity',
                                                  '0_2_4_steepness',
                                                  '0_2_5_fecund',
@@ -568,6 +497,63 @@ SSsummarize(xx) |>
 ####------------------------------------------------####
 
 new_name <- "0_2_2_Mconstant"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+#----
+# Update M as a single offset value ------------------------------------------------
+mod$ctl$natM_type <- 0
+mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
+#Remove second M breakpoint parameters
+mod$ctl$MG_parms <- mod$ctl$MG_parms[-grep("NatM_p_2",rownames(mod$ctl$MG_parms)),]
+
+max.age <- 84
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- c(
+  0.02, 0.2,
+  round(5.4/max.age, 4), 
+  round(log(5.4/max.age), 2), 
+  0.31
+)
+#----
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+
+####------------------------------------------------####
+### 0_2_2_M_justValue update bio M individually ----
+####------------------------------------------------####
+
+new_name <- "0_2_2_M_justValue"
 
 ##
 #Copy inputs
@@ -618,6 +604,7 @@ r4ss::run(dir = here('models',new_name),
 
 pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
 
 
 ####------------------------------------------------####
@@ -847,7 +834,7 @@ SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 ### Model name here with numbering (starting with 1_0_0) ----
 ####------------------------------------------------####
 
-new_name <- "0_3_1_ssinputs"
+new_name <- "0_4_1_ssinputs"
 
 ##
 #Copy inputs
