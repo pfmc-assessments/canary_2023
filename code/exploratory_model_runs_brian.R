@@ -157,6 +157,8 @@ mod$ctl$F_iter <-  5
 #mod$ctl$Variance_adjustment_list$Value <- 1 #TO DO: CONFIRM HOW WE WISH TO HANDLE THESE FOR DEVELOPMENT
 #mod$ctl$lambdas$value <- 1 #TO DO: CONFIRM HOW WE WISH TO HANDLE THESE FOR DEVELOPMENT
 
+#TO DO: Change the dev vector ph to 0
+
 #Output changes and run model
 r4ss::SS_write(mod, dir = new_mod, overwrite = TRUE)
 r4ss::run(dir = new_mod, 
