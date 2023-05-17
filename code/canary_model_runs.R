@@ -489,7 +489,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', 
                                      'mortality', 'mortality-value', 'maturity', 'steepness','fecundity', 'WL'),
-                    subplots = c(1,3), print = TRUE, plotdir = here('models/0_2_1_update_bio') )
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/0_2_1_update_bio_Mval') )
 
 
 ####------------------------------------------------####
