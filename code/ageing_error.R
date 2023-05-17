@@ -79,11 +79,11 @@ xx <- nwfscAgeingError::RunFn(Data = all_for_estimation,
 
 #Figuring this out still
 save.image(file = here('data-raw/ageErr/ageerr_output.Rdata'))
-
+load(here('data-raw/ageErr/ageerr_output.Rdata'))
 
 
 # Plot output
-PlotOutputFn(Data = all_for_estimation, MaxAge = 90,
+PlotOutputFn(Data = data.frame(all_for_estimation), MaxAge = 90,
              SaveFile = here('data-raw/ageErr'), PlotType = "PDF"
 )
 
@@ -109,7 +109,7 @@ SearchMat <- array(NA,
 # 3. Standard plots for each loop
 # WARNING: One run of this stepwise model building example can take
 # 8+ hours, and should be run overnight
-StepwiseFn(SearchMat = SearchMat, Data = all_for_estimation,
+StepwiseFn(SearchMat = SearchMat, Data = data.frame(all_for_estimation),
            NDataSets = 1, MinAge = 0, MaxAge = 90,
            RefAge = 10, MaxSd = 40, MaxExpectedAge = MaxAge+10,
            SaveFile = here('data-raw/ageErr'),
