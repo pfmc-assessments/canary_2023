@@ -378,8 +378,11 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 0_1_1_update_data_ageErr - NEED TO COMPLETE ----
+### 0_1_2_ageErr ----
 ####------------------------------------------------####
+
+#Match to what was used in 2015 assessment in this run
+#Ageerr = 1 (CAPS) 2 (WDFW) 3 (ODFW)
 
 ##
 #Copy inputs
@@ -392,6 +395,7 @@ copy_SS_inputs(dir.old = here('models/0_1_1_update_data'),
                overwrite = TRUE)
 
 mod <- SS_read(here('models/0_1_2_ageErr'))
+mod2015 <- SS_read(here('models/converted'))
 
 fleet.converter <- mod$dat$fleetinfo |>
   dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
@@ -404,6 +408,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 
 #----
+
 
 # TO DO: Update ageing error matrices ----------------------------------------------------
 
@@ -543,10 +548,19 @@ pp <- SS_output(here('models/0_2_1_update_bio'),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('2015base', '0_1_1_update_data', '0_2_1_update_bio')))
+                                      subdir = c('2015base', 
+                                                 '0_1_1_update_data', 
+                                                 '0_2_1_update_bio',
+                                                 '0_2_2_Mconstant',
+                                                 '0_2_2_Mconstant_justValue',
+                                                 '0_2_3_maturity',
+                                                 '0_2_4_steepness',
+                                                 '0_2_5_fecund',
+                                                 '0_2_6_WL')))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio'),
-                    subplots = c(2,4), print = TRUE, plotdir = here('models/0_2_1_update_bio') )
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', 
+                                     'mortality', 'mortality-value', 'maturity', 'steepness','fecundity', 'WL'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/0_2_1_update_bio') )
 
 
 ####------------------------------------------------####
@@ -605,12 +619,6 @@ r4ss::run(dir = here('models',new_name),
 pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "Mconstant"),
-                    subplots = c(2,4), print = TRUE, plotdir = here('models',new_name))
-
 
 ####------------------------------------------------####
 ### 0_2_3_maturity update bio maturity individually ----
@@ -660,12 +668,6 @@ r4ss::run(dir = here('models',new_name),
 pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "maturity"),
-                    subplots = c(2,4), print = TRUE, plotdir = here('models',new_name))
-
 
 ####------------------------------------------------####
 ### 0_2_4_steepness update bio steepness individually ----
@@ -712,12 +714,6 @@ r4ss::run(dir = here('models',new_name),
 
 pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
-
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "steepness"),
-                    subplots = c(2,4), print = TRUE, plotdir = here('models',new_name))
 
 
 ####------------------------------------------------####
@@ -771,12 +767,6 @@ r4ss::run(dir = here('models',new_name),
 
 pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
-
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "fecundity"),
-                    subplots = c(2,4), print = TRUE, plotdir = here('models',new_name))
 
 
 ####------------------------------------------------####
@@ -845,11 +835,7 @@ r4ss::run(dir = here('models',new_name),
 pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "weight-length"),
-                    subplots = c(2,4))
+
 
 
 ##########################################################################################
@@ -949,8 +935,8 @@ SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "adjust inputs"),
-                    subplots = c(2,4))
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "SS3 inputs"),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
 
 
 ##########################################################################################
