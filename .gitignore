@@ -101,3 +101,6 @@ suggested_tuning.ss
 *.pdf
 !input_accessability.tex
 !sa4ss_glossaries.tex
+
+#batch files
+*run_ss.bat
