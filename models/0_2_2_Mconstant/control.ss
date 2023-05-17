@@ -49,28 +49,28 @@
 2 #_First_Mature_Age
 1 #_fecundity option:(1)eggs=Wt*(a+b*Wt);(2)eggs=a*L^b;(3)eggs=a*Wt^b; (4)eggs=a+b*L; (5)eggs=a+b*W
 0 #_hermaphroditism option:  0=none; 1=female-to-male age-specific fxn; -1=male-to-female age-specific fxn
-2 #_parameter_offset_approach (1=none, 2= M, G, CV_G as offset from female-GP1, 3=like SS2 V1.x)
+1 #_parameter_offset_approach (1=none, 2= M, G, CV_G as offset from female-GP1, 3=like SS2 V1.x)
 #
 #_growth_parms
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env_var&link	dev_link	dev_minyr	dev_maxyr	dev_PH	Block	Block_Fxn
- 0.02	     0.2	   0.0643	   -2.74	0.31	3	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Fem_GP_1  
+ 0.02	     0.2	   0.0643	   -2.74	0.31	3	  2	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Fem_GP_1  
     2	      15	   9.0468	       4	  50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amin_Fem_GP_1 
    50	      70	  60.0427	      60	  50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amax_Fem_GP_1 
  0.02	    0.21	 0.128749	    0.14	  50	0	  2	0	0	   0	   0	0.5	0	0	#_VonBert_K_Fem_GP_1 
  0.02	    0.21	 0.109118	    0.15	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_young_Fem_GP_1  
-   -3	       3	 -1.35857	    -1.3	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_old_Fem_GP_1    
+ 0.01	    0.21	   0.1221	  0.1221	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_old_Fem_GP_1    
     0	       1	 1.18e-05	1.55e-05	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_1_Fem_GP_1   
     2	       4	    3.094	    3.03	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_2_Fem_GP_1   
    40	      41	     40.5	    40.5	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat50%_Fem_GP_1    
    -3	       3	    -0.25	   -0.25	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat_slope_Fem_GP_1 
    -3	       3	   0.2619	       1	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Eggs_alpha_Fem_GP_1
    -1	       1	   0.0217	       0	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Eggs_beta_Fem_GP_1 
-   -3	       3	        0	       0	  50	6	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Mal_GP_1  
-   -3	       3	        0	       0	  50	6	-50	0	0	   0	   0	0.5	0	0	#_L_at_Amin_Mal_GP_1 
-   -3	       3	-0.114165	       0	  50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amax_Mal_GP_1 
-   -3	       3	 0.224564	       0	  50	0	  2	0	0	   0	   0	0.5	0	0	#_VonBert_K_Mal_GP_1 
-   -3	       3	0.0423839	       0	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_young_Mal_GP_1  
-   -3	       3	 -1.18523	       0	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_old_Mal_GP_1    
+ 0.02	     0.2	   0.0643	   -2.74	0.31	6	  2	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Mal_GP_1  
+    0	      15	        0	       0	  50	6	-50	0	0	   0	   0	0.5	0	0	#_L_at_Amin_Mal_GP_1 
+   50	      70	  60.0427	      60	  50	0	  2	0	0	   0	   0	0.5	0	0	#_L_at_Amax_Mal_GP_1 
+ 0.02	    0.21	 0.128749	    0.14	  50	0	  2	0	0	   0	   0	0.5	0	0	#_VonBert_K_Mal_GP_1 
+ 0.02	    0.21	 0.109118	    0.15	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_young_Mal_GP_1  
+ 0.01	    0.21	   0.1221	  0.1221	  50	0	  2	0	0	   0	   0	0.5	0	0	#_CV_old_Mal_GP_1    
     0	       1	1.064e-05	1.55e-05	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_1_Mal_GP_1   
     2	       4	    3.123	    3.03	  50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_2_Mal_GP_1   
     0	     999	        1	       1	  50	6	-50	0	0	   0	   0	0.5	0	0	#_RecrDist_GP_1      

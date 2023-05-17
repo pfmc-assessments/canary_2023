@@ -48,7 +48,7 @@
 #_Len_1	Len_2	Len_3	Len_4	Len_5	Len_6	Len_7	Len_8	Len_9	Len_10	Len_11	Len_12	Len_13	Len_14	Len_15	Len_16	Len_17	Len_18	Len_19	Len_20	Len_21	Len_22	Len_23	Len_24	Len_25	Len_26	Len_27	Len_28	Len_29	Len_30
 6.8e-06	1.39e-05	2.85e-05	5.83e-05	0.000119295	0.000244164	0.000499664	0.00102224	0.00209011	0.00426839	0.00869559	0.0176272	0.0353807	0.0696495	0.132205	0.235559	0.381109	0.545888	0.692066	0.796225	0.859413	0.894075	0.912046	0.92109	0.925574	0.92778	0.928862	0.929391	0.92965	0.929776	#_Length_Maturity1
 2 #_First_Mature_Age
-1 #_fecundity option:(1)eggs=Wt*(a+b*Wt);(2)eggs=a*L^b;(3)eggs=a*Wt^b; (4)eggs=a+b*L; (5)eggs=a+b*W
+2 #_fecundity option:(1)eggs=Wt*(a+b*Wt);(2)eggs=a*L^b;(3)eggs=a*Wt^b; (4)eggs=a+b*L; (5)eggs=a+b*W
 0 #_hermaphroditism option:  0=none; 1=female-to-male age-specific fxn; -1=male-to-female age-specific fxn
 3 #_parameter_offset_approach (1=none, 2= M, G, CV_G as offset from female-GP1, 3=like SS2 V1.x)
 #
@@ -65,7 +65,7 @@
     2	       4	    3.094	    3.03	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_2_Fem_GP_1   
    40	      41	     40.5	    40.5	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat50%_Fem_GP_1    
    -3	       3	    -0.25	   -0.25	    50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat_slope_Fem_GP_1 
-    0	     0.1	7.218e-08	-16.4441	 0.135	3	-50	0	0	   0	   0	0.5	0	0	#_Eggs_alpha_Fem_GP_1
+1e-10	     0.1	7.218e-08	-16.4441	 0.135	3	-50	0	0	   0	   0	0.5	0	0	#_Eggs_alpha_Fem_GP_1
     2	       6	    4.043	   4.043	   0.3	6	-50	0	0	   0	   0	0.5	0	0	#_Eggs_beta_Fem_GP_1 
    -3	       3	        0	       0	    50	6	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Mal_GP_1  
    -3	       3	        0	       0	    50	6	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_2_Mal_GP_1  

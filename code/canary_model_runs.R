@@ -512,19 +512,53 @@ mod <- SS_read(here('models',new_name))
 #Make Changes
 ##
 #----
-# Update M as a single offset value ------------------------------------------------
+# Update M and growth parameters (not as offsets) ------------------------------------------------
 mod$ctl$natM_type <- 0
-mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
+mod$ctl$parameter_offset_approach <- 1 #Use direct assignment with matching of M to F for L at Amin
 #Remove second M breakpoint parameters
 mod$ctl$MG_parms <- mod$ctl$MG_parms[-grep("NatM_p_2",rownames(mod$ctl$MG_parms)),]
 
+#Direct estimate male and female F
 max.age <- 84
-mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- c(
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
   0.02, 0.2,
   round(5.4/max.age, 4), 
   round(log(5.4/max.age), 2), 
-  0.31
+  0.31, 2 #estimate female M
 )
+mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
+  0.02, 0.2,
+  round(5.4/max.age, 4), 
+  round(log(5.4/max.age), 2), 
+  0.31, 2 #estimate male M
+)
+
+#Reset CV female old because it was an offset
+mod$ctl$MG_parms['CV_old_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
+  0.01, 0.21,
+  round(mod$ctl$MG_parms['CV_young_Fem_GP_1','INIT']*exp(mod$ctl$MG_parms['CV_old_Fem_GP_1','INIT']),4), 
+  round(mod$ctl$MG_parms['CV_young_Fem_GP_1','INIT']*exp(mod$ctl$MG_parms['CV_old_Fem_GP_1','INIT']),4),
+  50, 2 #estimate male M
+)
+
+#Set L at Amin for male to be same as female
+#Use init = 0 and negative phase
+mod$ctl$MG_parms['L_at_Amin_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
+  0, 15,
+  0, 0,
+  50, -50 #estimate male M
+)
+
+#Direct estimate L at Amax, K, and CVs for male with the same inits as females
+mod$ctl$MG_parms['L_at_Amax_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
+  mod$ctl$MG_parms['L_at_Amax_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
+mod$ctl$MG_parms['VonBert_K_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
+  mod$ctl$MG_parms['VonBert_K_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
+mod$ctl$MG_parms['CV_young_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
+  mod$ctl$MG_parms['CV_young_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
+mod$ctl$MG_parms['CV_old_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
+  mod$ctl$MG_parms['CV_old_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
+
 #----
 
 ##
@@ -823,6 +857,217 @@ pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
 
+####------------------------------------------------####
+### 0_2_1_update_bio with M value changed----
+####------------------------------------------------####
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models/0_2_1_update_bio_Mval'),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models/0_2_1_update_bio_Mval'))
+
+##
+#Make Changes
+##
+#----
+# Update M as a single offset value ------------------------------------------------
+#mod$ctl$natM_type <- 0
+#mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
+#Remove second M breakpoint parameters
+#mod$ctl$MG_parms <- mod$ctl$MG_parms[-grep("NatM_p_2",rownames(mod$ctl$MG_parms)),]
+
+max.age <- 84
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- c(
+  0.02, 0.2,
+  round(5.4/max.age, 4), 
+  round(log(5.4/max.age), 2), 
+  0.31
+)
+
+# Update maturity ------------------------------------------------
+a50_fxn <- 10.87
+slope_fxn <- -0.688
+mod$ctl$maturity_option <- 2 #age logistic
+mod$ctl$MG_parms['Mat50%_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- 
+  c(9, 12, a50_fxn, a50_fxn, 0.055)
+
+# Update steepness ------------------------------------------------
+#per best practices: https://www.pcouncil.org/documents/2023/03/accepted-practices-and-guidelines-for-groundfish-stock-assessments.pdf/
+mod$ctl$SR_parms['SR_BH_steep', c('INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- 
+  c(0.72, 0.72, 0.16, 2)
+
+# Update fecundity ------------------------------------------------
+mod$ctl$fecundity_option <- 2 #non-linear in length
+mod$ctl$MG_parms['Eggs_alpha_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  1E-10,0.1,
+  7.218E-08, log(7.218E-08), 
+  0.135, 3) #set prior sd for a as exp(~2) where 2 is about half the CI bound for A and use lognormal because alpha = exp(A)
+mod$ctl$MG_parms['Eggs_beta_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  2, 6, 
+  4.043, 4.043, 
+  0.3, 6) #set prior sd around half the CI bound for b (~0.6) and keep normal 
+
+# Update WL parameters ------------------------------------------------
+wlcoef <- utils::read.csv(here("data", "W_L_pars.csv"), header = TRUE)
+#Females
+mod$ctl$MG_parms['Wtlen_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  0, 0.1,
+  signif(wlcoef[wlcoef$Sex=="F","A"],3), 
+  signif(wlcoef[wlcoef$Sex=="F","A"],3),
+  50, 6) #keep same prior sd and distribution
+mod$ctl$MG_parms['Wtlen_2_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  2, 4,
+  round(wlcoef[wlcoef$Sex=="F","B"],3), 
+  round(wlcoef[wlcoef$Sex=="F","B"],3),
+  50, 6) #keep same prior sd and distribution
+#Males
+mod$ctl$MG_parms['Wtlen_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  0, 0.1,
+  signif(wlcoef[wlcoef$Sex=="M","A"],3), 
+  signif(wlcoef[wlcoef$Sex=="M","A"],3),
+  50, 6) #keep same prior sd and distribution
+mod$ctl$MG_parms['Wtlen_2_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
+  2, 4,
+  round(wlcoef[wlcoef$Sex=="M","B"],3), 
+  round(wlcoef[wlcoef$Sex=="M","B"],3),
+  50, 6)
+
+#----
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models/0_2_1_update_bio_Mval'),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_2_1_update_bio_Mval'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models/0_2_1_update_bio'),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+
+
+####------------------------------------------------####
+### 0_2_7_update_bio_Mconstant include all bio changes ----
+####------------------------------------------------####
+
+new_name <- "0_2_7_update_bio_Mconstant"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_2_1_update_bio_Mval'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+#----
+# Update M and growth parameters (not as offsets) ------------------------------------------------
+mod$ctl$natM_type <- 0
+mod$ctl$parameter_offset_approach <- 1 #Use direct assignment with matching of M to F for L at Amin
+#Remove second M breakpoint parameters
+mod$ctl$MG_parms <- mod$ctl$MG_parms[-grep("NatM_p_2",rownames(mod$ctl$MG_parms)),]
+
+#Direct estimate male and female F
+max.age <- 84
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
+  0.02, 0.2,
+  round(5.4/max.age, 4), 
+  round(log(5.4/max.age), 2), 
+  0.31, 2 #estimate female M
+)
+mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
+  0.02, 0.2,
+  round(5.4/max.age, 4), 
+  round(log(5.4/max.age), 2), 
+  0.31, 2 #estimate male M
+)
+
+#Reset CV female old because it was an offset
+mod$ctl$MG_parms['CV_old_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
+  0.01, 0.21,
+  round(mod$ctl$MG_parms['CV_young_Fem_GP_1','INIT']*exp(mod$ctl$MG_parms['CV_old_Fem_GP_1','INIT']),4), 
+  round(mod$ctl$MG_parms['CV_young_Fem_GP_1','INIT']*exp(mod$ctl$MG_parms['CV_old_Fem_GP_1','INIT']),4),
+  50, 2 #estimate male M
+)
+
+#Set L at Amin for male to be same as female
+#Use init = 0 and negative phase
+mod$ctl$MG_parms['L_at_Amin_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
+  0, 15,
+  0, 0,
+  50, -50 #estimate male M
+)
+
+#Direct estimate L at Amax, K, and CVs for male with the same inits as females
+mod$ctl$MG_parms['L_at_Amax_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
+  mod$ctl$MG_parms['L_at_Amax_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
+mod$ctl$MG_parms['VonBert_K_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
+  mod$ctl$MG_parms['VonBert_K_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
+mod$ctl$MG_parms['CV_young_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
+  mod$ctl$MG_parms['CV_young_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
+mod$ctl$MG_parms['CV_old_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
+  mod$ctl$MG_parms['CV_old_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
+
+#----
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base', 
+                                                 '0_1_1_update_data', 
+                                                 '0_2_1_update_bio_Mval',
+                                                 '0_2_2_Mconstant',
+                                                 '0_2_2_M_justValue',
+                                                 '0_2_3_maturity',
+                                                 '0_2_4_steepness',
+                                                 '0_2_5_fecund',
+                                                 '0_2_6_WL',
+                                                 '0_2_7_update_bio_Mconstant')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio-Mval', 
+                                     'mortality-cons', 'mortality-val', 'maturity', 'steepness','fecundity', 'WL',
+                                     '2023 data bio-Mcons'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 
 
 ##########################################################################################
@@ -894,6 +1139,8 @@ mod$ctl$F_Method <- 3 #TO DO: RECOMMENDED APPROACH IS 4 but IM NOT SURE WHAT DIF
 mod$ctl$maxF <- 4
 mod$ctl$F_iter <-  5
 #TO DO: CONFIRM Q SETUP
+
+#TO DO: Change recdevs to end 2022 in ctl
 
 #----
 
