@@ -856,115 +856,6 @@ r4ss::run(dir = here('models',new_name),
 pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
-##########################################################################################
-# 0_3_1 Move to coastwide model -------------------------------------------------
-##########################################################################################
-
-<<<<<<< HEAD
-new_name <- "0_3_1_coastwide"
-=======
-####------------------------------------------------####
-### 0_2_1_update_bio with M value changed----
-####------------------------------------------------####
-
-##
-#Copy inputs
-##
-copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
-               dir.new = here('models/0_2_1_update_bio_Mval'),
-               overwrite = TRUE)
-
-mod <- SS_read(here('models/0_2_1_update_bio_Mval'))
-
-##
-#Make Changes
-##
-#----
-# Update M as a single offset value ------------------------------------------------
-#mod$ctl$natM_type <- 0
-#mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
-#Remove second M breakpoint parameters
-#mod$ctl$MG_parms <- mod$ctl$MG_parms[-grep("NatM_p_2",rownames(mod$ctl$MG_parms)),]
-
-max.age <- 84
-mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- c(
-  0.02, 0.2,
-  round(5.4/max.age, 4), 
-  round(log(5.4/max.age), 2), 
-  0.31
-)
-
-# Update maturity ------------------------------------------------
-a50_fxn <- 10.87
-slope_fxn <- -0.688
-mod$ctl$maturity_option <- 2 #age logistic
-mod$ctl$MG_parms['Mat50%_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- 
-  c(9, 12, a50_fxn, a50_fxn, 0.055)
-
-# Update steepness ------------------------------------------------
-#per best practices: https://www.pcouncil.org/documents/2023/03/accepted-practices-and-guidelines-for-groundfish-stock-assessments.pdf/
-mod$ctl$SR_parms['SR_BH_steep', c('INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- 
-  c(0.72, 0.72, 0.16, 2)
-
-# Update fecundity ------------------------------------------------
-mod$ctl$fecundity_option <- 2 #non-linear in length
-mod$ctl$MG_parms['Eggs_alpha_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
-  1E-10,0.1,
-  7.218E-08, log(7.218E-08), 
-  0.135, 3) #set prior sd for a as exp(~2) where 2 is about half the CI bound for A and use lognormal because alpha = exp(A)
-mod$ctl$MG_parms['Eggs_beta_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
-  2, 6, 
-  4.043, 4.043, 
-  0.3, 6) #set prior sd around half the CI bound for b (~0.6) and keep normal 
-
-# Update WL parameters ------------------------------------------------
-wlcoef <- utils::read.csv(here("data", "W_L_pars.csv"), header = TRUE)
-#Females
-mod$ctl$MG_parms['Wtlen_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
-  0, 0.1,
-  signif(wlcoef[wlcoef$Sex=="F","A"],3), 
-  signif(wlcoef[wlcoef$Sex=="F","A"],3),
-  50, 6) #keep same prior sd and distribution
-mod$ctl$MG_parms['Wtlen_2_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
-  2, 4,
-  round(wlcoef[wlcoef$Sex=="F","B"],3), 
-  round(wlcoef[wlcoef$Sex=="F","B"],3),
-  50, 6) #keep same prior sd and distribution
-#Males
-mod$ctl$MG_parms['Wtlen_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
-  0, 0.1,
-  signif(wlcoef[wlcoef$Sex=="M","A"],3), 
-  signif(wlcoef[wlcoef$Sex=="M","A"],3),
-  50, 6) #keep same prior sd and distribution
-mod$ctl$MG_parms['Wtlen_2_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
-  2, 4,
-  round(wlcoef[wlcoef$Sex=="M","B"],3), 
-  round(wlcoef[wlcoef$Sex=="M","B"],3),
-  50, 6)
-
-#----
-
-##
-#Output files and run
-##
-
-SS_write(mod,
-         dir = here('models/0_2_1_update_bio_Mval'),
-         overwrite = TRUE)
-
-r4ss::run(dir = here('models/0_2_1_update_bio_Mval'), 
-          exe = here('models/ss_win.exe'), 
-          extras = '-nohess', 
-          # show_in_console = TRUE, 
-          skipfinished = FALSE)
-
-##
-#Comparison plots
-##
-
-pp <- SS_output(here('models/0_2_1_update_bio'),covar=FALSE)
-SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
-
 
 
 ####------------------------------------------------####
@@ -1077,7 +968,8 @@ SSsummarize(xx) |>
 
 #This produces funky results. R0 wants to go higher and higher (see 0_2_7_upR0bound - which is not automated)
 #RecDist also become poorly estimated
-
+#Adjusting phases (0_2_7_adjustPhases - which is not automated) does make some difference but still funky. 
+#I later automate that in 0_2_8
 
 ####------------------------------------------------####
 ### 0_2_8_update_bio_phases Adjust phases for GP parms ----
@@ -1198,7 +1090,13 @@ SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015', '2023 data bio-Mvalphase',
                                      'BreakPoints'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
->>>>>>> 5819cefe94ed4646d501f844a29cd3e90395396e
+
+
+##########################################################################################
+# 0_3_1 Move to coastwide model -------------------------------------------------
+##########################################################################################
+
+new_name <- "0_3_1_coastwide"
 
 ##
 #Copy inputs
