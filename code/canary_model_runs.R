@@ -1485,7 +1485,7 @@ r4ss::SS_plots(replist = out)
 
 
 ####------------------------------------------------####
-### 0_3_2_spatialHessian ---- do hessian for model 0_2_1_update_bio_Mval
+### 0_3_2_spatialHessian Do hessian for model 0_2_1_update_bio_Mval ----
 ####------------------------------------------------####
 
 new_name <- "0_3_2_spatialHessian"
@@ -1524,7 +1524,7 @@ SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
 
 ####------------------------------------------------####
-### 0_3_3_bestSpatialHessian ---- do hessian for best updated spatial model
+### 0_3_3_bestSpatialHessian Do hessian for best updated spatial model ----
 ####------------------------------------------------####
 
 new_name <- "0_3_3_bestSpatialHessian"
@@ -1574,7 +1574,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  '0_2_10_maleMfix',
                                                  new_name)))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2015 new SS', '2023 data update', '2023 data bio', 
+  SSplotComparisons(legendlabels = c('2015', '2015 new SS', '2023 data update', '2023 bio update', 
                                      'Mval', 'maturity', 'steepness', 'fecundity', 'WL',
                                      'Mcons-maleFix', 'hessian'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models', new_name) )
@@ -1587,8 +1587,10 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 0_4_1_ssInputs ---- based on best spatial model up to this point
+### 0_4_1_ssInputs Based on best spatial model up to this point ----
 ####------------------------------------------------####
+
+#Basically identical
 
 new_name <- "0_4_1_ssInputs"
 
@@ -1596,7 +1598,7 @@ new_name <- "0_4_1_ssInputs"
 #Copy inputs
 ##
 
-copy_SS_inputs(dir.old = here('models/0_2_12_maleMfixphases'), 
+copy_SS_inputs(dir.old = here('models/0_3_3_bestSpatialHessian'), 
                dir.new = here('models',new_name),
                overwrite = TRUE)
 
@@ -1629,7 +1631,7 @@ mod$fore$ForeCatch <- data.frame("Year" = rep(2023:2024, each = mod$dat$Nfleet),
                                  "Catch or F" = 0)
 
 #Make changes to data ------------------------------------------------
-mod$dat$area <- 3 #already one but setting up here for spatial model
+mod$dat$N_areas <- 3 #already three but setting up so explicit later
 mod$dat$catch$catch_se <- 0.05
 mod$dat$len_info$minsamplesize <- 0.01 #Manual says CAAL could have sample size < 1 so setting lower
 mod$dat$age_info$minsamplesize <- 0.01 #Manual says CAAL could have sample size < 1 so setting lower
@@ -1641,17 +1643,14 @@ if(mod$ctl$recr_dist_method==4){ #Comment out RecrDist parameters
   mod$ctl$MG_parms$LO[recLine] <- paste("#",mod$ctl$MG_parms$LO[recLine])
 }
 #mod$ctl$recr_dist_pattern[1:4] <- c(1,1,1,0) #TO DO: DISCUSS CHANGE OF SETTLEMENT TO SPRING-SUMMER? 
-#TO DO: FINALIZE SELEX BLOCKING
 mod$ctl$Growth_Age_for_L2 <- 999 #set equivalent to Linf
 mod$ctl$First_Mature_Age <- 2 #Keep at 2. IGNORED when maturity option is 3 but Id like to set it to whatever it is in case we change maturity option
-mod$ctl$Use_steep_init_equi <- 1
+mod$ctl$MG_parms[c('RecrDist_Area_2','RecrDist_Area_3'),'dev_maxyr'] <- 2022 #update to current end year
+mod$ctl$Use_steep_init_equi <- 1 #include in init eq. equations
 mod$ctl$Fcast_recr_phase <- mod$ctl$recdev_phase+1
 mod$ctl$F_Method <- 3 #TO DO: RECOMMENDED APPROACH IS 4 but IM NOT SURE WHAT DIFFERENCE IS. Looks like its useful if the model has issues (fleet specific F phases). THIS SLOWS DOWN RUNTIME A BIT
 mod$ctl$maxF <- 4
 mod$ctl$F_iter <-  5
-#TO DO: CONFIRM Q SETUP
-
-#TO DO: Change recdevs to end 2022 in ctl
 
 #----
 
@@ -1678,10 +1677,284 @@ pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('0_1_1_update_data', '0_2_1_update_bio',new_name)))
+                                      subdir = c('0_3_3_bestSpatialHessian',new_name)))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio', "SS3 inputs"),
+  SSplotComparisons(legendlabels = c('2023 model', 'SS3 inputs'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
+####------------------------------------------------####
+### 0_4_2_selexSetup Update selectivity setup ----
+####------------------------------------------------####
+
+new_name <- "0_4_2_selexSetup"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_4_1_ssInputs'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+
+##
+#Make Changes
+##
+#----
+### Now fix up selectivity parameter table
+
+#First for double normal selextivities
+selex_fleets <- rownames(mod$ctl$size_selex_types)[mod$ctl$size_selex_types$Pattern == 24] |>
+  as.list()
+
+#Get names of all six parms for double normal
+selex_names <- purrr::map(selex_fleets,
+                          ~ glue::glue('SizeSel_P_{par}_{fleet_name}({fleet_no})',
+                                       par = 1:6,
+                                       fleet_name = .x,
+                                       fleet_no = fleet.converter$fleet[fleet.converter$fleetname == .x])) |>
+  unlist()
+
+#Set up new selectivity table
+selex_new <- matrix(0, nrow = length(selex_names), 
+                    ncol = ncol(mod$ctl$size_selex_parms), 
+                    dimnames = list(selex_names, names(mod$ctl$size_selex_parms))) |>
+  as.data.frame()
+
+# default lo and hi
+selex_new$LO <- -99
+selex_new$HI <- 99
+
+# No prior applied, so just need to fill in a number
+selex_new$PR_SD <- 99
+selex_new$PRIOR <- 99
+
+# Fix three parameters of double normal initially
+selex_new$INIT[grep('P_2', rownames(selex_new))] <- -15
+selex_new$INIT[grep('P_5', rownames(selex_new))] <- -999
+selex_new$INIT[grep('P_6', rownames(selex_new))] <- -999
+selex_new$PHASE[grep('P_2', rownames(selex_new))] <- -99
+selex_new$PHASE[grep('P_5', rownames(selex_new))] <- -99
+selex_new$PHASE[grep('P_6', rownames(selex_new))] <- -99
+
+# calculate initial values for p1, p3, p4 for each fleet
+# based on recommendations in assessment handbook
+selex_modes <- mod$dat$lencomp |>
+  dplyr::arrange(FltSvy) |>
+  dplyr::group_by(FltSvy) |>
+  dplyr::summarise(dplyr::across(f12:m66, ~ sum(Nsamp*.x)/sum(Nsamp))) |> 
+  tidyr::pivot_longer(cols = -FltSvy, names_to = 'len_bin', values_to = 'dens') |>
+  tidyr::separate(col = len_bin, into = c('sex', 'length'), sep = 1) |>
+  dplyr::group_by(FltSvy, sex) |> 
+  dplyr::summarise(mode = length[which.max(dens)]) |>
+  dplyr::summarise(mode = mean(as.numeric(mode))) |>
+  dplyr::mutate(asc.slope = log(8*(mode - min(mod$dat$lbin_vector))),
+                desc.slope = log(8*(max(mod$dat$lbin_vector)-mode)))
+
+# P_1
+p1.ind <- grep('P_1', rownames(selex_new))
+selex_new$LO[p1.ind] <- 13.001
+selex_new$HI[p1.ind] <- 65
+selex_new$PHASE[p1.ind] <- 4
+selex_new$INIT[p1.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$mode[selex_modes$FltSvy == 
+                                                          fleet.converter$fleet[fleet.converter$fleetname == .x]]) |>
+  unlist()
+# Hard coding this in, used mode of ASHOP selectivity based on mode of all ASHOP fleets (~48) not just CA
+selex_new['SizeSel_P_1_10_CA_ASHOP(10)', 'INIT'] <- 48
+
+# P_3
+p3.ind <- grep('P_3', rownames(selex_new))
+selex_new$PHASE[p3.ind] <- 5
+selex_new$LO[p3.ind] <- 0 #This can become negative, but effect is small compared to when 0
+selex_new$HI[p3.ind] <- 9
+selex_new$INIT[p3.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$asc.slope[selex_modes$FltSvy == 
+                                                               fleet.converter$fleet[fleet.converter$fleetname == 
+                                                                                       .x]]) |>
+  unlist()
+
+# P_4
+p4.ind <- grep('P_4', rownames(selex_new))
+selex_new$PHASE[p4.ind] <- 5
+selex_new$LO[p4.ind] <- 0 #This can become negative, but effect is small compared to when 0
+selex_new$HI[p4.ind] <- 9
+selex_new$INIT[p4.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$desc.slope[selex_modes$FltSvy == 
+                                                                fleet.converter$fleet[fleet.converter$fleetname == 
+                                                                                        .x]]) |>
+  unlist()
+
+# just copying blocks from Jim for now
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+selex_new[grepl('_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, 'Block'] <- 1
+selex_new[grepl('_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, 'Block_Fxn'] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(Block, .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', 10*selex_tv_pars$id + 1990)
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_4_1_ssInputs',new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('SS3 inputs', 'selex set up'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_4_3_selexBlocks Update selectivity blocks to new years ---- 
+####------------------------------------------------####
+
+new_name <- "0_4_3_selexBlocks"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_4_2_selexSetup'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+
+##
+#Make Changes
+##
+#----
+
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_4_1_ssInputs',
+                                                 '0_4_2_selexSetup',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('SS3 inputs', 'selex set up', 'selex blocks'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+
+####------------------------------------------------####
+### 0_4_4_selexFree ---- Free up selectivity by state
+####------------------------------------------------####
+
+new_name <- "0_4_4_selexFree"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_4_3_selexBlocks'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+
+##
+#Make Changes
+##
+#----
+
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_4_1_ssInputs',
+                                                 '0_4_2_selexSetup',
+                                                 '0_4_3_selexBlocks',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('SS3 inputs', 'selex set up', 'selex blocks', 'selex no mirror'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
 
