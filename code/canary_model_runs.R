@@ -375,7 +375,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 0_2_1_update_bio with M value changed----
+### 0_2_1_update_bio All bio but with only the prior changed for M----
 ####------------------------------------------------####
 
 ##
@@ -970,6 +970,8 @@ SSsummarize(xx) |>
 #RecDist also become poorly estimated
 #Adjusting phases (0_2_7_adjustPhases - which is not automated) does make some difference but still funky. 
 #I later automate that in 0_2_8
+#If fix male M (dfone in 0_2_10) result is much improved
+
 
 ####------------------------------------------------####
 ### 0_2_8_update_bio_phases Adjust phases for GP parms ----
@@ -1090,6 +1092,190 @@ SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015', '2023 data bio-Mvalphase',
                                      'BreakPoints'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_2_10_maleMfix Fix male mortality in constant M model ----
+####------------------------------------------------####
+
+new_name <- "0_2_10_maleMfix"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_2_7_update_bio_Mconstant'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+#----
+# Fix male M at the prior, estimate female m
+mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', 'PHASE'] <- -50
+
+#----
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base', 
+                                                 '0_1_1_update_data', 
+                                                 '0_2_1_update_bio_Mval',
+                                                 '0_2_7_update_bio_Mconstant',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio-Mval', 
+                                     '2023 data bio-Mcons', '2023 data bio-Mcons maleFix'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_2_11_femMprior Set female logevity to 55 for M prior ----
+####------------------------------------------------####
+
+#Basically identical to when prior is same with males
+
+new_name <- "0_2_11_femMprior"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_2_10_maleMfix'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+#----
+# Base female longevity on 99.99% quantile of commercial ages. Rec and survey ages are lower
+max.age <- 55
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
+  0.02, 0.2,
+  round(5.4/max.age, 4), 
+  round(log(5.4/max.age), 2), 
+  0.31, 2 #estimate female M
+)
+
+#----
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_2_10_maleMfix',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('maleFixM', "change fem M prior"),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+
+####------------------------------------------------####
+### 0_2_12_phases Update phases from fix male mortality ----
+####------------------------------------------------####
+
+
+
+new_name <- "0_2_12_maleMfixPhases"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_2_10_maleMfix'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+#----
+# Set phases for M = 2, growth = 3, CV = 4. Previously mostly all at 2
+mod$ctl$MG_parms[c('L_at_Amin_Fem_GP_1',
+                   'L_at_Amax_Fem_GP_1',
+                   'VonBert_K_Fem_GP_1',
+                   'CV_young_Fem_GP_1',
+                   'CV_old_Fem_GP_1',
+                   'L_at_Amax_Mal_GP_1',
+                   'VonBert_K_Mal_GP_1',
+                   'CV_young_Mal_GP_1',
+                   'CV_old_Mal_GP_1'),'PHASE'] <- c(3,3,3,4,4,3,3,4,4)
+#----
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_2_1_update_bio_Mval',
+                                                 '0_2_8_update_bio_Mval_phases',
+                                                 '0_2_10_maleMfix',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Mval', 'MvalPhase',
+                                     'MaleFix', 'MaleFixPhase'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+
 
 
 ##########################################################################################
@@ -1296,6 +1482,87 @@ r4ss::run(dir = here('models',new_name),
 
 out <- r4ss::SS_output(here('models',new_name))
 r4ss::SS_plots(replist = out)
+
+
+####------------------------------------------------####
+### 0_3_2_spatialHessian ---- do hessian for model 0_2_1_update_bio_Mval
+####------------------------------------------------####
+
+new_name <- "0_3_2_spatialHessian"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_2_1_update_bio_Mval'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          #extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+
+####------------------------------------------------####
+### 0_3_3_bestSpatialHessian ---- do hessian for best updated spatial model
+####------------------------------------------------####
+
+new_name <- "0_3_3_bestSpatialHessian"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_2_10_maleMfix'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          #extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+
+
 
 ##########################################################################################
 #               Explorations with up-to-date current version to decide base
