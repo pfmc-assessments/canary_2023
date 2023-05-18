@@ -1216,7 +1216,7 @@ SSsummarize(xx) |>
 ### 0_2_12_phases Update phases from fix male mortality ----
 ####------------------------------------------------####
 
-
+#Basically identical
 
 new_name <- "0_2_12_maleMfixPhases"
 
@@ -1533,7 +1533,7 @@ new_name <- "0_3_3_bestSpatialHessian"
 #Copy inputs
 ##
 
-copy_SS_inputs(dir.old = here('models/0_2_10_maleMfix'), 
+copy_SS_inputs(dir.old = here('models/0_2_12_maleMfixphases'), 
                dir.new = here('models',new_name),
                overwrite = TRUE)
 

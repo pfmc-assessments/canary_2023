@@ -1,3 +1,8 @@
 Note 1 Suggestion:  recr_dist_method 3 is simpler and takes 1 parm for each settlement
 Note 2 Information: Max harvest rate typically is >1.0 for F_method 2, 3 or 4 0.9
 Warning 1 : Setting in starter does not request all priors, and 21 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 : Final gradient: 0.00290295 is larger than final_conv: 0.0001
+Note 3 Information: No *.ss_new and fewer *.sso files written after mceval
+Warning 3 : Reminder: Number of lamdas !=0.0 and !=1.0:  20
+Note 4 Information:  N parameters that are on or within 1% of min-max bound: 8; check results, variance may be suspect
+ 3 warnings  and 4 notes 
