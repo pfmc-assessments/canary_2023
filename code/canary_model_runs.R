@@ -1561,6 +1561,23 @@ r4ss::run(dir = here('models',new_name),
 pp <- SS_output(here('models',new_name),covar=FALSE)
 SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted',
+                                                 '0_1_1_update_data', 
+                                                 '0_2_1_update_bio_Mval',
+                                                 '0_2_2_M_justValue',
+                                                 '0_2_3_maturity',
+                                                 '0_2_4_steepness',
+                                                 '0_2_5_fecund',
+                                                 '0_2_6_WL',
+                                                 '0_2_10_maleMfix',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2015 new SS', '2023 data update', '2023 data bio', 
+                                     'Mval', 'maturity', 'steepness', 'fecundity', 'WL',
+                                     'Mcons-maleFix', 'hessian'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models', new_name) )
 
 
 
@@ -1570,16 +1587,16 @@ SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
 
 ####------------------------------------------------####
-### Model name here with numbering (starting with 1_0_0) ----
+### 0_4_1_ssInputs ---- based on best spatial model up to this point
 ####------------------------------------------------####
 
-new_name <- "0_4_1_ssinputs"
+new_name <- "0_4_1_ssInputs"
 
 ##
 #Copy inputs
 ##
 
-copy_SS_inputs(dir.old = here('models/0_2_1_update_bio'), 
+copy_SS_inputs(dir.old = here('models/0_2_12_maleMfixphases'), 
                dir.new = here('models',new_name),
                overwrite = TRUE)
 
