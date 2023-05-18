@@ -1069,6 +1069,130 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
+#This produces funky results. R0 wants to go higher and higher (see 0_2_7_upR0bound - which is not automated)
+#RecDist also become poorly estimated
+
+
+####------------------------------------------------####
+### 0_2_8_update_bio_phases Adjust phases for GP parms ----
+####------------------------------------------------####
+
+new_name <- "0_2_8_update_bio_Mval_phases"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_2_1_update_bio_Mval'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+#----
+# Set phases for M = 2, growth = 3, CV = 4. Previously mostly all at 2
+mod$ctl$MG_parms[c('NatM_p_2_Fem_GP_1',
+                   'L_at_Amin_Fem_GP_1',
+                   'L_at_Amax_Fem_GP_1',
+                   'VonBert_K_Fem_GP_1',
+                   'CV_young_Fem_GP_1',
+                   'CV_old_Fem_GP_1',
+                   'L_at_Amax_Mal_GP_1',
+                   'VonBert_K_Mal_GP_1',
+                   'CV_young_Mal_GP_1',
+                   'CV_old_Mal_GP_1'),'PHASE'] <- c(2,3,3,3,4,4,3,3,4,4)
+#----
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base', 
+                                                 '0_1_1_update_data', 
+                                                 '0_2_1_update_bio_Mval',
+                                                 '0_2_8_update_bio_Mval_phases')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data update', '2023 data bio-Mval', 
+                                     '2023 data bio-phase'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_2_9_newBreakpoints Adjust breakpoints for M based on occurrence in trawl ----
+####------------------------------------------------####
+
+new_name <- "0_2_9_breakpoints"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/0_2_8_update_bio_Mval_phases'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+#----
+# Set breakpoints to ages 20 and 21, when female sex ratio declines
+mod$ctl$M_ageBreakPoints[[1]] <- 20
+mod$ctl$M_ageBreakPoints[[2]] <- 21
+
+#----
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base', '0_2_8_update_bio_Mval_phases',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015', '2023 data bio-Mvalphase',
+                                     'BreakPoints'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 
 ##########################################################################################
 #               Explorations with up-to-date current version to decide base
