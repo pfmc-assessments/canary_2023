@@ -3150,23 +3150,24 @@ selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_
 selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
 selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 1
 selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
-selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
 selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 5
-selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
 
 mod$ctl$size_selex_parms <- selex_new
 
 ### Time varying selectivity table ----
+#Need to set id based on Block_Fxn not Block
 selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
-  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
-  tidyr::uncount(Block, .id = 'id', .remove = FALSE)
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block, Block_Fxn) |>
+  tidyr::uncount(Block_Fxn, .id = 'id', .remove = FALSE)
 
 rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
   stringr::str_remove('\\.\\.\\.[:digit:]+') |>
-  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', 10*selex_tv_pars$id + 1990)
+  stringr::str_c('_BLK', selex_tv_pars$Block_Fxn, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id*2))
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
-  dplyr::select(-Block, -id)
+  dplyr::select(-Block, -Block_Fxn, -id)
 #----
 
 
@@ -3201,61 +3202,6 @@ SSsummarize(xx) |>
 
 
 
-####------------------------------------------------####
-### 0_4_4_selexFree ---- Free up selectivity by state
-####------------------------------------------------####
-
-new_name <- "0_4_4_selexFree"
-
-##
-#Copy inputs
-##
-
-copy_SS_inputs(dir.old = here('models/0_4_3_selexBlocks'), 
-               dir.new = here('models',new_name),
-               overwrite = TRUE)
-
-mod <- SS_read(here('models',new_name))
-
-
-
-##
-#Make Changes
-##
-#----
-
-#----
-
-
-##
-#Output files and run
-##
-
-SS_write(mod,
-         dir = here('models',new_name),
-         overwrite = TRUE)
-
-r4ss::run(dir = here('models',new_name), 
-          exe = here('models/ss_win.exe'), 
-          extras = '-nohess', 
-          # show_in_console = TRUE, 
-          skipfinished = FALSE)
-
-##
-#Comparison plots
-##
-
-pp <- SS_output(here('models',new_name),covar=FALSE)
-SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
-
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('0_4_1_ssInputs',
-                                                 '0_4_2_selexSetup',
-                                                 '0_4_3_selexBlocks',
-                                                 new_name)))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('SS3 inputs', 'selex set up', 'selex blocks', 'selex no mirror'),
-                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
 
