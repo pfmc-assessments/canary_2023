@@ -928,10 +928,12 @@ SSsummarize(xx) |>
 ### 0_1_7_fishery Add catches and fishery comps ----
 ####------------------------------------------------####
 
-#Adding data one by one doesn't recreate the dip in estimated abundance in the 50s
+#Adding data one by one doesn't recreate the dip in estimated abundance starting in the 50s
 #I believe adding comps to the recent years since 2014 results in changed selectivity
 #in recent years which given the current block structure match historical years.
-#Test first by combining multiple data entries together
+#Looking at the selectivity values for CA NTWL (all other com fleets mirror to those)
+#seelctivity has shifted leftward. Also recruitment starting in 1933 declines. Collectively
+#this is what is contributing
 
 new_name <- '0_1_7_fishery'
 
@@ -1132,6 +1134,10 @@ SSsummarize(xx) |>
 ####------------------------------------------------####
 ### 0_1_8_survey Add survey indices and comps ----
 ####------------------------------------------------####
+
+#This run lowers the population a bit, and seems to be based on lower recruitment
+#during period the population declines. Also lowers trawl selectivity slightly
+
 
 new_name <- '0_1_8_survey'
 
@@ -1624,6 +1630,10 @@ SSsummarize(xx) |>
 ### 0_1_10_extendBlocks Update fishery data AND extend blocks out to end year ----
 ####------------------------------------------------####
 
+#This shows that the population declines much less when selectivity in 2015-2022 isn't
+#set to mirror the < 2000 block. Selectivity for CA TWL and NTWL (which otehr fleets mirror)
+#moves right
+
 new_name <- '0_1_10_extendBlocks'
 
 ##
@@ -1632,7 +1642,7 @@ new_name <- '0_1_10_extendBlocks'
 
 # I suggest not touching converted, or transition. That was just for updating SS3
 # version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
-copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+copy_SS_inputs(dir.old = here('models/0_1_7_fishery'), 
                dir.new = here('models',new_name),
                overwrite = TRUE)
 
@@ -1668,6 +1678,9 @@ r4ss::run(dir = here('models', new_name),
 #Comparison plots
 ##
 
+pp <- SS_output(here('models', new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('converted', 
                                                  '0_1_1_update_data',
@@ -1680,13 +1693,15 @@ SSsummarize(xx) |>
                                      'fisheryCompsCatch',
                                      'surveyCompsIndex',
                                      'Catch and Surveys',
-                                     'extend Blocks'),
+                                     'fishery and extend Blocks'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
 
 
 ####------------------------------------------------####
 ### 0_1_11_fixCaHistCatch ---- Found an error in CA historical catches
 ####------------------------------------------------####
+
+#Bug has negligable effect on model output
 
 new_name = "0_1_11_fixCaHistCatch"
 
@@ -2029,7 +2044,7 @@ SS_plots(pp)
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('converted', 
-                                                 '0_1_1_update_data'
+                                                 '0_1_1_update_data',
                                                  new_name)))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('converted', 
