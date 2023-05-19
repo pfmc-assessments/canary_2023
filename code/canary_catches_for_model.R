@@ -95,8 +95,8 @@ ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK_twl <- ca_hist_com_ag[ca_hist_co
 ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK_oth <- ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK * ca_hist_com_ag2$perc_oth_KNOWNreg
 
 #Sum up total TWL and OTH gear across regions
-ca_hist_com_ag$TOT_TWL = ca_hist_com_ag$TWL + ca_hist_com_ag$UNK_twl
-ca_hist_com_ag$TOT_OTH = ca_hist_com_ag$OTH + ca_hist_com_ag$UNK_oth
+ca_hist_com_ag$TOT_TWL = rowSums(ca_hist_com_ag[,c('TWL','UNK_twl')],na.rm=T)
+ca_hist_com_ag$TOT_OTH = rowSums(ca_hist_com_ag[,c('OTH', 'UNK_oth')],na.rm=T)
 ca_hist_com_out <- ca_hist_com_ag %>% group_by(year) %>% 
   summarize(TWL = sum(TOT_TWL, na.rm = T), NTWL = sum(TOT_OTH, na.rm=T)) %>% data.frame()
 

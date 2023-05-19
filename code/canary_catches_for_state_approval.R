@@ -89,8 +89,8 @@ ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK_twl <- ca_hist_com_ag[ca_hist_co
 ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK_oth <- ca_hist_com_ag[ca_hist_com_ag$region == 0,]$UNK * ca_hist_com_ag2$perc_oth_KNOWNreg
 
 #Sum up total TWL and OTH gear across regions
-ca_hist_com_ag$TOT_TWL = ca_hist_com_ag$TWL + ca_hist_com_ag$UNK_twl
-ca_hist_com_ag$TOT_OTH = ca_hist_com_ag$OTH + ca_hist_com_ag$UNK_oth
+ca_hist_com_ag$TOT_TWL = rowSums(ca_hist_com_ag[,c('TWL','UNK_twl')],na.rm=T)
+ca_hist_com_ag$TOT_OTH = rowSums(ca_hist_com_ag[,c('OTH', 'UNK_oth')],na.rm=T)
 ca_hist_com_out <- ca_hist_com_ag %>% group_by(year) %>% 
   summarize(TWL = sum(TOT_TWL, na.rm = T), NTWL = sum(TOT_OTH, na.rm=T)) %>% data.frame()
 
@@ -344,7 +344,7 @@ removals[removals$Year %in% for_fleet$Year, c("FOR.C","FOR.O","FOR.W")] <- for_f
 # #Upload to googledrive
 # #Break out of commercial data so CONFIDENTIAL
 # ##
-# xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_removals_forStateApproval_May2',
+# xx <- googledrive::drive_create(name = 'CONFIDENTIAL_canary_removals_forStateApproval_May19',
 #                                 path = 'https://drive.google.com/drive/folders/179mhykZRxnXFLp81sFOAYsPtLfVOUtKB',
 #                                 type = 'spreadsheet', overwrite = TRUE)
 # googlesheets4::sheet_write(round(removals,2), ss = xx, sheet = "catch_summary")
