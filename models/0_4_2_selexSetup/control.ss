@@ -178,20 +178,20 @@
 #_size_selex_patterns
 #_Pattern	Discard	Male	Special
 24	0	0	 0	#_1 1_CA_TWL               
-15	0	0	 1	#_2 2_OR_TWL               
-15	0	0	 1	#_3 3_WA_TWL               
+24	0	0	 0	#_2 2_OR_TWL               
+24	0	0	 0	#_3 3_WA_TWL               
 24	0	0	 0	#_4 4_CA_NTWL              
-15	0	0	 4	#_5 5_OR_NTWL              
-15	0	0	 4	#_6 6_WA_NTWL              
+24	0	0	 0	#_5 5_OR_NTWL              
+15	0	0	 3	#_6 6_WA_NTWL              
 24	0	0	 0	#_7 7_CA_REC               
-15	0	0	 7	#_8 8_OR_REC               
-15	0	0	 7	#_9 9_WA_REC               
+24	0	0	 0	#_8 8_OR_REC               
+24	0	0	 0	#_9 9_WA_REC               
 24	0	0	 0	#_10 10_CA_ASHOP           
 15	0	0	10	#_11 11_OR_ASHOP           
 15	0	0	10	#_12 12_WA_ASHOP           
 15	0	0	 1	#_13 13_CA_FOR             
-15	0	0	13	#_14 14_OR_FOR             
-15	0	0	13	#_15 15_WA_FOR             
+15	0	0	 2	#_14 14_OR_FOR             
+15	0	0	 3	#_15 15_WA_FOR             
 24	0	0	 0	#_16 16_CA_NWFSC           
 15	0	0	16	#_17 17_OR_NWFSC           
 15	0	0	16	#_18 18_WA_NWFSC           
@@ -251,18 +251,48 @@
      0	 9	5.17048	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_1_CA_TWL(1)        
    -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_1_CA_TWL(1)        
    -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_1_CA_TWL(1)        
+13.001	65	     47	99	99	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_2_OR_TWL(2)        
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_2_OR_TWL(2)        
+     0	 9	5.63479	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_2_OR_TWL(2)        
+     0	 9	5.02388	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_2_OR_TWL(2)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_2_OR_TWL(2)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_2_OR_TWL(2)        
+13.001	65	     48	99	99	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_3_WA_TWL(3)        
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_3_WA_TWL(3)        
+     0	 9	5.66296	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_3_WA_TWL(3)        
+     0	 9	4.96981	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_3_WA_TWL(3)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_3_WA_TWL(3)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_3_WA_TWL(3)        
 13.001	65	     36	99	99	0	  4	0	0	0	0	0	1	2	#_SizeSel_P_1_4_CA_NTWL(4)       
    -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_4_CA_NTWL(4)       
      0	 9	 5.2575	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_3_4_CA_NTWL(4)       
      0	 9	5.48064	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_4_4_CA_NTWL(4)       
    -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_4_CA_NTWL(4)       
    -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_4_CA_NTWL(4)       
+13.001	65	     35	99	99	0	  4	0	0	0	0	0	1	2	#_SizeSel_P_1_5_OR_NTWL(5)       
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_5_OR_NTWL(5)       
+     0	 9	5.21494	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_3_5_OR_NTWL(5)       
+     0	 9	5.51343	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_4_5_OR_NTWL(5)       
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_5_OR_NTWL(5)       
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_5_OR_NTWL(5)       
 13.001	65	     34	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_7_CA_REC(7)        
    -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_7_CA_REC(7)        
      0	 9	5.17048	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_7_CA_REC(7)        
      0	 9	5.54518	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_7_CA_REC(7)        
    -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_7_CA_REC(7)        
    -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_7_CA_REC(7)        
+13.001	65	     34	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_8_OR_REC(8)        
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_8_OR_REC(8)        
+     0	 9	5.17048	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_8_OR_REC(8)        
+     0	 9	5.54518	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_8_OR_REC(8)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_8_OR_REC(8)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_8_OR_REC(8)        
+13.001	65	     35	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_9_WA_REC(9)        
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_9_WA_REC(9)        
+     0	 9	5.21494	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_9_WA_REC(9)        
+     0	 9	5.51343	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_9_WA_REC(9)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_9_WA_REC(9)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_9_WA_REC(9)        
 13.001	65	     48	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_10_CA_ASHOP(10)    
    -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_10_CA_ASHOP(10)    
      0	 9	5.51343	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_10_CA_ASHOP(10)    
@@ -297,9 +327,24 @@
      0	 9	5.54518	99	99	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2010 
      0	 9	5.17048	99	99	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2000 
      0	 9	5.17048	99	99	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2010 
+13.001	65	     47	99	99	0	4	#_SizeSel_P_1_2_OR_TWL(2)_BLK2repl_2000 
+13.001	65	     47	99	99	0	4	#_SizeSel_P_1_2_OR_TWL(2)_BLK2repl_2010 
+     0	 9	5.63479	99	99	0	5	#_SizeSel_P_3_2_OR_TWL(2)_BLK2repl_2000 
+     0	 9	5.63479	99	99	0	5	#_SizeSel_P_3_2_OR_TWL(2)_BLK2repl_2010 
+     0	 9	5.02388	99	99	0	5	#_SizeSel_P_4_2_OR_TWL(2)_BLK2repl_2000 
+     0	 9	5.02388	99	99	0	5	#_SizeSel_P_4_2_OR_TWL(2)_BLK2repl_2010 
+13.001	65	     48	99	99	0	4	#_SizeSel_P_1_3_WA_TWL(3)_BLK2repl_2000 
+13.001	65	     48	99	99	0	4	#_SizeSel_P_1_3_WA_TWL(3)_BLK2repl_2010 
+     0	 9	5.66296	99	99	0	5	#_SizeSel_P_3_3_WA_TWL(3)_BLK2repl_2000 
+     0	 9	5.66296	99	99	0	5	#_SizeSel_P_3_3_WA_TWL(3)_BLK2repl_2010 
+     0	 9	4.96981	99	99	0	5	#_SizeSel_P_4_3_WA_TWL(3)_BLK2repl_2000 
+     0	 9	4.96981	99	99	0	5	#_SizeSel_P_4_3_WA_TWL(3)_BLK2repl_2010 
 13.001	65	     36	99	99	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK1repl_2000
      0	 9	 5.2575	99	99	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK1repl_2000
      0	 9	5.48064	99	99	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK1repl_2000
+13.001	65	     35	99	99	0	4	#_SizeSel_P_1_5_OR_NTWL(5)_BLK1repl_2000
+     0	 9	5.21494	99	99	0	5	#_SizeSel_P_3_5_OR_NTWL(5)_BLK1repl_2000
+     0	 9	5.51343	99	99	0	5	#_SizeSel_P_4_5_OR_NTWL(5)_BLK1repl_2000
 # info on dev vectors created for selex parms are reported with other devs after tag parameter section
 #
 0 #  use 2D_AR1 selectivity(0/1):  experimental feature

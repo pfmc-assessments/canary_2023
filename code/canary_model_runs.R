@@ -375,6 +375,1248 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
+### 0_1_2_catch Individually add data one by one ----
+####------------------------------------------------####
+
+new_name <- '0_1_2_catch'
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/converted'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#----
+mod$start$detailed_age_structure <- 1 #all output
+
+# Extend catch time series ------------------------------------------------
+
+mod$dat$endyr <- 2022
+
+catches <- read.csv(here('data/canary_total_removals.csv')) 
+updated.catch.df <- catches |>
+  dplyr::select(-rec.W.N) |>
+  tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
+  tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |> 
+  # warning is ok, cuts off units in WA rec catch column name
+  dplyr::mutate(gear = stringr::str_to_upper(gear),
+                state = dplyr::case_when(state == 'W' ~ 'WA',
+                                         state == 'O' ~ 'OR',
+                                         state == 'C' ~ 'CA'),
+                fleet_no_num = paste(state, gear, sep = '_')) |>
+  dplyr::left_join(fleet.converter) |>
+  dplyr::mutate(seas = 1, 
+                catch_se = 0.05) |>
+  dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
+  #rbind(c(-999, 1, 1, 0, 0.05)) |>
+  dplyr::arrange(fleet, year) |>
+  as.data.frame()
+
+mod$dat$catch <- updated.catch.df
+
+# Change survey fleets to non-catch fleets
+survey.ind <- grep(mod$dat$fleetinfo$fleetname, pattern = 'Tri|NWFSC')
+mod$dat$fleetinfo$type[survey.ind] <- 3
+
+# Change fishing mortality to year-round, gets rid of ss3 warnings
+mod$dat$fleetinfo$surveytiming[mod$dat$fleetinfo$type==1] <- -1
+
+
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_1_1_update_data'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+####------------------------------------------------####
+### 0_1_3_survey Individually add data one by one ----
+####------------------------------------------------####
+
+new_name <- '0_1_3_survey'
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/converted'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#----
+mod$start$detailed_age_structure <- 1 #all output
+# Update survey indices ----------------------------------------------------------
+
+wcgbts.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_lognormal/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, '_NWFSC')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se)
+
+tri.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_lognormal_mix/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, ifelse(year <= 1992, '_Tri_early', '_Tri_late'))) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se)
+
+prerecruit <- read.csv(here('data/canary_prerecruit_indices.csv')) |>
+  dplyr::filter(!(YEAR %in% c(2010, 2012, 2022))) |> # could also include these years...
+  dplyr::mutate(fleet_no_num = paste0(region, '_prerec')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year = YEAR, seas, index = fleet, obs = est, se_log = se)
+
+mod$dat$CPUE <- dplyr::bind_rows(wcgbts.cpue, tri.cpue, prerecruit)
+
+# Triennial selectivity and Q should probably be mirrored!!!
+
+
+
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_1_1_update_data'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 0_1_4_surveyCompsNWFSC Individually add data one by one ----
+####------------------------------------------------####
+
+new_name <- '0_1_4_surveyCompsNWFSC'
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/converted'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#----
+mod$start$detailed_age_structure <- 1 #all output
+# Update combo survey comps -----------------------------------------------------
+
+length.min <- min(mod$dat$lbin_vector)
+length.max <- max(mod$dat$lbin_vector)
+age.min <- min(mod$dat$agebin_vector)
+age.max <- max(mod$dat$agebin_vector)
+
+caal <- marginal.ages <- marginal.lengths <- list()
+for(ii in 1:4) {
+  area <- c('CA', 'OR', 'WA', 'coastwide')[ii]
+  fleet_num <- fleet.converter$fleet[grep(x = fleet.converter$fleet_no_num, 
+                                          pattern = paste0(area, "_NWFSC"))]
+  caal[[area]] <- purrr::map(list(`F` = 'Female', M = 'Male'), function(.x) {
+    read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_CAAL_{sex}_Bins_{lmin}_{lmax}_{amin}_{amax}.csv',
+                             area = area,
+                             sex = .x,
+                             lmin = length.min,
+                             lmax = length.max,
+                             amin = age.min,
+                             amax = age.max))) |>
+      dplyr::mutate(Fleet = fleet_num) |> 
+      `names<-`(names(mod$dat$agecomp)) 
+  })
+  
+  marginal.ages[[area]] <- read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_Sex3_Bins_{amin}_{amax}_AgeComps.csv',
+                                                    area = area,
+                                                    amin = age.min,
+                                                    amax = age.max))) |>
+    dplyr::mutate(fleet = -1 * fleet_num,
+                  agelow = -1,
+                  agehigh = -1) |>
+    `names<-`(names(mod$dat$agecomp))
+  
+  marginal.lengths[[area]] <- read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_Sex3_Bins_{lmin}_{lmax}_LengthComps.csv',
+                                                       area = area,
+                                                       lmin = length.min,
+                                                       lmax = length.max))) |>
+    dplyr::mutate(fleet = fleet_num) |>
+    `names<-`(names(mod$dat$lencomp))
+  
+}
+
+caal.dfr <- caal |>
+  purrr::list_flatten() |>
+  purrr::list_rbind() |> 
+  dplyr::mutate(Yr = ifelse(FltSvy == 28, -1 * Yr, Yr)) |> # exclude coastwide survey from likelihood
+  # caal table is in absolute length, model is in length index.
+  # Updating caal to be in length index
+  dplyr::mutate(dplyr::across(Lbin_lo:Lbin_hi, ~ match(.x, mod$dat$lbin_vector)))
+
+marginal.ages.dfr <- marginal.ages |>
+  purrr::list_rbind() 
+# Marginal ages already have negative fleet number
+
+marginal.lengths.dfr <- marginal.lengths |>
+  purrr::list_rbind() |>
+  dplyr::mutate(Yr = ifelse(FltSvy == 28, -1 * Yr, Yr)) # exclude coastwide survey from likelihood
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(caal.dfr$FltSvy)),
+                !(FltSvy %in% unique(marginal.ages.dfr$FltSvy))) |>
+  dplyr::bind_rows(caal.dfr, marginal.ages.dfr)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(marginal.lengths.dfr$FltSvy))) |>
+  dplyr::bind_rows(marginal.lengths.dfr)
+
+
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_1_1_update_data'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 0_1_5_surveyCompsTri Individually add data one by one ----
+####------------------------------------------------####
+
+new_name <- '0_1_5_surveyCompsTri'
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/converted'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#----
+mod$start$detailed_age_structure <- 1 #all output
+# Update triennial survey comps -----------------------------------------------------
+
+caal <- marginal.ages <- marginal.lengths <- list()
+
+for(ii in 1:4) {
+  area <- c('CA', 'OR', 'WA', 'coastwide')[ii]
+  fleet_num <- fleet.converter$fleet[grep(x = fleet.converter$fleet_no_num, 
+                                          pattern = paste0(area, "_Tri"))]
+  caal[[area]] <- purrr::map(list(`F` = 'Female', M = 'Male'), function(.x) {
+    read.csv(here(glue::glue('data/{area}_tri_comps/Survey_CAAL_{sex}_Bins_{lmin}_{lmax}_{amin}_{amax}.csv',
+                             area = area,
+                             sex = .x,
+                             lmin = length.min,
+                             lmax = length.max,
+                             amin = age.min,
+                             amax = age.max))) |>
+      dplyr::mutate(Fleet = ifelse(year <= 1992, fleet_num[1], fleet_num[2])) |>
+      `names<-`(names(mod$dat$agecomp)) 
+  })
+  
+  marginal.ages[[area]] <- read.csv(here(glue::glue('data/{area}_tri_comps/Survey_Sex3_Bins_{amin}_{amax}_AgeComps.csv',
+                                                    area = area,
+                                                    amin = age.min,
+                                                    amax = age.max))) |>
+    dplyr::mutate(fleet = -1 * ifelse(year <= 1992, fleet_num[1], fleet_num[2]),
+                  agelow = -1,
+                  agehigh = -1) |>
+    `names<-`(names(mod$dat$agecomp))
+  
+  marginal.lengths[[area]] <- read.csv(here(glue::glue('data/{area}_tri_comps/Survey_Sex3_Bins_{lmin}_{lmax}_LengthComps.csv',
+                                                       area = area,
+                                                       lmin = length.min,
+                                                       lmax = length.max))) |>
+    dplyr::mutate(fleet = ifelse(year <= 1992, fleet_num[1], fleet_num[2])) |>
+    `names<-`(names(mod$dat$lencomp))
+  
+}
+
+caal.dfr <- caal |>
+  purrr::list_flatten() |>
+  purrr::list_rbind() |> 
+  dplyr::mutate(Yr = ifelse(FltSvy %in% c(29,30), -1 * Yr, Yr)) |> # exclude coastwide survey from likelihood
+  # caal table is in absolute length, model is in length index.
+  # Updating caal to be in length index
+  dplyr::mutate(dplyr::across(Lbin_lo:Lbin_hi, ~ match(.x, mod$dat$lbin_vector)))
+
+marginal.ages.dfr <- marginal.ages |>
+  purrr::list_rbind() 
+# Marginal ages already have negative fleet number
+
+marginal.lengths.dfr <- marginal.lengths |>
+  purrr::list_rbind() |>
+  dplyr::mutate(Yr = ifelse(FltSvy %in% c(29,30), -1 * Yr, Yr)) # exclude coastwide survey from likelihood
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(caal.dfr$FltSvy)),
+                !(FltSvy %in% unique(marginal.ages.dfr$FltSvy))) |>
+  dplyr::bind_rows(caal.dfr, marginal.ages.dfr)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(marginal.lengths.dfr$FltSvy))) |>
+  dplyr::bind_rows(marginal.lengths.dfr)
+# Note: consider switching triennial to marginal ages.
+
+
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_1_1_update_data'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 0_1_6_fisheryComps Individually add data one by one ----
+####------------------------------------------------####
+
+new_name <- '0_1_6_fisheryComps'
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/converted'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#----
+mod$start$detailed_age_structure <- 1 #all output
+# Update fishery comps ----------------------------------------------------
+
+read.fishery.comps <- function(filename, exclude) {
+  
+}
+
+pacfin.ages <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Acomps_{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-state, -Ntows, -Nsamps) |>
+    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+                                                                       area = .x,
+                                                                       fleet = .fleet)])) |> 
+    `names<-`(names(mod$dat$agecomp))
+}) |> 
+  purrr::list_rbind() 
+
+pacfin.lengths <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Lcomps_{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-state, -Ntows, -Nsamps) |>
+    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+                                                                       area = .x, 
+                                                                       fleet = .fleet)])) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+rec.ages <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Acomp{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)],
+                  ageErr = dplyr::case_when(grepl("OR",fleet.converter$fleet_no_num[fleet]) ~ 1, #non-expanded has different names than expanded so ageErr here
+                                            grepl("WA",fleet.converter$fleet_no_num[fleet]) ~ 2)) |> 
+    `names<-`(names(mod$dat$agecomp))
+}) |>
+  purrr::list_rbind()
+
+rec.lengths <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)]) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_ashop_not_expanded_Acomp{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)],
+                  ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
+    `names<-`(names(mod$dat$agecomp))
+}) |>
+  purrr::list_rbind()
+
+ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)]) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(pacfin.ages$FltSvy)),
+                !(FltSvy %in% unique(rec.ages$FltSvy)),
+                !(FltSvy %in% unique(ashop.ages$FltSvy))) |>
+  dplyr::bind_rows(pacfin.ages, rec.ages, ashop.ages)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(pacfin.lengths$FltSvy)),
+                !(FltSvy %in% unique(rec.lengths$FltSvy)),
+                !(FltSvy %in% unique(ashop.lengths$FltSvy))) |>
+  dplyr::bind_rows(pacfin.lengths, rec.lengths, ashop.lengths)
+
+
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_1_1_update_data'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('converted', 
+                                                 '0_1_1_update_data', 
+                                                 '0_1_2_catch',
+                                                 '0_1_3_survey',
+                                                 '0_1_4_surveyCompsNWFSC',
+                                                 '0_1_5_surveyCompsTri',
+                                                 '0_1_6_fisheryComps')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015converted', '2023 All data', 
+                                     'Catch',
+                                     'Survey',
+                                     'SurveyCompsNWFSC',
+                                     'SurveyCompsTri',
+                                     'fisheryComps'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
+####------------------------------------------------####
+### 0_1_7_fishery Add catches and fishery comps ----
+####------------------------------------------------####
+
+new_name <- '0_1_7_fishery'
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/converted'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#----
+mod$start$detailed_age_structure <- 1 #all output
+
+# Extend catch time series ------------------------------------------------
+
+mod$dat$endyr <- 2022
+
+catches <- read.csv(here('data/canary_total_removals.csv')) 
+updated.catch.df <- catches |>
+  dplyr::select(-rec.W.N) |>
+  tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
+  tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |> 
+  # warning is ok, cuts off units in WA rec catch column name
+  dplyr::mutate(gear = stringr::str_to_upper(gear),
+                state = dplyr::case_when(state == 'W' ~ 'WA',
+                                         state == 'O' ~ 'OR',
+                                         state == 'C' ~ 'CA'),
+                fleet_no_num = paste(state, gear, sep = '_')) |>
+  dplyr::left_join(fleet.converter) |>
+  dplyr::mutate(seas = 1, 
+                catch_se = 0.05) |>
+  dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
+  #rbind(c(-999, 1, 1, 0, 0.05)) |>
+  dplyr::arrange(fleet, year) |>
+  as.data.frame()
+
+mod$dat$catch <- updated.catch.df
+
+# Change survey fleets to non-catch fleets
+survey.ind <- grep(mod$dat$fleetinfo$fleetname, pattern = 'Tri|NWFSC')
+mod$dat$fleetinfo$type[survey.ind] <- 3
+
+# Change fishing mortality to year-round, gets rid of ss3 warnings
+mod$dat$fleetinfo$surveytiming[mod$dat$fleetinfo$type==1] <- -1
+
+# Update fishery comps ----------------------------------------------------
+
+read.fishery.comps <- function(filename, exclude) {
+  
+}
+
+pacfin.ages <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Acomps_{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-state, -Ntows, -Nsamps) |>
+    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+                                                                       area = .x,
+                                                                       fleet = .fleet)])) |> 
+    `names<-`(names(mod$dat$agecomp))
+}) |> 
+  purrr::list_rbind() 
+
+pacfin.lengths <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Lcomps_{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-state, -Ntows, -Nsamps) |>
+    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+                                                                       area = .x, 
+                                                                       fleet = .fleet)])) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+rec.ages <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Acomp{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)],
+                  ageErr = dplyr::case_when(grepl("OR",fleet.converter$fleet_no_num[fleet]) ~ 1, #non-expanded has different names than expanded so ageErr here
+                                            grepl("WA",fleet.converter$fleet_no_num[fleet]) ~ 2)) |> 
+    `names<-`(names(mod$dat$agecomp))
+}) |>
+  purrr::list_rbind()
+
+rec.lengths <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)]) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_ashop_not_expanded_Acomp{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)],
+                  ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
+    `names<-`(names(mod$dat$agecomp))
+}) |>
+  purrr::list_rbind()
+
+ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)]) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(pacfin.ages$FltSvy)),
+                !(FltSvy %in% unique(rec.ages$FltSvy)),
+                !(FltSvy %in% unique(ashop.ages$FltSvy))) |>
+  dplyr::bind_rows(pacfin.ages, rec.ages, ashop.ages)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(pacfin.lengths$FltSvy)),
+                !(FltSvy %in% unique(rec.lengths$FltSvy)),
+                !(FltSvy %in% unique(ashop.lengths$FltSvy))) |>
+  dplyr::bind_rows(pacfin.lengths, rec.lengths, ashop.lengths)
+
+
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/0_1_1_update_data'), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('converted', 
+                                                 '0_1_1_update_data', 
+                                                 '0_1_2_catch',
+                                                 '0_1_3_survey',
+                                                 '0_1_4_surveyCompsNWFSC',
+                                                 '0_1_5_surveyCompsTri',
+                                                 '0_1_6_fisheryComps',
+                                                 '0_1_7_fishery')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015converted', '2023 All data', 
+                                     'Catch',
+                                     'Survey',
+                                     'SurveyCompsNWFSC',
+                                     'SurveyCompsTri',
+                                     'fisheryComps',
+                                     "fisheryCompsCatch"),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
+####------------------------------------------------####
+### 0_1_8_survey Add survey indices and comps ----
+####------------------------------------------------####
+
+new_name <- '0_1_8_survey'
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/converted'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#----
+mod$start$detailed_age_structure <- 1 #all output
+
+# Update survey indices ----------------------------------------------------------
+
+wcgbts.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_lognormal/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, '_NWFSC')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se)
+
+tri.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_lognormal_mix/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, ifelse(year <= 1992, '_Tri_early', '_Tri_late'))) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se)
+
+prerecruit <- read.csv(here('data/canary_prerecruit_indices.csv')) |>
+  dplyr::filter(!(YEAR %in% c(2010, 2012, 2022))) |> # could also include these years...
+  dplyr::mutate(fleet_no_num = paste0(region, '_prerec')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year = YEAR, seas, index = fleet, obs = est, se_log = se)
+
+mod$dat$CPUE <- dplyr::bind_rows(wcgbts.cpue, tri.cpue, prerecruit)
+
+# Triennial selectivity and Q should probably be mirrored!!!
+
+# Update combo survey comps -----------------------------------------------------
+
+length.min <- min(mod$dat$lbin_vector)
+length.max <- max(mod$dat$lbin_vector)
+age.min <- min(mod$dat$agebin_vector)
+age.max <- max(mod$dat$agebin_vector)
+
+caal <- marginal.ages <- marginal.lengths <- list()
+for(ii in 1:4) {
+  area <- c('CA', 'OR', 'WA', 'coastwide')[ii]
+  fleet_num <- fleet.converter$fleet[grep(x = fleet.converter$fleet_no_num, 
+                                          pattern = paste0(area, "_NWFSC"))]
+  caal[[area]] <- purrr::map(list(`F` = 'Female', M = 'Male'), function(.x) {
+    read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_CAAL_{sex}_Bins_{lmin}_{lmax}_{amin}_{amax}.csv',
+                             area = area,
+                             sex = .x,
+                             lmin = length.min,
+                             lmax = length.max,
+                             amin = age.min,
+                             amax = age.max))) |>
+      dplyr::mutate(Fleet = fleet_num) |> 
+      `names<-`(names(mod$dat$agecomp)) 
+  })
+  
+  marginal.ages[[area]] <- read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_Sex3_Bins_{amin}_{amax}_AgeComps.csv',
+                                                    area = area,
+                                                    amin = age.min,
+                                                    amax = age.max))) |>
+    dplyr::mutate(fleet = -1 * fleet_num,
+                  agelow = -1,
+                  agehigh = -1) |>
+    `names<-`(names(mod$dat$agecomp))
+  
+  marginal.lengths[[area]] <- read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_Sex3_Bins_{lmin}_{lmax}_LengthComps.csv',
+                                                       area = area,
+                                                       lmin = length.min,
+                                                       lmax = length.max))) |>
+    dplyr::mutate(fleet = fleet_num) |>
+    `names<-`(names(mod$dat$lencomp))
+  
+}
+
+caal.dfr <- caal |>
+  purrr::list_flatten() |>
+  purrr::list_rbind() |> 
+  dplyr::mutate(Yr = ifelse(FltSvy == 28, -1 * Yr, Yr)) |> # exclude coastwide survey from likelihood
+  # caal table is in absolute length, model is in length index.
+  # Updating caal to be in length index
+  dplyr::mutate(dplyr::across(Lbin_lo:Lbin_hi, ~ match(.x, mod$dat$lbin_vector)))
+
+marginal.ages.dfr <- marginal.ages |>
+  purrr::list_rbind() 
+# Marginal ages already have negative fleet number
+
+marginal.lengths.dfr <- marginal.lengths |>
+  purrr::list_rbind() |>
+  dplyr::mutate(Yr = ifelse(FltSvy == 28, -1 * Yr, Yr)) # exclude coastwide survey from likelihood
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(caal.dfr$FltSvy)),
+                !(FltSvy %in% unique(marginal.ages.dfr$FltSvy))) |>
+  dplyr::bind_rows(caal.dfr, marginal.ages.dfr)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(marginal.lengths.dfr$FltSvy))) |>
+  dplyr::bind_rows(marginal.lengths.dfr)
+
+# Update triennial survey comps -----------------------------------------------------
+
+caal <- marginal.ages <- marginal.lengths <- list()
+
+for(ii in 1:4) {
+  area <- c('CA', 'OR', 'WA', 'coastwide')[ii]
+  fleet_num <- fleet.converter$fleet[grep(x = fleet.converter$fleet_no_num, 
+                                          pattern = paste0(area, "_Tri"))]
+  caal[[area]] <- purrr::map(list(`F` = 'Female', M = 'Male'), function(.x) {
+    read.csv(here(glue::glue('data/{area}_tri_comps/Survey_CAAL_{sex}_Bins_{lmin}_{lmax}_{amin}_{amax}.csv',
+                             area = area,
+                             sex = .x,
+                             lmin = length.min,
+                             lmax = length.max,
+                             amin = age.min,
+                             amax = age.max))) |>
+      dplyr::mutate(Fleet = ifelse(year <= 1992, fleet_num[1], fleet_num[2])) |>
+      `names<-`(names(mod$dat$agecomp)) 
+  })
+  
+  marginal.ages[[area]] <- read.csv(here(glue::glue('data/{area}_tri_comps/Survey_Sex3_Bins_{amin}_{amax}_AgeComps.csv',
+                                                    area = area,
+                                                    amin = age.min,
+                                                    amax = age.max))) |>
+    dplyr::mutate(fleet = -1 * ifelse(year <= 1992, fleet_num[1], fleet_num[2]),
+                  agelow = -1,
+                  agehigh = -1) |>
+    `names<-`(names(mod$dat$agecomp))
+  
+  marginal.lengths[[area]] <- read.csv(here(glue::glue('data/{area}_tri_comps/Survey_Sex3_Bins_{lmin}_{lmax}_LengthComps.csv',
+                                                       area = area,
+                                                       lmin = length.min,
+                                                       lmax = length.max))) |>
+    dplyr::mutate(fleet = ifelse(year <= 1992, fleet_num[1], fleet_num[2])) |>
+    `names<-`(names(mod$dat$lencomp))
+  
+}
+
+caal.dfr <- caal |>
+  purrr::list_flatten() |>
+  purrr::list_rbind() |> 
+  dplyr::mutate(Yr = ifelse(FltSvy %in% c(29,30), -1 * Yr, Yr)) |> # exclude coastwide survey from likelihood
+  # caal table is in absolute length, model is in length index.
+  # Updating caal to be in length index
+  dplyr::mutate(dplyr::across(Lbin_lo:Lbin_hi, ~ match(.x, mod$dat$lbin_vector)))
+
+marginal.ages.dfr <- marginal.ages |>
+  purrr::list_rbind() 
+# Marginal ages already have negative fleet number
+
+marginal.lengths.dfr <- marginal.lengths |>
+  purrr::list_rbind() |>
+  dplyr::mutate(Yr = ifelse(FltSvy %in% c(29,30), -1 * Yr, Yr)) # exclude coastwide survey from likelihood
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(caal.dfr$FltSvy)),
+                !(FltSvy %in% unique(marginal.ages.dfr$FltSvy))) |>
+  dplyr::bind_rows(caal.dfr, marginal.ages.dfr)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(marginal.lengths.dfr$FltSvy))) |>
+  dplyr::bind_rows(marginal.lengths.dfr)
+# Note: consider switching triennial to marginal ages.
+
+#
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('converted', 
+                                                 '0_1_1_update_data', 
+                                                 '0_1_2_catch',
+                                                 '0_1_3_survey',
+                                                 '0_1_4_surveyCompsNWFSC',
+                                                 '0_1_5_surveyCompsTri',
+                                                 '0_1_6_fisheryComps',
+                                                 '0_1_7_fishery',
+                                                 '0_1_8_survey')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015converted', '2023 All data', 
+                                     'Catch',
+                                     'Survey',
+                                     'SurveyCompsNWFSC',
+                                     'SurveyCompsTri',
+                                     'fisheryComps',
+                                     "fisheryCompsCatch",
+                                     'surveyCompsIndex'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
+####------------------------------------------------####
+### 0_1_9_catchANDsurvey Add survey indices and comps as well as catches ----
+####------------------------------------------------####
+
+new_name <- '0_1_9_catchANDsurvey'
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/converted'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#----
+mod$start$detailed_age_structure <- 1 #all output
+
+# Extend catch time series ------------------------------------------------
+
+mod$dat$endyr <- 2022
+
+catches <- read.csv(here('data/canary_total_removals.csv')) 
+updated.catch.df <- catches |>
+  dplyr::select(-rec.W.N) |>
+  tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
+  tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |> 
+  # warning is ok, cuts off units in WA rec catch column name
+  dplyr::mutate(gear = stringr::str_to_upper(gear),
+                state = dplyr::case_when(state == 'W' ~ 'WA',
+                                         state == 'O' ~ 'OR',
+                                         state == 'C' ~ 'CA'),
+                fleet_no_num = paste(state, gear, sep = '_')) |>
+  dplyr::left_join(fleet.converter) |>
+  dplyr::mutate(seas = 1, 
+                catch_se = 0.05) |>
+  dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
+  #rbind(c(-999, 1, 1, 0, 0.05)) |>
+  dplyr::arrange(fleet, year) |>
+  as.data.frame()
+
+mod$dat$catch <- updated.catch.df
+
+# Change survey fleets to non-catch fleets
+survey.ind <- grep(mod$dat$fleetinfo$fleetname, pattern = 'Tri|NWFSC')
+mod$dat$fleetinfo$type[survey.ind] <- 3
+
+# Change fishing mortality to year-round, gets rid of ss3 warnings
+mod$dat$fleetinfo$surveytiming[mod$dat$fleetinfo$type==1] <- -1
+
+
+# Update survey indices ----------------------------------------------------------
+
+wcgbts.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_lognormal/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, '_NWFSC')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se)
+
+tri.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_lognormal_mix/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, ifelse(year <= 1992, '_Tri_early', '_Tri_late'))) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se)
+
+prerecruit <- read.csv(here('data/canary_prerecruit_indices.csv')) |>
+  dplyr::filter(!(YEAR %in% c(2010, 2012, 2022))) |> # could also include these years...
+  dplyr::mutate(fleet_no_num = paste0(region, '_prerec')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year = YEAR, seas, index = fleet, obs = est, se_log = se)
+
+mod$dat$CPUE <- dplyr::bind_rows(wcgbts.cpue, tri.cpue, prerecruit)
+
+# Triennial selectivity and Q should probably be mirrored!!!
+
+# Update combo survey comps -----------------------------------------------------
+
+length.min <- min(mod$dat$lbin_vector)
+length.max <- max(mod$dat$lbin_vector)
+age.min <- min(mod$dat$agebin_vector)
+age.max <- max(mod$dat$agebin_vector)
+
+caal <- marginal.ages <- marginal.lengths <- list()
+for(ii in 1:4) {
+  area <- c('CA', 'OR', 'WA', 'coastwide')[ii]
+  fleet_num <- fleet.converter$fleet[grep(x = fleet.converter$fleet_no_num, 
+                                          pattern = paste0(area, "_NWFSC"))]
+  caal[[area]] <- purrr::map(list(`F` = 'Female', M = 'Male'), function(.x) {
+    read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_CAAL_{sex}_Bins_{lmin}_{lmax}_{amin}_{amax}.csv',
+                             area = area,
+                             sex = .x,
+                             lmin = length.min,
+                             lmax = length.max,
+                             amin = age.min,
+                             amax = age.max))) |>
+      dplyr::mutate(Fleet = fleet_num) |> 
+      `names<-`(names(mod$dat$agecomp)) 
+  })
+  
+  marginal.ages[[area]] <- read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_Sex3_Bins_{amin}_{amax}_AgeComps.csv',
+                                                    area = area,
+                                                    amin = age.min,
+                                                    amax = age.max))) |>
+    dplyr::mutate(fleet = -1 * fleet_num,
+                  agelow = -1,
+                  agehigh = -1) |>
+    `names<-`(names(mod$dat$agecomp))
+  
+  marginal.lengths[[area]] <- read.csv(here(glue::glue('data/{area}_wcgbts_comps/Survey_Sex3_Bins_{lmin}_{lmax}_LengthComps.csv',
+                                                       area = area,
+                                                       lmin = length.min,
+                                                       lmax = length.max))) |>
+    dplyr::mutate(fleet = fleet_num) |>
+    `names<-`(names(mod$dat$lencomp))
+  
+}
+
+caal.dfr <- caal |>
+  purrr::list_flatten() |>
+  purrr::list_rbind() |> 
+  dplyr::mutate(Yr = ifelse(FltSvy == 28, -1 * Yr, Yr)) |> # exclude coastwide survey from likelihood
+  # caal table is in absolute length, model is in length index.
+  # Updating caal to be in length index
+  dplyr::mutate(dplyr::across(Lbin_lo:Lbin_hi, ~ match(.x, mod$dat$lbin_vector)))
+
+marginal.ages.dfr <- marginal.ages |>
+  purrr::list_rbind() 
+# Marginal ages already have negative fleet number
+
+marginal.lengths.dfr <- marginal.lengths |>
+  purrr::list_rbind() |>
+  dplyr::mutate(Yr = ifelse(FltSvy == 28, -1 * Yr, Yr)) # exclude coastwide survey from likelihood
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(caal.dfr$FltSvy)),
+                !(FltSvy %in% unique(marginal.ages.dfr$FltSvy))) |>
+  dplyr::bind_rows(caal.dfr, marginal.ages.dfr)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(marginal.lengths.dfr$FltSvy))) |>
+  dplyr::bind_rows(marginal.lengths.dfr)
+
+# Update triennial survey comps -----------------------------------------------------
+
+caal <- marginal.ages <- marginal.lengths <- list()
+
+for(ii in 1:4) {
+  area <- c('CA', 'OR', 'WA', 'coastwide')[ii]
+  fleet_num <- fleet.converter$fleet[grep(x = fleet.converter$fleet_no_num, 
+                                          pattern = paste0(area, "_Tri"))]
+  caal[[area]] <- purrr::map(list(`F` = 'Female', M = 'Male'), function(.x) {
+    read.csv(here(glue::glue('data/{area}_tri_comps/Survey_CAAL_{sex}_Bins_{lmin}_{lmax}_{amin}_{amax}.csv',
+                             area = area,
+                             sex = .x,
+                             lmin = length.min,
+                             lmax = length.max,
+                             amin = age.min,
+                             amax = age.max))) |>
+      dplyr::mutate(Fleet = ifelse(year <= 1992, fleet_num[1], fleet_num[2])) |>
+      `names<-`(names(mod$dat$agecomp)) 
+  })
+  
+  marginal.ages[[area]] <- read.csv(here(glue::glue('data/{area}_tri_comps/Survey_Sex3_Bins_{amin}_{amax}_AgeComps.csv',
+                                                    area = area,
+                                                    amin = age.min,
+                                                    amax = age.max))) |>
+    dplyr::mutate(fleet = -1 * ifelse(year <= 1992, fleet_num[1], fleet_num[2]),
+                  agelow = -1,
+                  agehigh = -1) |>
+    `names<-`(names(mod$dat$agecomp))
+  
+  marginal.lengths[[area]] <- read.csv(here(glue::glue('data/{area}_tri_comps/Survey_Sex3_Bins_{lmin}_{lmax}_LengthComps.csv',
+                                                       area = area,
+                                                       lmin = length.min,
+                                                       lmax = length.max))) |>
+    dplyr::mutate(fleet = ifelse(year <= 1992, fleet_num[1], fleet_num[2])) |>
+    `names<-`(names(mod$dat$lencomp))
+  
+}
+
+caal.dfr <- caal |>
+  purrr::list_flatten() |>
+  purrr::list_rbind() |> 
+  dplyr::mutate(Yr = ifelse(FltSvy %in% c(29,30), -1 * Yr, Yr)) |> # exclude coastwide survey from likelihood
+  # caal table is in absolute length, model is in length index.
+  # Updating caal to be in length index
+  dplyr::mutate(dplyr::across(Lbin_lo:Lbin_hi, ~ match(.x, mod$dat$lbin_vector)))
+
+marginal.ages.dfr <- marginal.ages |>
+  purrr::list_rbind() 
+# Marginal ages already have negative fleet number
+
+marginal.lengths.dfr <- marginal.lengths |>
+  purrr::list_rbind() |>
+  dplyr::mutate(Yr = ifelse(FltSvy %in% c(29,30), -1 * Yr, Yr)) # exclude coastwide survey from likelihood
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(caal.dfr$FltSvy)),
+                !(FltSvy %in% unique(marginal.ages.dfr$FltSvy))) |>
+  dplyr::bind_rows(caal.dfr, marginal.ages.dfr)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(marginal.lengths.dfr$FltSvy))) |>
+  dplyr::bind_rows(marginal.lengths.dfr)
+# Note: consider switching triennial to marginal ages.
+
+#
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('converted', 
+                                                 '0_1_1_update_data', 
+                                                 '0_1_2_catch',
+                                                 '0_1_3_survey',
+                                                 '0_1_4_surveyCompsNWFSC',
+                                                 '0_1_5_surveyCompsTri',
+                                                 '0_1_6_fisheryComps',
+                                                 '0_1_7_fishery',
+                                                 '0_1_8_survey',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015converted', '2023 All data', 
+                                     'Catch',
+                                     'Survey',
+                                     'SurveyCompsNWFSC',
+                                     'SurveyCompsTri',
+                                     'fisheryComps',
+                                     'fisheryCompsCatch',
+                                     'surveyCompsIndex',
+                                     'CatchSurveys'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
+
+####------------------------------------------------####
 ### 0_2_1_update_bio All bio but with only the prior changed for M----
 ####------------------------------------------------####
 
@@ -1684,7 +2926,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 0_4_2_selexSetup Update selectivity setup ----
+### 0_4_2_selexSetup Update selectivity setup and stop mirroring all fleets ----
 ####------------------------------------------------####
 
 new_name <- "0_4_2_selexSetup"
@@ -1710,7 +2952,23 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 #----
-### Now fix up selectivity parameter table
+### Unmirror fleets ----
+# Un-mirror TWL, NTWL, REC selectivities
+mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
+mod$ctl$size_selex_types$Special[grep('TWL|REC', fleet.converter$fleetname)] <- 0
+
+# Except WA NTWL which is very small fleet, it mirrors TWL (more similar to WA TWL than OR NTWL)
+mod$ctl$size_selex_types$Pattern[fleet.converter$fleet_no_num=='WA_NTWL'] <- 15
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_NTWL'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# Foreign fleets mirror respective state TWL fleet
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='OR_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='OR_TWL']
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# NMFS surveys by state mirror one another as well as the coastwide so keep as is
+
+
+### Now fix up selectivity parameter table ----
 
 #First for double normal selextivities
 selex_fleets <- rownames(mod$ctl$size_selex_types)[mod$ctl$size_selex_types$Pattern == 24] |>
@@ -1801,7 +3059,7 @@ selex_new[grepl('_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, 'Block_Fxn'
 
 mod$ctl$size_selex_parms <- selex_new
 
-### Time varying selectivity table
+### Time varying selectivity table ----
 selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
   dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
   tidyr::uncount(Block, .id = 'id', .remove = FALSE)
@@ -1865,7 +3123,50 @@ mod <- SS_read(here('models',new_name))
 #Make Changes
 ##
 #----
+### Update blocks ----
 
+mod$ctl$N_Block_Designs <- 6
+mod$ctl$blocks_per_pattern <- c(2,2,1,2,2,1)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:6)
+
+#Now that no longer mirrored can have distinct blocks
+#Note: This is probably too many
+mod$ctl$Block_Design <- list(c(2001, 2010, 2011, 2022), #TWL fleets
+                             c(2003, 2020, 2021, 2022), #CA ntwl
+                             c(2001, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR and WA NTWL, OR rec
+                             c(2006, 2020, 2021, 2022), #WA rec
+                             c(1891, 1891))
+
+selex_new <- mod$ctl$size_selex_parms
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+selex_new[grepl('CA_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+#WA NTWL is set to mirror WA TWL. It mirrors better with OR NTWL so could change that
+
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 1
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 5
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table ----
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(Block, .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', 10*selex_tv_pars$id + 1990)
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
 #----
 
 
