@@ -1634,7 +1634,10 @@ SSsummarize(xx) |>
 #set to mirror the < 2000 block. Selectivity for CA TWL and NTWL (which otehr fleets mirror)
 #moves right
 
-new_name <- '0_1_10_extendBlocks'
+#Note however that the gradients on this are really bad so not sure whether can trust this.
+#Try extending blocks with all data
+
+new_name <- '0_1_10_extendBlocks_fishery'
 
 ##
 #Copy inputs
@@ -1695,6 +1698,72 @@ SSsummarize(xx) |>
                                      'Catch and Surveys',
                                      'fishery and extend Blocks'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
+####------------------------------------------------####
+### 0_1_10_extendBlocks Extend blocks out to end year with all data updated ----
+####------------------------------------------------####
+
+#Extending with all data in ends up in similar place as 0_1_1. The decline does not appear to be due
+#to not extending the blocks nor adding in fishing data.
+#This drops NTWL selectivity but raises the dome portion of TWL
+
+new_name <- '0_1_10_extendBlocks_all'
+
+##
+#Copy inputs
+##
+
+# I suggest not touching converted, or transition. That was just for updating SS3
+# version, and plus just enough changes so that it actually ran. It was not 100% reproducible.
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+
+##
+#Make Changes
+##
+
+#----
+mod$ctl$Block_Design[[1]][2] <- 2022
+mod$ctl$Block_Design[[2]][4] <- 2022
+#----
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models', new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('converted', 
+                                                 '0_1_1_update_data',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015converted', '2023 All data', 
+                                     'Extend Blocks'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
 
 
 ####------------------------------------------------####
@@ -3209,7 +3278,7 @@ SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
 new_name <- "0_3_3_bestSpatialHessian"
 
-##
+  ##
 #Copy inputs
 ##
 
@@ -3254,9 +3323,9 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  '0_2_10_maleMfix',
                                                  new_name)))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2015', '2015 new SS', '2023 data update', '2023 bio update', 
-                                     'Mval', 'maturity', 'steepness', 'fecundity', 'WL',
-                                     'Mcons-maleFix', 'hessian'),
+  SSplotComparisons(legendlabels = c('2015', '2015 new SS', '2023 add data', '2023 add bio (Mprior)', 
+                                     'only Mprior', 'only mat', 'only steep', 'only fec', 'only WL',
+                                     '2023 add bio (fix male M)', 'hessian'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models', new_name) )
 
 
