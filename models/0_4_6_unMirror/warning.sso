@@ -1,0 +1,3 @@
+Note 1 Suggestion:  recr_dist_method 3 is simpler and takes 1 parm for each settlement
+Warning 1 : Setting in starter does not request all priors, and 21 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
