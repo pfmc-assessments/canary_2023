@@ -3028,16 +3028,17 @@ SSsummarize(xx) |>
 
 
 ##########################################################################################
-# 0_3_1 Move to coastwide model -------------------------------------------------
+# 0_3_1 and 0_5_1 Move to coastwide model -------------------------------------------------
 ##########################################################################################
 
-new_name <- "0_3_1_coastwide"
+# new_name <- "0_3_1_coastwide"
+new_name <- "0_5_1_coastwide_better_blocks"
 
 ##
 #Copy inputs
 ##
-copy_SS_inputs(dir.old = here('models/0_2_1_update_bio_Mval'), 
-               dir.new = here('models',new_name),
+copy_SS_inputs(dir.old = here('models/0_4_3_selexExtend'), 
+               dir.new = here('models', new_name),
                overwrite = TRUE)
 
 mod <- SS_read(here('models',new_name))
@@ -3220,7 +3221,7 @@ mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
 ##
 
 SS_write(mod,
-         dir = here('models',new_name),
+         dir = here('models', new_name),
          overwrite = TRUE)
 
 r4ss::run(dir = here('models',new_name), 
@@ -3228,10 +3229,11 @@ r4ss::run(dir = here('models',new_name),
           # extras = '-nohess', 
           # show_in_console = TRUE, 
           skipfinished = FALSE)
+beepr::beep()
 
 out <- r4ss::SS_output(here('models',new_name))
 r4ss::SS_plots(replist = out)
-
+beepr::beep()
 
 ####------------------------------------------------####
 ### 0_3_2_spatialHessian Do hessian for model 0_2_1_update_bio_Mval ----
