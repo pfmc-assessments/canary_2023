@@ -326,38 +326,38 @@
 #_No age_selex_parm
 # timevary selex parameters 
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE
-  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)...1 
-  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)...2 
-     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)...3 
-     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)...4 
-     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)...5 
-     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)...6 
-    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)...7 
-    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)...8 
-  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_2_OR_TWL(2)...9 
-  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_2_OR_TWL(2)...10
-     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_2_OR_TWL(2)...11
-     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_2_OR_TWL(2)...12
-     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_2_OR_TWL(2)...13
-     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_2_OR_TWL(2)...14
-    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_2_OR_TWL(2)...15
-    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_2_OR_TWL(2)...16
-  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_3_WA_TWL(3)...17
-  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_3_WA_TWL(3)...18
-     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_3_WA_TWL(3)...19
-     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_3_WA_TWL(3)...20
-     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_3_WA_TWL(3)...21
-     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_3_WA_TWL(3)...22
-    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_3_WA_TWL(3)...23
-    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_3_WA_TWL(3)...24
-13.001	65	43.2071	 50	50	0	4	#_SizeSel_P_1_4_CA_NTWL(4)    
-     0	 9	5.00821	4.2	50	0	5	#_SizeSel_P_3_4_CA_NTWL(4)    
-     0	 9	 7.3054	2.6	50	0	5	#_SizeSel_P_4_4_CA_NTWL(4)    
-    -5	 5	4.55253	  5	50	0	5	#_SizeSel_P_6_4_CA_NTWL(4)    
-13.001	65	43.2071	 50	50	0	4	#_SizeSel_P_1_5_OR_NTWL(5)    
-     0	 9	5.00821	4.2	50	0	5	#_SizeSel_P_3_5_OR_NTWL(5)    
-     0	 9	 7.3054	2.6	50	0	5	#_SizeSel_P_4_5_OR_NTWL(5)    
-    -5	 5	4.55253	  5	50	0	5	#_SizeSel_P_6_5_OR_NTWL(5)    
+  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2000 
+  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2011 
+     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2000 
+     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2011 
+     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2000 
+     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2011 
+    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK2repl_2000 
+    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK2repl_2011 
+  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_2_OR_TWL(2)_BLK2repl_2000 
+  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_2_OR_TWL(2)_BLK2repl_2011 
+     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_2_OR_TWL(2)_BLK2repl_2000 
+     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_2_OR_TWL(2)_BLK2repl_2011 
+     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_2_OR_TWL(2)_BLK2repl_2000 
+     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_2_OR_TWL(2)_BLK2repl_2011 
+    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_2_OR_TWL(2)_BLK2repl_2000 
+    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_2_OR_TWL(2)_BLK2repl_2011 
+  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_3_WA_TWL(3)_BLK2repl_2000 
+  13.1	65	48.8575	 50	50	0	4	#_SizeSel_P_1_3_WA_TWL(3)_BLK2repl_2011 
+     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_3_WA_TWL(3)_BLK2repl_2000 
+     0	 9	 4.2986	4.2	50	0	5	#_SizeSel_P_3_3_WA_TWL(3)_BLK2repl_2011 
+     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_3_WA_TWL(3)_BLK2repl_2000 
+     0	 9	0.01082	2.6	50	0	5	#_SizeSel_P_4_3_WA_TWL(3)_BLK2repl_2011 
+    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_3_WA_TWL(3)_BLK2repl_2000 
+    -5	 5	1.17553	  5	50	0	5	#_SizeSel_P_6_3_WA_TWL(3)_BLK2repl_2011 
+13.001	65	43.2071	 50	50	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK1repl_2000
+     0	 9	5.00821	4.2	50	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK1repl_2000
+     0	 9	 7.3054	2.6	50	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK1repl_2000
+    -5	 5	4.55253	  5	50	0	5	#_SizeSel_P_6_4_CA_NTWL(4)_BLK1repl_2000
+13.001	65	43.2071	 50	50	0	4	#_SizeSel_P_1_5_OR_NTWL(5)_BLK1repl_2000
+     0	 9	5.00821	4.2	50	0	5	#_SizeSel_P_3_5_OR_NTWL(5)_BLK1repl_2000
+     0	 9	 7.3054	2.6	50	0	5	#_SizeSel_P_4_5_OR_NTWL(5)_BLK1repl_2000
+    -5	 5	4.55253	  5	50	0	5	#_SizeSel_P_6_5_OR_NTWL(5)_BLK1repl_2000
 # info on dev vectors created for selex parms are reported with other devs after tag parameter section
 #
 0 #  use 2D_AR1 selectivity(0/1):  experimental feature
