@@ -1,3 +1,30 @@
 Note 1 Suggestion:  recr_dist_method 3 is simpler and takes 1 parm for each settlement
 Warning 1 : Setting in starter does not request all priors, and 21 parameters have priors and are not estimated, so their prior not included in obj_fun.
 Warning 2 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
+Warning 3 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2005; min: -7; max: 7; base: 4.92154 timevary_val: 9.69879 RecrDist_Area_3
+Warning 4 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2006; min: -7; max: 7; base: 4.92154 timevary_val: 7.27452 RecrDist_Area_3
+Warning 5 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2015; min: -7; max: 7; base: 4.92154 timevary_val: 7.20643 RecrDist_Area_3
+Warning 6 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2017; min: -7; max: 7; base: 4.92154 timevary_val: 9.03706 RecrDist_Area_3
+Warning 7 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2018; min: -7; max: 7; base: 4.92154 timevary_val: 7.03295 RecrDist_Area_3
+Warning 8 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 9 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 10 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 11 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Warning 12 : poor convergence in Fspr search 0.5 0.864844
+Warning 13 : Fmult = 40 cannot get high enough to achieve low SPR target: 0.5; SPR achieved is: 0.864844
+Warning 14 : poor convergence in Btarget search 114767 243962
+Warning 15 : poor convergence in Fmsy, final dy/dy2= -0.198045
+Warning 16 : Fmsy.mey is close to max allowed; check for convergence 
+Warning 17 : Forecast F capped by max possible F from control file4
+Warning 18 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2005; min: -7; max: 7; base: 4.92154 timevary_val: 9.69879 RecrDist_Area_3
+Warning 19 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2006; min: -7; max: 7; base: 4.92154 timevary_val: 7.27452 RecrDist_Area_3
+Warning 20 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2015; min: -7; max: 7; base: 4.92154 timevary_val: 7.20643 RecrDist_Area_3
+Warning 21 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2017; min: -7; max: 7; base: 4.92154 timevary_val: 9.03706 RecrDist_Area_3
+Warning 22 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1660; parm#: 24; y: 2018; min: -7; max: 7; base: 4.92154 timevary_val: 7.03295 RecrDist_Area_3
+Warning 23 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 24 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 25 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 26 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Warning 27 : Reminder: Number of lamdas !=0.0 and !=1.0:  20
+Note 2 Information:  N parameters that are on or within 1% of min-max bound: 5; check results, variance may be suspect
+ 27 warnings  and 2 notes 
