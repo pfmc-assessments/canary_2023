@@ -52,7 +52,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 
 # Extend catch time series ------------------------------------------------
@@ -342,7 +341,6 @@ mod$dat$lencomp <- mod$dat$lencomp |>
                 !(FltSvy %in% unique(ashop.lengths$FltSvy))) |>
   dplyr::bind_rows(pacfin.lengths, rec.lengths, ashop.lengths)
 
-#----
 
 
 ##
@@ -402,7 +400,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 
 # Extend catch time series ------------------------------------------------
@@ -438,7 +435,6 @@ mod$dat$fleetinfo$type[survey.ind] <- 3
 mod$dat$fleetinfo$surveytiming[mod$dat$fleetinfo$type==1] <- -1
 
 
-#----
 
 
 ##
@@ -483,7 +479,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 # Update survey indices ----------------------------------------------------------
 
@@ -512,7 +507,6 @@ mod$dat$CPUE <- dplyr::bind_rows(wcgbts.cpue, tri.cpue, prerecruit)
 
 
 
-#----
 
 
 ##
@@ -558,7 +552,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 # Update combo survey comps -----------------------------------------------------
 
@@ -628,7 +621,6 @@ mod$dat$lencomp <- mod$dat$lencomp |>
   dplyr::bind_rows(marginal.lengths.dfr)
 
 
-#----
 
 
 ##
@@ -674,7 +666,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 # Update triennial survey comps -----------------------------------------------------
 
@@ -741,7 +732,6 @@ mod$dat$lencomp <- mod$dat$lencomp |>
 # Note: consider switching triennial to marginal ages.
 
 
-#----
 
 
 ##
@@ -787,7 +777,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 # Update fishery comps ----------------------------------------------------
 
@@ -888,7 +877,6 @@ mod$dat$lencomp <- mod$dat$lencomp |>
   dplyr::bind_rows(pacfin.lengths, rec.lengths, ashop.lengths)
 
 
-#----
 
 
 ##
@@ -959,7 +947,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 
 # Extend catch time series ------------------------------------------------
@@ -1093,7 +1080,6 @@ mod$dat$lencomp <- mod$dat$lencomp |>
   dplyr::bind_rows(pacfin.lengths, rec.lengths, ashop.lengths)
 
 
-#----
 
 
 ##
@@ -1163,7 +1149,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 
 # Update survey indices ----------------------------------------------------------
@@ -1323,7 +1308,6 @@ mod$dat$lencomp <- mod$dat$lencomp |>
 # Note: consider switching triennial to marginal ages.
 
 #
-#----
 
 
 ##
@@ -1391,7 +1375,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 
 # Extend catch time series ------------------------------------------------
@@ -1584,7 +1567,6 @@ mod$dat$lencomp <- mod$dat$lencomp |>
 # Note: consider switching triennial to marginal ages.
 
 #
-#----
 
 
 ##
@@ -1656,10 +1638,8 @@ mod <- SS_read(here('models', new_name))
 #Make Changes
 ##
 
-#----
 mod$ctl$Block_Design[[1]][2] <- 2022
 mod$ctl$Block_Design[[2]][4] <- 2022
-#----
 
 
 ##
@@ -1727,10 +1707,8 @@ mod <- SS_read(here('models', new_name))
 #Make Changes
 ##
 
-#----
 mod$ctl$Block_Design[[1]][2] <- 2022
 mod$ctl$Block_Design[[2]][4] <- 2022
-#----
 
 
 ##
@@ -1796,7 +1774,6 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make Changes
 ##
 
-#----
 mod$start$detailed_age_structure <- 1 #all output
 
 # Extend catch time series ------------------------------------------------
@@ -2086,7 +2063,6 @@ mod$dat$lencomp <- mod$dat$lencomp |>
                 !(FltSvy %in% unique(ashop.lengths$FltSvy))) |>
   dplyr::bind_rows(pacfin.lengths, rec.lengths, ashop.lengths)
 
-#----
 
 
 ##
@@ -2139,7 +2115,7 @@ mod <- SS_read(here('models/0_2_1_update_bio_Mval'))
 ##
 #Make Changes
 ##
-#----
+
 # Update M as a single offset value ------------------------------------------------
 #mod$ctl$natM_type <- 0
 #mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
@@ -2202,7 +2178,6 @@ mod$ctl$MG_parms['Wtlen_2_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR
   round(wlcoef[wlcoef$Sex=="M","B"],3),
   50, 6)
 
-#----
 
 ##
 #Output files and run
@@ -2260,7 +2235,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Update M and growth parameters (not as offsets) ------------------------------------------------
 mod$ctl$natM_type <- 0
 mod$ctl$parameter_offset_approach <- 1 #Use direct assignment with matching of M to F for L at Amin
@@ -2308,7 +2283,6 @@ mod$ctl$MG_parms['CV_young_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'P
 mod$ctl$MG_parms['CV_old_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
   mod$ctl$MG_parms['CV_old_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
 
-#----
 
 ##
 #Output files and run
@@ -2351,7 +2325,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Update M as a single offset value ------------------------------------------------
 #mod$ctl$natM_type <- 0
 #mod$ctl$parameter_offset_approach <- 2 #because not having breakpoints
@@ -2365,7 +2339,6 @@ mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <
   round(log(5.4/max.age), 2), 
   0.31
 )
-#----
 
 ##
 #Output files and run
@@ -2408,14 +2381,13 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Update maturity ------------------------------------------------
 a50_fxn <- 10.87
 slope_fxn <- -0.688
 mod$ctl$maturity_option <- 2 #age logistic
 mod$ctl$MG_parms['Mat50%_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- 
   c(9, 12, a50_fxn, a50_fxn, 0.055)
-#----
 
 ##
 #Output files and run
@@ -2457,12 +2429,12 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Update steepness ------------------------------------------------
 #per best practices: https://www.pcouncil.org/documents/2023/03/accepted-practices-and-guidelines-for-groundfish-stock-assessments.pdf/
 mod$ctl$SR_parms['SR_BH_steep', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- 
   c(0.21, 0.99, 0.72, 0.72, 0.16, 2)
-#----
+
 
 ##
 #Output files and run
@@ -2504,7 +2476,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Update fecundity ------------------------------------------------
 mod$ctl$fecundity_option <- 2 #non-linear in length
 mod$ctl$MG_parms['Eggs_alpha_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type')] <- c(
@@ -2515,7 +2487,6 @@ mod$ctl$MG_parms['Eggs_beta_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', '
   2, 6, 
   4.043, 4.043, 
   0.3, 6) #set prior sd around half the CI bound for b (~0.6) and keep normal 
-#----
 
 ##
 #Output files and run
@@ -2557,7 +2528,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Update WL parameters ------------------------------------------------
 wlcoef <- utils::read.csv(here("data", "W_L_pars.csv"), header = TRUE)
 #Females
@@ -2582,7 +2553,6 @@ mod$ctl$MG_parms['Wtlen_2_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR
   round(wlcoef[wlcoef$Sex=="M","B"],3), 
   round(wlcoef[wlcoef$Sex=="M","B"],3),
   50, 6)
-#----
 
 ##
 #Output files and run
@@ -2626,7 +2596,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Update M and growth parameters (not as offsets) ------------------------------------------------
 mod$ctl$natM_type <- 0
 mod$ctl$parameter_offset_approach <- 1 #Use direct assignment with matching of M to F for L at Amin
@@ -2674,7 +2644,6 @@ mod$ctl$MG_parms['CV_young_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'P
 mod$ctl$MG_parms['CV_old_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- 
   mod$ctl$MG_parms['CV_old_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')]
 
-#----
 
 ##
 #Output files and run
@@ -2741,7 +2710,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Set phases for M = 2, growth = 3, CV = 4. Previously mostly all at 2
 mod$ctl$MG_parms[c('NatM_p_2_Fem_GP_1',
                    'L_at_Amin_Fem_GP_1',
@@ -2753,7 +2722,6 @@ mod$ctl$MG_parms[c('NatM_p_2_Fem_GP_1',
                    'VonBert_K_Mal_GP_1',
                    'CV_young_Mal_GP_1',
                    'CV_old_Mal_GP_1'),'PHASE'] <- c(2,3,3,3,4,4,3,3,4,4)
-#----
 
 ##
 #Output files and run
@@ -2806,12 +2774,11 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Set breakpoints to ages 20 and 21, when female sex ratio declines
 mod$ctl$M_ageBreakPoints[[1]] <- 20
 mod$ctl$M_ageBreakPoints[[2]] <- 21
 
-#----
 
 ##
 #Output files and run
@@ -2862,11 +2829,10 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Fix male M at the prior, estimate female m
 mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', 'PHASE'] <- -50
 
-#----
 
 ##
 #Output files and run
@@ -2922,7 +2888,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Base female longevity on 99.99% quantile of commercial ages. Rec and survey ages are lower
 max.age <- 55
 mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PHASE')] <- c(
@@ -2932,7 +2898,6 @@ mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'P
   0.31, 2 #estimate female M
 )
 
-#----
 
 ##
 #Output files and run
@@ -2982,7 +2947,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 # Set phases for M = 2, growth = 3, CV = 4. Previously mostly all at 2
 mod$ctl$MG_parms[c('L_at_Amin_Fem_GP_1',
                    'L_at_Amax_Fem_GP_1',
@@ -2993,7 +2958,6 @@ mod$ctl$MG_parms[c('L_at_Amin_Fem_GP_1',
                    'VonBert_K_Mal_GP_1',
                    'CV_young_Mal_GP_1',
                    'CV_old_Mal_GP_1'),'PHASE'] <- c(3,3,3,4,4,3,3,4,4)
-#----
 
 ##
 #Output files and run
@@ -3214,7 +3178,6 @@ rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
 
-#----
 
 ##
 #Output files and run
@@ -3280,7 +3243,7 @@ SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
 new_name <- "0_3_3_bestSpatialHessian"
 
-  ##
+##
 #Copy inputs
 ##
 
@@ -3360,7 +3323,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 #Make changes to starter ------------------------------------------------
 mod$start$N_bootstraps <- 1 #generate ss_new datafile
 mod$start$SPR_basis <- 4 #This may not be needed (1 is ok) but use raw (1-SPR). 
@@ -3403,7 +3366,6 @@ mod$ctl$F_Method <- 3 #TO DO: RECOMMENDED APPROACH IS 4 but IM NOT SURE WHAT DIF
 mod$ctl$maxF <- 4
 mod$ctl$F_iter <-  5
 
-#----
 
 
 ##
@@ -3461,7 +3423,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 #Make Changes
 ##
-#----
+
 ### Unmirror fleets ----
 # Un-mirror TWL, NTWL, REC selectivities
 mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
@@ -3580,7 +3542,6 @@ rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
-#----
 
 
 ##
@@ -3632,11 +3593,10 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 ### Extend previous blocks ----
 mod$ctl$Block_Design[[1]][2] <- 2022
 mod$ctl$Block_Design[[2]][4] <- 2022
-#----
 
 
 ##
@@ -3694,7 +3654,7 @@ mod <- SS_read(here('models',new_name))
 ##
 #Make Changes
 ##
-#----
+
 ### Update blocks ----
 
 mod$ctl$N_Block_Designs <- 4
@@ -3730,7 +3690,6 @@ rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -Block_Fxn, -id)
-#----
 
 
 ##
@@ -3789,7 +3748,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 #Make Changes
 ##
-#----
+
 ### Fix up selectivity parameter table ----
 
 #First for double normal selextivities
@@ -3892,7 +3851,6 @@ rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
-#----
 
 
 ##
@@ -3955,7 +3913,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 #Make Changes
 ##
-#----
+
 ### Unmirror fleets ----
 # Un-mirror TWL, NTWL, REC selectivities
 mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
@@ -4074,7 +4032,6 @@ rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
-#----
 
 
 ##
@@ -4139,7 +4096,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 #Make Changes
 ##
-#----
+
 ### Unmirror fleets ----
 # Un-mirror TWL, NTWL, REC selectivities
 mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
@@ -4282,7 +4239,6 @@ rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
-#----
 
 
 ##
@@ -4349,7 +4305,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 #Make Changes
 ##
-#----
+
 ### Update blocks ----
 
 mod$ctl$N_Block_Designs <- 4
@@ -4471,7 +4427,6 @@ rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
-#----
 
 
 ##
@@ -4536,7 +4491,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 #Make Changes
 ##
-#----
+
 ### Unmirror fleets ----
 # Un-mirror TWL, NTWL, REC selectivities
 mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
@@ -4597,7 +4552,6 @@ rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
-#----
 
 
 ##
