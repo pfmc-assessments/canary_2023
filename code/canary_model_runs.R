@@ -5223,6 +5223,121 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
+####------------------------------------------------####
+### 0_5_2_coastwide_selex_and_comps  ----
+####------------------------------------------------####
+
+new_name <- "0_5_2_coastwide_selex_comps_lambdas"
+
+##
+#Copy inputs
+##
+
+#this model is the same as converted but has detailed_age_structure in the starter set to 1
+copy_SS_inputs(dir.old = here('models/0_5_1_coastwide_better_blocks'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+# Change P5 from -999 to -15 so selectivity at small sizes is zero
+mod$ctl$size_selex_parms$INIT[grepl('P_5', rownames(mod$ctl$size_selex_parms))] <- -15
+
+# Get rid of CA ASHOP age and length comps. 
+# They are all in 2000s and have been added to OR
+# Ages:
+ca.ashop.comps.ind <- which(mod$dat$agecomp$FltSvy == 
+                              fleet.converter$fleet[fleet.converter$fleet_no_num == 
+                                                      'CA_ASHOP']
+)
+mod$dat$agecomp$Yr[ca.ashop.comps.ind] <- -1 * mod$dat$agecomp$Yr[ca.ashop.comps.ind]
+
+# Lengths:
+ca.ashop.comps.ind <- which(mod$dat$lencomp$FltSvy == 
+                              fleet.converter$fleet[fleet.converter$fleet_no_num == 
+                                                      'CA_ASHOP']
+)
+mod$dat$lencomp$Yr[ca.ashop.comps.ind] <- -1 * mod$dat$lencomp$Yr[ca.ashop.comps.ind]
+
+# Get rid of variance factor for CA fleets with no comp data.
+ca.rec.ind <- which(mod$ctl$Variance_adjustment_list$Fleet == 
+                      fleet.converter$fleet[fleet.converter$fleet_no_num == 'CA_REC'] & 
+                      mod$ctl$Variance_adjustment_list$Data_type == 5) 
+# likelihood component 5 = age comps
+ca.ashop.ind <- which(mod$ctl$Variance_adjustment_list$Fleet == 
+                      fleet.converter$fleet[fleet.converter$fleet_no_num == 'CA_ASHOP'] 
+) 
+mod$ctl$Variance_adjustment_list <- mod$ctl$Variance_adjustment_list[-c(ca.rec.ind,
+                                                                        ca.ashop.ind),]
+
+# Zero out lambdas that are effectively doing data weighting
+mod$ctl$lambdas <- NULL
+mod$ctl$N_lambdas <- 0
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+####------------------------------------------------####
+### 0_5_3 tune comps using Francis weights  ----
+####------------------------------------------------####
+
+
+new_name <- "0_5_3_tuned"
+
+##
+#Copy inputs
+##
+
+R.utils::copyDirectory(from = here('models/0_5_2_coastwide_selex_comps_lambdas'),
+                       to = here('models', new_name), 
+                       overwrite = TRUE)
+
+mod.out <- SS_output(here('models', new_name))
+xx <- r4ss::tune_comps(replist = mod.out, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 3, 
+                       extras = '-nohess')
+beepr::beep()
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          # extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp)
+beepr::beep()
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_3_1_coastwide',
+                                                 '0_5_1_coastwide_better_blocks',
+                                                 '0_5_2_coastwide_selex_comps_lambdas',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Original coastwide',
+                                     'Coastwide, blocks extended',
+                                     'Coastwide, various fixes',
+                                     'Coastwide, tuned comps'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 
 
 ##########################################################################################

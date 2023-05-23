@@ -60,13 +60,17 @@ caps_for_estimation <- caps_double_reads |>
                      values_fn = mean) |> # the values are repeated, sd of mean = 0 or NA 
   dplyr::select(-age_structure_id) 
 
-all_for_estimation <- dplyr::bind_rows(
+dat_5_readers <- dplyr::bind_rows(
   wdfw_for_estimation,
   caps_for_estimation
   ) |>
+ dplyr::select(-WDFW3, -NMFS3, -NMFS4) |> # remember to delete this
   dplyr::count(dplyr::across(dplyr::everything())) |>
   dplyr::mutate(dplyr::across(-n, ~ ifelse(is.na(.x), -999, .x))) |>
   dplyr::select(n, dplyr::everything())
+
+
+save(dat_full, dat_5_readers, file = here('data-raw/age_error_tmb/data_for_andre.Rdata'))
 
 min_age <- 1
 max_age <- 90
@@ -78,7 +82,7 @@ cat('Range_of_ages',
     paste(min_age, max_age),
     '',
     'Data_set_1',
-    paste(nrow(all_for_estimation), '# Number of rows'),
+    paste(100, '# Number of rows'),
     paste(ncol(all_for_estimation) - 1, '# Number of readers'),
     paste(minus_group, plus_group, ref_age, '# Minus group; plus group; reference age'),
     '',
@@ -88,11 +92,28 @@ cat('Range_of_ages',
     file = here('data-raw/age_error_tmb/canary.dat'), 
     sep = '\n', append = FALSE)
 
-write.table(all_for_estimation, 
+write.table(dplyr::slice(all_for_estimation, 1:100), 
             file = here('data-raw/age_error_tmb/canary.dat'),
             append = TRUE, row.names = FALSE, col.names = FALSE)
 
+# Andre start here
+Outs <- AgeingError:::CreateData(
+  DataFile = here("data-raw/age_error_tmb/canary.dat"),
+  NDataSet = 1
+)
 
+ModelSpecs <- AgeingError:::CreateSpecs(
+  SpecsFile = here("data-raw/age_error_tmb/canary.spc"),
+  DataSpecs = Outs,
+)
+model <- AgeingError:::DoApplyAgeError(
+  Species = Species,
+  DataSpecs = Outs,
+  ModelSpecs = ModelSpecs,
+  SaveDir = here("data-raw/age_error_tmb")
+)
+
+model$hessian
 
 # ADMB version
 xx <- nwfscAgeingError::RunFn(Data = all_for_estimation,
