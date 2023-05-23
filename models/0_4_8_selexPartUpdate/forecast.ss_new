@@ -2,7 +2,7 @@
 #C forecast file written by R function SS_writeforecast
 #C rerun model to get more complete formatting in forecast.ss_new
 #C should work with SS version: 3.3
-#C file write time: 2023-05-22 07:58:09
+#C file write time: 2023-05-22 16:39:53
 # for all year entries except rebuilder; enter either: actual year, -999 for styr, 0 for endyr, neg number for rel. endyr
 1 # Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F0.1,F_msy; 3=add F_Blimit; 
 2 # Do_MSY: 1= set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F0.1; 4=set to F(endyr); 5=calc F(MEY) with MSY_unit options
@@ -56,18 +56,18 @@
 2 # basis for fcast catch tuning and for fcast catch caps and allocation  (2=deadbio; 3=retainbio; 5=deadnum; 6=retainnum); NOTE: same units for all fleets
 # Conditional input if relative F choice = 2
 # enter list of:  season,  fleet, relF; if used, terminate with season=-9999
-# 1 1 0.215183
-# 1 2 0.0857069
-# 1 3 0.0476041
-# 1 4 0.0635362
-# 1 5 0.00458873
-# 1 6 0.00173872
-# 1 7 0.471262
-# 1 8 0.057852
-# 1 9 0.0509887
+# 1 1 0.250343
+# 1 2 0.0924128
+# 1 3 0.0537889
+# 1 4 0.0668755
+# 1 5 0.00447426
+# 1 6 0.00176305
+# 1 7 0.426444
+# 1 8 0.0512471
+# 1 9 0.0512271
 # 1 10 1e-06
-# 1 11 0.000589267
-# 1 12 0.000949804
+# 1 11 0.000540468
+# 1 12 0.000884074
 # 1 13 1e-06
 # 1 14 1e-06
 # 1 15 1e-06

@@ -246,72 +246,67 @@
 #
 #_SizeSelex
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn  #  parm_name
-  13.1	65	  48.8575	 50	50	0	  4	0	0	0	0	0	1	2	#_SizeSel_P_1_1_CA_TWL(1)        
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_1_CA_TWL(1)        
-     0	 9	   4.2986	4.2	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_3_1_CA_TWL(1)        
-     0	 9	  0.01082	2.6	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_4_1_CA_TWL(1)        
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_1_CA_TWL(1)        
-    -5	 5	  1.17553	  5	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_6_1_CA_TWL(1)        
-13.001	65	  43.2071	 50	50	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_4_CA_NTWL(4)       
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_4_CA_NTWL(4)       
-     0	 9	  5.00821	4.2	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_4_CA_NTWL(4)       
-     0	 9	   7.3054	2.6	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_4_CA_NTWL(4)       
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_4_CA_NTWL(4)       
-    -5	 5	  4.55253	  5	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_6_4_CA_NTWL(4)       
-13.001	65	  32.3937	 50	50	0	  4	0	0	0	0	0	3	2	#_SizeSel_P_1_7_CA_REC(7)        
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_7_CA_REC(7)        
-     0	 9	  3.75467	4.2	50	0	  5	0	0	0	0	0	3	2	#_SizeSel_P_3_7_CA_REC(7)        
-     0	 9	  3.40759	2.6	50	0	  5	0	0	0	0	0	3	2	#_SizeSel_P_4_7_CA_REC(7)        
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_7_CA_REC(7)        
-    -5	 5	 -1.66869	  5	50	0	  5	0	0	0	0	0	3	2	#_SizeSel_P_6_7_CA_REC(7)        
-13.001	65	  45.9334	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_10_CA_ASHOP(10)    
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_10_CA_ASHOP(10)    
-     0	 9	  2.99325	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_10_CA_ASHOP(10)    
-     0	 9	0.0064059	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_10_CA_ASHOP(10)    
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_10_CA_ASHOP(10)    
-    -5	 5	 0.605481	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_10_CA_ASHOP(10)    
-13.001	65	  13.0174	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_16_CA_NWFSC(16)    
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_16_CA_NWFSC(16)    
-     0	 9	  4.50915	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_16_CA_NWFSC(16)    
-     0	 9	  8.94034	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_16_CA_NWFSC(16)    
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_16_CA_NWFSC(16)    
-    -5	 5	  2.25288	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_16_CA_NWFSC(16)    
-13.001	65	  53.9843	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_19_CA_Tri_early(19)
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_19_CA_Tri_early(19)
-     0	 9	  6.56392	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_19_CA_Tri_early(19)
-     0	 9	 0.425038	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_19_CA_Tri_early(19)
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_19_CA_Tri_early(19)
-    -5	 5	  0.53673	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_19_CA_Tri_early(19)
-13.001	65	  51.1148	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_22_CA_Tri_late(22) 
-    -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_22_CA_Tri_late(22) 
-     0	 9	  5.66969	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_22_CA_Tri_late(22) 
-     0	 9	  4.25381	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_22_CA_Tri_late(22) 
-    -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_22_CA_Tri_late(22) 
-    -5	 5	-0.218186	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_22_CA_Tri_late(22) 
+13.001	65	     44	99	99	0	  4	0	0	0	0	0	1	2	#_SizeSel_P_1_1_CA_TWL(1)        
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_1_CA_TWL(1)        
+     0	 9	5.54518	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_3_1_CA_TWL(1)        
+     0	 9	5.17048	99	99	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_4_1_CA_TWL(1)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_1_CA_TWL(1)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_1_CA_TWL(1)        
+13.001	65	     36	99	99	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_4_CA_NTWL(4)       
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_4_CA_NTWL(4)       
+     0	 9	 5.2575	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_4_CA_NTWL(4)       
+     0	 9	5.48064	99	99	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_4_CA_NTWL(4)       
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_4_CA_NTWL(4)       
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_4_CA_NTWL(4)       
+13.001	65	     34	99	99	0	  4	0	0	0	0	0	3	2	#_SizeSel_P_1_7_CA_REC(7)        
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_7_CA_REC(7)        
+     0	 9	5.17048	99	99	0	  5	0	0	0	0	0	3	2	#_SizeSel_P_3_7_CA_REC(7)        
+     0	 9	5.54518	99	99	0	  5	0	0	0	0	0	3	2	#_SizeSel_P_4_7_CA_REC(7)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_7_CA_REC(7)        
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_7_CA_REC(7)        
+13.001	65	     48	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_10_CA_ASHOP(10)    
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_10_CA_ASHOP(10)    
+     0	 9	5.51343	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_10_CA_ASHOP(10)    
+     0	 9	5.21494	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_10_CA_ASHOP(10)    
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_10_CA_ASHOP(10)    
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_10_CA_ASHOP(10)    
+13.001	65	     41	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_16_CA_NWFSC(16)    
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_16_CA_NWFSC(16)    
+     0	 9	5.44674	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_16_CA_NWFSC(16)    
+     0	 9	5.29832	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_16_CA_NWFSC(16)    
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_16_CA_NWFSC(16)    
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_16_CA_NWFSC(16)    
+13.001	65	     43	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_19_CA_Tri_early(19)
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_19_CA_Tri_early(19)
+     0	 9	5.51343	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_19_CA_Tri_early(19)
+     0	 9	5.21494	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_19_CA_Tri_early(19)
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_19_CA_Tri_early(19)
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_19_CA_Tri_early(19)
+13.001	65	     39	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_22_CA_Tri_late(22) 
+   -99	99	    -15	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_2_22_CA_Tri_late(22) 
+     0	 9	5.37528	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_22_CA_Tri_late(22) 
+     0	 9	5.37528	99	99	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_22_CA_Tri_late(22) 
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_5_22_CA_Tri_late(22) 
+   -99	99	   -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_22_CA_Tri_late(22) 
 #_AgeSelex
 #_No age_selex_parm
 # timevary selex parameters 
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE
-  13.1	65	 48.8575	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK1repl_2001 
-  13.1	65	 48.8575	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK1repl_2011 
-     0	 9	  4.2986	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK1repl_2001 
-     0	 9	  4.2986	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK1repl_2011 
-     0	 9	 0.01082	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK1repl_2001 
-     0	 9	 0.01082	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK1repl_2011 
-    -5	 5	 1.17553	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK1repl_2001 
-    -5	 5	 1.17553	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK1repl_2011 
-13.001	65	 43.2071	 50	50	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK2repl_2003
-13.001	65	 43.2071	 50	50	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK2repl_2017
-     0	 9	 5.00821	4.2	50	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK2repl_2003
-     0	 9	 5.00821	4.2	50	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK2repl_2017
-     0	 9	  7.3054	2.6	50	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK2repl_2003
-     0	 9	  7.3054	2.6	50	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK2repl_2017
-    -5	 5	 4.55253	  5	50	0	5	#_SizeSel_P_6_4_CA_NTWL(4)_BLK2repl_2003
-    -5	 5	 4.55253	  5	50	0	5	#_SizeSel_P_6_4_CA_NTWL(4)_BLK2repl_2017
-13.001	65	 32.3937	 50	50	0	4	#_SizeSel_P_1_7_CA_REC(7)_BLK3repl_2001 
-     0	 9	 3.75467	4.2	50	0	5	#_SizeSel_P_3_7_CA_REC(7)_BLK3repl_2001 
-     0	 9	 3.40759	2.6	50	0	5	#_SizeSel_P_4_7_CA_REC(7)_BLK3repl_2001 
-    -5	 5	-1.66869	  5	50	0	5	#_SizeSel_P_6_7_CA_REC(7)_BLK3repl_2001 
+13.001	65	     44	99	99	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK1repl_2001 
+13.001	65	     44	99	99	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK1repl_2011 
+     0	 9	5.54518	99	99	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK1repl_2001 
+     0	 9	5.54518	99	99	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK1repl_2011 
+     0	 9	5.17048	99	99	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK1repl_2001 
+     0	 9	5.17048	99	99	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK1repl_2011 
+13.001	65	     36	99	99	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK2repl_2003
+13.001	65	     36	99	99	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK2repl_2017
+     0	 9	 5.2575	99	99	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK2repl_2003
+     0	 9	 5.2575	99	99	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK2repl_2017
+     0	 9	5.48064	99	99	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK2repl_2003
+     0	 9	5.48064	99	99	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK2repl_2017
+13.001	65	     34	99	99	0	4	#_SizeSel_P_1_7_CA_REC(7)_BLK3repl_2001 
+     0	 9	5.17048	99	99	0	5	#_SizeSel_P_3_7_CA_REC(7)_BLK3repl_2001 
+     0	 9	5.54518	99	99	0	5	#_SizeSel_P_4_7_CA_REC(7)_BLK3repl_2001 
 # info on dev vectors created for selex parms are reported with other devs after tag parameter section
 #
 0 #  use 2D_AR1 selectivity(0/1):  experimental feature
