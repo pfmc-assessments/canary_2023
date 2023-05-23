@@ -4404,7 +4404,6 @@ selex_new$INIT[p4.ind] <- purrr::map(selex_fleets,
   unlist()
 
 # Use new block set up
-selex_new <- mod$ctl$size_selex_parms
 selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
 selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
 
@@ -4448,7 +4447,7 @@ r4ss::run(dir = here('models',new_name),
 ##
 
 pp <- SS_output(here('models',new_name),covar=FALSE)
-SS_plots(pp, plot = c(1:26))
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('0_4_1_ssInputs',
@@ -4466,13 +4465,13 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 0_4_9_unmirror2015 To see if unmirroring really is intractable, check what doing that does to 2015 model ----
+### 0_4_9_unMirror2015 To see if unmirroring really is intractable, check what doing that does to 2015 model ----
 ####------------------------------------------------####
 
 #2015 model can handle unmirroring. Not sure why current 2023 version cant. Try whether its because
 #of new selex setup
 
-new_name <- "0_4_9_unmirror2015"
+new_name <- "0_4_9_unMirror2015"
 
 ##
 #Copy inputs
@@ -4593,12 +4592,12 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 0_4_10_unmirrorOldSetup Check if the new setup (3parm selex) is contributing to poor stability when unmirroring ----
+### 0_4_10_unMirrorOldSetup Check if the new setup (3parm selex) is contributing to poor stability when unmirroring ----
 ####------------------------------------------------####
 
-#Does new selex setup contribute to unstable results seen in 0_4_7? Yes it does!!
+#Does new selex setup contribute to unstable results seen in 0_4_6? Yes it does!!
 
-new_name <- "0_4_10_unmirrorOldSetup"
+new_name <- "0_4_10_unMirrorOldSetup"
 
 ##
 #Copy inputs
@@ -4725,10 +4724,10 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 0_4_11_unmirrorPreSSinput Check if the new SS inputs contribute to poor stability when unmirroring ----
+### 0_4_11_unMirrorPreSSinput Check if the new SS inputs contribute to poor stability when unmirroring ----
 ####------------------------------------------------####
 
-#Does new SSinput setup contribute to unstable results seen in 0_4_7? Not the cause, but does affect
+#Does new SSinput setup contribute to unstable results seen in 0_4_6? Not the case, but it does affect scale
 
 new_name <- "0_4_11_unmirrorPreSSinput"
 
@@ -4852,6 +4851,379 @@ SSsummarize(xx) |>
                                      'SS3 inputs',
                                      '+ extend Blocks + oldSetup + unmirror'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_4_12_selexFullUpdate_OldSetup This repeats 0_4_7 (new blocks, unmirror, new setup) but with old setup of parameters ----
+####------------------------------------------------####
+
+new_name <- "0_4_12_selexFullUpdate_OldSetup"
+
+##
+#Copy inputs
+##
+
+#this model is the same as converted but has detailed_age_structure in the starter set to 1
+copy_SS_inputs(dir.old = here('models/0_4_1_ssInputs'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+### Unmirror fleets ----
+# Un-mirror TWL, NTWL, REC selectivities
+mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
+mod$ctl$size_selex_types$Special[grep('TWL|REC', fleet.converter$fleetname)] <- 0
+
+# Except WA NTWL which is very small fleet, it mirrors TWL (more similar to WA TWL than OR NTWL)
+mod$ctl$size_selex_types$Pattern[fleet.converter$fleet_no_num=='WA_NTWL'] <- 15
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_NTWL'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# Foreign fleets mirror respective state TWL fleet
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='OR_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='OR_TWL']
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# NMFS surveys by state mirror one another as well as the coastwide so keep as is
+
+### Update blocks ----
+mod$ctl$N_Block_Designs <- 6
+mod$ctl$blocks_per_pattern <- c(2,2,1,2,2,1)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:6)
+
+#Now that no longer mirrored can have distinct blocks
+#Note: This is probably too many
+mod$ctl$Block_Design <- list(c(2001, 2010, 2011, 2022), #TWL fleets
+                             c(2003, 2020, 2021, 2022), #CA ntwl
+                             c(2001, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR and WA NTWL, OR rec
+                             c(2006, 2020, 2021, 2022), #WA rec
+                             c(1891, 1891))
+
+### Update selectivity parameter table matching Jim's parameters setup ----
+
+#First for double normal selextivities
+selex_fleets <- rownames(mod$ctl$size_selex_types)[mod$ctl$size_selex_types$Pattern == 24] |>
+  as.list()
+
+#Get names of all six parms for double normal
+selex_names <- purrr::map(selex_fleets,
+                          ~ glue::glue('SizeSel_P_{par}_{fleet_name}({fleet_no})',
+                                       par = 1:6,
+                                       fleet_name = .x,
+                                       fleet_no = fleet.converter$fleet[fleet.converter$fleetname == .x])) |>
+  unlist()
+
+#Extend CA TWL and CA REC lines to all three states.
+#Extend CA NTWL to two other states, because mirroring WA NTWL to WA TWL
+#Thus initial values among states are the same as when they are mirrored
+selex_new <- mod$ctl$size_selex_parms
+
+selex_new <- rbind(selex_new[grep('_TWL', rownames(selex_new)),], 
+                   selex_new[grep('_TWL', rownames(selex_new)),],
+                   selex_new) #extend TWL to three states
+selex_new <- rbind(selex_new[1:(min(grep('_NTWL', rownames(selex_new)))-1),], 
+                   selex_new[grep('_NTWL', rownames(selex_new)),], #extend NTWL to two states
+                   selex_new[min(grep('_NTWL', rownames(selex_new))):nrow(selex_new),]) #extend trawls
+selex_new <- rbind(selex_new[1:(min(grep('_REC', rownames(selex_new)))-1),], 
+                   selex_new[grep('_REC', rownames(selex_new)),],
+                   selex_new[grep('_REC', rownames(selex_new)),],
+                   selex_new[min(grep('_REC', rownames(selex_new))):nrow(selex_new),]) #extend REC to three states
+rownames(selex_new) <- selex_names
+
+# # calculate initial values for p1, p3, p4 for each fleet
+# # based on recommendations in assessment handbook
+# selex_modes <- mod$dat$lencomp |>
+#   dplyr::arrange(FltSvy) |>
+#   dplyr::group_by(FltSvy) |>
+#   dplyr::summarise(dplyr::across(f12:m66, ~ sum(Nsamp*.x)/sum(Nsamp))) |> 
+#   tidyr::pivot_longer(cols = -FltSvy, names_to = 'len_bin', values_to = 'dens') |>
+#   tidyr::separate(col = len_bin, into = c('sex', 'length'), sep = 1) |>
+#   dplyr::group_by(FltSvy, sex) |> 
+#   dplyr::summarise(mode = length[which.max(dens)]) |>
+#   dplyr::summarise(mode = mean(as.numeric(mode))) |>
+#   dplyr::mutate(asc.slope = log(8*(mode - min(mod$dat$lbin_vector))),
+#                 desc.slope = log(8*(max(mod$dat$lbin_vector)-mode)))
+
+
+
+# Use new block set up
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+selex_new[grepl('CA_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+#WA NTWL is set to mirror WA TWL. It mirrors better with OR NTWL so could change that
+
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 5
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table ----
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_4_1_ssInputs',
+                                                 '0_4_6_unMirror',
+                                                 '0_4_7_selexFullUpdate',
+                                                 '0_4_8_selexPartUpdate',
+                                                 '0_4_10_unMirrorOldSetup',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('SS3 inputs',
+                                     '+ extend Blocks + newSetup + unmirror',
+                                     '+ full Blocks + newSetup + unmirror',
+                                     '+ part Blocks + newSetup',
+                                     '+ extend Blocks + oldSetup + unmirror',
+                                     '+ full Blocks + oldSetup + unmirror'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_4_13_newInit This repeats 0_4_12 but uses new inits for p1, p3, and p4 ----
+####------------------------------------------------####
+
+new_name <- "0_4_13_newInit"
+
+##
+#Copy inputs
+##
+
+#this model is the same as converted but has detailed_age_structure in the starter set to 1
+copy_SS_inputs(dir.old = here('models/0_4_1_ssInputs'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+### Unmirror fleets ----
+# Un-mirror TWL, NTWL, REC selectivities
+mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
+mod$ctl$size_selex_types$Special[grep('TWL|REC', fleet.converter$fleetname)] <- 0
+
+# Except WA NTWL which is very small fleet, it mirrors TWL (more similar to WA TWL than OR NTWL)
+mod$ctl$size_selex_types$Pattern[fleet.converter$fleet_no_num=='WA_NTWL'] <- 15
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_NTWL'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# Foreign fleets mirror respective state TWL fleet
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='OR_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='OR_TWL']
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# NMFS surveys by state mirror one another as well as the coastwide so keep as is
+
+### Update blocks ----
+mod$ctl$N_Block_Designs <- 6
+mod$ctl$blocks_per_pattern <- c(2,2,1,2,2,1)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:6)
+
+#Now that no longer mirrored can have distinct blocks
+#Note: This is probably too many
+mod$ctl$Block_Design <- list(c(2001, 2010, 2011, 2022), #TWL fleets
+                             c(2003, 2020, 2021, 2022), #CA ntwl
+                             c(2001, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR and WA NTWL, OR rec
+                             c(2006, 2020, 2021, 2022), #WA rec
+                             c(1891, 1891))
+
+### Update selectivity parameter table matching Jim's parameters setup but with updated inits ----
+
+#First for double normal selextivities
+selex_fleets <- rownames(mod$ctl$size_selex_types)[mod$ctl$size_selex_types$Pattern == 24] |>
+  as.list()
+
+#Get names of all six parms for double normal
+selex_names <- purrr::map(selex_fleets,
+                          ~ glue::glue('SizeSel_P_{par}_{fleet_name}({fleet_no})',
+                                       par = 1:6,
+                                       fleet_name = .x,
+                                       fleet_no = fleet.converter$fleet[fleet.converter$fleetname == .x])) |>
+  unlist()
+
+#Extend CA TWL and CA REC lines to all three states.
+#Extend CA NTWL to two other states, because mirroring WA NTWL to WA TWL
+#Thus initial values among states are the same as when they are mirrored
+selex_new <- mod$ctl$size_selex_parms
+
+selex_new <- rbind(selex_new[grep('_TWL', rownames(selex_new)),], 
+                   selex_new[grep('_TWL', rownames(selex_new)),],
+                   selex_new) #extend TWL to three states
+selex_new <- rbind(selex_new[1:(min(grep('_NTWL', rownames(selex_new)))-1),], 
+                   selex_new[grep('_NTWL', rownames(selex_new)),], #extend NTWL to two states
+                   selex_new[min(grep('_NTWL', rownames(selex_new))):nrow(selex_new),]) #extend trawls
+selex_new <- rbind(selex_new[1:(min(grep('_REC', rownames(selex_new)))-1),], 
+                   selex_new[grep('_REC', rownames(selex_new)),],
+                   selex_new[grep('_REC', rownames(selex_new)),],
+                   selex_new[min(grep('_REC', rownames(selex_new))):nrow(selex_new),]) #extend REC to three states
+rownames(selex_new) <- selex_names
+
+# calculate initial values for p1, p3, p4 for each fleet
+# based on recommendations in assessment handbook
+selex_modes <- mod$dat$lencomp |>
+  dplyr::arrange(FltSvy) |>
+  dplyr::group_by(FltSvy) |>
+  dplyr::summarise(dplyr::across(f12:m66, ~ sum(Nsamp*.x)/sum(Nsamp))) |>
+  tidyr::pivot_longer(cols = -FltSvy, names_to = 'len_bin', values_to = 'dens') |>
+  tidyr::separate(col = len_bin, into = c('sex', 'length'), sep = 1) |>
+  dplyr::group_by(FltSvy, sex) |>
+  dplyr::summarise(mode = length[which.max(dens)]) |>
+  dplyr::summarise(mode = mean(as.numeric(mode))) |>
+  dplyr::mutate(asc.slope = log(8*(mode - min(mod$dat$lbin_vector))),
+                desc.slope = log(8*(max(mod$dat$lbin_vector)-mode)))
+
+# P_1
+p1.ind <- grep('P_1', rownames(selex_new))
+selex_new$LO[p1.ind] <- 13.001
+selex_new$HI[p1.ind] <- 65
+selex_new$PHASE[p1.ind] <- 4
+selex_new$INIT[p1.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$mode[selex_modes$FltSvy == 
+                                                          fleet.converter$fleet[fleet.converter$fleetname == .x]]) |>
+  unlist()
+# Hard coding this in, used mode of ASHOP selectivity based on mode of all ASHOP fleets (~48) not just CA
+selex_new['SizeSel_P_1_10_CA_ASHOP(10)', 'INIT'] <- 48
+
+# P_3
+p3.ind <- grep('P_3', rownames(selex_new))
+selex_new$PHASE[p3.ind] <- 5
+selex_new$LO[p3.ind] <- 0 #This can become negative, but effect is small compared to when 0
+selex_new$HI[p3.ind] <- 9
+selex_new$INIT[p3.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$asc.slope[selex_modes$FltSvy == 
+                                                               fleet.converter$fleet[fleet.converter$fleetname == 
+                                                                                       .x]]) |>
+  unlist()
+
+# P_4
+p4.ind <- grep('P_4', rownames(selex_new))
+selex_new$PHASE[p4.ind] <- 5
+selex_new$LO[p4.ind] <- 0 #This can become negative, but effect is small compared to when 0
+selex_new$HI[p4.ind] <- 9
+selex_new$INIT[p4.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$desc.slope[selex_modes$FltSvy == 
+                                                                fleet.converter$fleet[fleet.converter$fleetname == 
+                                                                                        .x]]) |>
+  unlist()
+
+
+# Use new block set up
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+selex_new[grepl('CA_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+#WA NTWL is set to mirror WA TWL. It mirrors better with OR NTWL so could change that
+
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 5
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+
+### Time varying selectivity table ----
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_4_12_selexFullUpdate_OldSetup',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('full Blocks + oldSetup + unmirror',
+                                     'full Blocks + oldSetup + unmirror + newInits'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+
 
 ##########################################################################################
 
