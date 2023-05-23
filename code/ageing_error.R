@@ -1,3 +1,5 @@
+# remotes::install_github('pfmc-assessments/nwfscAgeingError', ref = 'TMB')
+
 library(nwfscAgeingError)
 library(here)
 
@@ -66,6 +68,33 @@ all_for_estimation <- dplyr::bind_rows(
   dplyr::mutate(dplyr::across(-n, ~ ifelse(is.na(.x), -999, .x))) |>
   dplyr::select(n, dplyr::everything())
 
+min_age <- 1
+max_age <- 90
+minus_group <- 1
+plus_group <- 35
+ref_age <- 10
+
+cat('Range_of_ages', 
+    paste(min_age, max_age),
+    '',
+    'Data_set_1',
+    paste(nrow(all_for_estimation), '# Number of rows'),
+    paste(ncol(all_for_estimation) - 1, '# Number of readers'),
+    paste(minus_group, plus_group, ref_age, '# Minus group; plus group; reference age'),
+    '',
+    paste(' ' , 
+          stringr::str_flatten(1:(ncol(all_for_estimation) - 1), collapse = ' '), 
+          '# Header of reader numbers'),
+    file = here('data-raw/age_error_tmb/canary.dat'), 
+    sep = '\n', append = FALSE)
+
+write.table(all_for_estimation, 
+            file = here('data-raw/age_error_tmb/canary.dat'),
+            append = TRUE, row.names = FALSE, col.names = FALSE)
+
+
+
+# ADMB version
 xx <- nwfscAgeingError::RunFn(Data = all_for_estimation,
                         SigOpt = c(1, 1, -2, -2, 1, -5, -5, -5),
                         BiasOpt = c(1, 1, -2, -2, 0, -5, -5, -5),
