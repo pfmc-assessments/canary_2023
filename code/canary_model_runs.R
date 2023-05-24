@@ -5457,7 +5457,7 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 ####------------------------------------------------####
-### 0_5_4 full new blocked with Francis weighting  ----
+### 0_5_5 full new blocked with Francis weighting  ----
 ####------------------------------------------------####
 
 new_name <- "0_5_5_fullBlocks_tuned"
