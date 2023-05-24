@@ -2995,7 +2995,7 @@ SSsummarize(xx) |>
 # 0_3_1 and 0_5_1 Move to coastwide model -------------------------------------------------
 ##########################################################################################
 
-# new_name <- "0_3_1_coastwide"
+# new_name <- "0_3_1_coastwide" #copied from 0_2_1_update_bio_Mval
 new_name <- "0_5_1_coastwide_better_blocks"
 
 ##
@@ -3393,6 +3393,25 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                       subdir = c('0_3_3_bestSpatialHessian',new_name)))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2023 model', 'SS3 inputs'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
+####------------------------------------------------####
+### 0_4_1_1_MGdevPH ----
+####------------------------------------------------####
+
+#Not reproducing here but I copied model 0_4_1_ssInputs and then set all 
+#dev_PH = 0.5 values to 0 in the MG parm section to confirm that this indeed 
+#has no effect on the model
+
+new_name <- '0_4_1_1_MGdevPH'
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_4_1_ssInputs',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('SS3 inputs',
+                                     'set dev_PH to 0'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
 
 
@@ -5431,7 +5450,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  new_name)))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Original coastwide',
-                                     'Coastwide with new data and bio',
+                                     'Coastwide with new data and bio (for M just val)',
                                      'Coastwide, blocks extended',
                                      'Coastwide, various fixes',
                                      'Coastwide, various fixes and full blocks'),
@@ -5648,6 +5667,11 @@ dw <- tune_comps(replist = yy, dir = here('models', new_name),
                  allow_up_tuning = TRUE,
                  write = TRUE)
 
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
 
 ##
 #Comparison plots
@@ -5665,144 +5689,6 @@ SSsummarize(xx) |>
                                      'selexFullUpdate with lambda = 1',
                                      'after 2 new Francis runs'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
-
-
-# ####------------------------------------------------####
-# ### 0_6_1_1_francis1_047 Copy model 0_6_1_0 WITHIN CA ASHOP COMPS and update first Francis weights and run ----
-# ####------------------------------------------------####
-# 
-# new_name <- "0_6_1_1_francis1_047"
-# 
-# ##
-# #Copy inputs
-# ##
-# 
-# copy_SS_inputs(dir.old = here('models/0_6_1_0_negYearCAashop'), 
-#                dir.new = here('models',new_name),
-#                overwrite = TRUE)
-# 
-# mod <- SS_read(here('models',new_name))
-# 
-# 
-# ##
-# #Make Changes
-# ##
-# 
-# yy <- SS_output(here('models/0_6_1_0_negYearCAashop'))
-# dw <- tune_comps(replist = yy, dir = here('models/0_6_1_0_negYearCAashop'), 
-#                  option = c("Francis"), niters_tuning = 0, 
-#                  exe = here('models/ss_win.exe'), write = TRUE)
-# 
-# #Replace Francis weights with value from above
-# colnames(dw)[1] = "Data_type"
-# mod$ctl$Variance_adjustment_list <- dplyr::left_join(mod$ctl$Variance_adjustment_list, dw,
-#                                                      by = dplyr::join_by(Data_type, Fleet))
-#                                               
-# 
-# 
-# ##
-# #Output files and run
-# ##
-# 
-# SS_write(mod,
-#          dir = here('models',new_name),
-#          overwrite = TRUE)
-# 
-# r4ss::run(dir = here('models',new_name), 
-#           exe = here('models/ss_win.exe'), 
-#           extras = '-nohess', 
-#           # show_in_console = TRUE, 
-#           skipfinished = FALSE)
-# 
-# 
-# ####------------------------------------------------####
-# ### 0_6_1_2_francis2_047 Now update second Francis weights and run ----
-# ####------------------------------------------------####
-# 
-# new_name <- "0_6_1_2_francis2_047"
-# 
-# ##
-# #Copy inputs
-# ##
-# 
-# copy_SS_inputs(dir.old = here('models/0_6_1_1_francis1_047'), 
-#                dir.new = here('models',new_name),
-#                overwrite = TRUE)
-# 
-# mod <- SS_read(here('models',new_name))
-# 
-# 
-# ##
-# #Make Changes
-# ##
-# 
-# yy <- SS_output(here('models/0_6_1_1_francis1_047'))
-# dw <- tune_comps(replist = yy, dir = here('models/0_6_1_1_francis1_047'), 
-#                  option = c("Francis"), niters_tuning = 0, 
-#                  exe = here('models/ss_win.exe'), write = TRUE)
-# 
-# #Replace Francis weights with value from above
-# mod$ctl$Variance_adjustment_list
-# 
-# 
-# ##
-# #Output files and run
-# ##
-# 
-# SS_write(mod,
-#          dir = here('models',new_name),
-#          overwrite = TRUE)
-# 
-# r4ss::run(dir = here('models',new_name), 
-#           exe = here('models/ss_win.exe'), 
-#           extras = '-nohess', 
-#           # show_in_console = TRUE, 
-#           skipfinished = FALSE)
-# 
-# 
-# ####------------------------------------------------####
-# ### 0_6_1_3_francis3_047 Now update third and final Francis weights and run ----
-# ####------------------------------------------------####
-# 
-# new_name <- "0_6_1_3_francis3_047"
-# 
-# ##
-# #Copy inputs
-# ##
-# 
-# copy_SS_inputs(dir.old = here('models/0_6_1_2_francis2_047'), 
-#                dir.new = here('models',new_name),
-#                overwrite = TRUE)
-# 
-# mod <- SS_read(here('models',new_name))
-# 
-# 
-# ##
-# #Make Changes
-# ##
-# 
-# yy <- SS_output(here('models/0_6_1_2_francis2_047'))
-# dw <- tune_comps(replist = yy, dir = here('models/0_6_1_2_francis2_047'), 
-#                  option = c("Francis"), niters_tuning = 0, 
-#                  exe = here('models/ss_win.exe'), write = TRUE)
-# 
-# #Replace Francis weights with value from above
-# mod$ctl$Variance_adjustment_list
-# 
-# 
-# ##
-# #Output files and run
-# ##
-# 
-# SS_write(mod,
-#          dir = here('models',new_name),
-#          overwrite = TRUE)
-# 
-# r4ss::run(dir = here('models',new_name), 
-#           exe = here('models/ss_win.exe'), 
-#           extras = '-nohess', 
-#           # show_in_console = TRUE, 
-#           skipfinished = FALSE)
 
 
 
@@ -5896,6 +5782,11 @@ dw <- tune_comps(replist = yy, dir = here('models', new_name),
                  allow_up_tuning = TRUE,
                  write = TRUE)
 
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
 
 ##
 #Comparison plots
@@ -6005,6 +5896,11 @@ dw <- tune_comps(replist = yy, dir = here('models', new_name),
                  allow_up_tuning = TRUE,
                  write = TRUE)
 
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
 
 ##
 #Comparison plots
