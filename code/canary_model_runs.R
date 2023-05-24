@@ -5437,6 +5437,53 @@ SSsummarize(xx) |>
                                      'Coastwide, various fixes and full blocks'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
+####------------------------------------------------####
+### 0_5_4 full new blocked with Francis weighting  ----
+####------------------------------------------------####
+
+new_name <- "0_5_5_fullBlocks_tuned"
+
+##
+#Copy inputs
+##
+
+R.utils::copyDirectory(from = here('models/0_5_4_fullBlocks'),
+                       to = here('models', new_name), 
+                       overwrite = TRUE)
+
+mod.out <- SS_output(here('models', new_name))
+xx <- r4ss::tune_comps(replist = mod.out, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 3, 
+                       extras = '-nohess')
+beepr::beep()
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          # extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp)
+beepr::beep()
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_3_1_coastwide',
+                                                 '0_5_1_coastwide_better_blocks',
+                                                 '0_5_2_coastwide_selex_comps_lambdas',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Original coastwide',
+                                     'Coastwide, blocks extended',
+                                     'Coastwide, various fixes',
+                                     'Coastwide, tuned comps'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 
 ####------------------------------------------------####
 ### Setup models 0_6_0 with: -----
