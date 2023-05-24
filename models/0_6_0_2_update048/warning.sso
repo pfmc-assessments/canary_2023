@@ -1,0 +1,20 @@
+Note 1 Suggestion:  recr_dist_method 3 is simpler and takes 1 parm for each settlement
+Warning 1 : Setting in starter does not request all priors, and 21 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 : 1st iteration warning: ssb(endyr)/ssb(styr)= 1.40961e-08; suggest start with larger R0 to get near 0.4; or use depletion fleet option
+Warning 3 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
+Warning 4 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1642; parm#: 24; y: 2005; min: -7; max: 7; base: 4.38896 timevary_val: 9.15236 RecrDist_Area_3
+Warning 5 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1642; parm#: 24; y: 2006; min: -7; max: 7; base: 4.38896 timevary_val: 7.88648 RecrDist_Area_3
+Warning 6 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 7 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 8 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 9 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Warning 10 : Forecast F capped by max possible F from control file4
+Warning 11 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1642; parm#: 24; y: 2005; min: -7; max: 7; base: 4.38896 timevary_val: 9.15236 RecrDist_Area_3
+Warning 12 : adjusted MGparm out of base parm bounds. Phase: 6; Inter: 1642; parm#: 24; y: 2006; min: -7; max: 7; base: 4.38896 timevary_val: 7.88648 RecrDist_Area_3
+Warning 13 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 14 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 15 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 16 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Warning 17 : Reminder: Number of lamdas !=0.0 and !=1.0:  20
+Note 2 Information:  N parameters that are on or within 1% of min-max bound: 2; check results, variance may be suspect
+ 17 warnings  and 2 notes 

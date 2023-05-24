@@ -5339,6 +5339,544 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
+####------------------------------------------------####
+### Setup models 0_6_0 with: -----
+### 1. Removing CA ASHOP length and age comps (which are holdovers from early models)
+### 2. Removing the var_adj value for ages for CA_REC (fleet 7, type 5) because there are not CA rec ages in this model or in the last model
+### 3. Remove the var_adj values for ages and lengths for CA ASHOP
+### 4. Setting the new selex setup to have init for param 5 as -15 (instead of -999) because we expect selectivity at the youngest sizes to be 0
+####------------------------------------------------####
+
+#047 now behaves but 048 now does not. 
+#Appears to be due to parm5 adjustment for 048 since its not due to removing CA ASHOP.
+
+new_name <- c("0_6_0_1_update047", "0_6_0_2_update048", "0_6_0_3_update0413")
+old_name <- c("0_4_7_selexFullUpdate", "0_4_8_selexPartUpdate", "0_4_13_newInit")
+
+for(i in 1:length(new_name)){
+  
+  ##
+  #Copy inputs
+  ##
+  
+  copy_SS_inputs(dir.old = here('models',old_name[i]),
+                 dir.new = here('models',new_name[i]),
+                 overwrite = TRUE)
+  
+  mod <- SS_read(here('models',new_name[i]))
+  
+  
+  ##
+  #Make Changes
+  ##
+  
+  #Exclude CA ASHOP length and age comps
+  mod$dat$lencomp <- mod$dat$lencomp[mod$dat$lencomp$FltSvy!=10,]
+  mod$dat$agecomp <- mod$dat$agecomp[mod$dat$agecomp$FltSvy!=10,]
+  
+  #Remove var_adj values for CA rec (age) and CA ashop (age and length)
+  mod$ctl$Variance_adjustment_list <- mod$ctl$Variance_adjustment_list[
+    -c(which(mod$ctl$Variance_adjustment_list$Fleet == 7 & mod$ctl$Variance_adjustment_list$Data_type == 5),
+       which(mod$ctl$Variance_adjustment_list$Fleet == 10)),]
+  
+  #Set initial value of the 5th parameters for selectivity to be -15 instead of -999
+  mod$ctl$size_selex_parms[grep("_P_5",rownames(mod$ctl$size_selex_parms)), "INIT"] <- -15
+  
+  
+  ##
+  #Output files and run
+  ##
+  
+  SS_write(mod,
+           dir = here('models',new_name[i]),
+           overwrite = TRUE)
+  
+  r4ss::run(dir = here('models',new_name[i]),
+            exe = here('models/ss_win.exe'),
+            extras = '-nohess',
+            # show_in_console = TRUE,
+            skipfinished = FALSE)
+  
+  
+  ##
+  #Comparison plots
+  ##
+  
+  xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(old_name[i],
+                                                   new_name[i])))
+  SSsummarize(xx) |>
+    SSplotComparisons(legendlabels = c(old_name[i], 
+                                       'Clean up before data weighting'),
+                      subplots = c(1,3), print = TRUE, plotdir = here('models',new_name[i]))
+  
+}
+
+
+
+####------------------------------------------------####
+### 0_6_1_0_lambda1_047 Take the 0_6_0_X revised model of 0_4_7 (new blocks without mirroring, new selex setup) and turn lambdas to 1 ----
+####------------------------------------------------####
+
+new_name <- "0_6_1_0_lambda1_047"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_6_0_1_update047'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+#Set lambdas to 1 for all but the coastwide comps (rec age comps 
+#were previously zero because did not have them in the model)
+mod$ctl$lambdas[!grepl("_coastwide",rownames(mod$ctl$lambdas)), "value"] <- 1
+#Set lambdas to 0 for CA ashop length and age and CA_rec because dont have them in the model
+mod$ctl$lambdas[grepl("CA_ASHOP",rownames(mod$ctl$lambdas)), "value"] <- 0
+mod$ctl$lambdas[grepl("age_7_CA_REC",rownames(mod$ctl$lambdas)), "value"] <- 0
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_6_0_1_update047',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('selexFullUpdate with 0_6_0 changes', 
+                                     'lambdas = 1'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_6_1_1_francisAll_047 Copy model 0_6_1_0 and then iterate 2 to get Francis weights ----
+####------------------------------------------------####
+
+new_name <- "0_6_1_1_francisAll_047"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_6_1_0_lambda1_047'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_1_0_lambda1_047'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_1_0_lambda1_047'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_1_0_lambda1_047'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 2,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_6_0_1_update047',
+                                                 '0_6_1_0_lambda1_047',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('selexFullUpdate with 0_6_0 changes',
+                                     'selexFullUpdate with lambda = 1',
+                                     'after 2 new Francis runs'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+# ####------------------------------------------------####
+# ### 0_6_1_1_francis1_047 Copy model 0_6_1_0 WITHIN CA ASHOP COMPS and update first Francis weights and run ----
+# ####------------------------------------------------####
+# 
+# new_name <- "0_6_1_1_francis1_047"
+# 
+# ##
+# #Copy inputs
+# ##
+# 
+# copy_SS_inputs(dir.old = here('models/0_6_1_0_negYearCAashop'), 
+#                dir.new = here('models',new_name),
+#                overwrite = TRUE)
+# 
+# mod <- SS_read(here('models',new_name))
+# 
+# 
+# ##
+# #Make Changes
+# ##
+# 
+# yy <- SS_output(here('models/0_6_1_0_negYearCAashop'))
+# dw <- tune_comps(replist = yy, dir = here('models/0_6_1_0_negYearCAashop'), 
+#                  option = c("Francis"), niters_tuning = 0, 
+#                  exe = here('models/ss_win.exe'), write = TRUE)
+# 
+# #Replace Francis weights with value from above
+# colnames(dw)[1] = "Data_type"
+# mod$ctl$Variance_adjustment_list <- dplyr::left_join(mod$ctl$Variance_adjustment_list, dw,
+#                                                      by = dplyr::join_by(Data_type, Fleet))
+#                                               
+# 
+# 
+# ##
+# #Output files and run
+# ##
+# 
+# SS_write(mod,
+#          dir = here('models',new_name),
+#          overwrite = TRUE)
+# 
+# r4ss::run(dir = here('models',new_name), 
+#           exe = here('models/ss_win.exe'), 
+#           extras = '-nohess', 
+#           # show_in_console = TRUE, 
+#           skipfinished = FALSE)
+# 
+# 
+# ####------------------------------------------------####
+# ### 0_6_1_2_francis2_047 Now update second Francis weights and run ----
+# ####------------------------------------------------####
+# 
+# new_name <- "0_6_1_2_francis2_047"
+# 
+# ##
+# #Copy inputs
+# ##
+# 
+# copy_SS_inputs(dir.old = here('models/0_6_1_1_francis1_047'), 
+#                dir.new = here('models',new_name),
+#                overwrite = TRUE)
+# 
+# mod <- SS_read(here('models',new_name))
+# 
+# 
+# ##
+# #Make Changes
+# ##
+# 
+# yy <- SS_output(here('models/0_6_1_1_francis1_047'))
+# dw <- tune_comps(replist = yy, dir = here('models/0_6_1_1_francis1_047'), 
+#                  option = c("Francis"), niters_tuning = 0, 
+#                  exe = here('models/ss_win.exe'), write = TRUE)
+# 
+# #Replace Francis weights with value from above
+# mod$ctl$Variance_adjustment_list
+# 
+# 
+# ##
+# #Output files and run
+# ##
+# 
+# SS_write(mod,
+#          dir = here('models',new_name),
+#          overwrite = TRUE)
+# 
+# r4ss::run(dir = here('models',new_name), 
+#           exe = here('models/ss_win.exe'), 
+#           extras = '-nohess', 
+#           # show_in_console = TRUE, 
+#           skipfinished = FALSE)
+# 
+# 
+# ####------------------------------------------------####
+# ### 0_6_1_3_francis3_047 Now update third and final Francis weights and run ----
+# ####------------------------------------------------####
+# 
+# new_name <- "0_6_1_3_francis3_047"
+# 
+# ##
+# #Copy inputs
+# ##
+# 
+# copy_SS_inputs(dir.old = here('models/0_6_1_2_francis2_047'), 
+#                dir.new = here('models',new_name),
+#                overwrite = TRUE)
+# 
+# mod <- SS_read(here('models',new_name))
+# 
+# 
+# ##
+# #Make Changes
+# ##
+# 
+# yy <- SS_output(here('models/0_6_1_2_francis2_047'))
+# dw <- tune_comps(replist = yy, dir = here('models/0_6_1_2_francis2_047'), 
+#                  option = c("Francis"), niters_tuning = 0, 
+#                  exe = here('models/ss_win.exe'), write = TRUE)
+# 
+# #Replace Francis weights with value from above
+# mod$ctl$Variance_adjustment_list
+# 
+# 
+# ##
+# #Output files and run
+# ##
+# 
+# SS_write(mod,
+#          dir = here('models',new_name),
+#          overwrite = TRUE)
+# 
+# r4ss::run(dir = here('models',new_name), 
+#           exe = here('models/ss_win.exe'), 
+#           extras = '-nohess', 
+#           # show_in_console = TRUE, 
+#           skipfinished = FALSE)
+
+
+
+####------------------------------------------------####
+### 0_6_2_0_lambda1_048 Take the 0_6_0_X revised model of 0_4_8 (new blocks with mirroring, new selex setup) and turn lambdas to 1 ----
+####------------------------------------------------####
+
+new_name <- "0_6_2_0_lambda1_048"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_6_0_2_update048'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+#Set lambdas to 1 for all but the coastwide comps (rec age comps 
+#were previously zero because did not have them in the model)
+mod$ctl$lambdas[!grepl("_coastwide",rownames(mod$ctl$lambdas)), "value"] <- 1
+#Set lambdas to 0 for CA ashop length and age and CA_rec because dont have them in the model
+mod$ctl$lambdas[grepl("CA_ASHOP",rownames(mod$ctl$lambdas)), "value"] <- 0
+mod$ctl$lambdas[grepl("age_7_CA_REC",rownames(mod$ctl$lambdas)), "value"] <- 0
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_4_8_selexPartUpdate',
+                                                 '0_6_0_2_update048',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('selexPartUpdate',
+                                     'selexPartUpdate with 0_6_0 changes',
+                                     'lambdas = 1'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_6_2_1_francisAll_048 Copy model 0_6_2_0 and then iterate 2 to get Francis weights ----
+####------------------------------------------------####
+
+new_name <- "0_6_2_1_francisAll_048"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_6_2_0_lambda1_048'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_2_0_lambda1_048'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_2_0_lambda1_048'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_2_0_lambda1_048'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 2,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_6_0_2_update048',
+                                                 '0_6_2_0_lambda1_048',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('selexPartUpdate with 0_6_0 changes',
+                                     'selexPartUpdate with lambda = 1',
+                                     'after 2 new Francis runs'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+
+####------------------------------------------------####
+### 0_6_3_0_lambda1_0413 Take the 0_6_0_X revised model of 0_4_13 (new blocks without mirroring, old selex setup but with new inits) and turn lambdas to 1 ----
+####------------------------------------------------####
+
+new_name <- "0_6_3_0_lambda1_0413"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_6_0_3_update0413'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+#Set lambdas to 1 for all but the coastwide comps (rec age comps 
+#were previously zero because did not have them in the model)
+mod$ctl$lambdas[!grepl("_coastwide",rownames(mod$ctl$lambdas)), "value"] <- 1
+#Set lambdas to 0 for CA ashop length and age and CA_rec because dont have them in the model
+mod$ctl$lambdas[grepl("CA_ASHOP",rownames(mod$ctl$lambdas)), "value"] <- 0
+mod$ctl$lambdas[grepl("age_7_CA_REC",rownames(mod$ctl$lambdas)), "value"] <- 0
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_4_13_newInit',
+                                                 '0_6_0_3_update0413',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('newInit',
+                                     'newInit with 0_6_0 changes',
+                                     'lambdas = 1'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_6_2_1_francisAll_048 Copy model 0_6_2_0 and then iterate 2 to get Francis weights ----
+####------------------------------------------------####
+
+new_name <- "0_6_3_1_francisAll_0413"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_6_3_0_lambda1_0413'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_3_0_lambda1_0413'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_3_0_lambda1_0413'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_3_0_lambda1_0413'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 2,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_6_0_3_update0413',
+                                                 '0_6_3_0_lambda1_0413',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('OldSetup newInit with 0_6_0 changes',
+                                     'OldSetup newInit with lambda = 1',
+                                     'after 2 new Francis runs'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 
 ##########################################################################################
 
