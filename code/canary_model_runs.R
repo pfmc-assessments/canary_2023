@@ -5340,6 +5340,105 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
+### 0_5_4 updated untuned model with full new blocks  ----
+####------------------------------------------------####
+
+
+new_name <- "0_5_4_fullBlocks"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_5_2_coastwide_selex_comps_lambdas'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+## Update blocks
+mod$ctl$N_Block_Designs <- 6
+mod$ctl$blocks_per_pattern <- c(2,2,1,2,2,1)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:6)
+
+mod$ctl$Block_Design <- list(c(2001, 2010, 2011, 2022), #TWL fleets
+                             c(2003, 2020, 2021, 2022), #CA ntwl
+                             c(2001, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR and WA NTWL, OR rec
+                             c(2006, 2020, 2021, 2022), #WA rec
+                             c(1891, 1891))
+
+selex_new <- mod$ctl$size_selex_parms
+
+# Use new block set up
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+selex_new[grepl('CA_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+#WA NTWL is set to mirror WA TWL. It mirrors better with OR NTWL so could change that
+
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 5
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+
+### Time varying selectivity table ----
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('coastwide',
+                                                 '0_3_1_coastwide',
+                                                 '0_5_1_coastwide_better_blocks',
+                                                 '0_5_2_coastwide_selex_comps_lambdas',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Original coastwide',
+                                     'Coastwide with new data and bio',
+                                     'Coastwide, blocks extended',
+                                     'Coastwide, various fixes',
+                                     'Coastwide, various fixes and full blocks'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
 ### Setup models 0_6_0 with: -----
 ### 1. Removing CA ASHOP length and age comps (which are holdovers from early models)
 ### 2. Removing the var_adj value for ages for CA_REC (fleet 7, type 5) because there are not CA rec ages in this model or in the last model
