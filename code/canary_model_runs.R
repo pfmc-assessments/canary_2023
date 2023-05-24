@@ -5920,6 +5920,82 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
+
+####------------------------------------------------####
+### 0_6_4_reweight_047 Add one more iteration to Francis weighting of model 0_6_1_1_francisAll_047
+####------------------------------------------------####
+
+#Despite model previous weighting of 047 suggested stability, weighting a third time
+#suggests the model is not biologically realistic. Female M is less than male M. 
+
+new_name <- "0_6_4_reweight_047"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_6_1_1_francisAll_047'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_1_1_francisAll_047'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_1_1_francisAll_047'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/0_6_1_1_francisAll_047'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 0,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+plot(dw$Francis_mult)
+colnames(dw)[1] = "Data_type"
+new_var_adj <- dplyr::left_join(mod$ctl$Variance_adjustment_list, dw,
+                                by = dplyr::join_by(Data_type, Fleet))
+mod$ctl$Variance_adjustment_list$Value <-  new_var_adj$New_Var_adj
+  
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_6_0_1_update047',
+                                                 '0_6_1_0_lambda1_047',
+                                                 '0_6_1_1_francisAll_047',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('selexFullUpdate with 0_6_0 changes',
+                                     'selexFullUpdate with lambda = 1',
+                                     'after 2 new Francis runs',
+                                     'after 1 adtl. Francis run'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities

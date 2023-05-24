@@ -16,11 +16,12 @@
 1	1	3	0	#_recr_dist_pattern3
 #
 0 #_N_movement_definitions goes here if N_areas > 1
-3 #_Nblock_Patterns
-1 2 1 #_blocks_per_pattern
+4 #_Nblock_Patterns
+2 2 1 1 #_blocks_per_pattern
 #_begin and end years of blocks
-2000 2022
-2000 2010 2011 2022
+2001 2010 2011 2022
+2003 2016 2017 2022
+2001 2022
 1891 1891
 #
 # controls for all timevary parameters 
@@ -245,24 +246,24 @@
 #
 #_SizeSelex
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn  #  parm_name
-  13.1	65	  48.8575	 50	50	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_1_CA_TWL(1)        
+  13.1	65	  48.8575	 50	50	0	  4	0	0	0	0	0	1	2	#_SizeSel_P_1_1_CA_TWL(1)        
     -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_1_CA_TWL(1)        
-     0	 9	   4.2986	4.2	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_1_CA_TWL(1)        
-     0	 9	  0.01082	2.6	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_1_CA_TWL(1)        
+     0	 9	   4.2986	4.2	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_3_1_CA_TWL(1)        
+     0	 9	  0.01082	2.6	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_4_1_CA_TWL(1)        
     -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_1_CA_TWL(1)        
-    -5	 5	  1.17553	  5	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_6_1_CA_TWL(1)        
-13.001	65	  43.2071	 50	50	0	  4	0	0	0	0	0	1	2	#_SizeSel_P_1_4_CA_NTWL(4)       
+    -5	 5	  1.17553	  5	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_6_1_CA_TWL(1)        
+13.001	65	  43.2071	 50	50	0	  4	0	0	0	0	0	2	2	#_SizeSel_P_1_4_CA_NTWL(4)       
     -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_4_CA_NTWL(4)       
-     0	 9	  5.00821	4.2	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_3_4_CA_NTWL(4)       
-     0	 9	   7.3054	2.6	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_4_4_CA_NTWL(4)       
+     0	 9	  5.00821	4.2	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_3_4_CA_NTWL(4)       
+     0	 9	   7.3054	2.6	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_4_4_CA_NTWL(4)       
     -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_4_CA_NTWL(4)       
-    -5	 5	  4.55253	  5	50	0	  5	0	0	0	0	0	1	2	#_SizeSel_P_6_4_CA_NTWL(4)       
-13.001	65	  32.3937	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_7_CA_REC(7)        
+    -5	 5	  4.55253	  5	50	0	  5	0	0	0	0	0	2	2	#_SizeSel_P_6_4_CA_NTWL(4)       
+13.001	65	  32.3937	 50	50	0	  4	0	0	0	0	0	3	1	#_SizeSel_P_1_7_CA_REC(7)        
     -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_7_CA_REC(7)        
-     0	 9	  3.75467	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_7_CA_REC(7)        
-     0	 9	  3.40759	2.6	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_4_7_CA_REC(7)        
+     0	 9	  3.75467	4.2	50	0	  5	0	0	0	0	0	3	1	#_SizeSel_P_3_7_CA_REC(7)        
+     0	 9	  3.40759	2.6	50	0	  5	0	0	0	0	0	3	1	#_SizeSel_P_4_7_CA_REC(7)        
     -9	 5	       -9	 -9	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_5_7_CA_REC(7)        
-    -5	 5	 -1.66869	  5	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_6_7_CA_REC(7)        
+    -5	 5	 -1.66869	  5	50	0	  5	0	0	0	0	0	3	1	#_SizeSel_P_6_7_CA_REC(7)        
 13.001	65	  45.9334	 50	50	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_10_CA_ASHOP(10)    
     -9	 4	       -4	 -4	50	0	-50	0	0	0	0	0	0	0	#_SizeSel_P_2_10_CA_ASHOP(10)    
      0	 9	  2.99325	4.2	50	0	  5	0	0	0	0	0	0	0	#_SizeSel_P_3_10_CA_ASHOP(10)    
@@ -291,18 +292,26 @@
 #_No age_selex_parm
 # timevary selex parameters 
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE
-13.001	65	  43.6755	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2000 
-13.001	65	  43.2338	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2011 
-     0	 9	  4.25156	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2000 
-     0	 9	  5.03648	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2011 
-     0	 9	   1.5833	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2000 
-     0	 9	  1.58696	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2011 
-    -5	 5	 0.189738	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK2repl_2000 
-    -5	 5	-0.782065	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK2repl_2011 
-13.001	65	  40.6674	 50	50	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK1repl_2000
-     0	 9	  4.31903	4.2	50	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK1repl_2000
-     0	 9	  6.62311	2.6	50	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK1repl_2000
-    -5	 5	  4.21716	  5	50	0	5	#_SizeSel_P_6_4_CA_NTWL(4)_BLK1repl_2000
+  13.1	65	 48.8575	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2010 
+  13.1	65	 48.8575	 50	50	0	4	#_SizeSel_P_1_1_CA_TWL(1)_BLK2repl_2022 
+     0	 9	  4.2986	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2010 
+     0	 9	  4.2986	4.2	50	0	5	#_SizeSel_P_3_1_CA_TWL(1)_BLK2repl_2022 
+     0	 9	 0.01082	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2010 
+     0	 9	 0.01082	2.6	50	0	5	#_SizeSel_P_4_1_CA_TWL(1)_BLK2repl_2022 
+    -5	 5	 1.17553	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK2repl_2010 
+    -5	 5	 1.17553	  5	50	0	5	#_SizeSel_P_6_1_CA_TWL(1)_BLK2repl_2022 
+13.001	65	 43.2071	 50	50	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK2repl_2016
+13.001	65	 43.2071	 50	50	0	4	#_SizeSel_P_1_4_CA_NTWL(4)_BLK2repl_2022
+     0	 9	 5.00821	4.2	50	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK2repl_2016
+     0	 9	 5.00821	4.2	50	0	5	#_SizeSel_P_3_4_CA_NTWL(4)_BLK2repl_2022
+     0	 9	  7.3054	2.6	50	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK2repl_2016
+     0	 9	  7.3054	2.6	50	0	5	#_SizeSel_P_4_4_CA_NTWL(4)_BLK2repl_2022
+    -5	 5	 4.55253	  5	50	0	5	#_SizeSel_P_6_4_CA_NTWL(4)_BLK2repl_2016
+    -5	 5	 4.55253	  5	50	0	5	#_SizeSel_P_6_4_CA_NTWL(4)_BLK2repl_2022
+13.001	65	 32.3937	 50	50	0	4	#_SizeSel_P_1_7_CA_REC(7)_BLK1repl_2022 
+     0	 9	 3.75467	4.2	50	0	5	#_SizeSel_P_3_7_CA_REC(7)_BLK1repl_2022 
+     0	 9	 3.40759	2.6	50	0	5	#_SizeSel_P_4_7_CA_REC(7)_BLK1repl_2022 
+    -5	 5	-1.66869	  5	50	0	5	#_SizeSel_P_6_7_CA_REC(7)_BLK1repl_2022 
 # info on dev vectors created for selex parms are reported with other devs after tag parameter section
 #
 0 #  use 2D_AR1 selectivity(0/1):  experimental feature
