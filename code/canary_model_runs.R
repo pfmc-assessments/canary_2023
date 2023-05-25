@@ -6213,6 +6213,122 @@ SSsummarize(xx) |>
 
 ##########################################################################################
 
+#Revisiting earlier models and reweighting to see if earlier versions are stable
+##########################################################################################
+
+####------------------------------------------------####
+### 1_1_0_lambda1_2015 Take the 2015 base model, set lambdas to 1 ----
+####------------------------------------------------####
+
+new_name <- "1_1_0_lambda1_2015"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/converted'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+mod$start$detailed_age_structure <- 1 #all output
+
+#Set lambdas to 1 for all but the coastwide comps (rec age comps were previously 
+#zero but these aren't in the model so can set them to 1 to avoid issues later)
+mod$ctl$lambdas[!grepl("_coastwide",rownames(mod$ctl$lambdas)), "value"] <- 1
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015base',
+                                     'converted2015', 
+                                     'lambdas = 1'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 1_1_1_reweight_2015 Take the 2015 base model with lambdas set to 1 and reweight ----
+####------------------------------------------------####
+
+new_name <- "1_1_1_reweight_2015"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/1_1_0_lambda1_2015'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/1_1_0_lambda1_2015'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/1_1_0_lambda1_2015'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/1_1_0_lambda1_2015'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted',
+                                                 '1_0_0_lambda1_2015',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015base',
+                                     'converted2015', 
+                                     'lambdas = 1',
+                                     'Francis reweight'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+source(here('code/selexComp.R'))
+plot_sel_comm(yy)
+plot_sel_noncomm(yy)
+
+##########################################################################################
+
 #Sensitivities on base can probably go into separate script called sensitivities
 ##########################################################################################
 
