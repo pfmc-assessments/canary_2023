@@ -5553,18 +5553,22 @@ r4ss::run(dir = here('models',new_name),
 
 
 pp <- SS_output(here('models',new_name))
-SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('coastwide',
                                                  '0_3_1_coastwide',
-                                                 '0_5_3_tuned',
+                                                 '0_5_1_coastwide_better_blocks',
+                                                 '0_5_2_coastwide_selex_comps_lambdas',
+                                                 '0_5_3_tuned_toGetReport',
                                                  new_name)))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Original coastwide',
                                      'Coastwide with new data and bio (for M just val)',
-                                     'Coastwide, tuned comps',
-                                     'Coastwide, survey logistic'),
+                                     'Coastwide, blocks extended',
+                                     'Coastwide, various fixes',
+                                     'tuned',
+                                     'survey logistic selex'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
@@ -6066,7 +6070,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 0_6_4_reweight_047 Add one more iteration to Francis weighting of model 0_6_1_1_francisAll_047
+### 0_6_4_reweight_047 Add one more iteration to Francis weighting of model 0_6_1_1_francisAll_047 ----
 ####------------------------------------------------####
 
 #Despite model previous weighting of 047 suggested stability, weighting a third time
@@ -6139,6 +6143,73 @@ SSsummarize(xx) |>
                                      'after 2 new Francis runs',
                                      'after 1 adtl. Francis run'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 0_6_5_survLogistic Try fixing survey selectivity at logistic  ----
+####------------------------------------------------####
+
+new_name <- "0_6_5_survLogistic"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_6_4_reweight_047'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+#Set parameter 4 to a large number (15) and dont estimate
+mod$ctl$size_selex_parms[intersect(
+  grep("_NWFSC|_Tri",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("HI")] <- 20
+mod$ctl$size_selex_parms[intersect(
+  grep("_NWFSC|_Tri",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("INIT")] <- 15
+mod$ctl$size_selex_parms[intersect(
+  grep("_NWFSC|_Tri",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("PHASE")] <- -99
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_6_0_1_update047',
+                                                 '0_6_1_0_lambda1_047',
+                                                 '0_6_1_1_francisAll_047',
+                                                 '0_6_4_reweight_047',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('selexFullUpdate with 0_6_0 changes',
+                                     'selexFullUpdate with lambda = 1',
+                                     'after 2 new Francis runs',
+                                     'after 1 adtl. Francis run',
+                                     'survey logistic selex'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
 
 ##########################################################################################
 
