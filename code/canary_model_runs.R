@@ -5504,6 +5504,71 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
+
+####------------------------------------------------####
+### 0_5_6_survLogistic Try fixing survey selectivity at logistic  ----
+####------------------------------------------------####
+
+new_name <- "0_5_6_survLogistic"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_5_3_tuned'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+#Set parameter 4 to a large number (15) and dont estimate
+mod$ctl$size_selex_parms[intersect(
+  grep("_coastwide",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("HI")] <- 20
+mod$ctl$size_selex_parms[intersect(
+  grep("_coastwide",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("INIT")] <- 15
+mod$ctl$size_selex_parms[intersect(
+  grep("_coastwide",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("PHASE")] <- -99
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(13:14,16:17)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('coastwide',
+                                                 '0_3_1_coastwide',
+                                                 '0_5_3_tuned',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Original coastwide',
+                                     'Coastwide with new data and bio (for M just val)',
+                                     'Coastwide, tuned comps',
+                                     'Coastwide, survey logistic'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+
 ####------------------------------------------------####
 ### Setup models 0_6_0 with: -----
 ### 1. Removing CA ASHOP length and age comps (which are holdovers from early models)
@@ -5865,7 +5930,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 0_6_2_1_francisAll_048 Copy model 0_6_2_0 and then iterate 2 to get Francis weights ----
+### 0_6_3_1_francisAll_0413 Copy model 0_6_3_0 and then iterate 2 to get Francis weights ----
 ####------------------------------------------------####
 
 new_name <- "0_6_3_1_francisAll_0413"
