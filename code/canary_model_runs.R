@@ -5691,6 +5691,91 @@ xx <- r4ss::tune_comps(replist = mod.out,
 pp <- SS_output(here('models',new_name))
 SS_plots(pp)
 
+
+####------------------------------------------------####
+### 0_5_7_1 simplified new blocks corrected so that recreational selex is replace not additive ----
+####------------------------------------------------####
+
+new_name <- "0_5_7_1_mediumBlocks_corrected"
+
+copy_SS_inputs(dir.old = here('models/0_5_3_tuned'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+## Update blocks
+mod$ctl$N_Block_Designs <- 4
+mod$ctl$blocks_per_pattern <- c(2,2,1,1)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:4)
+
+mod$ctl$Block_Design <- list(c(2001, 2010, 2011, 2022), #TWL fleets
+                             c(2003, 2016, 2017, 2022), #NTWL (mix between CA and OR/WA)
+                             c(2001, 2022), #Rec (simple to start)
+                             c(1891, 1891))
+
+selex_new <- mod$ctl$size_selex_parms
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+selex_new[grepl('_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+
+selex_new[grepl('_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+selex_new[grepl('_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table ----
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+#Try tunning
+mod.out <- SS_output(here('models',new_name))
+
+xx <- r4ss::tune_comps(replist = mod.out, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 3, 
+                       extras = '-nohess')
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp)
+
+plot_sel_comm(pp)
+plot_sel_noncomm(pp)
+
+#This model has a terrible gradient
+#How is the selectivity function for CA NTWL possible? 
+#Upweighted CA_TWL ages, and WA NTWL ages and lengths
+
+
 ####------------------------------------------------####
 ### 0_5_8 use breakpoint for female M  ----
 ####------------------------------------------------####
@@ -5797,89 +5882,6 @@ SSsummarize(xx) |>
 
 tune_comps(pp, option = 'Francis', dir = here('models', new_name), 
            niters_tuning = 0, exe = here('models/ss_win.exe'))
-
-####------------------------------------------------####
-### 0_5_7_1 simplified new blocks Corrected so that recreational selex is replace not additive ----
-####------------------------------------------------####
-
-new_name <- "0_5_7_1_mediumBlocks_corrected"
-
-copy_SS_inputs(dir.old = here('models/0_5_3_tuned'),  
-               dir.new = here('models',new_name),
-               overwrite = TRUE)
-
-mod <- SS_read(here('models',new_name))
-
-##
-#Make Changes
-##
-
-## Update blocks
-mod$ctl$N_Block_Designs <- 4
-mod$ctl$blocks_per_pattern <- c(2,2,1,1)
-names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:4)
-
-mod$ctl$Block_Design <- list(c(2001, 2010, 2011, 2022), #TWL fleets
-                             c(2003, 2016, 2017, 2022), #NTWL (mix between CA and OR/WA)
-                             c(2001, 2022), #Rec (simple to start)
-                             c(1891, 1891))
-
-selex_new <- mod$ctl$size_selex_parms
-selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
-selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
-
-selex_new[grepl('_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
-
-selex_new[grepl('_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
-selex_new[grepl('_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
-
-mod$ctl$size_selex_parms <- selex_new
-
-### Time varying selectivity table ----
-selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
-  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
-  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
-
-rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
-  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
-  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
-
-mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
-  dplyr::select(-Block, -id)
-
-##
-#Output files and run
-##
-
-SS_write(mod,
-         dir = here('models',new_name),
-         overwrite = TRUE)
-
-  r4ss::run(dir = here('models',new_name), 
-          exe = here('models/ss_win.exe'), 
-          extras = '-nohess',
-          # show_in_console = TRUE, 
-          skipfinished = FALSE)
-
-#Try tunning
-mod.out <- SS_output(here('models',new_name))
-
-xx <- r4ss::tune_comps(replist = mod.out, 
-                       option = 'Francis', 
-                       dir = here('models', new_name), 
-                       exe = here('models/ss_win.exe'), 
-                       niters_tuning = 3, 
-                       extras = '-nohess')
-
-pp <- SS_output(here('models',new_name))
-SS_plots(pp)
-
-plot_sel_comm(pp)
-plot_sel_noncomm(pp)
-
-#This model has a terrible gradient
-#How is the selectivity function for CA NTWL possible? 
-#Upweighted CA_TWL ages, and WA NTWL ages and lengths
 
 
 ####------------------------------------------------####
