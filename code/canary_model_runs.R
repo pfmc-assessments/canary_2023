@@ -457,6 +457,8 @@ r4ss::run(dir = here('models/0_1_1_update_data'),
 ####------------------------------------------------####
 
 new_name <- '0_1_3_survey'
+#new_name <- '0_1_3_survey_2022' #if uncomment the change to the start year below
+
 
 ##
 #Copy inputs
@@ -481,6 +483,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 
 mod$start$detailed_age_structure <- 1 #all output
+#mod$dat$endyr <- 2022
 # Update survey indices ----------------------------------------------------------
 
 wcgbts.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_lognormal/index/est_by_area.csv')) |>
@@ -507,9 +510,6 @@ mod$dat$CPUE <- dplyr::bind_rows(wcgbts.cpue, tri.cpue, prerecruit)
 # Triennial selectivity and Q should probably be mirrored!!!
 
 
-
-
-
 ##
 #Output files and run
 ##
@@ -530,6 +530,7 @@ r4ss::run(dir = here('models/0_1_1_update_data'),
 ####------------------------------------------------####
 
 new_name <- '0_1_4_surveyCompsNWFSC'
+#new_name <- '0_1_4_surveyCompsNWFSC_2022' #if uncomment the change to the start year below
 
 ##
 #Copy inputs
@@ -554,6 +555,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 
 mod$start$detailed_age_structure <- 1 #all output
+#mod$dat$endyr <- 2022
 # Update combo survey comps -----------------------------------------------------
 
 length.min <- min(mod$dat$lbin_vector)
@@ -644,6 +646,7 @@ r4ss::run(dir = here('models/0_1_1_update_data'),
 ####------------------------------------------------####
 
 new_name <- '0_1_5_surveyCompsTri'
+#new_name <- '0_1_5_surveyCompsTri_2022' #if uncomment the change to the start year below
 
 ##
 #Copy inputs
@@ -668,6 +671,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 
 mod$start$detailed_age_structure <- 1 #all output
+#mod$dat$endyr <- 2022
 # Update triennial survey comps -----------------------------------------------------
 
 caal <- marginal.ages <- marginal.lengths <- list()
@@ -755,6 +759,7 @@ r4ss::run(dir = here('models/0_1_1_update_data'),
 ####------------------------------------------------####
 
 new_name <- '0_1_6_fisheryComps'
+#new_name <- '0_1_6_fisheryComps_2022' #if uncomment the change to the start year below
 
 ##
 #Copy inputs
@@ -779,6 +784,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 
 mod$start$detailed_age_structure <- 1 #all output
+#mod$dat$endyr <- 2022
 # Update fishery comps ----------------------------------------------------
 
 read.fishery.comps <- function(filename, exclude) {
@@ -1127,6 +1133,7 @@ SSsummarize(xx) |>
 
 
 new_name <- '0_1_8_survey'
+#new_name <- '0_1_8_survey_2022' #if uncomment the change to the start year below
 
 ##
 #Copy inputs
@@ -1151,7 +1158,7 @@ fleet.converter <- mod$dat$fleetinfo |>
 ##
 
 mod$start$detailed_age_structure <- 1 #all output
-
+#mod$dat$endyr <- 2022
 # Update survey indices ----------------------------------------------------------
 
 wcgbts.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_lognormal/index/est_by_area.csv')) |>
@@ -1346,6 +1353,39 @@ SSsummarize(xx) |>
                                      "fisheryCompsCatch",
                                      'surveyCompsIndex'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+#For runs with extending time seires to 2022
+xx2022 <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('converted', 
+                                                 '0_1_1_update_data', 
+                                                 '0_1_2_catch',
+                                                 '0_1_3_survey',
+                                                 '0_1_3_survey_2022',
+                                                 '0_1_4_surveyCompsNWFSC',
+                                                 '0_1_4_surveyCompsNWFSC_2022',
+                                                 '0_1_5_surveyCompsTri',
+                                                 '0_1_5_surveyCompsTri_2022',
+                                                 '0_1_6_fisheryComps',
+                                                 '0_1_6_fisheryComps_2022',
+                                                 '0_1_7_fishery',
+                                                 '0_1_8_survey',
+                                                 '0_1_8_survey_2022')))
+SSsummarize(xx2022) |>
+  SSplotComparisons(legendlabels = c('2015converted', '2023 All data', 
+                                     'Catch',
+                                     'Survey',
+                                     'Survey 2022',
+                                     'SurveyCompsNWFSC',
+                                     'SurveyCompsNWFSC 2022',
+                                     'SurveyCompsTri',
+                                     'SurveyCompsTri 2022',
+                                     'fisheryComps',
+                                     'fisheryComps 2022',
+                                     "fisheryCompsCatch",
+                                     'surveyCompsIndex',
+                                     'surveyCompsIndex 2022'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
 
 
 ####------------------------------------------------####
