@@ -20,6 +20,7 @@ if(Sys.getenv("USERNAME") == "Kiva.Oken") {
   wd = "Q:/"
 }
 
+source(here('code/selexComp.R'))
 
 
 ##########################################################################################
@@ -6323,7 +6324,6 @@ SSsummarize(xx) |>
                                      'Francis reweight'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
-source(here('code/selexComp.R'))
 plot_sel_comm(yy)
 plot_sel_noncomm(yy)
 
