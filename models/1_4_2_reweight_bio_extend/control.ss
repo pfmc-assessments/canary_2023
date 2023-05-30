@@ -312,37 +312,49 @@
 #
 # Input variance adjustments factors: 
 #_Data_type	Fleet	Value
-    4	 1	0.128	#_Variance_adjustment_list1 
-    5	 1	0.266	#_Variance_adjustment_list2 
-    4	 2	0.128	#_Variance_adjustment_list3 
-    5	 2	0.266	#_Variance_adjustment_list4 
-    4	 3	0.128	#_Variance_adjustment_list5 
-    5	 3	0.266	#_Variance_adjustment_list6 
-    4	 4	0.325	#_Variance_adjustment_list7 
-    4	 5	0.325	#_Variance_adjustment_list8 
-    4	 6	0.325	#_Variance_adjustment_list9 
-    4	 7	0.092	#_Variance_adjustment_list10
-    5	 7	  0.1	#_Variance_adjustment_list11
-    4	 8	0.092	#_Variance_adjustment_list12
-    5	 8	  0.1	#_Variance_adjustment_list13
-    4	 9	0.092	#_Variance_adjustment_list14
-    5	 9	  0.1	#_Variance_adjustment_list15
-    4	10	0.176	#_Variance_adjustment_list16
-    5	10	0.235	#_Variance_adjustment_list17
-    4	11	0.176	#_Variance_adjustment_list18
-    5	11	0.235	#_Variance_adjustment_list19
-    4	12	0.176	#_Variance_adjustment_list20
-    5	12	0.235	#_Variance_adjustment_list21
-    4	16	0.081	#_Variance_adjustment_list22
-    4	17	0.081	#_Variance_adjustment_list23
-    4	18	0.081	#_Variance_adjustment_list24
-    4	19	0.093	#_Variance_adjustment_list25
-    4	20	0.093	#_Variance_adjustment_list26
-    4	21	0.093	#_Variance_adjustment_list27
-    4	22	0.114	#_Variance_adjustment_list28
-    4	23	0.114	#_Variance_adjustment_list29
-    4	24	0.114	#_Variance_adjustment_list30
--9999	 0	    0	#_terminator                
+    4	 1	0.163966	#_Variance_adjustment_list1 
+    5	 1	0.244019	#_Variance_adjustment_list2 
+    4	 2	0.154657	#_Variance_adjustment_list3 
+    5	 2	0.385794	#_Variance_adjustment_list4 
+    4	 3	0.118587	#_Variance_adjustment_list5 
+    5	 3	0.212965	#_Variance_adjustment_list6 
+    4	 4	 0.15369	#_Variance_adjustment_list7 
+    4	 5	0.022927	#_Variance_adjustment_list8 
+    4	 6	 1.54069	#_Variance_adjustment_list9 
+    4	 7	0.071219	#_Variance_adjustment_list10
+    5	 7	     0.1	#_Variance_adjustment_list11
+    4	 8	0.280931	#_Variance_adjustment_list12
+    5	 8	0.065373	#_Variance_adjustment_list13
+    4	 9	0.707869	#_Variance_adjustment_list14
+    5	 9	0.157936	#_Variance_adjustment_list15
+    4	10	0.728263	#_Variance_adjustment_list16
+    5	10	 360.137	#_Variance_adjustment_list17
+    4	11	0.181135	#_Variance_adjustment_list18
+    5	11	0.594278	#_Variance_adjustment_list19
+    4	12	0.138514	#_Variance_adjustment_list20
+    5	12	0.265186	#_Variance_adjustment_list21
+    4	16	0.087968	#_Variance_adjustment_list22
+    4	17	 0.12646	#_Variance_adjustment_list23
+    4	18	0.067777	#_Variance_adjustment_list24
+    4	19	0.182446	#_Variance_adjustment_list25
+    4	20	0.116785	#_Variance_adjustment_list26
+    4	21	0.072139	#_Variance_adjustment_list27
+    4	22	 0.53222	#_Variance_adjustment_list28
+    4	23	0.065488	#_Variance_adjustment_list29
+    4	24	0.040578	#_Variance_adjustment_list30
+    5	 4	0.849484	#_Variance_adjustment_list31
+    5	 5	0.610551	#_Variance_adjustment_list32
+    5	 6	 1.82966	#_Variance_adjustment_list33
+    5	16	 1.00006	#_Variance_adjustment_list34
+    5	17	0.193562	#_Variance_adjustment_list35
+    5	18	0.424021	#_Variance_adjustment_list36
+    5	19	0.155026	#_Variance_adjustment_list37
+    5	20	0.069752	#_Variance_adjustment_list38
+    5	21	 0.99109	#_Variance_adjustment_list39
+    5	22	0.054152	#_Variance_adjustment_list40
+    5	23	0.248186	#_Variance_adjustment_list41
+    5	24	0.593578	#_Variance_adjustment_list42
+-9999	 0	       0	#_terminator                
 #
 1 #_maxlambdaphase
 1 #_sd_offset; must be 1 if any growthCV, sigmaR, or survey extraSD is an estimated parameter
