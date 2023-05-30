@@ -1,0 +1,3 @@
+Note 1 Suggestion:  recr_dist_method 3 is simpler and takes 1 parm for each settlement
+Note 2 Information: Max harvest rate typically is >1.0 for F_method 2, 3 or 4 0.9
+Warning 1 : Setting in starter does not request all priors, and 23 parameters have priors and are not estimated, so their prior not included in obj_fun.

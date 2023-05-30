@@ -6367,6 +6367,483 @@ SSsummarize(xx) |>
 plot_sel_comm(yy)
 plot_sel_noncomm(yy)
 
+
+####------------------------------------------------####
+### 1_2_0_data_lambda1 Take the 2015 base model with new data added and set lambdas to 1 ----
+####------------------------------------------------####
+
+new_name <- "1_2_0_lambda1_data"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_1_1_update_data'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+#Set lambdas to 1 for all but the coastwide comps (rec age comps were previously 
+#zero but these aren't in the model so can set them to 1 to avoid issues later)
+mod$ctl$lambdas[!grepl("_coastwide",rownames(mod$ctl$lambdas)), "value"] <- 1
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 1_2_1_reweight_data Take the 2015 base model with new data added and lambdas set to 1 and reweight ----
+####------------------------------------------------####
+
+new_name <- "1_2_1_reweight_data"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/1_2_0_lambda1_data'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/1_2_0_lambda1_data'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/1_2_0_lambda1_data'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/1_2_0_lambda1_data'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted',
+                                                 '1_1_1_reweight_2015',
+                                                 '1_2_0_lambda1_data',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015base',
+                                     'converted2015',
+                                     'Francis reweight',
+                                     'Data lambda = 1',
+                                     'Francis reweight data'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+plot_sel_comm(yy)
+plot_sel_noncomm(yy)
+
+
+####------------------------------------------------####
+### 1_2_2_reweight_data_extend Forgot to extend selectivity blocks. Do so with 2015 base model with new data added and lambdas set to 1 and reweight ----
+####------------------------------------------------####
+
+new_name <- "1_2_2_reweight_data_extend"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/1_2_0_lambda1_data'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+mod$ctl$Block_Design[[1]][2] <- 2022
+mod$ctl$Block_Design[[2]][4] <- 2022
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+#Reweight
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted',
+                                                 '1_2_1_reweight_data',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015base',
+                                     'converted2015',
+                                     'Francis reweight data',
+                                     'Francis reweight data extend'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 1_3_0_bioMval_lambda1 Take the 2015 base model with new data added and new bio (just M value) and set lambdas to 1 ----
+####------------------------------------------------####
+
+new_name <- "1_3_0_lambda1_bioMval"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_2_1_update_bio_Mval'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+#Set lambdas to 1 for all but the coastwide comps (rec age comps were previously 
+#zero but these aren't in the model so can set them to 1 to avoid issues later)
+mod$ctl$lambdas[!grepl("_coastwide",rownames(mod$ctl$lambdas)), "value"] <- 1
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 1_3_1_reweight_bioMval Take the 2015 base model with new data and bio added (just M value) and lambdas set to 1 and reweight ----
+####------------------------------------------------####
+
+new_name <- "1_3_1_reweight_bioMval"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/1_3_0_lambda1_bioMval'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/1_3_0_lambda1_bioMval'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/1_3_0_lambda1_bioMval'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/1_3_0_lambda1_bioMval'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted',
+                                                 '1_1_1_reweight_2015',
+                                                 '1_2_1_reweight_data',
+                                                 '1_3_0_lambda1_bioMval',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015base',
+                                     'converted2015',
+                                     'Francis reweight',
+                                     'Francis reweight data',
+                                     'BioMval lambda = 1',
+                                     'Francis reweight bioMval'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+plot_sel_comm(yy)
+plot_sel_noncomm(yy)
+
+
+####------------------------------------------------####
+### 1_3_2_reweight_bioMval_extend Forgot to extend selectivity blocks. Do so with 2015 base model with new data and bio added (just Mvalue) and lambdas set to 1 and reweight ----
+####------------------------------------------------####
+
+new_name <- "1_3_2_reweight_bioMval_extend"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/1_3_0_lambda1_bioMval'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+mod$ctl$Block_Design[[1]][2] <- 2022
+mod$ctl$Block_Design[[2]][4] <- 2022
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+#Reweight
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted',
+                                                 '1_3_1_reweight_bioMval',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015base',
+                                     'converted2015',
+                                     'Francis reweight bioMval',
+                                     'Francis reweight bioMval extend'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 1_4_0_bio_lambda1 Take the 2015 base model with new data added and all new bio and set lambdas to 1 ----
+####------------------------------------------------####
+
+new_name <- "1_4_0_lambda1_bio"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/0_2_12_maleMfixPhases'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+#Set lambdas to 1 for all but the coastwide comps (rec age comps were previously 
+#zero but these aren't in the model so can set them to 1 to avoid issues later)
+mod$ctl$lambdas[!grepl("_coastwide",rownames(mod$ctl$lambdas)), "value"] <- 1
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 1_4_1_reweight_bio Take the 2015 base model with new data and bio added and lambdas set to 1 and reweight ----
+####------------------------------------------------####
+
+new_name <- "1_4_1_reweight_bio"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/1_4_0_lambda1_bio'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/1_4_0_lambda1_bio'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/1_4_0_lambda1_bio'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/1_4_0_lambda1_bio'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted',
+                                                 '1_1_1_reweight_2015',
+                                                 '1_2_1_reweight_data',
+                                                 '1_3_1_reweight_bioMval',
+                                                 '1_4_0_lambda1_bio',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015base',
+                                     'converted2015',
+                                     'Francis reweight',
+                                     'Francis reweight data',
+                                     'Francis reweight bioMval',
+                                     'Bio lambda = 1',
+                                     'Francis reweight bio'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+plot_sel_comm(yy)
+plot_sel_noncomm(yy)
+
+
+####------------------------------------------------####
+### 1_4_2_reweight_bio_extend Forgot to extend selectivity blocks. Do so with 2015 base model with new data and bio added and lambdas set to 1 and reweight ----
+####------------------------------------------------####
+
+new_name <- "1_4_2_reweight_bio_extend"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/1_4_0_lambda1_bio'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+mod$ctl$Block_Design[[1]][2] <- 2022
+mod$ctl$Block_Design[[2]][4] <- 2022
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+#Reweight
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted',
+                                                 '1_4_1_reweight_bio',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015base',
+                                     'converted2015',
+                                     'Francis reweight bio',
+                                     'Francis reweight bio extend'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities
