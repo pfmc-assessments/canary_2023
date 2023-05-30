@@ -5651,6 +5651,112 @@ xx <- r4ss::tune_comps(replist = mod.out,
 pp <- SS_output(here('models',new_name))
 SS_plots(pp)
 
+####------------------------------------------------####
+### 0_5_8 use breakpoint for female M  ----
+####------------------------------------------------####
+
+new_name <- "0_5_8_breakpoint_M"
+
+copy_SS_inputs(dir.old = here('models/0_5_6_survLogistic'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(20,21) # or something
+# I *think* it does still need two breakpoints. Otherwise it will only estimate one M per sex
+
+male.ind <- which(rownames(mod$ctl$MG_parms) == 'NatM_p_1_Mal_GP_1')
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(1,1,2:male.ind, male.ind:nrow(mod$ctl$MG_parms)),] 
+rownames(mod$ctl$MG_parms) <- stringr::str_replace(rownames(mod$ctl$MG_parms), 
+                                                   pattern = '1.1', 
+                                                   replacement = '2')
+mod$ctl$MG_parms[1,] <- mod$ctl$MG_parms['NatM_p_1_Mal_GP_1',]
+mod$ctl$MG_parms[2, 1:7] <- c(0, 0.9, 0.1, 99, 99, 0, 3)
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_5_1_coastwide_better_blocks',
+                                                 '0_5_2_coastwide_selex_comps_lambdas',
+                                                 '0_5_3_tuned_toGetReport',
+                                                 '0_5_6_survLogistic',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Coastwide, blocks extended',
+                                     'Coastwide, various fixes',
+                                     'tuned',
+                                     'survey logistic selex',
+                                     'breakpoint female M'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+####------------------------------------------------####
+### 0_5_9 mirror non-trawl fleet  ----
+####------------------------------------------------####
+
+new_name <- "0_5_9_mirror_ntwl"
+
+copy_SS_inputs(dir.old = here('models/0_5_8_breakpoint_M'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+mod$ctl$size_selex_types[fleet.converter$fleetname[fleet.converter$fleet_no_num == 'OR_NTWL'],
+                         c('Pattern', 'Special')] <- c(15,
+                                                       fleet.converter$fleet[fleet.converter$fleet_no_num ==
+                                                                               'CA_NTWL'])
+
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep('OR_NTWL', rownames(mod$ctl$size_selex_parms)),]
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[-grep('OR_NTWL', rownames(mod$ctl$size_selex_parms_tv)),]
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_5_1_coastwide_better_blocks',
+                                                 '0_5_3_tuned_toGetReport',
+                                                 '0_5_6_survLogistic',
+                                                 '0_5_8_breakpoint_M',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Coastwide, blocks extended',
+                                     'Coastwide, various fixes tuned',
+                                     'survey logistic selex',
+                                     'breakpoint female M',
+                                     'mirror OR NTWL to CA'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+tune_comps(pp, option = 'Francis', dir = here('models', new_name), 
+           niters_tuning = 0, exe = here('models/ss_win.exe'))
 
 ####------------------------------------------------####
 ### Setup models 0_6_0 with: -----
