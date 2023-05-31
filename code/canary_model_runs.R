@@ -7065,7 +7065,7 @@ fleet.converter <- mod$dat$fleetinfo |>
                 fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
   dplyr::select(fleetname, fleet_no_num, fleet)
 
-# Update ASHOP comps, previous versions were not updated (were added to rec) ------------------------------------------------
+# Update ASHOP comps, previous versions were not updated (were added to rec) so update rec too ------------------------------------------------
 length.min <- min(mod$dat$lbin_vector)
 length.max <- max(mod$dat$lbin_vector)
 age.min <- min(mod$dat$agebin_vector)
@@ -7074,6 +7074,33 @@ age.max <- max(mod$dat$agebin_vector)
 read.fishery.comps <- function(filename, exclude) {
   
 }
+
+#Keep just rec (since ASHOP were added to them)
+rec.ages <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Acomp{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)],
+                  ageErr = dplyr::case_when(grepl("OR",fleet.converter$fleet_no_num[fleet]) ~ 1, #non-expanded has different names than expanded so ageErr here
+                                            grepl("WA",fleet.converter$fleet_no_num[fleet]) ~ 2)) |> 
+    `names<-`(names(mod$dat$agecomp))
+}) |>
+  purrr::list_rbind()
+
+rec.lengths <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)]) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
 
 #These now correctly replace ASHOP fleets
 ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
@@ -7101,14 +7128,15 @@ ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
 }) |>
   purrr::list_rbind()
 
-
 mod$dat$agecomp <- mod$dat$agecomp |> 
-  dplyr::filter(!(FltSvy %in% unique(ashop.ages$FltSvy))) |>
-  dplyr::bind_rows(ashop.ages)
+  dplyr::filter(!(FltSvy %in% unique(rec.ages$FltSvy)),
+                !(FltSvy %in% unique(ashop.ages$FltSvy))) |>
+  dplyr::bind_rows(rec.ages, ashop.ages)
 
 mod$dat$lencomp <- mod$dat$lencomp |> 
-  dplyr::filter(!(FltSvy %in% unique(ashop.lengths$FltSvy))) |>
-  dplyr::bind_rows(ashop.lengths)
+  dplyr::filter(!(FltSvy %in% unique(rec.lengths$FltSvy)),
+                !(FltSvy %in% unique(ashop.lengths$FltSvy))) |>
+  dplyr::bind_rows(rec.lengths, ashop.lengths)
 
 # Update CA catches, previous versions did not update recent values ------------------------------------------------
 catches <- read.csv(here('data/canary_total_removals.csv')) 
@@ -7168,6 +7196,22 @@ r4ss::run(dir = here('models',new_name),
 
 pp <- SS_output(here('models',new_name))
 SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_5_1_coastwide_better_blocks',
+                                                 '0_5_3_tuned_toGetReport',
+                                                 '0_5_6_survLogistic',
+                                                 '0_5_8_breakpoint_M',
+                                                 '0_5_9_mirror_ntwl',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Coastwide, blocks extended',
+                                     'Coastwide, various fixes tuned',
+                                     'survey logistic selex',
+                                     'breakpoint female M',
+                                     'mirror OR NTWL to CA',
+                                     'survey logistic + fixes to data and SSinputs'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
 ##########################################################################################
