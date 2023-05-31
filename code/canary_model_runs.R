@@ -10,6 +10,7 @@ library(r4ss)
 #devtools::install_github("pfmc-assessments/PEPtools")
 library(PEPtools)
 library(here)
+library(dplyr)
 
 #Add file managing section here 
 #I will try to get 'here' to work but if I cant I will go with what I had
@@ -310,7 +311,7 @@ ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
                            amin = age.min,
                            amax = age.max))) |>
     dplyr::select(-Nsamp) |>
-    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC', ##THIS IS INCORRECT. IT SHOULD BE {area}_ASHOP
                                                                                            area = .x)],
                   ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
     `names<-`(names(mod$dat$agecomp))
@@ -323,7 +324,7 @@ ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
                            lmin = length.min,
                            lmax = length.max))) |>
     dplyr::select(-Nsamp) |>
-    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC', ##THIS IS INCORRECT. IT SHOULD BE {area}_ASHOP
                                                                                            area = .x)]) |>
     `names<-`(names(mod$dat$lencomp))
 }) |>
@@ -851,7 +852,7 @@ ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
                            amin = age.min,
                            amax = age.max))) |>
     dplyr::select(-Nsamp) |>
-    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC', ##THIS IS INCORRECT. IT SHOULD BE {area}_ASHOP
                                                                                            area = .x)],
                   ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
     `names<-`(names(mod$dat$agecomp))
@@ -864,7 +865,7 @@ ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
                            lmin = length.min,
                            lmax = length.max))) |>
     dplyr::select(-Nsamp) |>
-    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC', ##THIS IS INCORRECT. IT SHOULD BE {area}_ASHOP
                                                                                            area = .x)]) |>
     `names<-`(names(mod$dat$lencomp))
 }) |>
@@ -1054,7 +1055,7 @@ ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
                            amin = age.min,
                            amax = age.max))) |>
     dplyr::select(-Nsamp) |>
-    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC', ##THIS IS INCORRECT. IT SHOULD BE {area}_ASHOP
                                                                                            area = .x)],
                   ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
     `names<-`(names(mod$dat$agecomp))
@@ -1067,7 +1068,7 @@ ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
                            lmin = length.min,
                            lmax = length.max))) |>
     dplyr::select(-Nsamp) |>
-    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC', ##THIS IS INCORRECT. IT SHOULD BE {area}_ASHOP
                                                                                            area = .x)]) |>
     `names<-`(names(mod$dat$lencomp))
 }) |>
@@ -2072,7 +2073,7 @@ ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
                            amin = age.min,
                            amax = age.max))) |>
     dplyr::select(-Nsamp) |>
-    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC', ##THIS IS INCORRECT. IT SHOULD BE {area}_ASHOP
                                                                                            area = .x)],
                   ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
     `names<-`(names(mod$dat$agecomp))
@@ -2085,7 +2086,7 @@ ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
                            lmin = length.min,
                            lmax = length.max))) |>
     dplyr::select(-Nsamp) |>
-    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC', ##THIS IS INCORRECT. IT SHOULD BE {area}_ASHOP
                                                                                            area = .x)]) |>
     `names<-`(names(mod$dat$lencomp))
 }) |>
@@ -5769,7 +5770,7 @@ pp <- SS_output(here('models',new_name))
 SS_plots(pp)
 
 plot_sel_comm(pp)
-plot_sel_noncomm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
 
 #This model has a terrible gradient
 #How is the selectivity function for CA NTWL possible? 
@@ -5882,6 +5883,7 @@ SSsummarize(xx) |>
 
 tune_comps(pp, option = 'Francis', dir = here('models', new_name), 
            niters_tuning = 0, exe = here('models/ss_win.exe'))
+
 
 
 ####------------------------------------------------####
@@ -7034,6 +7036,139 @@ SSsummarize(xx) |>
                                      'Francis reweight bio',
                                      'Francis reweight bio extend'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+##########################################################################################
+
+#Working towards a base model for the coastwide model
+##########################################################################################
+
+
+####------------------------------------------------####
+### 2_0_0 minor fixes to various inputs from model 0_5_6  ----
+####------------------------------------------------####
+
+new_name <- "2_0_0_coastwide_minor_fixes"
+
+copy_SS_inputs(dir.old = here('models/0_5_6_survLogistic'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+# Update ASHOP comps, previous versions were not updated (were added to rec) ------------------------------------------------
+length.min <- min(mod$dat$lbin_vector)
+length.max <- max(mod$dat$lbin_vector)
+age.min <- min(mod$dat$agebin_vector)
+age.max <- max(mod$dat$agebin_vector)
+
+read.fishery.comps <- function(filename, exclude) {
+  
+}
+
+#These now correctly replace ASHOP fleets
+ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_ashop_not_expanded_Acomp{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_ASHOP',
+                                                                                           area = .x)],
+                  ageErr = 1) |> #non-expanded has different names than expanded so ageErr here
+    `names<-`(names(mod$dat$agecomp))
+}) |>
+  purrr::list_rbind()
+
+ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_ASHOP',
+                                                                                           area = .x)]) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(ashop.ages$FltSvy))) |>
+  dplyr::bind_rows(ashop.ages)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(ashop.lengths$FltSvy))) |>
+  dplyr::bind_rows(ashop.lengths)
+
+# Update CA catches, previous versions did not update recent values ------------------------------------------------
+catches <- read.csv(here('data/canary_total_removals.csv')) 
+updated.catch.df <- catches |>
+  dplyr::select(-rec.W.N) |>
+  tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
+  tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |> 
+  # warning is ok, cuts off units in WA rec catch column name
+  dplyr::mutate(gear = stringr::str_to_upper(gear),
+                state = dplyr::case_when(state == 'W' ~ 'WA',
+                                         state == 'O' ~ 'OR',
+                                         state == 'C' ~ 'CA'),
+                fleet_no_num = paste(state, gear, sep = '_')) |>
+  dplyr::left_join(fleet.converter) |>
+  dplyr::mutate(seas = 1, 
+                catch_se = 0.05) |>
+  dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
+  #rbind(c(-999, 1, 1, 0, 0.05)) |>
+  dplyr::arrange(fleet, year) |>
+  as.data.frame()
+
+mod$dat$catch <- updated.catch.df
+
+# Replace unused but weird values in MGparms (devPH, cohort growth min/max) ------------------------------------------------
+mod$ctl$MG_parms$dev_PH <- 0
+mod$ctl$MG_parms['CohortGrowDev', c('dev_minyr', 'dev_maxyr')] <- 0
+
+# Remove final block, which does not appear to be used anywhere ------------------------------------------------
+mod$ctl$Block_Design <- mod$ctl$Block_Design[-3]
+mod$ctl$N_Block_Designs <- 2
+mod$ctl$blocks_per_pattern <- c(1,2)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:2)
+
+# Adjust recdev start (early devs) and last year (main devs) and bias adj (update to recent years) ------------------------------------------------
+mod$ctl$recdev_early_start <- mod$dat$styr
+mod$ctl$last_yr_fullbias_adj <- 2020
+mod$ctl$first_recent_yr_nobias_adj <- 2022
+mod$ctl$MainRdevYrLast <- 2022
+
+#Change recruitment distribution method to 4 (none) and change params in MG_parm ------------------------------------------------
+mod$ctl$recr_dist_method <- 4
+mod$ctl$MG_parms <- mod$ctl$MG_parms[!grepl("RecrDist",rownames(mod$ctl$MG_parms)),]
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
 
 ##########################################################################################
 
