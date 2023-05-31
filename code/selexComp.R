@@ -123,37 +123,60 @@ plot_sel_comm <- function(mod, sex = 1) {
 #' @param mod A model object created by [get_mod()] or
 #' `r4ss::SS_output()`
 #' @param sex Either 1 (females) or 2 (males)
+#' @param spatial TRUE/FALSE on whether the model is spatial
 #' @export
 #' @author Ian G. Taylor
-plot_sel_noncomm <- function(mod, sex = 1) {
+plot_sel_noncomm <- function(mod, sex = 1, spatial = TRUE) {
   filename <- "selectivity_noncomm.png"
   # if (sex == 2) {
   #   filename <- gsub(".png", "_males.png", filename)
   # }
   filepath <- file.path(mod$inputs$dir, filename)
   png(filepath, width = 6.5, height = 6.5, units = "in", res = 300, pointsize = 10)
-  par(mfrow = c(4,3), oma = c(2,2,0,0), las = 1)
   
-  #REC
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 7, sex = sex)
-  mtext("Selectivity", side = 2, line = 3, las = 0)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 8, sex = sex)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 9, sex = sex)
-  #NWFSC trawl
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 16, sex = sex)
-  mtext("Selectivity", side = 2, line = 3, las = 0)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 17, sex = sex)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 18, sex = sex)
-  #Triennial early
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 19, sex = sex)
-  mtext("Selectivity", side = 2, line = 3, las = 0)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 20, sex = sex)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 21, sex = sex)
-  #Triennial late
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 22, sex = sex)
-  mtext("Selectivity", side = 2, line = 3, las = 0)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 23, sex = sex)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 24, sex = sex)
+  if(spatial) {
+    par(mfrow = c(4,3), oma = c(2,2,0,0), las = 1)
+    
+    #REC
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 7, sex = sex)
+    mtext("Selectivity", side = 2, line = 3, las = 0)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 8, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 9, sex = sex)
+    #NWFSC trawl
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 16, sex = sex)
+    mtext("Selectivity", side = 2, line = 3, las = 0)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 17, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 18, sex = sex)
+    #Triennial early
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 19, sex = sex)
+    mtext("Selectivity", side = 2, line = 3, las = 0)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 20, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 21, sex = sex)
+    #Triennial late
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 22, sex = sex)
+    mtext("Selectivity", side = 2, line = 3, las = 0)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 23, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 24, sex = sex)
+    
+  }
+  
+  if(!spatial) {
+    par(mfrow = c(2,3), oma = c(2,2,0,0), las = 1)
+    
+    #REC
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 7, sex = sex)
+    mtext("Selectivity", side = 2, line = 3, las = 0)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 8, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 9, sex = sex)
+    #NWFSC trawl coastal
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 28, sex = sex)
+    mtext("Selectivity", side = 2, line = 3, las = 0)
+    #Triennial early coastal
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 29, sex = sex)
+   #Triennial late coastal
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 30, sex = sex)
+    
+  }
   
   dev.off()
   
