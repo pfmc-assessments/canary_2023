@@ -319,7 +319,7 @@ ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
   purrr::list_rbind()
 
 ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
-  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv', ##THIS IS INCORRECT. THE FILE NAME SHOULD HAVE ASHOP
                            area = .x,
                            lmin = length.min,
                            lmax = length.max))) |>
@@ -860,7 +860,7 @@ ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
   purrr::list_rbind()
 
 ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
-  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv', ##THIS IS INCORRECT. THE FILE NAME SHOULD HAVE ASHOP
                            area = .x,
                            lmin = length.min,
                            lmax = length.max))) |>
@@ -1063,7 +1063,7 @@ ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
   purrr::list_rbind()
 
 ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
-  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv', ##THIS IS INCORRECT. THE FILE NAME SHOULD HAVE ASHOP
                            area = .x,
                            lmin = length.min,
                            lmax = length.max))) |>
@@ -2081,7 +2081,7 @@ ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
   purrr::list_rbind()
 
 ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
-  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv', ##THIS IS INCORRECT. THE FILE NAME SHOULD HAVE ASHOP
                            area = .x,
                            lmin = length.min,
                            lmax = length.max))) |>
@@ -7066,7 +7066,7 @@ fleet.converter <- mod$dat$fleetinfo |>
                 fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
   dplyr::select(fleetname, fleet_no_num, fleet)
 
-# Update ASHOP comps, previous versions were not updated (were added to rec) so update rec too ------------------------------------------------
+# Update ASHOP comps, previous versions were not updated (were added to rec for ages or doubled for rec for lengths) so update rec too ------------------------------------------------
 length.min <- min(mod$dat$lbin_vector)
 length.max <- max(mod$dat$lbin_vector)
 age.min <- min(mod$dat$agebin_vector)
@@ -7118,7 +7118,7 @@ ashop.ages <- purrr::map(list('OR', 'WA'), function(.x) {
   purrr::list_rbind()
 
 ashop.lengths <- purrr::map(list('OR', 'WA'), function(.x) {
-  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
+  read.csv(here(glue::glue('data/forSS/{area}_ashop_not_expanded_Lcomp{lmin}_{lmax}_formatted.csv',
                            area = .x,
                            lmin = length.min,
                            lmax = length.max))) |>
