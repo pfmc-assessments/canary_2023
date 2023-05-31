@@ -7049,6 +7049,7 @@ SSsummarize(xx) |>
 ####------------------------------------------------####
 
 new_name <- "2_0_0_coastwide_minor_fixes"
+#new_name <- "2_0_0_coastwide_minor_fixes_not_data" #this is the same, but does not include the updated rec and ashop data lines, nor historical CA comm catches
 
 copy_SS_inputs(dir.old = here('models/0_5_6_survLogistic'),  
                dir.new = here('models',new_name),
@@ -7212,6 +7213,9 @@ SSsummarize(xx) |>
                                      'mirror OR NTWL to CA',
                                      'survey logistic + fixes to data and SSinputs'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
 
 
 ##########################################################################################
