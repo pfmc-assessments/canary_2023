@@ -1,0 +1,3 @@
+Note 1 Information: Max harvest rate typically is >1.0 for F_method 2, 3 or 4 0.9
+Warning 1 : Setting in starter does not request all priors, and 15 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 : 1st iteration warning: ssb(endyr)/ssb(styr)= 9.29535e-09; suggest start with larger R0 to get near 0.4; or use depletion fleet option
