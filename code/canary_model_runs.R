@@ -7282,8 +7282,11 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
 ####------------------------------------------------####
-### 2_0_1_tuned Reweight model 2_0_1 due to updating data ----
+### 2_0_2_tuned Reweight model 2_0_1 due to updating data ----
 ####------------------------------------------------####
 
 new_name <- "2_0_2_tuned"
@@ -7308,7 +7311,7 @@ file.copy(from = file.path(here('models/2_0_1_remove_sex0'),"warning.sso"),
 
 yy <- SS_output(here('models', new_name))
 dw <- tune_comps(replist = yy, dir = here('models', new_name),
-                 option = c("Francis"), niters_tuning = 0,
+                 option = c("Francis"), niters_tuning = 4,
                  exe = here('models/ss_win.exe'), extras = "-nohess",
                  allow_up_tuning = TRUE,
                  write = TRUE)
@@ -7317,8 +7320,24 @@ dw <- tune_comps(replist = yy, dir = here('models', new_name),
 #Comparison plots
 ##
 
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
 
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_5_6_survLogistic',
+                                                 '2_0_0_coastwide_minor_fixes',
+                                                 '2_0_1_remove_sex0',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('survey logistic selex',
+                                     'survey logistic + fixes to data and SSinputs',
+                                     'remove sparse sex=0 comp samples',
+                                     'Francis reweight'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
 
 ##########################################################################################
 
