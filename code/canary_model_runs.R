@@ -7045,7 +7045,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 2_0_0 minor fixes to various inputs from model 0_5_6  ----
+### 2_0_0 minor fixes to various inputs from model 0_5_6 and corrections to data  ----
 ####------------------------------------------------####
 
 new_name <- "2_0_0_coastwide_minor_fixes"
@@ -7066,7 +7066,7 @@ fleet.converter <- mod$dat$fleetinfo |>
                 fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
   dplyr::select(fleetname, fleet_no_num, fleet)
 
-# Update ASHOP comps, previous versions were not updated (were added to rec for ages or doubled for rec for lengths) so update rec too ------------------------------------------------
+# Update ASHOP comps, previous versions were not updated (were added to rec for ages and taken and then doubled rec for lengths) so update rec too ------------------------------------------------
 length.min <- min(mod$dat$lbin_vector)
 length.max <- max(mod$dat$lbin_vector)
 age.min <- min(mod$dat$agebin_vector)
@@ -7216,6 +7216,108 @@ SSsummarize(xx) |>
 
 plot_sel_comm(pp)
 plot_sel_noncomm(pp, spatial = FALSE)
+
+####------------------------------------------------####
+### 2_0_1_remove_sex0 Remove spiky parts of combined sex fish for length and age comps ----
+####------------------------------------------------####
+
+#thought is that these could contribute to poor weights when reweighting
+#Changes aren't as great as I thought though I still think removing sparse comps is a good idea
+#Initial weighting for OR rec is really high
+
+new_name <- "2_0_1_remove_sex0"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/2_0_0_coastwide_minor_fixes'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make Changes
+##
+
+#Remove sex = 0 fish for all AGE comps (Most have small absolute sample size or small relative to sexed samples)
+#NTWL (WA, OR); ASHOP (WA), Rec (OR, WA), and TWL (CA, OR, WA). Of these WA TWL has most samples so could be kept.  
+table(mod$dat$agecomp$FltSvy, mod$dat$agecomp$Gender, mod$dat$agecomp$Yr <0)
+mod$dat$agecomp$Yr[mod$dat$agecomp$Gender == 0] <- -1 * 
+  mod$dat$agecomp$Yr[mod$dat$agecomp$Gender == 0]
+
+#Remove sex = 0 fish for some LENGTH comps that have few samples (absolute or relative to sexed samples)
+#NTWL (WA, OR); ASHOP (WA, OR), and TWL (OR). WA rec has sparse data but sex=0 is similarly sparse as sex=3 so keep   
+table(mod$dat$lencomp$FltSvy, mod$dat$lencomp$Gender, mod$dat$lencomp$Yr <0)
+mod$dat$lencomp$Yr[mod$dat$lencomp$Gender == 0 & mod$dat$lencomp$FltSvy %in% c(2,5,6,11,12)] <- -1 * 
+  mod$dat$lencomp$Yr[mod$dat$lencomp$Gender == 0 & mod$dat$lencomp$FltSvy %in% c(2,5,6,11,12)]
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('0_5_6_survLogistic',
+                                                 '2_0_0_coastwide_minor_fixes',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('survey logistic selex',
+                                     'survey logistic + fixes to data and SSinputs',
+                                     'remove sparse sex=0 comp samples'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 2_0_1_tuned Reweight model 2_0_1 due to updating data ----
+####------------------------------------------------####
+
+new_name <- "2_0_2_tuned"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/2_0_1_remove_sex0'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/2_0_1_remove_sex0'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/2_0_1_remove_sex0'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/2_0_1_remove_sex0'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 0,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+
 
 
 ##########################################################################################
