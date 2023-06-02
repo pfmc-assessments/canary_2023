@@ -7339,6 +7339,131 @@ dev.off()
 plot_sel_comm(pp)
 plot_sel_noncomm(pp, spatial = FALSE)
 
+####------------------------------------------------####
+### 2_1_1_noSurveyLogistic Remove logistic assumption for surveys ----
+####------------------------------------------------####
+
+new_name <- "2_1_1_noSurveyLogistic"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/2_0_2_tuned'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+nonlog <- SS_read(here('models','0_5_3_tuned'))
+
+
+##
+#Make Changes
+##
+
+#Reset parameter 4 to allow domed (turn on phase and reset init)
+mod$ctl$size_selex_parms[intersect(
+  grep("_NWFSC|_Tri",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),"HI"] <- nonlog$ctl$size_selex_parms[intersect(
+    grep("_NWFSC|_Tri",rownames(nonlog$ctl$size_selex_parms)),
+    grep("P_4",rownames(nonlog$ctl$size_selex_parms))),"HI"]
+mod$ctl$size_selex_parms[intersect(
+  grep("_NWFSC|_Tri",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("INIT")] <- nonlog$ctl$size_selex_parms[intersect(
+    grep("_NWFSC|_Tri",rownames(nonlog$ctl$size_selex_parms)),
+    grep("P_4",rownames(nonlog$ctl$size_selex_parms))),"INIT"]
+mod$ctl$size_selex_parms[intersect(
+  grep("_NWFSC|_Tri",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("PHASE")] <- 5
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 2_1_1_ORtwlLogistic Remove logistic assumption for surveys and add to Oregon trawl ----
+####------------------------------------------------####
+
+new_name <- "2_1_2_ORTWL_Logistic"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/2_1_1_noSurveyLogistic'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+#Reset parameter 4 to force logistic
+mod$ctl$size_selex_parms[intersect(
+  grep("_OR_TWL",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),"HI"] <- 20
+mod$ctl$size_selex_parms[intersect(
+  grep("_OR_TWL",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("INIT")] <- 15
+mod$ctl$size_selex_parms[intersect(
+  grep("_OR_TWL",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("PHASE")] <- -99
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2_0_2_tuned',
+                                                 '2_1_1_noSurveyLogistic',
+                                                 '2_1_2_ORTWL_Logistic',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('tuned',
+                                     'survey domed',
+                                     'survey domed and OR early TWL logistic'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities
