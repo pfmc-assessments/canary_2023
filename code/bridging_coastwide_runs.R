@@ -2796,11 +2796,11 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  'Bridging coastwide/3_3_3_coastwide_tuned')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015converted', 
-                                     '2023 All data',
-                                     '2023 All data tuned',
-                                     '2023 All data and bio (M as constant)',
-                                     '2023 All data and bio tuned',
+                                     '2023 All data - spatial',
+                                     '2023 All data tuned - spatial',
+                                     '2023 All data and bio (M as constant) - spatial',
+                                     '2023 All data and bio tuned - spatial',
                                      '2023 Coastwide',
-                                     '2023 Coastwide'),
+                                     '2023 Coastwide tuned'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
 
