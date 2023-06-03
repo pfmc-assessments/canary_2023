@@ -1,0 +1,97 @@
+##########################################################################################
+#
+# Figure generation for write up
+#   By: Kiva Oken and Brian Langseth
+#
+##########################################################################################
+
+
+library(r4ss)
+#devtools::install_github("pfmc-assessments/PEPtools")
+library(PEPtools)
+library(here)
+library(dplyr)
+
+source(here('code/selexComp.R'))
+
+mod15 <- SS_output(here('models','2015base'))
+mod23 <- SS_output(here('models','3_0_0_MaturitySlope'))
+
+
+##
+#Compare fecundity from previous assessment
+##
+png(
+  filename = here('documents','figures','compare_fecundity.png'),
+  width = 6.5, height = 5.0, units = "in", res = 300, pointsize = 10
+)
+
+plot(mod15$biology$Len_mean, mod15$biology$Fec, type = "l", lwd=3, col = 2,
+     ylab = "Fecundity (millions of eggs)", xlab = "Length (cm)")
+lines(mod23$biology$Len_mean, mod23$biology$Fec, lwd = 3, col = 1)
+
+legend("topleft", c("2015 relationship", "2023 relationship"), 
+       lty = 1, lwd = 3, col = c(2,1), bty = "n")
+dev.off()
+
+
+
+##
+#Compare WL relationship with previous assessment
+##
+png(
+  filename = here('documents','figures','compare_WL.png'),
+  width = 6.5, height = 5.0, units = "in", res = 300, pointsize = 10
+)
+
+plot(mod15$biology$Len_mean, 1.18e-05*mod15$biology$Len_mean^3.094, type = "l", lwd=3, col = 2,
+     ylab = "Weight (kg)", xlab = "Length (cm)")
+lines(mod15$biology$Len_mean, 1.19e-05*mod15$biology$Len_mean^3.09, lwd = 3, col = 1)
+
+legend("topleft", c("2015 relationship", "2023 relationship"), 
+       lty = 1, lwd = 3, col = c(2,1), bty = "n")
+dev.off()
+
+
+##
+#Compare Maturity relationship with previous assessment
+##
+png(
+  filename = here('documents','figures','compare_maturity.png'),
+  width = 6.5, height = 5.0, units = "in", res = 300, pointsize = 10
+)
+
+#Because the 2015 assumed maturity at length, the maturity at age is in a column called (len_mat)
+#which means length based maturity at age
+#The 2023 model assumed maturity at age, and so is in a column called (age_mat)
+#which means age based maturity at age
+plot(mod15$endgrowth[mod15$endgrowth$Sex==1,]$Age_Mid, mod15$endgrowth[mod15$endgrowth$Sex==1,]$Len_Mat,
+     ylab = "Female maturity", xlab = "Age",
+     type = "l", lwd = 3, col = 2, ylim=c(0,1))
+lines(mod23$endgrowth[mod23$endgrowth$Sex==1,]$Age_Mid, mod23$endgrowth[mod23$endgrowth$Sex==1,]$Age_Mat,
+      lwd = 3, col = 1)
+
+legend("bottomright", c("2015 derived relationship", "2023 relationship"), 
+       lty = 1, lwd = 3, col = c(2,1), bty = "n")
+dev.off()
+
+
+##
+#Compare maturity * fecundity. This comparison is going to be affected by the growth curve due
+#to fecundity (at length or weight) being translated to age which is different between the two models
+##
+png(
+  filename = here('documents','figures','compare_maturity-fecundity.png'),
+  width = 6.5, height = 5.0, units = "in", res = 300, pointsize = 10
+)
+
+plot(mod15$endgrowth[mod15$endgrowth$Sex==1,]$Age_Mid, mod15$endgrowth[mod15$endgrowth$Sex==1,]$`Mat*Fecund`,
+     ylab = "Spawning output at age (mat x fec)", xlab = "Age",
+     type = "l", lwd = 3, col = 2, ylim=c(0,1.5))
+lines(mod23$endgrowth[mod23$endgrowth$Sex==1,]$Age_Mid, mod23$endgrowth[mod23$endgrowth$Sex==1,]$`Mat*Fecund`,
+      lwd = 3, col = 1)
+
+legend("topleft", c("2015 relationship", "2023 relationship"), 
+       lty = 1, lwd = 3, col = c(2,1), bty = "n")
+dev.off()
+
