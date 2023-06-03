@@ -7400,7 +7400,7 @@ plot_sel_noncomm(pp, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 2_1_1_ORtwlLogistic Remove logistic assumption for surveys and add to Oregon trawl ----
+### 2_1_1_ORtwlLogistic Remove logistic assumption for surveys and add to Oregon trawl for early period ----
 ####------------------------------------------------####
 
 new_name <- "2_1_2_ORTWL_Logistic"
@@ -7420,7 +7420,7 @@ mod <- SS_read(here('models',new_name))
 #Make Changes
 ##
 
-#Reset parameter 4 to force logistic
+#Reset parameter 4 to force logistic for the early period. No need to change timevarying parms. 
 mod$ctl$size_selex_parms[intersect(
   grep("_OR_TWL",rownames(mod$ctl$size_selex_parms)),
   grep("P_4",rownames(mod$ctl$size_selex_parms))),"HI"] <- 20
@@ -7464,9 +7464,188 @@ SSsummarize(xx) |>
                                      'survey domed and OR early TWL logistic'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
+
+####------------------------------------------------####
+### 2_1_3_param6 Turn on parameter 6 estimation for selectivity ----
+####------------------------------------------------####
+
+new_name <- "2_1_3_param6"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/2_0_2_tuned'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"LO"] <- -10
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"HI"] <- 10
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"INIT"] <- 0
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"PHASE"] <- 5
+
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"Block_Fxn"] <- 2
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"Block"] <-
+  mod$ctl$size_selex_parms[grep("P_1",rownames(mod$ctl$size_selex_parms)),"Block"]
+
+
+### Time varying selectivity table
+selex_tv_pars <- dplyr::filter(mod$ctl$size_selex_parms, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(Block, .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2_0_2_tuned',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('tuned',
+                                     'turn on selex param6'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 3_0_0_Maturity slope Slope for the maturity function was not updated. Do so ----
+####------------------------------------------------####
+
+new_name <- "3_0_0_MaturitySlope"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/2_0_2_tuned'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+
+slope_fxn <- -0.688
+mod$ctl$MG_parms['Mat_slope_Fem_GP_1', c('INIT', 'PRIOR')] <- c(slope_fxn, slope_fxn)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 3_0_1_tuned Tune the model with updated maturity slope ----
+####------------------------------------------------####
+
+new_name <- "3_0_1_tuned"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_0_0_MaturitySlope'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/3_0_0_MaturitySlope'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/3_0_0_MaturitySlope'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/3_0_0_MaturitySlope'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2_0_2_tuned',
+                                                 '3_0_0_MaturitySlope',
+                                                 '3_0_1_tuned')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Model 202',
+                                     'Update maturity slope',
+                                     'Francis reweight'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+
+
+
+
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities
 ##########################################################################################
-
 
