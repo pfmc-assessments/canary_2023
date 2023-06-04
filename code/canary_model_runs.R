@@ -7641,6 +7641,225 @@ plot_sel_comm(pp)
 plot_sel_noncomm(pp, spatial = FALSE)
 
 
+####------------------------------------------------####
+### 3_1_1_noFloat Turn off float q for triennial. Instead estimate. ----
+####------------------------------------------------####
+
+new_name <- "3_1_1_noFloat"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_0_1_tuned'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+#Turn off float q for triennial surveys. Need this off to mirror
+mod$ctl$Q_options[c('29_coastwide_Tri_early','30_coastwide_Tri_late'), "float"] <- 0
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+
+####------------------------------------------------####
+### 3_1_2_triennial MIrror q and selectivity for the early and late triennial surveys ----
+####------------------------------------------------####
+
+new_name <- "3_1_2_triennial"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_0_1_tuned'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+#Remove float for triennials and mirror q
+mod$ctl$Q_options[c('29_coastwide_Tri_early','30_coastwide_Tri_late'), "float"] <- 0
+
+mod$ctl$Q_options["30_coastwide_Tri_late", c("link", "link_info")] <- c(2, 29)
+mod$ctl$Q_parms["LnQ_base_30_coastwide_Tri_late(30)", "INIT"] <- 0 #This gets ignored so is not needed but using 0 to indicate a change
+
+#Mirror selectivity of late triennial to early
+mod$ctl$size_selex_types["30_coastwide_Tri_late",c("Pattern","Special")] <- c(15, 29)
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep(
+  "_Tri_late",rownames(mod$ctl$size_selex_parms)),]
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_0_1_tuned',
+                                                 '3_1_1_noFloat',
+                                                 '3_1_2_triennial')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Model 301',
+                                     'No float triennial',
+                                     'Mirror triennial selex and q'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 3_1_3_triennial_q Mirror q only. Selectivity in 3_1_2 for triennial is wrong----
+####------------------------------------------------####
+
+new_name <- "3_1_3_triennial_q"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_0_1_tuned'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+#Remove float for triennials and mirror
+mod$ctl$Q_options[c('29_coastwide_Tri_early','30_coastwide_Tri_late'), "float"] <- 0
+
+mod$ctl$Q_options["30_coastwide_Tri_late", c("link", "link_info")] <- c(2, 29)
+mod$ctl$Q_parms["LnQ_base_30_coastwide_Tri_late(30)", "INIT"] <- 0 #This gets ignored so is not needed but using 0 to indicate a change
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 3_1_4_triennial_selex Mirror selectivity only. Selectivity in 3_1_2 for triennial is wrong  ----
+####------------------------------------------------####
+
+new_name <- "3_1_4_triennial_mirrorSelex"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_0_1_tuned'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+#Mirror selectivity of late triennial to early
+mod$ctl$size_selex_types["30_coastwide_Tri_late",c("Pattern","Special")] <- c(15, 29)
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep(
+  "_Tri_late",rownames(mod$ctl$size_selex_parms)),]
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_0_1_tuned',
+                                                 '3_1_1_noFloat',
+                                                 '3_1_2_triennial',
+                                                 '3_1_3_triennial_q',
+                                                 '3_1_4_triennial_mirrorSelex')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Model 301',
+                                     'No float triennial',
+                                     'Mirror triennial selex and q',
+                                     'Mirror triennial q only',
+                                     'Mirror triennial selex only'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
 
 
 
