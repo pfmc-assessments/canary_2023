@@ -1784,6 +1784,9 @@ slope_fxn <- -0.688
 mod$ctl$maturity_option <- 2 #age logistic
 mod$ctl$MG_parms['Mat50%_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- 
   c(9, 12, a50_fxn, a50_fxn, 0.055)
+mod$ctl$MG_parms['Mat_slope_Fem_GP_1', c('INIT', 'PRIOR')] <- 
+  c(slope_fxn, slope_fxn)
+
 
 # Update steepness ------------------------------------------------
 #per best practices: https://www.pcouncil.org/documents/2023/03/accepted-practices-and-guidelines-for-groundfish-stock-assessments.pdf/
@@ -2083,6 +2086,8 @@ slope_fxn <- -0.688
 mod$ctl$maturity_option <- 2 #age logistic
 mod$ctl$MG_parms['Mat50%_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD')] <- 
   c(9, 12, a50_fxn, a50_fxn, 0.055)
+mod$ctl$MG_parms['Mat_slope_Fem_GP_1', c('INIT', 'PRIOR')] <- 
+  c(slope_fxn, slope_fxn)
 
 ##
 #Output files and run
@@ -2265,6 +2270,29 @@ SSsummarize(xx) |>
                                      'Steepness',
                                      'Fecundity',
                                      'WL'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
+xx_subset <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('converted', 
+                                                 'Bridging coastwide/3_1_1_update_data', 
+                                                 #'Bridging coastwide/3_2_2_Mconstant',
+                                                 'Bridging coastwide/3_2_2_M_justValue',
+                                                 'Bridging coastwide/3_2_3_maturity',
+                                                 'Bridging coastwide/3_2_4_steepness',
+                                                 'Bridging coastwide/3_2_5_fecund',
+                                                 'Bridging coastwide/3_2_6_WL',
+                                                 'Bridging coastwide/3_2_1_update_bio_Mval',
+                                                 'Bridging coastwide/3_2_1_update_bio_Mconstant')))
+SSsummarize(xx_subset) |>
+  SSplotComparisons(legendlabels = c('2015converted', '2023 All data', 
+                                     'M as breakpoint',
+                                     'Maturity',
+                                     'Steepness',
+                                     'Fecundity',
+                                     'WL',
+                                     'All bio M as breakpoint',
+                                     'All bio M as constant'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
 
 
@@ -2479,7 +2507,7 @@ SSsummarize(xx) |>
 
 
 ##########################################################################################
-# 3_3_1 and move to coastwide model -------------------------------------------------
+# 3_3_1 and move to coastwide model but keep the selectivity setup -------------------------------------------------
 ##########################################################################################
 
 new_name <- "Bridging coastwide/3_3_1_coastwide"
@@ -2554,7 +2582,243 @@ mod$ctl$Q_parms <- mod$ctl$Q_parms |>
   dplyr::filter(grepl('coastwide', rownames(mod$ctl$Q_parms))) |>
   dplyr::bind_rows(extra.se.row)
 
-######## CHANGE SELECTIVITY FOR COASTWIDE MODEL ----
+######## CHANGE SELECTIVITY FOR COASTWIDE MODEL BUT KEEP ORIGINAL SETUP (STILL MIRROR FLEETS AND ESTIMATE PARM6) ----
+
+# State surveys have no length selectivity (to eliminate parameter lines)
+mod$ctl$size_selex_types$Pattern[grep('NWFSC|Tri', fleet.converter$fleetname)] <- 0
+mod$ctl$size_selex_types$Special[grep('NWFSC|Tri', fleet.converter$fleetname)] <- 0
+
+# coastwide surveys get their own selectivity, no mirroring
+mod$ctl$size_selex_types$Pattern[grep('coastwide_(NWFSC|Tri)', fleet.converter$fleetname)] <- 24
+
+### Now fix up selectivity parameter table
+selex_fleets <- rownames(mod$ctl$size_selex_types)[mod$ctl$size_selex_types$Pattern == 24] |>
+  as.list()
+
+selex_names <- purrr::map(selex_fleets,
+                          ~ glue::glue('SizeSel_P_{par}_{fleet_name}({fleet_no})',
+                                       par = 1:6,
+                                       fleet_name = .x,
+                                       fleet_no = fleet.converter$fleet[fleet.converter$fleetname == .x])) |>
+  unlist()
+
+selex_new <- matrix(0, nrow = length(selex_names), 
+                    ncol = ncol(mod$ctl$size_selex_parms), 
+                    dimnames = list(selex_names, names(mod$ctl$size_selex_parms))) |>
+  as.data.frame()
+
+#Matching previous setup. Survey parameter lines line up so set mirrored state surveys (CA)
+#in old setup to be the coastwide surveys in the new setup
+selex_new[,colnames(selex_new)] <- mod$ctl$size_selex_parms[,colnames(selex_new)]
+
+#Dont need to change the timevarying setup
+
+mod$ctl$size_selex_parms <- selex_new
+
+##----
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+# r4ss::run(dir = here('models',new_name), 
+#           exe = here('models/ss_win.exe'), 
+#           # extras = '-nohess', 
+#           # show_in_console = TRUE, 
+#           skipfinished = FALSE)
+
+out <- r4ss::SS_output(here('models',new_name))
+r4ss::SS_plots(replist = out)
+
+
+##########################################################################################
+# 3_3_2 unmirror but DO NOT update coastwide selectivity setup -------------------------------------------------
+##########################################################################################
+
+new_name <- "Bridging coastwide/3_3_2_coastwide_unmirror"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/Bridging coastwide/3_3_1_coastwide'), 
+               dir.new = here('models', new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+######## CHANGE FLEET SETUP (UNMIRROR) BUT KEEP STRUCTURE FOR SELECTIVITY FOR COASTWIDE MODEL. ONLY CHANGE INITS ----
+
+# Un-mirror TWL, NTWL, REC selectivities
+mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
+mod$ctl$size_selex_types$Special[grep('TWL|REC', fleet.converter$fleetname)] <- 0
+
+# Except WA NTWL which is very small fleet, it mirrors TWL (more similar to WA TWL than OR NTWL)
+mod$ctl$size_selex_types$Pattern[fleet.converter$fleet_no_num=='WA_NTWL'] <- 15
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_NTWL'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# Foreign fleets mirror respective state TWL fleet
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='OR_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='OR_TWL']
+mod$ctl$size_selex_types$Special[fleet.converter$fleet_no_num=='WA_FOR'] <- fleet.converter$fleet[fleet.converter$fleet_no_num=='WA_TWL']
+
+# State surveys have no length selectivity (to eliminate parameter lines)
+mod$ctl$size_selex_types$Pattern[grep('NWFSC|Tri', fleet.converter$fleetname)] <- 0
+mod$ctl$size_selex_types$Special[grep('NWFSC|Tri', fleet.converter$fleetname)] <- 0
+
+# coastwide surveys get their own selectivity, no mirroring
+mod$ctl$size_selex_types$Pattern[grep('coastwide_(NWFSC|Tri)', fleet.converter$fleetname)] <- 24
+
+### Now fix up selectivity parameter table
+selex_fleets <- rownames(mod$ctl$size_selex_types)[mod$ctl$size_selex_types$Pattern == 24] |>
+  as.list()
+
+selex_names <- purrr::map(selex_fleets,
+                          ~ glue::glue('SizeSel_P_{par}_{fleet_name}({fleet_no})',
+                                       par = 1:6,
+                                       fleet_name = .x,
+                                       fleet_no = fleet.converter$fleet[fleet.converter$fleetname == .x])) |>
+  unlist()
+
+selex_new <- matrix(0, nrow = length(selex_names), 
+                    ncol = ncol(mod$ctl$size_selex_parms), 
+                    dimnames = list(selex_names, names(mod$ctl$size_selex_parms))) |>
+  as.data.frame()
+
+#Use same setup for each previously mirrored fleet, except use new inits
+
+selex_new[grepl("_TWL", rownames(selex_new)),] <- 
+  rbind(mod$ctl$size_selex_parms[grepl("_TWL", rownames( mod$ctl$size_selex_parms)),],
+        mod$ctl$size_selex_parms[grepl("_TWL", rownames( mod$ctl$size_selex_parms)),],
+        mod$ctl$size_selex_parms[grepl("_TWL", rownames( mod$ctl$size_selex_parms)),])
+
+#only need two lines for NTWL because WA is mirrored to WA TWL
+selex_new[grepl("_NTWL", rownames(selex_new)),] <- 
+  rbind(mod$ctl$size_selex_parms[grepl("_NTWL", rownames( mod$ctl$size_selex_parms)),],
+        mod$ctl$size_selex_parms[grepl("_NTWL", rownames( mod$ctl$size_selex_parms)),])
+
+selex_new[grepl("_REC", rownames(selex_new)),] <- 
+  rbind(mod$ctl$size_selex_parms[grepl("_REC", rownames( mod$ctl$size_selex_parms)),],
+        mod$ctl$size_selex_parms[grepl("_REC", rownames( mod$ctl$size_selex_parms)),],
+        mod$ctl$size_selex_parms[grepl("_REC", rownames( mod$ctl$size_selex_parms)),])
+
+#Copy over the rest for ASHOP and surveys
+selex_new[grepl("_ASHOP|_NWFSC|_Tri", rownames(selex_new)),] <- 
+  mod$ctl$size_selex_parms[grepl("_ASHOP|_NWFSC|_Tri", rownames( mod$ctl$size_selex_parms)),]
+
+# calculate initial values for p1, p3, p4 for each fleet
+# based on recommendations in assessment handbook
+selex_modes <- mod$dat$lencomp |>
+  dplyr::arrange(FltSvy) |>
+  dplyr::group_by(FltSvy) |>
+  dplyr::summarise(dplyr::across(f12:m66, ~ sum(Nsamp*.x)/sum(Nsamp))) |> 
+  tidyr::pivot_longer(cols = -FltSvy, names_to = 'len_bin', values_to = 'dens') |>
+  tidyr::separate(col = len_bin, into = c('sex', 'length'), sep = 1) |>
+  dplyr::group_by(FltSvy, sex) |> 
+  dplyr::summarise(mode = length[which.max(dens)]) |>
+  dplyr::summarise(mode = mean(as.numeric(mode))) |>
+  dplyr::mutate(asc.slope = log(8*(mode - 12)),
+                desc.slope = log(8*(66-mode)))
+
+#Add in CA ASHOP here so this runs (previously it was removed but here its used as the first mirror fleet). 
+#Use the same values as OR ASHOP, where INIT is updated below
+selex_modes <- rbind(selex_modes, c("FltSvy" = 10, selex_modes[selex_modes$FltSvy==11,-1]))
+
+
+# P_1
+p1.ind <- grep('P_1', rownames(selex_new))
+selex_new$LO[p1.ind] <- 13.001
+selex_new$HI[p1.ind] <- 65
+selex_new$PHASE[p1.ind] <- 4
+selex_new$INIT[p1.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$mode[selex_modes$FltSvy == 
+                                                          fleet.converter$fleet[fleet.converter$fleetname == .x]]) |>
+  unlist()
+# Hard coding this in, do not use CA as basis for mode of ASHOP selectivity
+selex_new['SizeSel_P_1_10_CA_ASHOP(10)', 'INIT'] <- 48
+
+### P_3
+p3.ind <- grep('P_3', rownames(selex_new))
+selex_new$PHASE[p3.ind] <- 5
+selex_new$LO[p3.ind] <- 0
+selex_new$HI[p3.ind] <- 9
+selex_new$INIT[p3.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$asc.slope[selex_modes$FltSvy == 
+                                                               fleet.converter$fleet[fleet.converter$fleetname == 
+                                                                                       .x]]) |>
+  unlist()
+
+### P_4
+p4.ind <- grep('P_4', rownames(selex_new))
+selex_new$PHASE[p4.ind] <- 5
+selex_new$LO[p4.ind] <- 0
+selex_new$HI[p4.ind] <- 9
+selex_new$INIT[p4.ind] <- purrr::map(selex_fleets, 
+                                     ~ selex_modes$desc.slope[selex_modes$FltSvy == 
+                                                                fleet.converter$fleet[fleet.converter$fleetname == 
+                                                                                        .x]]) |>
+  unlist()
+
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(Block, .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+
+##----
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models', new_name),
+         overwrite = TRUE)
+
+# r4ss::run(dir = here('models',new_name), 
+#           exe = here('models/ss_win.exe'), 
+#           # extras = '-nohess', 
+#           # show_in_console = TRUE, 
+#           skipfinished = FALSE)
+
+out <- r4ss::SS_output(here('models',new_name))
+r4ss::SS_plots(replist = out)
+
+
+##########################################################################################
+# 3_3_2 unmirror and update coastwide selectivity setup -------------------------------------------------
+##########################################################################################
+
+new_name <- "Bridging coastwide/3_3_2_coastwide_unmirrorANDselex"
+
+##
+#Copy inputs
+##
+copy_SS_inputs(dir.old = here('models/Bridging coastwide/3_3_1_coastwide'), 
+               dir.new = here('models', new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+######## CHANGE FLEET SETUP (UNMIRROR) AND SELECTIVITY SETUP FOR COASTWIDE MODEL ----
 
 # Un-mirror TWL, NTWL, REC selectivities
 mod$ctl$size_selex_types$Pattern[grep('TWL|REC', fleet.converter$fleetname)] <- 24
@@ -2700,16 +2964,16 @@ r4ss::SS_plots(replist = out)
 
 
 ####------------------------------------------------####
-### 3_3_2_lambda1 Set lambdas to 1 for coastwide model ----
+### 3_3_3_lambda1 Set lambdas to 1 for coastwide model ----
 ####------------------------------------------------####
 
-new_name <- 'Bridging coastwide/3_3_2_lambda1'
+new_name <- 'Bridging coastwide/3_3_3_lambda1'
 
 ##
 #Copy inputs
 ##
 
-copy_SS_inputs(dir.old = here('models/Bridging coastwide/3_3_1_coastwide'), 
+copy_SS_inputs(dir.old = here('models/Bridging coastwide/3_3_2_coastwide_selex'), 
                dir.new = here('models',new_name),
                overwrite = TRUE)
 
@@ -2746,11 +3010,11 @@ SS_write(mod,
 
 
 ####------------------------------------------------####
-### 3_3_3_coastwide_tuned Tune the model with data and bio added ----
+### 3_3_4_coastwide_tuned Tune the model with data and bio added ----
 ####------------------------------------------------####
 
-new_name <- 'Bridging coastwide/3_3_3_coastwide_tuned'
-copied_model <- 'Bridging coastwide/3_3_2_lambda1'
+new_name <- 'Bridging coastwide/3_3_4_coastwide_tuned'
+copied_model <- 'Bridging coastwide/3_3_3_lambda1'
 
 ##
 #Copy inputs
@@ -2793,14 +3057,18 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  'Bridging coastwide/3_2_7_update_bio_Mconstant_phases',
                                                  'Bridging coastwide/3_2_9_tuned',
                                                  'Bridging coastwide/3_3_1_coastwide',
-                                                 'Bridging coastwide/3_3_3_coastwide_tuned')))
+                                                 'Bridging coastwide/3_3_2_coastwide_unmirror',
+                                                 'Bridging coastwide/3_3_2_coastwide_unmirrorANDselex',
+                                                 'Bridging coastwide/3_3_4_coastwide_tuned')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015converted', 
                                      '2023 All data - spatial',
                                      '2023 All data tuned - spatial',
                                      '2023 All data and bio (M as constant) - spatial',
                                      '2023 All data and bio tuned - spatial',
-                                     '2023 Coastwide',
+                                     '2023 Coastwide Mirror fleets',
+                                     '2023 Coastwide Unmirror fleets',
+                                     '2023 Coastwide Unmirror fleets and update selex',
                                      '2023 Coastwide tuned'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
 

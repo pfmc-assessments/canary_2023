@@ -59,7 +59,7 @@
     0	     0.1	 1.19e-05	1.19e-05	   50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_1_Fem_GP_1   
     2	       4	     3.09	    3.09	   50	6	-50	0	0	   0	   0	0.5	0	0	#_Wtlen_2_Fem_GP_1   
     9	      12	    10.87	   10.87	0.055	6	-50	0	0	   0	   0	0.5	0	0	#_Mat50%_Fem_GP_1    
-   -3	       3	    -0.25	   -0.25	   50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat_slope_Fem_GP_1 
+   -3	       3	   -0.688	  -0.688	   50	6	-50	0	0	   0	   0	0.5	0	0	#_Mat_slope_Fem_GP_1 
 1e-10	     0.1	7.218e-08	-16.4441	0.135	3	-50	0	0	   0	   0	0.5	0	0	#_Eggs_alpha_Fem_GP_1
     2	       6	    4.043	   4.043	  0.3	6	-50	0	0	   0	   0	0.5	0	0	#_Eggs_beta_Fem_GP_1 
  0.02	     0.2	   0.0643	   -2.74	 0.31	6	-50	0	0	   0	   0	0.5	0	0	#_NatM_p_1_Mal_GP_1  
@@ -313,44 +313,44 @@
 # Input variance adjustments factors: 
 #_Data_type	Fleet	Value
     4	 1	0.167557	#_Variance_adjustment_list1 
-    5	 1	0.301928	#_Variance_adjustment_list2 
-    4	 2	 0.19066	#_Variance_adjustment_list3 
-    5	 2	0.369056	#_Variance_adjustment_list4 
-    4	 3	0.140351	#_Variance_adjustment_list5 
-    5	 3	 0.23742	#_Variance_adjustment_list6 
-    4	 4	0.125866	#_Variance_adjustment_list7 
-    4	 5	0.022571	#_Variance_adjustment_list8 
-    4	 6	 1.39043	#_Variance_adjustment_list9 
-    4	 7	0.057376	#_Variance_adjustment_list10
-    4	 8	0.209412	#_Variance_adjustment_list11
-    5	 8	  3.5249	#_Variance_adjustment_list12
-    4	 9	0.941425	#_Variance_adjustment_list13
-    5	 9	 1.65834	#_Variance_adjustment_list14
-    4	11	0.226111	#_Variance_adjustment_list15
-    5	11	0.560726	#_Variance_adjustment_list16
-    4	12	0.139304	#_Variance_adjustment_list17
-    5	12	 0.21747	#_Variance_adjustment_list18
-    4	16	0.058229	#_Variance_adjustment_list19
-    4	17	0.082608	#_Variance_adjustment_list20
-    4	18	0.052349	#_Variance_adjustment_list21
-    4	19	0.167571	#_Variance_adjustment_list22
-    4	20	0.111997	#_Variance_adjustment_list23
-    4	21	0.071613	#_Variance_adjustment_list24
-    4	22	0.398511	#_Variance_adjustment_list25
-    4	23	0.066605	#_Variance_adjustment_list26
-    4	24	0.042791	#_Variance_adjustment_list27
-    5	 4	0.672824	#_Variance_adjustment_list28
-    5	 5	0.582243	#_Variance_adjustment_list29
-    5	 6	 1.89178	#_Variance_adjustment_list30
-    5	16	0.886454	#_Variance_adjustment_list31
-    5	17	 0.20385	#_Variance_adjustment_list32
-    5	18	0.423666	#_Variance_adjustment_list33
-    5	19	0.157339	#_Variance_adjustment_list34
-    5	20	 0.06681	#_Variance_adjustment_list35
-    5	21	0.861735	#_Variance_adjustment_list36
-    5	22	0.039534	#_Variance_adjustment_list37
-    5	23	0.221699	#_Variance_adjustment_list38
-    5	24	0.636497	#_Variance_adjustment_list39
+    5	 1	0.304828	#_Variance_adjustment_list2 
+    4	 2	0.187947	#_Variance_adjustment_list3 
+    5	 2	0.372083	#_Variance_adjustment_list4 
+    4	 3	0.140338	#_Variance_adjustment_list5 
+    5	 3	0.240897	#_Variance_adjustment_list6 
+    4	 4	0.124337	#_Variance_adjustment_list7 
+    4	 5	 0.02223	#_Variance_adjustment_list8 
+    4	 6	 1.37965	#_Variance_adjustment_list9 
+    4	 7	0.057522	#_Variance_adjustment_list10
+    4	 8	0.208851	#_Variance_adjustment_list11
+    5	 8	 3.55812	#_Variance_adjustment_list12
+    4	 9	0.932427	#_Variance_adjustment_list13
+    5	 9	 1.67891	#_Variance_adjustment_list14
+    4	11	0.220203	#_Variance_adjustment_list15
+    5	11	0.549984	#_Variance_adjustment_list16
+    4	12	0.135396	#_Variance_adjustment_list17
+    5	12	0.213881	#_Variance_adjustment_list18
+    4	16	0.082584	#_Variance_adjustment_list19
+    4	17	0.105514	#_Variance_adjustment_list20
+    4	18	 0.06334	#_Variance_adjustment_list21
+    4	19	0.167831	#_Variance_adjustment_list22
+    4	20	0.111222	#_Variance_adjustment_list23
+    4	21	0.071403	#_Variance_adjustment_list24
+    4	22	0.404007	#_Variance_adjustment_list25
+    4	23	0.066063	#_Variance_adjustment_list26
+    4	24	0.042567	#_Variance_adjustment_list27
+    5	 4	 0.68316	#_Variance_adjustment_list28
+    5	 5	0.587338	#_Variance_adjustment_list29
+    5	 6	 1.82715	#_Variance_adjustment_list30
+    5	16	0.899727	#_Variance_adjustment_list31
+    5	17	0.209311	#_Variance_adjustment_list32
+    5	18	0.428013	#_Variance_adjustment_list33
+    5	19	0.150461	#_Variance_adjustment_list34
+    5	20	0.067332	#_Variance_adjustment_list35
+    5	21	0.887618	#_Variance_adjustment_list36
+    5	22	0.041537	#_Variance_adjustment_list37
+    5	23	0.226627	#_Variance_adjustment_list38
+    5	24	0.623869	#_Variance_adjustment_list39
 -9999	 0	       0	#_terminator                
 #
 1 #_maxlambdaphase
