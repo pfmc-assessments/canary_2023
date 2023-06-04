@@ -10,12 +10,11 @@ Due to an unexplained male-skewed sex ratio at older ages observed across fisher
 
 The increased ramp in natural mortality was also used in yellowtail rockfish assessments prior to 2005 with support from [@tagart_yellowtail_1991] that the senescent mortality hypothesis fit the fishery age data well, and was a better biological explanation for the disappearance of older age females than the alternative hypothesis that the older females were not vulnerable to the fishery. The pattern of male-skewed sex ratio at older ages has been observed along the U.S. West Coast in fishery data off Oregon (Rasmussen pers. comm. ODFW) and Alaska and in black rockfish in addition to canary and yellowtail rockfishes. Although it has been found in these three semi-pelagic species, the pattern has not been observed for bocaccio, chilipepper rockfish, shortbelly rockfish, or dusky rockfishes (in Alaska), which are also semi-pelagic.
 
-Probably add more background maybe if we have time. We have the Brooks thesis, and then the Sampson paper that offer alternatives but aren't complete.
+*Probably add more background maybe if we have time. We have the Brooks thesis, and then the Sampson paper that offer alternatives but aren't complete.*
 
 IF USE A BREAKPOINT: In this assessment, we updated the longevity-based prior for the natural mortality rate for males and young females based on @hamel2022development, using a maximum age of 84 yrs as was done in the previous assessment [@thorson_status_2015; @love2002rockfishes]. This results in a lognormal prior with a log-mean of -2.74, a log-standard deviation of 0.31, and a median natural mortality of 0.0643 yr$^{-1}$ (used as the fixed value). Instead of a ramp, which requires the analyst to select two ages, we used a breakpoint, which only requires selecting a single age and is thus more parsimonious. Rather than placing the breakpoint around the point of 50 percent maturity, at which point there is little evidence in the data of sex ratios deviating from 50:50, we placed the breakpoint between ages 20 and 21. This means female mortality stayed at the low value for more years than in recent assessments, and is more aligned with where the ratio of females begins to decline in survey data.
 
 IF USE A SINGLE VALUE: In this assessment, we elected to model natural mortality for males and females separately. We updated the longevity-based prior for the natural mortality rate for males and females based on @hamel2022development, using a maximum age of 84 yrs as was done in the previous assessment [@thorson_status_2015; @love2002rockfishes]. This results in a lognormal prior with a log-mean of -2.74, a log-standard deviation of 0.31, and a median natural mortality of 0.0643 yr$^{-1}$ for both sexes. As was done in the previous assessments, we fixed the male natural mortality value at the prior and estimate female natural mortality. The same maximum age for males and females was used. Estimating separate male and female natural mortality removes the need for a user-selected breakpoint at which natural mortality changes, and has been done in the past assessments for yellowtail [@stephens_status_2017] and black rockfish for Washington and California [@cope_assessments_2016]. 
-
 
 
 ### Maturation and Fecundity
@@ -36,21 +35,18 @@ where li is the length of individual i, Bernoulli(pi) is a Bernoulli probability
 
 #### Fecundity
 
-Fecundity information was based on the meta-analysis in [@dick_meta-analysis_2017] which updates the values from the previous assessment that were based on the dissertation of E.J. Dick [@dick_modeling_2009]. Existing species specific fecundity information for canary rockfish is limited and only 9 samples of canary rockfish exist within the rockfish fecundity database housed at the \gls{sefsc} (S. Beyer, personal communication, May 22, 2023, University of Washington). [@dick_meta-analysis_2017] performed their analysis on subgenera with at least three species, which excluded canary rockfish, so the relationship in [@dick_meta-analysis_2017] for general *Sebastes* species was used for this assessment. Fecundity was assumed as a power function of length, as in [@dick_meta-analysis_2017], whereas the previous assessment assumed fecundity was linearly proportional to weight. Although these reflect different parameterizations, they are transferrable based on the weight-length relationship, which was very similar between assessments. The fecundity relationship for this assessment was `r format(model$MGparmAdj$Eggs_scalar_Fem[1], scientific = TRUE)`$L$^`r round(model$MGparmAdj$Eggs_exp_len_Fem[1],2)`^ in millions of eggs where $L$ is length in cm. The new relationship decreases fecundity at larger sizes than in the past assessment (Figure \ref{fig:compare_fecundity}).
+Fecundity was based on the meta-analysis in [@dick_meta-analysis_2017]. Existing species specific fecundity information for canary rockfish is limited and only 9 samples of canary rockfish exist within the rockfish fecundity database housed at the \gls{sefsc} (S. Beyer, personal communication, May 22, 2023, University of Washington). [@dick_meta-analysis_2017] performed their analysis on subgenera with at least three species, which excluded canary rockfish, so the relationship in [@dick_meta-analysis_2017] for general *Sebastes* species was used for this assessment. Fecundity was assumed as a power function of length, as in [@dick_meta-analysis_2017], whereas the previous assessment assumed fecundity was linearly proportional to weight and used values from [@dick_modeling_2009]. Although these reflect different parameterizations, they are transferrable based on the weight-length relationship. The fecundity relationship for this assessment was `r format(model$MGparmAdj$Eggs_scalar_Fem[1], scientific = TRUE)`$L$^`r round(model$MGparmAdj$Eggs_exp_len_Fem[1],2)`^ in millions of eggs where $L$ is length in cm. The new relationship results in a decrease in fecundity at larger sizes compared to the relationship used in the 2015 assessment (Figure \ref{fig:compare_fecundity}).
 
 ### Steepness
 
-Steepness is defined as the proportion of average recruitment for an unfished population that is expected for a population with 20% of unfished spawning output.  It represents a measure of compensation in the spawner-recruit relationship, which is the only source of compensation included in this, and most other assessment models.  It is typically difficult to estimate using data for a single population (Conn et al., 2010), which has led to a series of meta-analyses to estimate its likely value (Dorn, 2002; Myers et al., 1995).  
+Steepness is defined as the proportion of average recruitment for an unfished population that is expected for a population with 20% of unfished spawning output.  It represents a measure of compensation in the spawner-recruit relationship. It is typically difficult to estimate using data for a single population (Conn et al., 2010), which has led to a series of meta-analyses to estimate its likely value (Dorn, 2002; Myers et al., 1995).  
 
-The Scientific and Statistical Committee of the PFMC has recommended for use in the 2015 assessment cycle an update of the method developed by M. Dorn.  This method computes a likelihood profile for estimates of steepness from the most recent assessment of all Category-1 assessed Pacific rockfish stocks.  This prior is then treated as a marginal likelihood and a hyper-distribution for steepness in Pacific rockfishes is estimated using maximum marginal likelihood (in this case, using a Bayesian paradigm).  The prior for 2015 has a predictive mean of 0.773 and a standard deviation of 0.147.  We fix the value for steepness for canary rockfish at the prior mean.
-
-
-### Sex Ratio
+Steepness in this assessment was fixed at the prior mean value. The SSC-approved prior for steepness in 2023 assumes a beta distribution with a mean of 0.72 and standard deviation of 0.16 [@pfmc_accepted_2023]. The prior parameters are based on the Thorson-Dorn rockfish prior (commonly used in past West Coast rockfish assessments) conducted by James Thorson (personal communication, NWFSC, NOAA) which was reviewed and endorsed by the Scientific and Statistical Committee (SSC) in 2017. However, this approach was subsequently rejected for future analysis in 2019 when the new meta-analysis resulted in a mean value of approximately 0.95. In the absence of a new method for generating a prior for steepness the default approach reverts to the previously endorsed method, the 2017 value.
 
 
 ### Length-Weight Relationship
 
-Individual condition is defined broadly as the relationship between individual length and weight in fishes.  Condition is estimated externally to the assessment model using a regression model:
+Individual condition is defined broadly as the relationship between individual length and weight in fishes. Condition is estimated externally to the assessment model using a regression model:
 
 *INSERT EQUATION HERE*
 w_i=a ̂〖l_i〗^b ̂  e^(ε_i )
@@ -61,6 +57,10 @@ where wi¬ and li are weight (kg) and length (cm) for individual i, and a ̂ and
 
 
 ### Growth (Length-at-Age)
+
+
+
+### Sex Ratio
 
 
 ### Ageing Precision and Bias
