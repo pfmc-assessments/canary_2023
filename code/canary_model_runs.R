@@ -7645,6 +7645,8 @@ plot_sel_noncomm(pp, spatial = FALSE)
 ### 3_1_1_noFloat Turn off float q for triennial. Instead estimate. ----
 ####------------------------------------------------####
 
+#Just setting float = 0, fixes q at the init. That is wrong. Need to do something else. 
+
 new_name <- "3_1_1_noFloat"
 
 ##
@@ -7665,6 +7667,11 @@ mod <- SS_read(here('models',new_name))
 #Turn off float q for triennial surveys. Need this off to mirror
 mod$ctl$Q_options[c('29_coastwide_Tri_early','30_coastwide_Tri_late'), "float"] <- 0
 
+#Turn on phase
+mod$ctl$Q_parms[c('LnQ_base_29_coastwide_Tri_early(29)',
+                  'LnQ_base_30_coastwide_Tri_late(30)'), "PHASE"] <- 2
+
+
 ##
 #Output files and run
 ##
@@ -7684,7 +7691,7 @@ SS_plots(pp, plot = c(1:26))
 
 
 ####------------------------------------------------####
-### 3_1_2_triennial MIrror q and selectivity for the early and late triennial surveys ----
+### 3_1_2_triennial Mirror q and selectivity for the early and late triennial surveys ----
 ####------------------------------------------------####
 
 new_name <- "3_1_2_triennial"
@@ -7710,6 +7717,9 @@ mod$ctl$Q_options[c('29_coastwide_Tri_early','30_coastwide_Tri_late'), "float"] 
 mod$ctl$Q_options["30_coastwide_Tri_late", c("link", "link_info")] <- c(2, 29)
 mod$ctl$Q_parms["LnQ_base_30_coastwide_Tri_late(30)", "INIT"] <- 0 #This gets ignored so is not needed but using 0 to indicate a change
 
+mod$ctl$Q_parms[c('LnQ_base_29_coastwide_Tri_early(29)',
+                  'LnQ_base_30_coastwide_Tri_late(30)'), "PHASE"] <- 2
+
 #Mirror selectivity of late triennial to early
 mod$ctl$size_selex_types["30_coastwide_Tri_late",c("Pattern","Special")] <- c(15, 29)
 mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep(
@@ -7733,16 +7743,6 @@ r4ss::run(dir = here('models',new_name),
 pp <- SS_output(here('models',new_name))
 SS_plots(pp, plot = c(1:26))
 
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('3_0_1_tuned',
-                                                 '3_1_1_noFloat',
-                                                 '3_1_2_triennial')))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('Model 301',
-                                     'No float triennial',
-                                     'Mirror triennial selex and q'),
-                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
-
 dev.off()
 plot_sel_comm(pp)
 plot_sel_noncomm(pp, spatial = FALSE)
@@ -7751,6 +7751,8 @@ plot_sel_noncomm(pp, spatial = FALSE)
 ####------------------------------------------------####
 ### 3_1_3_triennial_q Mirror q only. Selectivity in 3_1_2 for triennial is wrong----
 ####------------------------------------------------####
+
+#This fixes q at the initial condition, which doesn't seem right. Need to change this. 
 
 new_name <- "3_1_3_triennial_q"
 
@@ -7774,6 +7776,10 @@ mod$ctl$Q_options[c('29_coastwide_Tri_early','30_coastwide_Tri_late'), "float"] 
 
 mod$ctl$Q_options["30_coastwide_Tri_late", c("link", "link_info")] <- c(2, 29)
 mod$ctl$Q_parms["LnQ_base_30_coastwide_Tri_late(30)", "INIT"] <- 0 #This gets ignored so is not needed but using 0 to indicate a change
+
+#Turn on phase
+mod$ctl$Q_parms[c('LnQ_base_29_coastwide_Tri_early(29)',
+                  'LnQ_base_30_coastwide_Tri_late(30)'), "PHASE"] <- 2
 
 
 ##
