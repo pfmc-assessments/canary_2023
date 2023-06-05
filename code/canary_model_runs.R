@@ -7645,7 +7645,7 @@ plot_sel_noncomm(pp, spatial = FALSE)
 ### 3_1_1_noFloat Turn off float q for triennial. Instead estimate. ----
 ####------------------------------------------------####
 
-#Just setting float = 0, fixes q at the init. That is wrong. Need to do something else. 
+#Just setting float = 0, fixes q at the init. Need to turn on positive phase 
 
 new_name <- "3_1_1_noFloat"
 
@@ -7751,8 +7751,6 @@ plot_sel_noncomm(pp, spatial = FALSE)
 ####------------------------------------------------####
 ### 3_1_3_triennial_q Mirror q only. Selectivity in 3_1_2 for triennial is wrong----
 ####------------------------------------------------####
-
-#This fixes q at the initial condition, which doesn't seem right. Need to change this. 
 
 new_name <- "3_1_3_triennial_q"
 
