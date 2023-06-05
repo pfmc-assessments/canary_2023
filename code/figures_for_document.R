@@ -35,6 +35,31 @@ legend("topleft", c("2015 relationship", "2023 relationship"),
 dev.off()
 
 
+##
+#Plot WL relationship
+##
+png(
+  filename = here('documents','figures','WL.png'),
+  width = 6.5, height = 5.0, units = "in", res = 300, pointsize = 10
+)
+
+plot(mod23$biology$Len_mean, mod23$parameters['Wtlen_1_Fem', 'Value']*
+       mod23$biology$Len_mean^mod23$parameters['Wtlen_2_Fem', 'Value'], 
+     type = "n", lty = 1, lwd=3, col = 2, ylab = "Weight (kg)", xlab = "Length (cm)")
+
+#Females
+lines(mod23$biology$Len_mean, mod23$parameters['Wtlen_1_Fem', 'Value']*
+        mod23$biology$Len_mean^mod23$parameters['Wtlen_2_Fem', 'Value'], 
+      lty = 1, lwd=3, col = 2)
+
+#Males
+lines(mod23$biology$Len_mean, mod23$parameters['Wtlen_1_Mal', 'Value']*
+        mod23$biology$Len_mean^mod23$parameters['Wtlen_2_Mal', 'Value'], 
+      lty = 1, lwd = 3, col = 4)
+
+legend("topleft", c("Females", "Males"), 
+       lty = 1, lwd = 3, col = c(2,4), bty = "n")
+dev.off()
 
 ##
 #Compare WL relationship with previous assessment
@@ -44,12 +69,29 @@ png(
   width = 6.5, height = 5.0, units = "in", res = 300, pointsize = 10
 )
 
-plot(mod15$biology$Len_mean, 1.18e-05*mod15$biology$Len_mean^3.094, type = "l", lwd=3, col = 2,
-     ylab = "Weight (kg)", xlab = "Length (cm)")
-lines(mod15$biology$Len_mean, 1.19e-05*mod15$biology$Len_mean^3.09, lwd = 3, col = 1)
+plot(mod23$biology$Len_mean, mod23$parameters['Wtlen_1_Fem', 'Value']*
+       mod23$biology$Len_mean^mod23$parameters['Wtlen_2_Fem', 'Value'], 
+     type = "n", lty = 1, lwd=3, col = 2, ylab = "Weight (kg)", xlab = "Length (cm)")
 
-legend("topleft", c("2015 relationship", "2023 relationship"), 
-       lty = 1, lwd = 3, col = c(2,1), bty = "n")
+#Females
+lines(mod23$biology$Len_mean, mod23$parameters['Wtlen_1_Fem', 'Value']*
+       mod23$biology$Len_mean^mod23$parameters['Wtlen_2_Fem', 'Value'], 
+      lty = 1, lwd=3, col = 2)
+lines(mod15$biology$Len_mean, mod15$parameters['Wtlen_1_Fem', 'Value']*
+        mod15$biology$Len_mean^mod15$parameters['Wtlen_2_Fem', 'Value'], 
+      lwd = 3, lty = 3, col = 2)
+
+#Males
+lines(mod23$biology$Len_mean, mod23$parameters['Wtlen_1_Mal', 'Value']*
+        mod23$biology$Len_mean^mod23$parameters['Wtlen_2_Mal', 'Value'], 
+      lty = 1, lwd = 3, col = 4)
+lines(mod15$biology$Len_mean, mod15$parameters['Wtlen_1_Mal', 'Value']*
+        mod15$biology$Len_mean^mod15$parameters['Wtlen_2_Mal', 'Value'], 
+      lty = 2, lwd = 3, col = 4)
+
+legend("topleft", c("2023 relationship", "2015 relationship", "Female", "Male"), 
+       lty = c(1,2,1,1), lwd = 3, col = c(1,1,2,4), bty = "n")
+
 dev.off()
 
 
