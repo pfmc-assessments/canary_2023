@@ -7865,7 +7865,75 @@ dev.off()
 plot_sel_comm(pp)
 plot_sel_noncomm(pp, spatial = FALSE)
 
+####------------------------------------------------####
+### 3_1_5_update_tri_index Update triennial index to lognormal error instead of mixture (not stable)  ----
+####------------------------------------------------####
 
+new_name <- "3_1_5_update_tri_index"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_2_triennial'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+##
+#Make Changes
+##
+
+tri.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_lognormal/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, ifelse(year <= 1992, '_Tri_early', '_Tri_late'))) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se) |>
+  dplyr::mutate(year = ifelse(index %in% fleet.converter$fleet[grep('coastwide', fleet.converter$fleetname)],
+                              year, -year))
+
+mod$dat$CPUE <- dplyr::filter(mod$dat$CPUE, 
+                              !(index %in% fleet.converter$fleet[grep('Tri', fleet.converter$fleetname)])) |>
+  dplyr::bind_rows(tri.cpue)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+# pp <- SS_output(here('models',new_name))
+# SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_2_triennial',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Mirror triennial selex and q',
+                                     'Update triennial to lognormal'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+dev.off()
+
+xx$replist2$cpue |> View()
+
+# Triennial Q is 0.28
 
 ##########################################################################################
 
