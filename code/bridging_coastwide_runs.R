@@ -28,6 +28,94 @@ source(here('code/selexComp.R'))
 #                         Set up from 2015 base to current version
 ##########################################################################################
 
+####------------------------------------------------####
+### 3_0_1_2015lambda1 Set previous model lambdas to 1 in prep of reweighting ----
+####------------------------------------------------####
+
+new_name <- "Bridging coastwide/3_0_1_2015lambda1"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/converted_detailed'), 
+               dir.new = here('models', new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models', new_name))
+
+##
+#Make Changes
+##
+
+#Set lambdas to 1 for all but the coastwide comps and rec ages (rec age comps 
+#were previously zero because did not have them in the model)
+mod$ctl$lambdas[!grepl("_coastwide|age_7_CA_REC|age_8_OR_REC",rownames(mod$ctl$lambdas)), "value"] <- 1
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 3_0_2_2015retuned Reweight without lambda settings ----
+####------------------------------------------------####
+
+new_name <- 'Bridging coastwide/3_0_2_2015retuned'
+copied_model <- 'Bridging coastwide/3_0_1_2015lambda1'
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models', copied_model),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models', copied_model),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models', copied_model),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models', copied_model),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+
+##
+#Make Changes
+##
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('converted',
+                                                 copied_model,
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015converted', 
+                                     '2015 lambdas = 1',
+                                     '2015 retuned'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
 
 ####------------------------------------------------####
 ### 3_1_1_update_data ----
