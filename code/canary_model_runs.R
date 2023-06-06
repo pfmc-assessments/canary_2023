@@ -7927,13 +7927,98 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Mirror triennial selex and q',
                                      'Update triennial to lognormal'),
-                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
 dev.off()
 
 xx$replist2$cpue |> View()
 
 # Triennial Q is 0.28
+
+
+
+####------------------------------------------------####
+### 3_1_6_survey_domed Relax the assumption of forcing the surveys to be logistic  ----
+####------------------------------------------------####
+
+new_name <- "3_1_6_survey_domed"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_5_update_tri_index'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+##
+#Make Changes
+##
+
+# Relax logistic selectivity assumption for coastwide surveys. Reset param 4 to inits
+selex_modes <- mod$dat$lencomp |>
+  dplyr::arrange(FltSvy) |>
+  dplyr::group_by(FltSvy) |>
+  dplyr::summarise(dplyr::across(f12:m66, ~ sum(Nsamp*.x)/sum(Nsamp))) |>
+  tidyr::pivot_longer(cols = -FltSvy, names_to = 'len_bin', values_to = 'dens') |>
+  tidyr::separate(col = len_bin, into = c('sex', 'length'), sep = 1) |>
+  dplyr::group_by(FltSvy, sex) |>
+  dplyr::summarise(mode = length[which.max(dens)]) |>
+  dplyr::summarise(mode = mean(as.numeric(mode))) |>
+  dplyr::mutate(asc.slope = log(8*(mode - min(mod$dat$lbin_vector))),
+                desc.slope = log(8*(max(mod$dat$lbin_vector)-mode))) |>
+  filter(FltSvy %in% c(28,29))
+
+
+mod$ctl$size_selex_parms[intersect(
+  grep("_coastwide",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("HI")] <- 9
+mod$ctl$size_selex_parms[intersect(
+  grep("_coastwide",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("PHASE")] <- 5
+mod$ctl$size_selex_parms[intersect(
+  grep("_coastwide",rownames(mod$ctl$size_selex_parms)),
+  grep("P_4",rownames(mod$ctl$size_selex_parms))),c("INIT")] <- selex_modes$desc.slope
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_2_triennial',
+                                                 '3_1_5_update_tri_index',
+                                                 '3_1_6_survey_domed')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Mirror triennial selex and q',
+                                     'Update triennial index',
+                                     'Allow domed shaped for surveys'),
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+
 
 ##########################################################################################
 
