@@ -7,6 +7,9 @@ The stock assessment model requires specifying several life history parameters f
 *NEED TO ADD THIS TABLE*
 Table \ref{tab:growth-tab} shows the length-at-age, weight-at-age, maturity-at-age, and spawning output (the product of fecundity and maturity) assumed in the base model.
 
+
+*Do we want to add sample sizes to these. For the sake of time Im not included samples sizes, yet other assessments have used these*
+
 ### Natural Mortality
 
 Due to an unexplained male-skewed sex ratio at older ages observed across fishery-independent and -dependent data sources, canary rockfish natural mortality has been modeled in a number of ways over the years. @sampson1996canary modeled a linear ramp in female natural mortality from 0.06 yr$^{-1}$ at age 9 to roughly 0.18 yr$^{-1}$ at age 25, the plus group. In 1999, the ramp was adjusted to be from 0.06 at age 11 to 0.20 at age 25, and the document contains an extensive review of life history theory regarding increasing female natural mortality [@stat1999canary]. @methot2002canary fixed male and young female natural mortality at 0.06, but estimated an offset for older females, and based the slope of increasing natural mortality on maturity, not age, resulting in a non-linear ramp by age. In 2005, that option was no longer available in stock synthesis, so the assessment approximated the 2001 pattern by using a linear ramp from age 6 to age 14, again estimating a female offset [@methot2005canary]. This has been the approach for all canary rockfish assessments since 2005. 
@@ -54,17 +57,51 @@ The length-weight relationship for `r spp` was estimated outside the model using
 
 ### Growth (Length-at-Age)
 
+*Need to update text to include analysis to confirm growth did not vary across latitude*
+
+`r Spp` display sexually dimorphic growth. Females grow faster but obtain larger sizes than males. Estimates of growth parameters and latitudinal variability were investigated and starting values for model inputs were updated using the \gls{s-wcgbt} data. Spatial differences were investigated by fitting an overall von Bertalanffy relationship between age and length across all coastwide samples and then comparing the residuals across latitude and depth using Tukey's honestly significant difference test for pairwise multiple comparisons at state boundaries and then again at regions identified by [@Brooks_thesis_2021] at representing biological breaks. 
+
+The breaks observed by [@Brooks_thesis_2021] were not observed when using the \gls{s-wcgbt} data and so growth was assumed constant across the coast, as was assumed in the 2015 benchmark assessment. Externally estimated von-Bertalanffy growth parameters for `r spp` using \gls{s-wcgbt} data were as follows:
+$L_\infty$ = `r model$MGparmAdj$L_at_Amax_Fem_GP_1[1]` and $k$ = `r model$MGparmAdj$VonBert_K_Fem_GP_1[1]` for females with length at age 1 equal to `r model$MGparmAdj$L_at_Amin_Fem_GP_1[1]`, and 
+$L_\infty$ = `r model$MGparmAdj$L_at_Amax_Mal_GP_1[1]` and $k$ = `r model$MGparmAdj$VonBert_K_Mal_GP_1[1]` for males with length at age 1 set equal to the length at age 1 for females. We therefore assume size of young males and females are identical, consistent with the assumptions in the 2015 bechmark assessment. These estimates were used as initial values within the base model for estimating growth.
+
+*This was used in the lingcod assessment. I'd like some treatment of our analysis described for showing growth didn't differ between areas*
+A model based change-point analysis [@kapur2020]
+was used to identify a biologically relevant stock boundary using size-at-age data
+from the \gls{s-wcgbt} and `r get_fleet("Lam", col="label_long")` [@lam2021geographic].
+A generalized additive model was fit to
+observed `r spp` lengths of a single age as the response variable.
+Predictor variables included a smoother for latitude.
+Each age-sex combination was analyzed separately.
+The first derivative was taken from the fitted spline
+to detect the latitude at which differences in size-at-age were most pronounced
+(i.e., the maximum absolute value) and
+statistically significant
+(i.e., where the confidence interval does not include 0).
+The resulting latitude was rounded to the nearest integer
+as there were no detectable differences when half-degrees were used.
+77.8\% of significant age-sex combinations detected a break between latitudes
+$38^\circ 00^\prime$ and $40^\circ 00^\prime$ N
+(Figure \@ref(fig:Lam-kapurage7latitude)).
+This range is in agreement with the genetic break point identified for
+`r spp` by Longo et al. [-@longo2020strong].
 
 
 
 ### Sex Ratio
 
+As described in the mortality section, the observed sex ratio is skewed towards males at older ages. Sex ratio based on length is largely similar despite evidence for dimorphic growth between males and females. A cursory look at sex ratios within the \gls{s-wcgbt} and \gls{s-tri} by latitude indicate that males and females are similarly dispersed coastwide, and that differences in sex ratios at age are not due to latitudinal or depth specific differences (Figure \@ref(fig:biology-sexratio-lengthbylatitude)), and thus, a sex ratio of 50:50 was assumed for this assessment, as was done in the 2015 benchmark assessment.
+
 
 ### Ageing Precision and Bias
 
-In the 2005 assessment, a single ageing error key determining the level of bias in observed vs. true age and imprecision (the degree of variability in observed age at true age) was used to ‘smear’ model expectations in the observation sub-model of SS2 and generate appropriate predictions to compare with observed age-frequency data (Methot and Wetzel, 2013).  This treatment is similar to a full treatment via maximum marginal likelihood, given that it computes the expectation for a data stream (e.g., age composition) after integrating across values on a latent variable (true ages) and an observation process (the ageing error pattern).  All historically surface-read ages were excluded, due to known (but not quantified in the assessment) levels of bias and imprecision associated with using this method for a long-lived species (Boehlert and Yoklavich, 1984).
+An extensive description on the history of including ageing error and bias into past canary assessments was provided in the 2015 benchmark assessment [@thorson_status_2015]. 
 
-For the 2007 benchmark assessment, all sources of ageing information for break-and-burn reads of otoliths were revisited through inspection of the various cross- and double-read efforts.  Ageing bias and imprecision was estimated simultaneously using the first generation of the ageing error software developed by A. Punt, as subsequently published (Punt et al., 2008).  The 2007 assessment also explored the bias and imprecision of surface reads, but surface reads were not subsequently included in the 2007 benchmark or 2009/2011 update assessments.  
+The ageing error matrices used in the previous assessment for break and burn samples were retained for this analysis. Ageing error was explored in the last full assessment including extensive model selection and exploration on ages to includes and the appropriate aging lab to treat as unbiased. A qualitative examination of the new break and burn double reads showed no evidence that the ageing estimation had changed over time relative to the samples included in the previous analysis. Furthermore, a new TMB-based ageing error software has been developed (A. Punt pers. comm.) but has not yet been fully explored or documented. Therefore, revision of the ageing error matrices has been left as a research project to be completed in time for the next full assessment.
+
+*We need to do this qualitative analysis. TO DO: KIVA*
+
+
 
 There has been some debate regarding validation of age determination from break-and-burn reads.  The 2005 and 2007 assessments assumed that break-and-burn ages from the ODFW/CAPS lab were negatively biased, based on radiocarbon validation methods (Piner et al., 2005), while ages from the WDFW ageing lab were believed to be approximately in-line with ages determined from radiocarbon.  However, subsequent analysis of bomb radiocarbon has suggested delayed timing of detectable carbon signatures in the California Current relative to other regions, which could explain the bias of the ODFW/CAPS labs relative to radiocarbon signal (Hamel et al., 2008).  Additional exploration using the 2005 model has claimed that significant negative bias in the ODFW/CAPS lab is inconsistent with available data at that time (Stewart and Piner, 2007).   We therefore adopt as base case the assumption that the ODFW/CAPS lab is unbiased, and estimate linear bias in WDFW break-and-burn, and curvilinear bias in surface reads from all labs, relative to ODFW/CAPS reads.  We also present a comparison of the base case with a model that assumes that WDFW reads are unbiased (results presented later).
 
