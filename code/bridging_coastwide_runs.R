@@ -3160,3 +3160,38 @@ SSsummarize(xx) |>
                                      '2023 Coastwide tuned'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
 
+
+
+########################################################
+### 
+#Compare tunings between various models to understand what changed
+#Var adj depends on lambdas and sample sizes
+###
+########################################################
+
+#All of these are tuned
+mod2015 <- SS_read(here('models','converted_detailed'))
+mod_data <- SS_read(here('models','Bridging coastwide/3_1_11_tuned'))
+mod_bio <- SS_read(here('models','Bridging coastwide/3_2_9_tuned'))
+mod_coastwide <- SS_read(here('models','Bridging coastwide/3_3_4_coastwide_tuned'))
+
+fleet.converter <- mod_data$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+x = cbind(mod_data$ctl$Variance_adjustment_list,
+          mod_bio$ctl$Variance_adjustment_list)
+x$Name <- paste0(fleet.converter$fleet_no_num[x$Fleet],ifelse(x$Data_type==4,"_len","_age"))
+
+
+
+       "Name" = fleet.converter$fleet_no_num[x$Fleet]
+  y = fleet.converter[,c("fleet_no_num","fleet")],
+  join_by(Fleet == fleet),
+  suffix = c(Data_type,""))
+
+
+      mod2015$ctl$Variance_adjustment_list)
+      mod_coastwide$ctl$Variance_adjustment_list)
