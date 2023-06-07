@@ -8164,20 +8164,298 @@ r4ss::run(dir = here('models',new_name),
 pp <- SS_output(here('models',new_name))
 SS_plots(pp, plot = c(1:26)[-c(12:19)])
 
+
+####------------------------------------------------####
+### 4_0_4_notSumTo1 Allow rec devs not to sum to 1  ----
+####------------------------------------------------####
+
+new_name <- "4_0_4_notSumTo1"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+mod$ctl$do_recdev <- 2 
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('3_1_6_survey_domed',
                                                  '4_0_1_sigmaR_bias',
                                                  '4_0_2_setSigmaR',
-                                                 '4_0_3_offEarlyDevs')))
+                                                 '4_0_3_offEarlyDevs',
+                                                 '4_0_4_notSumTo1')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Domed survey selectivity',
                                      'Update sigmaR and bias correction',
                                      'Fix sigmaR at 0.9',
-                                     'Turn off early devs'),
+                                     'Turn off early devs',
+                                     'Relax recdev sum to 1'),
                     subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
 
+####------------------------------------------------####
+### 4_0_5_fixSteep0.9 Fix steepness to allow model to increase recdevs easier  ----
+####------------------------------------------------####
 
+new_name <- "4_0_5_fixSteep0.9"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+mod$ctl$SR_parms["SR_BH_steep","INIT"] <- 0.9
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_6_survey_domed',
+                                                 '4_0_1_sigmaR_bias',
+                                                 '4_0_2_setSigmaR',
+                                                 '4_0_3_offEarlyDevs',
+                                                 '4_0_4_notSumTo1',
+                                                 '4_0_5_fixSteep0.9')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Domed survey selectivity',
+                                     'Update sigmaR and bias correction',
+                                     'Fix sigmaR at 0.9',
+                                     'Turn off early devs',
+                                     'Relax recdev sum to 1',
+                                     'Fix steepness at 0.9'),
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+#The model wants to increase recdevs in recent years. Preferrentially fitting age and length comps. 
+#Less depletion when recdevs dont need to sum to one. 
+pp_new <- SS_output(here('models','4_0_4_notSumTo1'))
+pp_old <- SS_output(here('models','3_1_6_survey_domed'))
+like_compare <- cbind(pp_new$likelihoods_used, "prev_val" = pp_prev$likelihoods_used$values)
+like_compare$diff = round(like_compare$values - like_compare$prev_val,5) #improving age comps then length, poorer survey index
+pp_new$likelihoods_by_fleet[pp_new$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
+  pp_prev$likelihoods_by_fleet[pp_prev$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
+  
+
+
+####------------------------------------------------####
+### 4_1_1_blocks Revisiting additional blocks  ----
+####------------------------------------------------####
+
+new_name <- "4_1_1_blocks"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+### Update blocks ----
+mod$ctl$N_Block_Designs <- 5
+mod$ctl$blocks_per_pattern <- c(2,2,2,2,2)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+
+#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+#Keeping 2000 block instead of 2001 since the data seems to suggest change there (also same as last assessment)
+mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2022), #TWL fleets
+                             c(2000, 2019, 2020, 2022), #CA/OR ntwl
+                             c(2004, 2016, 2017, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR rec
+                             c(2006, 2020, 2021, 2022)) #WA rec
+
+### Update selectivity parameter table matching Jim's parameters setup ----
+
+selex_new <- mod$ctl$size_selex_parms
+
+# Use new block set up
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+selex_new[grepl('CA_NTWL|OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+#WA NTWL is set to mirror WA TWL due to better aggregate match. 
+
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 5
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table ----
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_6_survey_domed',
+                                                 '4_1_1_blocks')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Domed survey selectivity',
+                                     'Update blocks'),
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+#Compare likelihoods. Blocking improves
+pp_new <- SS_output(here('models','4_1_1_blocks'))
+pp_prev <- SS_output(here('models','3_1_6_survey_domed'))
+cbind(pp_new$likelihoods_used, "prev_val" = pp_prev$likelihoods_used$values)
+AIC_new <- 2 * pp_new$N_estimated_parameters + (2 * as.numeric(pp_new$likelihoods_used["TOTAL", "values"]))
+AIC_prev <- 2 * pp_prev$N_estimated_parameters + (2 * as.numeric(pp_prev$likelihoods_used["TOTAL", "values"]))
+
+
+####------------------------------------------------####
+### 4_2_1_noRec Explore effect of removing rec to see if bimodality really matters  ----
+####------------------------------------------------####
+
+new_name <- "4_2_1_norec"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+par <- SS_output(here('models/3_1_6_survey_domed'))
+
+##
+#Make Changes
+##
+
+#Set lambdas to rec length and age to 0
+mod$ctl$N_lambdas <- 5
+mod$ctl$lambdas <- data.frame("like_comp" = c(rep(4,3), rep(5,2)), #no CA rec ages
+                              "fleet" = c(7,8,9,8,9),
+                              "phase" = 1,
+                              "value" = 0, #turn off
+                              "size_freq_method" = 1)
+
+#Fix rec selex at existing selex values from previous model
+mod$ctl$size_selex_parms[grep('_REC', rownames(mod$ctl$size_selex_parms)), "INIT"] <- 
+  par$parameters[grep('_REC', rownames(par$parameters)),'Value']
+mod$ctl$size_selex_parms[grep('_REC', rownames(mod$ctl$size_selex_parms)), "PHASE"] <- -99
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_6_survey_domed',
+                                                 '4_2_1_norec')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Domed survey selectivity',
+                                     'Exclude rec comps'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 ##########################################################################################
 
