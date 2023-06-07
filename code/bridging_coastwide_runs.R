@@ -3170,28 +3170,30 @@ SSsummarize(xx) |>
 ########################################################
 
 #All of these are tuned
-mod2015 <- SS_read(here('models','converted_detailed'))
+mod_2015 <- SS_read(here('models','converted_detailed'))
 mod_data <- SS_read(here('models','Bridging coastwide/3_1_11_tuned'))
 mod_bio <- SS_read(here('models','Bridging coastwide/3_2_9_tuned'))
 mod_coastwide <- SS_read(here('models','Bridging coastwide/3_3_4_coastwide_tuned'))
 
-fleet.converter <- mod_data$dat$fleetinfo |>
-  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
-                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
-  dplyr::select(fleetname, fleet_no_num, fleet)
+tunings <- left_join(rbind(mod_data$ctl$Variance_adjustment_list, c(4,10,NA)),
+                     mod_bio$ctl$Variance_adjustment_list,
+                     by = c("Data_type","Fleet"),
+                     suffix = c("_data","_bio")) %>% 
+  left_join(.,mod_2015$ctl$Variance_adjustment_list,
+            by = c("Data_type","Fleet")) %>%
+  left_join(.,mod_2015$ctl$lambdas[,c("fleet","value","like_comp")],
+            join_by("Data_type" == "like_comp", "Fleet" == "fleet")) %>% 
+  left_join(.,mod_coastwide$ctl$Variance_adjustment_list,
+          by = c("Data_type","Fleet"),
+          suffix = c("_2015","_coast")) %>%
+  arrange(Data_type, Fleet)
 
 
-x = cbind(mod_data$ctl$Variance_adjustment_list,
-          mod_bio$ctl$Variance_adjustment_list)
-x$Name <- paste0(fleet.converter$fleet_no_num[x$Fleet],ifelse(x$Data_type==4,"_len","_age"))
+colnames(tunings)[which(colnames(tunings)=="value")] <- "lambda_2015"
 
+tunings$Name <- paste0(fleet.converter$fleet_no_num[tunings$Fleet],
+                       ifelse(tunings$Data_type==4,"_len","_age"))
 
-
-       "Name" = fleet.converter$fleet_no_num[x$Fleet]
-  y = fleet.converter[,c("fleet_no_num","fleet")],
-  join_by(Fleet == fleet),
-  suffix = c(Data_type,""))
-
-
-      mod2015$ctl$Variance_adjustment_list)
-      mod_coastwide$ctl$Variance_adjustment_list)
+write.csv(tunings[c("Fleet","Data_type","lambda_2015","Value_2015","Value_data","Value_bio","Value_coast", "Name")], 
+          here('models','Bridging coastwide',"tunings_comparison.csv"), row.names=FALSE)
+  
