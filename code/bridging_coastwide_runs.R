@@ -3175,15 +3175,18 @@ mod_data <- SS_read(here('models','Bridging coastwide/3_1_11_tuned'))
 mod_bio <- SS_read(here('models','Bridging coastwide/3_2_9_tuned'))
 mod_coastwide <- SS_read(here('models','Bridging coastwide/3_3_4_coastwide_tuned'))
 
+full_setup <- data.frame("Data_type"=rep(4:5,each=30), "Fleet" = rep(1:30,2)) #Exclude the prerecruit
+
 tunings <- left_join(rbind(mod_data$ctl$Variance_adjustment_list, c(4,10,NA)),
                      mod_bio$ctl$Variance_adjustment_list,
                      by = c("Data_type","Fleet"),
                      suffix = c("_data","_bio")) %>% 
-  left_join(.,mod_2015$ctl$Variance_adjustment_list,
+  full_join(.,mod_2015$ctl$Variance_adjustment_list,
             by = c("Data_type","Fleet")) %>%
-  left_join(.,mod_2015$ctl$lambdas[,c("fleet","value","like_comp")],
+  full_join(.,mod_2015$ctl$lambdas[mod_2015$ctl$lambdas$like_comp %in% c(4,5) &
+                                     mod_2015$ctl$lambdas$fleet < 31,c("fleet","value","like_comp")],
             join_by("Data_type" == "like_comp", "Fleet" == "fleet")) %>% 
-  left_join(.,mod_coastwide$ctl$Variance_adjustment_list,
+  full_join(.,mod_coastwide$ctl$Variance_adjustment_list,
           by = c("Data_type","Fleet"),
           suffix = c("_2015","_coast")) %>%
   arrange(Data_type, Fleet)
@@ -3194,6 +3197,6 @@ colnames(tunings)[which(colnames(tunings)=="value")] <- "lambda_2015"
 tunings$Name <- paste0(fleet.converter$fleet_no_num[tunings$Fleet],
                        ifelse(tunings$Data_type==4,"_len","_age"))
 
-write.csv(tunings[c("Fleet","Data_type","lambda_2015","Value_2015","Value_data","Value_bio","Value_coast", "Name")], 
+write.csv(tunings[c("Data_type","Fleet","lambda_2015","Value_2015","Value_data","Value_bio","Value_coast", "Name")], 
           here('models','Bridging coastwide',"tunings_comparison.csv"), row.names=FALSE)
   
