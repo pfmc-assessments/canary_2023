@@ -8019,6 +8019,165 @@ plot_sel_comm(pp)
 plot_sel_noncomm(pp, spatial = FALSE)
 
 
+####------------------------------------------------####
+### 4_0_1_sigmaR_bias Explore fix to pattern in early recdevs. Need hessian for this. Tune sigmaR  ----
+####------------------------------------------------####
+
+new_name <- "4_0_1_sigmaR_bias"
+
+##
+#Copy inputs and run with hessian
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          #extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+#Save report file used in initial run so have it after rec adjustments are done
+file.copy(from = file.path(here('models/4_0_1_sigmaR'),"Report.sso"),
+          to = file.path(here('models/4_0_1_sigmaR'),"Report_preadj.sso"), overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+pp <- SS_output(here('models',new_name))
+
+##
+#Make Changes
+##
+
+#Update sigmaR with tuned value? Suggests 0.5 is good so keep it
+pp$sigma_R_info
+mod$ctl$SR_parms["SR_sigmaR","INIT"] <- pp$sigma_R_info[pp$sigma_R_info$period == "Main",
+                                                        "alternative_sigma_R"]
+
+
+#Update bias adjust? Not really, just maybe 2017
+pp$breakpoints_for_bias_adjustment_ramp
+biasadj <- SS_fitbiasramp(pp, verbose = TRUE)
+
+#Update bias adjustments
+mod$ctl$last_yr_fullbias_adj <- 2017
+
+
+##
+#Output files and run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          #extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+
+
+####------------------------------------------------####
+### 4_0_2_setSigmaR Not much changes from the previous assessment are needed, but these done fix issue. Trying fixing sigmaR to see effect  ----
+####------------------------------------------------####
+
+new_name <- "4_0_2_setSigmaR"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+mod$ctl$SR_parms['SR_sigmaR',"INIT"] <- 0.9
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 4_0_3_offEarlyDevs See how turning off early devs affects model  ----
+####------------------------------------------------####
+
+new_name <- "4_0_3_offEarlyDevs"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+mod$ctl$recdev_early_start <- 0 #turn off
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_6_survey_domed',
+                                                 '4_0_1_sigmaR_bias',
+                                                 '4_0_2_setSigmaR',
+                                                 '4_0_3_offEarlyDevs')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Domed survey selectivity',
+                                     'Update sigmaR and bias correction',
+                                     'Fix sigmaR at 0.9',
+                                     'Turn off early devs'),
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+
 
 ##########################################################################################
 
