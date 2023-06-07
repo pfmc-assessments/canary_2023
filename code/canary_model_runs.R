@@ -8429,7 +8429,7 @@ mod$ctl$size_selex_parms[grep('_REC', rownames(mod$ctl$size_selex_parms)), "PHAS
 
 
 ##
-#Output files and run run with hessian
+#Output files and run
 ##
 
 SS_write(mod,
@@ -8456,6 +8456,118 @@ SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Domed survey selectivity',
                                      'Exclude rec comps'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+####------------------------------------------------####
+### 4_3_1_M_ramp use female M parameterization from previous assessments  ----
+####------------------------------------------------####
+
+new_name <- "4_3_1_M_ramp"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(6, 14)
+
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+mod$ctl$MG_parms['NatM_p_2_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  c(0, 0.9, 0.5, 99, 99, 0, 3)
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 4_3_2_M_breakpoint use female M breakpoint where sex ratio declines  ----
+####------------------------------------------------####
+
+new_name <- "4_3_2_M_breakpoint"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$M_ageBreakPoints <- c(20,21)
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_6_survey_domed',
+                                                 '4_3_1_M_ramp',
+                                                 '4_3_2_M_breakpoint')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Constant M',
+                                     'M ramp (historical)',
+                                     'M breakpoint'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 
 ##########################################################################################
 
