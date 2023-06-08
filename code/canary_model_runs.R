@@ -8346,7 +8346,98 @@ SSsummarize(xx) |>
                                      'Estimate male M'),
                     subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
+####------------------------------------------------####
+### 4_0_7_estM Fix male M to match female M  ----
+####------------------------------------------------####
 
+new_name <- "4_0_7_estM"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+mod$ctl$MG_parms["NatM_p_1_Mal_GP_1", c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  c(-3, 3, 0, 0, 50, 6, -50)
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+
+####------------------------------------------------####
+### 4_0_8_estH Estimate steepness  ----
+####------------------------------------------------####
+
+new_name <- "4_0_8_estH"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+mod$ctl$SR_parms["SR_BH_steep", "PHASE"] <- 2
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_6_survey_domed',
+                                                 '4_0_7_estM',
+                                                 '4_0_8_estH')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Estimate M together',
+                                     'Estimate H'),
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
 
 ####------------------------------------------------####
