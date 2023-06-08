@@ -8287,6 +8287,65 @@ SSsummarize(xx) |>
                                      'Fix steepness at 0.9'),
                     subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
+####------------------------------------------------####
+### 4_0_6_maleM Estiamte male M as well as female  ----
+####------------------------------------------------####
+
+new_name <- "4_0_6_maleM"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+mod$ctl$MG_parms["NatM_p_1_Mal_GP_1", "PHASE"] <- 2
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_6_survey_domed',
+                                                 '4_0_1_sigmaR_bias',
+                                                 '4_0_2_setSigmaR',
+                                                 '4_0_3_offEarlyDevs',
+                                                 '4_0_4_notSumTo1',
+                                                 '4_0_5_fixSteep0.9',
+                                                 '4_0_6_maleM')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Domed survey selectivity',
+                                     'Update sigmaR and bias correction',
+                                     'Fix sigmaR at 0.9',
+                                     'Turn off early devs',
+                                     'Relax recdev sum to 1',
+                                     'Fix steepness at 0.9',
+                                     'Estimate male M'),
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
 
 
 
@@ -8576,6 +8635,12 @@ r4ss::run(dir = here('models',new_name),
           # show_in_console = TRUE,
           skipfinished = FALSE)
 
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
 
 ####------------------------------------------------####
 ### 4_3_1_M_ramp_update Update female M with offset approach 3  ----
@@ -8743,6 +8808,13 @@ r4ss::run(dir = here('models',new_name),
           # show_in_console = TRUE,
           skipfinished = FALSE)
 
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
 
 ####------------------------------------------------####
 ### 4_3_2_M_breakpoint_update Update female M to be direct estimation (and correct prior)  ----
@@ -8792,6 +8864,19 @@ SSsummarize(xx) |>
                                      'M breakpoint update',
                                      'M breakpoint true offset'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+pp_con <- SS_output(here('models','3_1_6_survey_domed'))
+pp_ramp <- SS_output(here('models','4_3_1_M_ramp_update'))
+pp_break <- SS_output(here('models','4_3_2_M_breakpoint_update'))
+like_compare <- cbind(pp_ramp$likelihoods_used, "bp" = pp_break$likelihoods_used$values, "con" = pp_con$likelihoods_used$values)
+like_compare$diff_ramp_break = round(like_compare$values - like_compare$bp,5) #improving age comps then length, poorer survey index
+like_compare$diff_cons_ramp = round(like_compare$con - like_compare$values,5) #improving age comps then length, poorer survey index
+pp_ramp$likelihoods_by_fleet[pp_ramp$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
+  pp_break$likelihoods_by_fleet[pp_break$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
+#Comps are better fit with breakpoint assumption. Likelihoods across the board are improved.
+
+
 
 ##########################################################################################
 
