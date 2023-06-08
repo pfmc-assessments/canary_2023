@@ -8220,6 +8220,15 @@ SSsummarize(xx) |>
                                      'Relax recdev sum to 1'),
                     subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
+#The model wants to increase recdevs in recent years. Preferrentially fitting age and length comps. 
+#Less depletion when recdevs dont need to sum to one. 
+pp_new <- SS_output(here('models','4_0_4_notSumTo1'))
+pp_old <- SS_output(here('models','3_1_6_survey_domed'))
+like_compare <- cbind(pp_new$likelihoods_used, "prev_val" = pp_prev$likelihoods_used$values)
+like_compare$diff = round(like_compare$values - like_compare$prev_val,5) #improving age comps then length, poorer survey index
+pp_new$likelihoods_by_fleet[pp_new$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
+  pp_prev$likelihoods_by_fleet[pp_prev$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
+
 
 ####------------------------------------------------####
 ### 4_0_5_fixSteep0.9 Fix steepness to allow model to increase recdevs easier  ----
@@ -8279,15 +8288,6 @@ SSsummarize(xx) |>
                     subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
 
-#The model wants to increase recdevs in recent years. Preferrentially fitting age and length comps. 
-#Less depletion when recdevs dont need to sum to one. 
-pp_new <- SS_output(here('models','4_0_4_notSumTo1'))
-pp_old <- SS_output(here('models','3_1_6_survey_domed'))
-like_compare <- cbind(pp_new$likelihoods_used, "prev_val" = pp_prev$likelihoods_used$values)
-like_compare$diff = round(like_compare$values - like_compare$prev_val,5) #improving age comps then length, poorer survey index
-pp_new$likelihoods_by_fleet[pp_new$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
-  pp_prev$likelihoods_by_fleet[pp_prev$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
-  
 
 
 ####------------------------------------------------####
@@ -8385,7 +8385,7 @@ SSsummarize(xx) |>
                                      'Update blocks'),
                     subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
-#Compare likelihoods. Blocking improves
+#Compare likelihoods. Blocking improves likelihood as well as AIC
 pp_new <- SS_output(here('models','4_1_1_blocks'))
 pp_prev <- SS_output(here('models','3_1_6_survey_domed'))
 cbind(pp_new$likelihoods_used, "prev_val" = pp_prev$likelihoods_used$values)
@@ -8455,7 +8455,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Domed survey selectivity',
                                      'Exclude rec comps'),
-                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
 ####------------------------------------------------####
 ### 4_3_1_M_ramp use female M parameterization from previous assessments  ----
@@ -8520,6 +8520,138 @@ plot_sel_noncomm(pp, spatial = FALSE)
 
 
 ####------------------------------------------------####
+### 4_3_1_M_ramp_update Update female M to be direct estimation (and correct prior)  ----
+####------------------------------------------------####
+
+new_name <- "4_3_1_M_ramp_update"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(6, 14)
+
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+mod$ctl$MG_parms['NatM_p_2_Fem_GP_1',] <- mod$ctl$MG_parms['NatM_p_1_Fem_GP_1',]
+mod$ctl$MG_parms[c('NatM_p_1_Fem_GP_1'), 'PHASE'] <- -50
+mod$ctl$MG_parms[c('NatM_p_1_Mal_GP_1', 'NatM_p_2_Mal_GP_1'), 'PR_type'] <- 3
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 4_3_1_M_ramp_update Update female M with offset approach 3  ----
+####------------------------------------------------####
+
+new_name <- "4_3_1_M_ramp_offset"
+
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$parameter_offset_approach <- 3
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(6, 14)
+
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+mod$ctl$MG_parms[c('NatM_p_1_Fem_GP_1'), 'PHASE'] <- -50
+mod$ctl$MG_parms[c('NatM_p_1_Mal_GP_1', 'NatM_p_2_Mal_GP_1'), 
+                 c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <- 
+  rep(c(-3, 3, 0, 0, 50, 6, -50), each = 2)
+
+mod$ctl$MG_parms['NatM_p_2_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  c(0, 0.9, 0.5, 0.5, 50, 0, 2)
+
+#Because offset approach is 3 need to update male L at amin and offset male Linf, and offset K and CV
+
+mod$ctl$MG_parms['L_at_Amin_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  c(-3, 3, 0, 0, 50, 6, -50)
+mod$ctl$MG_parms['L_at_Amax_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  c(-3, 3, 0, 0, 50, 0, 3)
+
+mod$ctl$MG_parms['CV_old_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  c(-3, 3, 0, 0, 50, 0, 4)
+mod$ctl$MG_parms['CV_young_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  c(-3, 3, 0, 0, 50, 0, 4)
+mod$ctl$MG_parms['CV_old_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  c(-3, 3, 0, 0, 50, 0, 4)
+
+mod$ctl$MG_parms['VonBert_K_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  c(-3, 3, 0, 0, 50, 0, 3)
+
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
 ### 4_3_2_M_breakpoint use female M breakpoint where sex ratio declines  ----
 ####------------------------------------------------####
 
@@ -8568,6 +8700,88 @@ SSsummarize(xx) |>
                                      'M breakpoint'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
+
+####------------------------------------------------####
+### 4_3_2_M_breakpoint_update Update female M to be direct estimation (and correct prior)  ----
+####------------------------------------------------####
+
+new_name <- "4_3_2_M_breakpoint_update"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$M_ageBreakPoints <- c(20,21)
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 4_3_2_M_breakpoint_update Update female M to be direct estimation (and correct prior)  ----
+####------------------------------------------------####
+
+new_name <- "4_3_2_M_breakpoint_offset"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_offset'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$M_ageBreakPoints <- c(20,21)
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_3_1_M_ramp',
+                                                 '4_3_1_M_ramp_update',
+                                                 '4_3_1_M_ramp_offset',
+                                                 '4_3_2_M_breakpoint',
+                                                 '4_3_2_M_breakpoint_update',
+                                                 '4_3_2_M_breakpoint_offset')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('M ramp (historical)',
+                                     'M ramp update',
+                                     'M ramp true offset',
+                                     'M breakpoint',
+                                     'M breakpoint update',
+                                     'M breakpoint true offset'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 ##########################################################################################
 
