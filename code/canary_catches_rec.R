@@ -251,14 +251,29 @@ rec_df[rec_df$Year %in% ca_mrfss_tot$YEAR_,]$ca_MT <- rowSums(ca_mrfss_tot[,-1],
 #Updated values pulled on March 21, 2023 from 
 #https://github.com/pfmc-assessments/california-data/blob/main/recreational-fishery/proxy%202020%20data/genus_allocate.csv
 #See discussion #8 for guidance (https://github.com/pfmc-assessments/california-data/discussions/8)
-update2020 <- utils::read.csv(file = file.path(git_dir, "data-raw", "CA_rec_genus_allocate_2020.csv"), header = TRUE)
+
+# update2020 <- utils::read.csv(file = file.path(git_dir, "data-raw", "CA_rec_genus_allocate_2020.csv"), header = TRUE)
+# alloc_val <- update2020 %>% filter(orig_allocated == "allocated") %>%
+#   group_by(year, mode) %>% summarize(sum = sum(canary_kg) * 0.001) #0.001 to get into MT
+# rec_df[rec_df$Year %in% c(2020),]$ca_MT <- sum(alloc_val[alloc_val$year == 2020,]$sum)
+# pr2021 <- recfin %>% dplyr::filter(AGENCY=="C" & RECFIN_YEAR == 2021) %>%
+#   group_by(mode) %>% summarize(sum_total = sum(SUM_TOTAL_MORTALITY_MT))
+# rec_df[rec_df$Year %in% c(2021),]$ca_MT <- alloc_val[alloc_val$year == 2021,]$sum + pr2021[pr2021$mode=="PR",]$sum_total
+# split_df$ca_MT <- rec_df$ca_MT
+
+#Julia Coates sent an email on June 7, 2023 updating the choice of replacing the values from RecFIN. The 
+#preference of California is to add teh updated values to the recfin estimates. New files were provided
+#This process needs to add the proxy values in CDFWRec_CanaryRF_AvgProxyValuesApr-Jun2020.xls which is 10.0804 for 2020
+update2020 <- utils::read.csv(file = file.path(git_dir, "data-raw", "CA_rec_genus_allocate_20230602.csv"), header = TRUE)
 alloc_val <- update2020 %>% filter(orig_allocated == "allocated") %>% 
   group_by(year, mode) %>% summarize(sum = sum(canary_kg) * 0.001) #0.001 to get into MT
-rec_df[rec_df$Year %in% c(2020),]$ca_MT <- sum(alloc_val[alloc_val$year == 2020,]$sum) 
+rec_df[rec_df$Year %in% c(2020),]$ca_MT <- rec_df[rec_df$Year %in% c(2020),]$ca_MT + 
+  sum(alloc_val[alloc_val$year == 2020,]$sum) + 10.0804
 pr2021 <- recfin %>% dplyr::filter(AGENCY=="C" & RECFIN_YEAR == 2021) %>% 
   group_by(mode) %>% summarize(sum_total = sum(SUM_TOTAL_MORTALITY_MT))
-rec_df[rec_df$Year %in% c(2021),]$ca_MT <- alloc_val[alloc_val$year == 2021,]$sum + pr2021[pr2021$mode=="PR",]$sum_total
+rec_df[rec_df$Year %in% c(2021),]$ca_MT <- rec_df[rec_df$Year %in% c(2021),]$ca_MT + alloc_val[alloc_val$year == 2021,]$sum
 split_df$ca_MT <- rec_df$ca_MT
+
 
 #write.csv(rec_df, file = file.path(git_dir, "data", "canary_rec_catch.csv"), row.names = FALSE)
 #write.csv(split_df, file = file.path(git_dir, "data", "canary_rec_catch_splitOut.csv"), row.names = FALSE)
