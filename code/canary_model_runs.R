@@ -8518,6 +8518,11 @@ dev.off()
 plot_sel_comm(pp)
 plot_sel_noncomm(pp, spatial = FALSE)
 
+r4ss::tune_comps(replist = pp, 
+                 option = 'Francis', 
+                 dir = here('models', new_name), 
+                 exe = here('models/ss_win.exe'), 
+                 niters_tuning = 0)
 
 ####------------------------------------------------####
 ### 4_3_2_M_breakpoint use female M breakpoint where sex ratio declines  ----
@@ -8568,6 +8573,11 @@ SSsummarize(xx) |>
                                      'M breakpoint'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
+r4ss::tune_comps(replist = pp, 
+                 option = 'Francis', 
+                 dir = here('models', new_name), 
+                 exe = here('models/ss_win.exe'), 
+                 niters_tuning = 0)
 
 ##########################################################################################
 
