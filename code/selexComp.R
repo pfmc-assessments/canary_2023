@@ -35,7 +35,7 @@ plot_sel_ret <- function(mod,
                                  sexes = sex,
                                  sizefactors = Factor,
                                  years = years,
-                                 subplot = 1,
+                                 subplots = 1,
                                  plot = FALSE,
                                  print = TRUE,
                                  plotdir = mod$inputs$dir
@@ -64,7 +64,7 @@ plot_sel_ret <- function(mod,
                     ),
                     legendloc = "topright",
                     years = years,
-                    subplot = 1,
+                    subplots = 1,
                     plot = TRUE,
                     print = FALSE,
                     infotable = infotable,
@@ -72,7 +72,6 @@ plot_sel_ret <- function(mod,
                     mar = c(2,2,2,1),
                     plotdir = mod$inputs$dir
   )
-  #dev.off()
 }
 
 #' Plot selectivity and retention for the commercial fleets
@@ -83,10 +82,13 @@ plot_sel_ret <- function(mod,
 #' @export
 #' @author Ian G. Taylor
 plot_sel_comm <- function(mod, sex = 1) {
+  
+  graphics.off()
+  
   filename <- "selectivity_comm.png"
-  # if (sex == 2) {
-  #   filename <- gsub(".png", "_males.png", filename)
-  # }
+  if (sex == 2) {
+    filename <- gsub(".png", "_males.png", filename)
+  }
   filepath <- file.path(mod$inputs$dir, filename)
   png(filepath, width = 6.5, height = 6.5, units = "in", res = 300, pointsize = 10)
   par(mfrow = c(4,3), oma = c(2,2,0,0), las = 1)
@@ -127,10 +129,13 @@ plot_sel_comm <- function(mod, sex = 1) {
 #' @export
 #' @author Ian G. Taylor
 plot_sel_noncomm <- function(mod, sex = 1, spatial = TRUE) {
+  
+  graphics.off()
+  
   filename <- "selectivity_noncomm.png"
-  # if (sex == 2) {
-  #   filename <- gsub(".png", "_males.png", filename)
-  # }
+  if (sex == 2) {
+    filename <- gsub(".png", "_males.png", filename)
+  }
   filepath <- file.path(mod$inputs$dir, filename)
   png(filepath, width = 6.5, height = 6.5, units = "in", res = 300, pointsize = 10)
   
