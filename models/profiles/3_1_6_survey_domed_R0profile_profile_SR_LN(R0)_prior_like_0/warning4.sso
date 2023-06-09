@@ -1,0 +1,16 @@
+Warning 1 : Setting in starter does not request all priors, and 15 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 : Minimum pop size bin:_8; is > L at Amin for sex: 1; Gpat: 1; L= 7.70557
+Warning 3 : Minimum pop size bin:_8; is > L at Amin for sex: 2; Gpat: 1; L= 7.70557
+Warning 4 : 1st iteration warning: ssb(endyr)/ssb(styr)= 2.2909e-09; suggest start with larger R0 to get near 0.4; or use depletion fleet option
+Warning 5 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
+Warning 6 : Final gradient: 0.000118402 is larger than final_conv: 0.0001
+Warning 7 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 8 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 9 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 10 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Warning 11 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 12 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 13 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 14 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Note 1 Information:  N parameters that are on or within 1% of min-max bound: 1; check results, variance may be suspect
+ 14 warnings  and 1 note 
