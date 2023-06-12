@@ -9556,9 +9556,593 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  '4_4_3_sexSelex_4_AllFleets',
                                                  '4_4_4_sexSelex_6_AllFleets',
                                                  '4_4_5_sexSelex_Apical_AllFleets',
-                                                 '4_4_6_sexSelex_All_AllFleets')))
+                                                 '4_4_5_sexSelex_Apical_AllFleets_3',
+                                                 '4_4_6_sexSelex_All_AllFleets',
+                                                 '4_4_6_sexSelex_All_AllFleets_3')))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('Survey domed',
+  SSplotComparisons(legendlabels = c("model 3_1_6",
+                                     'Selex parm 1 sex specific',
+                                     'Selex parm 3 sex specific',
+                                     'Selex parm 4 sex specific',
+                                     'Selex parm 6 sex specific',
+                                     'Apical selex sex specific Mal offset',
+                                     'Apical selex sex specific Fem offset',
+                                     'All selex parm sex specific Mal offset',
+                                     'All selex parm sex specific Fem offset'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+pp_0 <- SS_output(here('models','3_1_6_survey_domed'))
+pp_1 <- SS_output(here('models','4_4_1_sexSelex_1_AllFleets'))
+pp_4 <- SS_output(here('models','4_4_3_sexSelex_4_AllFleets'))
+pp_all <- SS_output(here('models','4_4_6_sexSelex_All_AllFleets_3'))
+
+like_compare <- cbind(pp_0$likelihoods_used, "one" = pp_1$likelihoods_used$values, "four" = pp_4$likelihoods_used$values, "all" = pp_4$likelihoods_used$values)
+like_compare$diff_from0 = round(like_compare$values - like_compare[c("one","four","all")]) #improving age comps then length, poorer survey index
+pp_0$likelihoods_by_fleet[pp_0$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
+  pp_4$likelihoods_by_fleet[pp_4$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
+#Comps are better fit parm 4 as sex dependent. Length and age comps are much improved
+
+
+################
+
+#Repeat the process above but with copying model 4_3_1_M_ramp_update. Only use male = 3
+################
+
+####------------------------------------------------####
+### 4_5_1_sexSelex1 Set up sex specific selectivity for parm 1  ----
+####------------------------------------------------####
+
+new_name <- "4_5_1_MrampsexSelex_1_AllFleets"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Pick fleets want to have an offset for. Here we are doing all
+maleFleets <- rownames(mod$ctl$size_selex_types[mod$ctl$size_selex_types$Pattern == 24, ]) 
+#Male offset from female (using option 4 (female offset from male) makes no difference)
+mod$ctl$size_selex_types[maleFleets, "Male"] <- 3
+
+for(i in maleFleets){
+  ifelse(i != tail(maleFleets,1),
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)], #only output 5 parameters. Use P_2 for the fifth parameter name
+                                                                (max(grep(i, rownames(mod$ctl$size_selex_parms)))+1):
+                                                                  length(rownames(mod$ctl$size_selex_parms))),],
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)]),]) #only output 5 parameters. Use P_2 for the fifth parameter name
+}
+#male parm 1 added to female parm 1. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_1", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-25, 25, 0, 0, 50, 0, 4, 0, 0), each = length(maleFleets))
+
+#male parm 2 added to female parm 3. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_3", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 3 added to female parm 4. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_4", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 4 added to female parm 6. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_6", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-99, 99, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 5 is a scalar to apical selectivity AND descending limb (rescales the whole thing). Use 1 for no change
+#search for P_2 for this because I arbitrarily copied the parm2 line for the 5th male parameter
+mod$ctl$size_selex_parms[intersect(grep("_P_2", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(0, 2, 1, 1, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 4_5_2_sexSelex3 Set up sex specific selectivity for parm 3  ----
+####------------------------------------------------####
+
+new_name <- "4_5_2_MrampsexSelex_3_AllFleets"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Pick fleets want to have an offset for. Here we are doing all
+maleFleets <- rownames(mod$ctl$size_selex_types[mod$ctl$size_selex_types$Pattern == 24, ]) 
+#Male offset from female (using option 4 (female offset from male) makes no difference)
+mod$ctl$size_selex_types[maleFleets, "Male"] <- 3
+
+for(i in maleFleets){
+  ifelse(i != tail(maleFleets,1),
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)], #only output 5 parameters. Use P_2 for the fifth parameter name
+                                                                (max(grep(i, rownames(mod$ctl$size_selex_parms)))+1):
+                                                                  length(rownames(mod$ctl$size_selex_parms))),],
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)]),]) #only output 5 parameters. Use P_2 for the fifth parameter name
+}
+#male parm 1 added to female parm 1. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_1", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-25, 25, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 2 added to female parm 3. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_3", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, 5, 0, 0), each = length(maleFleets))
+
+#male parm 3 added to female parm 4. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_4", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 4 added to female parm 6. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_6", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-99, 99, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 5 is a scalar to apical selectivity AND descending limb (rescales the whole thing). Use 1 for no change
+#search for P_2 for this because I arbitrarily copied the parm2 line for the 5th male parameter
+mod$ctl$size_selex_parms[intersect(grep("_P_2", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(0, 2, 1, 1, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+####------------------------------------------------####
+### 4_5_3_sexSelex4 Set up sex specific selectivity for parm 4  ----
+####------------------------------------------------####
+
+new_name <- "4_5_3_MrampsexSelex_4_AllFleets"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Pick fleets want to have an offset for. Here we are doing all
+maleFleets <- rownames(mod$ctl$size_selex_types[mod$ctl$size_selex_types$Pattern == 24, ]) 
+#Male offset from female (using option 4 (female offset from male) makes no difference)
+mod$ctl$size_selex_types[maleFleets, "Male"] <- 3
+
+for(i in maleFleets){
+  ifelse(i != tail(maleFleets,1),
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)], #only output 5 parameters. Use P_2 for the fifth parameter name
+                                                                (max(grep(i, rownames(mod$ctl$size_selex_parms)))+1):
+                                                                  length(rownames(mod$ctl$size_selex_parms))),],
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)]),]) #only output 5 parameters. Use P_2 for the fifth parameter name
+}
+#male parm 1 added to female parm 1. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_1", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-25, 25, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 2 added to female parm 3. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_3", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 3 added to female parm 4. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_4", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, 5, 0, 0), each = length(maleFleets))
+
+#male parm 4 added to female parm 6. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_6", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-99, 99, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 5 is a scalar to apical selectivity AND descending limb (rescales the whole thing). Use 1 for no change
+#search for P_2 for this because I arbitrarily copied the parm2 line for the 5th male parameter
+mod$ctl$size_selex_parms[intersect(grep("_P_2", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(0, 2, 1, 1, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_6_survey_domed',
+                                                 '4_4_3_sexSelex_4_AllFleets',
+                                                 '4_3_1_M_ramp_update',
+                                                 '4_5_3_MrampsexSelex_4_AllFleets')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c("model 3_1_6",
+                                     'Selex parm 4 sex specific',
+                                     "model 4_3_1 Mramp",
+                                     'Mramp Selex parm 4 sex specific'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+####------------------------------------------------####
+### 4_5_4_sexSelex6 Set up sex specific selectivity for parm 6  ----
+####------------------------------------------------####
+
+new_name <- "4_5_4_MrampsexSelex_6_AllFleets"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Pick fleets want to have an offset for. Here we are doing all
+maleFleets <- rownames(mod$ctl$size_selex_types[mod$ctl$size_selex_types$Pattern == 24, ]) 
+#Male offset from female (using option 4 (female offset from male) makes no difference)
+mod$ctl$size_selex_types[maleFleets, "Male"] <- 3
+
+for(i in maleFleets){
+  ifelse(i != tail(maleFleets,1),
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)], #only output 5 parameters. Use P_2 for the fifth parameter name
+                                                                (max(grep(i, rownames(mod$ctl$size_selex_parms)))+1):
+                                                                  length(rownames(mod$ctl$size_selex_parms))),],
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)]),]) #only output 5 parameters. Use P_2 for the fifth parameter name
+}
+#male parm 1 added to female parm 1. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_1", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-25, 25, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 2 added to female parm 3. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_3", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 3 added to female parm 4. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_4", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 4 added to female parm 6. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_6", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-99, 99, 0, 0, 50, 0, 5, 0, 0), each = length(maleFleets))
+
+#male parm 5 is a scalar to apical selectivity AND descending limb (rescales the whole thing). Use 1 for no change
+#search for P_2 for this because I arbitrarily copied the parm2 line for the 5th male parameter
+mod$ctl$size_selex_parms[intersect(grep("_P_2", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(0, 2, 1, 1, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+####------------------------------------------------####
+### 4_5_5_sexSelexApical Set up sex specific selectivity for scaling  ----
+####------------------------------------------------####
+
+new_name <- "4_5_5_MrampsexSelex_Apical_AllFleets_3"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Pick fleets want to have an offset for. Here we are doing all
+maleFleets <- rownames(mod$ctl$size_selex_types[mod$ctl$size_selex_types$Pattern == 24, ]) 
+#Use female offset from male (using option 3 makes a difference)
+mod$ctl$size_selex_types[maleFleets, "Male"] <- 3
+
+for(i in maleFleets){
+  ifelse(i != tail(maleFleets,1),
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)], #only output 5 parameters. Use P_2 for the fifth parameter name
+                                                                (max(grep(i, rownames(mod$ctl$size_selex_parms)))+1):
+                                                                  length(rownames(mod$ctl$size_selex_parms))),],
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)]),]) #only output 5 parameters. Use P_2 for the fifth parameter name
+}
+#male parm 1 added to female parm 1. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_1", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-25, 25, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 2 added to female parm 3. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_3", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 3 added to female parm 4. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_4", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 4 added to female parm 6. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_6", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-99, 99, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#male parm 5 is a scalar to apical selectivity AND descending limb (rescales the whole thing). Use 1 for no change
+#search for P_2 for this because I arbitrarily copied the parm2 line for the 5th male parameter
+mod$ctl$size_selex_parms[intersect(grep("_P_2", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(0, 2, 1, 1, 50, 0, 5, 0, 0), each = length(maleFleets))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 4_5_6_sexSelexAll Set up sex specific selectivity for all male parameters  ----
+####------------------------------------------------####
+
+new_name <- "4_5_6_MrampsexSelex_All_AllFleets_3"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Pick fleets want to have an offset for. Here we are doing all
+maleFleets <- rownames(mod$ctl$size_selex_types[mod$ctl$size_selex_types$Pattern == 24, ]) 
+#Female offset from male (using option 3 doesn't make a difference but for apical this makes more sense)
+mod$ctl$size_selex_types[maleFleets, "Male"] <- 3
+
+for(i in maleFleets){
+  ifelse(i != tail(maleFleets,1),
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)], #only output 5 parameters. Use P_2 for the fifth parameter name
+                                                                (max(grep(i, rownames(mod$ctl$size_selex_parms)))+1):
+                                                                  length(rownames(mod$ctl$size_selex_parms))),],
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)]),]) #only output 5 parameters. Use P_2 for the fifth parameter name
+}
+#male parm 1 added to female parm 1. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_1", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-25, 25, 0, 0, 50, 0, 4, 0, 0), each = length(maleFleets))
+
+#male parm 2 added to female parm 3. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_3", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, 5, 0, 0), each = length(maleFleets))
+
+#male parm 3 added to female parm 4. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_4", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, 5, 0, 0), each = length(maleFleets))
+
+#male parm 4 added to female parm 6. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_6", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-99, 99, 0, 0, 50, 0, 5, 0, 0), each = length(maleFleets))
+
+#male parm 5 is a scalar to apical selectivity AND descending limb (rescales the whole thing). Use 1 for no change
+#search for P_2 for this because I arbitrarily copied the parm2 line for the 5th male parameter
+mod$ctl$size_selex_parms[intersect(grep("_P_2", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(0, 2, 1, 1, 50, 0, 5, 0, 0), each = length(maleFleets))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_3_1_M_ramp_update',
+                                                 '4_5_1_MrampsexSelex_1_AllFleets',
+                                                 '4_5_2_MrampsexSelex_3_AllFleets',
+                                                 '4_5_3_MrampsexSelex_4_AllFleets',
+                                                 '4_5_4_MrampsexSelex_6_AllFleets',
+                                                 '4_5_5_MrampsexSelex_Apical_AllFleets_3',
+                                                 '4_5_6_MrampsexSelex_All_AllFleets_3')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c("model 4_3_1",
                                      'Selex parm 1 sex specific',
                                      'Selex parm 3 sex specific',
                                      'Selex parm 4 sex specific',
@@ -9568,26 +10152,228 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c(#'4_4_1_sexSelex_1_AllFleets',
-                                                 #'4_4_2_sexSelex_3_AllFleets',
-                                                 #'4_4_3_sexSelex_4_AllFleets',
-                                                 #'4_4_4_sexSelex_6_AllFleets',
-                                                 #'4_4_5_sexSelex_Apical_AllFleets',
-                                                 #'4_4_5_sexSelex_Apical_AllFleets_3',
-                                                 '4_4_6_sexSelex_All_AllFleets',
-                                                 '4_4_6_sexSelex_All_AllFleets_3')))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c(#'Selex parm 1 sex specific',
-                                     #'Selex parm 3 sex specific',
-                                     #'Selex parm 4 sex specific',
-                                     #'Selex parm 6 sex specific',
-                                     #'Apical selex sex specific Mal offset',
-                                     #'Apical selex sex specific Fem offset',
-                                     'All selex parm sex specific Mal offset',
-                                     'All selex parm sex specific Fem offset'),
-                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+pp_0 <- SS_output(here('models','4_3_1_M_ramp_update'))
+pp_1 <- SS_output(here('models','4_5_1_MrampsexSelex_1_AllFleets'))
+pp_4 <- SS_output(here('models','4_5_3_MrampsexSelex_4_AllFleets'))
+pp_all <- SS_output(here('models','4_5_6_MrampsexSelex_All_AllFleets_3'))
 
+like_compare <- cbind(pp_0$likelihoods_used, "one" = pp_1$likelihoods_used$values, "four" = pp_4$likelihoods_used$values, "all" = pp_4$likelihoods_used$values)
+like_compare$diff_from0 = round(like_compare$values - like_compare[c("one","four","all")]) #improving age comps then length, poorer survey index
+pp_0$likelihoods_by_fleet[pp_0$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
+  pp_4$likelihoods_by_fleet[pp_4$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
+#Same thing. Four changes most and is similar to all. With all the combo survey selex is weird. Go with 4. 
+#Compared to constant M model with sex-dependent selectivity (4_4_3), the likelihood is higher/poorer. 
+
+
+####------------------------------------------------####
+### 4_6_1_blocks_Mramp Revisiting additional blocks for M ramp ----
+####------------------------------------------------####
+
+new_name <- "4_6_1_blocks_Mramp"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+### Update blocks ----
+mod$ctl$N_Block_Designs <- 5
+mod$ctl$blocks_per_pattern <- c(2,2,2,2,2)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+
+#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+#Keeping 2000 block instead of 2001 since the data seems to suggest change there (also same as last assessment)
+mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2022), #TWL fleets
+                             c(2000, 2019, 2020, 2022), #CA/OR ntwl
+                             c(2004, 2016, 2017, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR rec
+                             c(2006, 2020, 2021, 2022)) #WA rec
+
+### Update selectivity parameter table matching Jim's parameters setup ----
+
+selex_new <- mod$ctl$size_selex_parms
+
+# Use new block set up
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+selex_new[grepl('CA_NTWL|OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+#WA NTWL is set to mirror WA TWL due to better aggregate match. 
+
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 5
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table ----
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+dev.off()
+plot_sel_comm(pp)
+plot_sel_noncomm(pp, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_3_1_M_ramp_update',
+                                                 '4_6_1_blocks_Mramp')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('M_ramp',
+                                     'Update blocks'),
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 4_6_2_blocks_selex4 Revisiting additional blocks for sex specific selectivity ----
+####------------------------------------------------####
+
+new_name <- "4_6_2_blocks_selex4"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_4_3_sexSelex_4_AllFleets'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+### Update blocks ----
+mod$ctl$N_Block_Designs <- 5
+mod$ctl$blocks_per_pattern <- c(2,2,2,2,2)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+
+#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+#Keeping 2000 block instead of 2001 since the data seems to suggest change there (also same as last assessment)
+mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2022), #TWL fleets
+                             c(2000, 2019, 2020, 2022), #CA/OR ntwl
+                             c(2004, 2016, 2017, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR rec
+                             c(2006, 2020, 2021, 2022)) #WA rec
+
+### Update selectivity parameter table matching Jim's parameters setup ----
+
+selex_new <- mod$ctl$size_selex_parms
+
+# Use new block set up
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+selex_new[grepl('CA_NTWL|OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+#WA NTWL is set to mirror WA TWL due to better aggregate match. 
+
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 5
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table ----
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_4_3_sexSelex_4_AllFleets',
+                                                 '4_6_2_blocks_selex4')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Selex 4',
+                                     'Update blocks'),
+                    subplots = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+pp_noblock <- SS_output(here('models','4_4_3_sexSelex_4_AllFleets'))
+pp_block <- SS_output(here('models','4_6_2_blocks_selex4'))
+
+like_compare <- cbind(pp_noblock$likelihoods_used, "block" = pp_block$likelihoods_used$values)
+like_compare$diff = round(like_compare$values - like_compare$block) #improving age comps then length, poorer survey index
+pp_noblock$likelihoods_by_fleet[pp_noblock$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
+  pp_block$likelihoods_by_fleet[pp_block$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
+#Comps are better fit parm 4 as sex dependent. Length and age comps are much improved
+#Improvement is mostly with the rec fleets. Trawl and survey are generally poorer fitting
+
+xx <- r4ss::tune_comps(replist = pp_block, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 0, 
+                       extras = '-nohess')
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities
