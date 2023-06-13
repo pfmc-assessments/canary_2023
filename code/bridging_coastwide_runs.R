@@ -3161,6 +3161,106 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
 
 
+####------------------------------------------------####
+### 3_3_5_lambda1 Set lambdas to 1 for straight copied coastwide model ----
+####------------------------------------------------####
+
+new_name <- 'Bridging coastwide/3_3_5_lambda1'
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/Bridging coastwide/3_3_1_coastwide'), 
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make Changes
+##
+
+#Set lambdas to 1 for all but the coastwide comps (rec age comps 
+#were previously zero because did not have them in the model)
+mod$ctl$lambdas[!grepl("_coastwide",rownames(mod$ctl$lambdas)), "value"] <- 1
+
+#Set lambdas to 0 for CA ashop length and age and CA_rec because dont have them in the model
+mod$ctl$lambdas[grepl("CA_ASHOP",rownames(mod$ctl$lambdas)), "value"] <- 0
+mod$ctl$lambdas[grepl("age_7_CA_REC",rownames(mod$ctl$lambdas)), "value"] <- 0
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+# r4ss::run(dir = here('models',new_name), 
+#           exe = here('models/ss_win.exe'), 
+#           extras = '-nohess', 
+#           # show_in_console = TRUE, 
+#           skipfinished = FALSE)
+
+
+
+####------------------------------------------------####
+### 3_3_6_coastwide_tuned Tune the straight copied coastwide model ----
+####------------------------------------------------####
+
+new_name <- 'Bridging coastwide/3_3_6_coastwide_tuned'
+copied_model <- 'Bridging coastwide/3_3_5_lambda1'
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models', copied_model),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models', copied_model),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models', copied_model),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models', copied_model),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+##
+#Make Changes
+##
+
+mod <- SS_read(here('models',new_name))
+
+yy <- SS_output(here('models', new_name))
+dw <- tune_comps(replist = yy, dir = here('models', new_name),
+                 option = c("Francis"), niters_tuning = 3,
+                 exe = here('models/ss_win.exe'), extras = "-nohess",
+                 allow_up_tuning = TRUE,
+                 write = TRUE)
+
+##
+#Comparison plots
+##
+
+pp <- SS_output(here('models',new_name),covar=FALSE)
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('Bridging coastwide/3_2_7_update_bio_Mconstant_phases',
+                                                 'Bridging coastwide/3_3_1_coastwide',
+                                                 'Bridging coastwide/3_2_9_tuned',
+                                                 'Bridging coastwide/3_3_6_coastwide_tuned')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Spatial (M as constant)',
+                                     'Coastwide (M as constant)',
+                                     'Spatial tuned',
+                                     'Coastwide tuned'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
 
 ########################################################
 ### 
