@@ -104,3 +104,6 @@ suggested_tuning.ss
 
 #batch files
 *run_ss.bat
+
+#powerpoint files (may want to change once get to STAR panel)
+*.ppt*
