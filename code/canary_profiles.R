@@ -46,13 +46,13 @@ tictoc::toc()
 
 # R0 profile --------------------------------------------------------------
 
-new_name <- "3_1_5_update_tri_index_KLO"
+new_name <- "3_1_6_survey_domed_KLO_phases"
 
 ##
 #Copy inputs
 ##
 
-copy_SS_inputs(dir.old = here('models/3_1_5_update_tri_index'),  
+copy_SS_inputs(dir.old = here('models/3_1_6_survey_domed'),  
                dir.new = here('models',new_name),
                overwrite = TRUE)
 
@@ -72,22 +72,24 @@ r4ss::run(dir = here('models',new_name),
 
 profile.settings <- get_settings_profile(parameters = 'SR_LN(R0)',
                                          low = -1, high = 1,
-                                         step_size = 0.2,
+                                         step_size = 0.2, 
                                          param_space = 'relative',
-                                         use_prior_like = 1) 
+                                         use_prior_like = 0) 
 settings <- get_settings(settings = list(base_name = '3_1_5_update_tri_index_KLO',
                                          run = 'profile',
                                          profile_details = profile.settings))
 
 settings$exe <- 'ss_win'
 settings$extras <- '-nohess'
-settings$show_in_console
+settings$globalpar <- TRUE
 
 
 tictoc::tic()
 run_diagnostics(mydir = here('models'), 
                 model_settings = settings)
 tictoc::toc()
+
+
 
 
 # MCMC --------------------------------------------------------------------
@@ -123,7 +125,7 @@ fit <- adnuts::sample_rwm(model = 'ss_win', # this is the name of the executable
                           thin = thin, # thin to save memory, could try not
                           warmup = warmup,
                           chains = 5)
-saveRDS(fit, 'mcmc_run.rds')
+saveRDS(fit, here('models', new_name, 'mcmc_run.rds'))
 
 # new_name <- '3_1_5_update_tri_index_KLO'
 # tictoc::tic()

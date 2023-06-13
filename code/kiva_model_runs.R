@@ -746,3 +746,13 @@ new.lambdas <- purrr::map(list(c('Surv', ''),
                                                       other = .x[2]))
                           }) |>
   purrr::list_rbind()
+
+
+tri.lognormal <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_lognormal/index/est_by_area.csv')) 
+tri.mixture <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_lognormal_mix/index/est_by_area.csv'))
+
+dplyr::bind_rows(list(lognormal = tri.lognormal, mixture = tri.mixture), .id = 'error') |>
+  dplyr::filter(area == 'coastwide') |>
+  ggplot(aes(x = year, y = est, col = error)) +
+  geom_point() + geom_line() +
+  geom_linerange(aes(ymin = lwr, ymax = upr))
