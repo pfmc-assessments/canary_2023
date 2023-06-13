@@ -9283,6 +9283,19 @@ plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('3_1_6_survey_domed',
+                                                 '4_3_1_M_ramp',
+                                                 '4_3_2_M_breakpoint',
+                                                 '4_4_3_sexSelex_4_AllFleets')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Constant M',
+                                     'M ramp (historical)',
+                                     'M breakpoint',
+                                     'Sex dependent selex descending'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
 ####------------------------------------------------####
 ### 4_4_4_sexSelex6 Set up sex specific selectivity for parm 6  ----
 ####------------------------------------------------####
@@ -9770,7 +9783,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('4_4_3_sexSelex_4_AllFleets',
-                                                 '4_6_2_blocks_selex4')))
+                                                 '4_5_2_blocks_selex4')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Selex 4',
                                      'Update blocks'),
@@ -9778,7 +9791,7 @@ SSsummarize(xx) |>
 
 
 pp_noblock <- SS_output(here('models','4_4_3_sexSelex_4_AllFleets'))
-pp_block <- SS_output(here('models','4_6_2_blocks_selex4'))
+pp_block <- SS_output(here('models','4_5_2_blocks_selex4'))
 
 like_compare <- cbind(pp_noblock$likelihoods_used, "block" = pp_block$likelihoods_used$values)
 like_compare$diff = round(like_compare$values - like_compare$block) #improving age comps then length, poorer survey index
@@ -9792,7 +9805,8 @@ xx <- r4ss::tune_comps(replist = pp_block,
                        dir = here('models', new_name), 
                        exe = here('models/ss_win.exe'), 
                        niters_tuning = 0, 
-                       extras = '-nohess')
+                       extras = '-nohess',
+                       allow_up_tuning = TRUE)
 
 ################
 
@@ -10373,6 +10387,183 @@ pp_0$likelihoods_by_fleet[pp_0$likelihoods_by_fleet$Label %in% c("Length_like","
   pp_4$likelihoods_by_fleet[pp_4$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
 #Same thing. Four changes most and is similar to all. With all the combo survey selex is weird. Go with 4. 
 #Compared to constant M model with sex-dependent selectivity (4_4_3), the likelihood is higher/poorer. 
+
+
+####------------------------------------------------####
+### 4_7_1_tune452 Tune model 4_5_2  ----
+####------------------------------------------------####
+
+new_name <- "4_7_1_tune452"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_5_2_blocks_selex4'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/4_5_2_blocks_selex4'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/4_5_2_blocks_selex4'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/4_5_2_blocks_selex4'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+mod.out <- SS_output(here('models', new_name))
+xx <- r4ss::tune_comps(replist = mod.out, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 4, 
+                       extras = '-nohess',
+                       allow_up_tuning = TRUE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_4_3_sexSelex_4_AllFleets',
+                                                 '4_5_2_blocks_selex4',
+                                                 '4_7_1_tune452')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Sex dependent selex descending',
+                                     'Updated blocks',
+                                     'Retuned'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+#Changes NTWL and REC weightings mostly, which is as expected.
+
+
+####------------------------------------------------####
+### 5_0_0_updateCatches Update catches from CA rec (for 2020 and 2021) and WA 2022 (and WA pacfin comps)  ----
+####------------------------------------------------####
+
+#NOT READY YET TO DO - NEED TO CONFIRM WA CATCHES ARE IN FACT UPDATED IN PACFIN
+
+new_name <- "5_0_0_updateCatches"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make changes
+##
+
+# Update catch time series ------------------------------------------------
+catches <- read.csv(here('data/canary_total_removals.csv')) 
+updated.catch.df <- catches |>
+  dplyr::select(-rec.W.N) |>
+  tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
+  tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |> 
+  # warning is ok, cuts off units in WA rec catch column name
+  dplyr::mutate(gear = stringr::str_to_upper(gear),
+                state = dplyr::case_when(state == 'W' ~ 'WA',
+                                         state == 'O' ~ 'OR',
+                                         state == 'C' ~ 'CA'),
+                fleet_no_num = paste(state, gear, sep = '_')) |>
+  dplyr::left_join(fleet.converter) |>
+  dplyr::mutate(seas = 1, 
+                catch_se = 0.05) |>
+  dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
+  #rbind(c(-999, 1, 1, 0, 0.05)) |>
+  dplyr::arrange(fleet, year) |>
+  as.data.frame()
+
+mod$dat$catch <- updated.catch.df
+
+
+# Update WA comps ----------------------------------------------------
+
+read.fishery.comps <- function(filename, exclude) {
+  
+}
+
+pacfin.ages <- purrr::map(list('WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Acomps_{amin}_{amax}_formatted.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-state, -Ntows, -Nsamps) |>
+    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+                                                                       area = .x,
+                                                                       fleet = .fleet)])) |> 
+    `names<-`(names(mod$dat$agecomp))
+}) |> 
+  purrr::list_rbind() 
+
+pacfin.lengths <- purrr::map(list('WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Lcomps_{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-state, -Ntows, -Nsamps) |>
+    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+                                                                       area = .x, 
+                                                                       fleet = .fleet)])) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(pacfin.ages$FltSvy))) |>
+  dplyr::bind_rows(pacfin.ages)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(pacfin.lengths$FltSvy))) |>
+  dplyr::bind_rows(pacfin.lengths)
+
+
+
+##----
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_7_1_tune452',
+                                                 '5_0_0_updateCatches')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Tuned model'
+                                     'Update catches'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
 
