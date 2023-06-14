@@ -10438,20 +10438,108 @@ SSsummarize(xx) |>
 
 #Changes NTWL and REC weightings mostly, which is as expected.
 
+#Check that var adjust are not more than number of fish.
+upwgt <- mod$ctl$Variance_adjustment_list[which(mod$ctl$Variance_adjustment_list$Value>1),]
+#mod$dat$lencomp[mod$dat$lencomp$FltSvy %in% c(upwgt[upwgt$Data_type==4,"Fleet"]),]
+#mod$dat$agecomp[mod$dat$agecomp$FltSvy %in% c(upwgt[upwgt$Data_type==5,"Fleet"]),]
+
+#For oregon ntwl positive years comps are fine with upweight of 1.7  
+#For washington ntwl lengths positive years comps are close with upweight of 3.12 (for one year the 
+#number is 3 and Ninput is 1 so that would be higher)
+#For washington ntwl ages positive years comps are fine with upweight of 1.3 (for one year of sample size = 1
+#is would be above)
+#For oregon rec ages upweight of 1.15 is fine
+#For california trawl ages, upweight of 2 results is more than Nsamples for two years (where N = 1, upweight = 2; 
+#and N = 12, upweight = 14)
+#All together I would not say this is a huge issue. 
+
 
 ####------------------------------------------------####
-### 5_0_0_updateCatches Update catches from CA rec (for 2020 and 2021) and WA 2022 (and WA pacfin comps)  ----
+### 4_8_1_mirrorORWA_twl Mirror trawl for oregon and washington  ----
 ####------------------------------------------------####
 
-#NOT READY YET TO DO - NEED TO CONFIRM WA CATCHES ARE IN FACT UPDATED IN PACFIN
-
-new_name <- "5_0_0_updateCatches"
+new_name <- "4_8_1_mirrorORWA_twl"
 
 ##
 #Copy inputs
 ##
 
-copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+copy_SS_inputs(dir.old = here('models/4_7_1_tune452'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+#Mirror WA TWL to OR TWL
+mod$ctl$size_selex_types["3_WA_TWL", c("Pattern", "Male", "Special")] <- c(15, 0, 2)
+
+#Remove WA TWL selex parms
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep("_WA_TWL", rownames(mod$ctl$size_selex_parms)), ]
+
+#Remove WA TWL from time-varying 
+
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[-grep("_WA_TWL", rownames(mod$ctl$size_selex_parms_tv)), ]
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_7_1_tune452',
+                                                 '4_8_1_mirrorORWA_twl')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Tuned model',
+                                     'Mirror OR/WA trawl'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+pp_0 <- SS_output(here('models','4_7_1_tune452'))
+pp_1 <- SS_output(here('models','4_8_1_mirrorORWA_twl'))
+
+like_compare <- cbind(pp_0$likelihoods_used, "mir" = pp_1$likelihoods_used$values)
+like_compare$diff_from0 = round(like_compare$values - like_compare[,c("mir")]) #improving age comps then length, poorer survey index
+pp_0$likelihoods_by_fleet[pp_0$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
+  pp_1$likelihoods_by_fleet[pp_1$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
+#Improves length comps for OR TWL but not age comps. Improve WA TWL (because less influence of WA NTWL)
+#Overall poorer fit by 60 units for 12 less parameters. 
+
+#Need to first unmirror WA_NTWL with WA_TWL and then run this test. 
+
+
+####------------------------------------------------####
+### 4_8_2_unmirrorWA_ntwl Unmirror WA NTWL from TWL  ----
+####------------------------------------------------####
+
+new_name <- "4_8_2_unmirrorWA_ntwl"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_7_1_tune452'),
                dir.new = here('models',new_name),
                overwrite = TRUE)
 
@@ -10467,75 +10555,94 @@ fleet.converter <- mod$dat$fleetinfo |>
 #Make changes
 ##
 
-# Update catch time series ------------------------------------------------
-catches <- read.csv(here('data/canary_total_removals.csv')) 
-updated.catch.df <- catches |>
-  dplyr::select(-rec.W.N) |>
-  tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
-  tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |> 
-  # warning is ok, cuts off units in WA rec catch column name
-  dplyr::mutate(gear = stringr::str_to_upper(gear),
-                state = dplyr::case_when(state == 'W' ~ 'WA',
-                                         state == 'O' ~ 'OR',
-                                         state == 'C' ~ 'CA'),
-                fleet_no_num = paste(state, gear, sep = '_')) |>
-  dplyr::left_join(fleet.converter) |>
-  dplyr::mutate(seas = 1, 
-                catch_se = 0.05) |>
-  dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
-  #rbind(c(-999, 1, 1, 0, 0.05)) |>
-  dplyr::arrange(fleet, year) |>
-  as.data.frame()
+#For whatever reason I could not get this to output, so I did the changes manually
 
-mod$dat$catch <- updated.catch.df
+# #Unmirror WA NTWL
+# #Currently not setting a block. Likely will fit recent years anyway
+# mod$ctl$size_selex_types["6_WA_NTWL", c("Pattern", "Male", "Special")] <- c(24, 4, 0)
+# 
+# ### Set up selectivity parameter table ----
+# 
+# #Get names of all six parms for double normal
+# selex_names <- purrr::map("6_WA_NTWL",
+#                           ~ glue::glue('SizeSel_P_{par}_{fleet_name}({fleet_no})',
+#                                        par = 1:6,
+#                                        fleet_name = .x,
+#                                        fleet_no = fleet.converter$fleet[fleet.converter$fleetname == .x])) |>
+#   unlist()
+# 
+# #Set up new selectivity table
+# selex_new <- matrix(0, nrow = length(selex_names), 
+#                     ncol = ncol(mod$ctl$size_selex_parms), 
+#                     dimnames = list(selex_names, names(mod$ctl$size_selex_parms))) |>
+#   as.data.frame()
+# 
+# # default lo and hi
+# selex_new$LO <- -99
+# selex_new$HI <- 99
+# 
+# # No prior applied, so just need to fill in a number
+# selex_new$PR_SD <- 99
+# selex_new$PRIOR <- 99
+# 
+# # Fix three parameters of double normal initially
+# selex_new$INIT[grep('P_2', rownames(selex_new))] <- -15
+# selex_new$INIT[grep('P_5', rownames(selex_new))] <- -999
+# selex_new$INIT[grep('P_6', rownames(selex_new))] <- -999
+# selex_new$PHASE[grep('P_2', rownames(selex_new))] <- -99
+# selex_new$PHASE[grep('P_5', rownames(selex_new))] <- -99
+# selex_new$PHASE[grep('P_6', rownames(selex_new))] <- -99
+# 
+# # calculate initial values for p1, p3, p4 for each fleet
+# # based on recommendations in assessment handbook
+# selex_modes <- mod$dat$lencomp |>
+#   dplyr::arrange(FltSvy) |>
+#   dplyr::group_by(FltSvy) |>
+#   dplyr::summarise(dplyr::across(f12:m66, ~ sum(Nsamp*.x)/sum(Nsamp))) |> 
+#   tidyr::pivot_longer(cols = -FltSvy, names_to = 'len_bin', values_to = 'dens') |>
+#   tidyr::separate(col = len_bin, into = c('sex', 'length'), sep = 1) |>
+#   dplyr::group_by(FltSvy, sex) |> 
+#   dplyr::summarise(mode = length[which.max(dens)]) |>
+#   dplyr::summarise(mode = mean(as.numeric(mode))) |>
+#   dplyr::mutate(asc.slope = log(8*(mode - min(mod$dat$lbin_vector))),
+#                 desc.slope = log(8*(max(mod$dat$lbin_vector)-mode)))
+# 
+# # P_1
+# p1.ind <- grep('P_1', rownames(selex_new))
+# selex_new$LO[p1.ind] <- 13.001
+# selex_new$HI[p1.ind] <- 65
+# selex_new$PHASE[p1.ind] <- 4
+# selex_new$INIT[p1.ind] <- selex_modes[selex_modes$FltSvy == 6,"mode"]
+# 
+# 
+# # P_3
+# p3.ind <- grep('P_3', rownames(selex_new))
+# selex_new$PHASE[p3.ind] <- 5
+# selex_new$LO[p3.ind] <- 0 #This can become negative, but effect is small compared to when 0
+# selex_new$HI[p3.ind] <- 9
+# selex_new$INIT[p3.ind] <- selex_modes[selex_modes$FltSvy == 6,"asc.slope"]
+# 
+# # P_4
+# p4.ind <- grep('P_4', rownames(selex_new))
+# selex_new$PHASE[p4.ind] <- 5
+# selex_new$LO[p4.ind] <- 0 #This can become negative, but effect is small compared to when 0
+# selex_new$HI[p4.ind] <- 9
+# selex_new$INIT[p4.ind] <- selex_modes[selex_modes$FltSvy == 6,"desc.slope"]
+# 
+# #Add in new WA NTWL paramasters along with the female offset for descending limb
+# mod$ctl$size_selex_parms <- rbind(mod$ctl$size_selex_parms[1:(min(grep("CA_REC",rownames(mod$ctl$size_selex_parms)))-1),], 
+#   selex_new,
+#   mod$ctl$size_selex_parms[grep("PFemOff_1_5_OR_NTWL",rownames(mod$ctl$size_selex_parms)):
+#                              grep("PFemOff_5_5_OR_NTWL",rownames(mod$ctl$size_selex_parms)),],
+#   mod$ctl$size_selex_parms[min(grep("CA_REC",rownames(mod$ctl$size_selex_parms))):length(rownames(mod$ctl$size_selex_parms)),])
+# 
+# #Set the new offsets to not have a block because copied from OR NTWL which did
+# mod$ctl$size_selex_parms[
+#   intersect(grep(")1",rownames(mod$ctl$size_selex_parms)),grep("_3",rownames(mod$ctl$size_selex_parms))),
+#   c("Block","Block_Fxn")] <- 0
 
 
-# Update WA comps ----------------------------------------------------
-
-read.fishery.comps <- function(filename, exclude) {
-  
-}
-
-pacfin.ages <- purrr::map(list('WA'), function(.x) {
-  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Acomps_{amin}_{amax}_formatted.csv',
-                           area = .x,
-                           amin = age.min,
-                           amax = age.max))) |>
-    dplyr::select(-state, -Ntows, -Nsamps) |>
-    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
-      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
-                                                                       area = .x,
-                                                                       fleet = .fleet)])) |> 
-    `names<-`(names(mod$dat$agecomp))
-}) |> 
-  purrr::list_rbind() 
-
-pacfin.lengths <- purrr::map(list('WA'), function(.x) {
-  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Lcomps_{lmin}_{lmax}_formatted.csv',
-                           area = .x,
-                           lmin = length.min,
-                           lmax = length.max))) |>
-    dplyr::select(-state, -Ntows, -Nsamps) |>
-    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
-      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
-                                                                       area = .x, 
-                                                                       fleet = .fleet)])) |>
-    `names<-`(names(mod$dat$lencomp))
-}) |>
-  purrr::list_rbind()
-
-
-mod$dat$agecomp <- mod$dat$agecomp |> 
-  dplyr::filter(!(FltSvy %in% unique(pacfin.ages$FltSvy))) |>
-  dplyr::bind_rows(pacfin.ages)
-
-mod$dat$lencomp <- mod$dat$lencomp |> 
-  dplyr::filter(!(FltSvy %in% unique(pacfin.lengths$FltSvy))) |>
-  dplyr::bind_rows(pacfin.lengths)
-
-
-
-##----
+##
 #Output files and run
 ##
 
@@ -10543,8 +10650,8 @@ SS_write(mod,
          dir = here('models',new_name),
          overwrite = TRUE)
 
-r4ss::run(dir = here('models',new_name), 
-          exe = here('models/ss_win.exe'), 
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
           extras = '-nohess',
           # show_in_console = TRUE,
           skipfinished = FALSE)
@@ -10559,11 +10666,281 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('4_7_1_tune452',
-                                                 '5_0_0_updateCatches')))
+                                                 '4_8_2_unmirrorWA_ntwl')))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('Tuned model'
-                                     'Update catches'),
+  SSplotComparisons(legendlabels = c('Tuned model',
+                                     'Unmirror WA nontrawl'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+xx <- r4ss::tune_comps(replist = pp, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 0,
+                       write = TRUE,
+                       extras = '-nohess')
+
+pp_0 <- SS_output(here('models','4_7_1_tune452'))
+pp_1 <- SS_output(here('models','4_8_2_unmirrorWA_ntwl'))
+
+like_compare <- cbind(pp_0$likelihoods_used, "unmir" = pp_1$likelihoods_used$values)
+like_compare$diff_from0 = round(like_compare$values - like_compare[,c("unmir")]) #improving age comps then length, poorer survey index
+pp_0$likelihoods_by_fleet[pp_0$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
+  pp_1$likelihoods_by_fleet[pp_1$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
+
+
+####------------------------------------------------####
+### 4_8_3_tune482 Tune model 4_8_2 which is unmirroring WA NTWL  ----
+####------------------------------------------------####
+
+new_name <- "4_8_3_tune482"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_2_unmirrorWA_ntwl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/4_8_2_unmirrorWA_ntwl'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/4_8_2_unmirrorWA_ntwl'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/4_8_2_unmirrorWA_ntwl'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+
+mod.out <- SS_output(here('models', new_name))
+xx <- r4ss::tune_comps(replist = mod.out, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 3, 
+                       extras = '-nohess',
+                       allow_up_tuning = TRUE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_7_1_tune452',
+                                                 '4_8_2_unmirrorWA_ntwl',
+                                                 '4_8_3_tune482')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Previously tuned: model_471',
+                                     'Unmirrored WA NTWL',
+                                     'Retuned unmirrored'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+#Biggest change in francis weight values is downweighting WA NTWL as expected
+
+####------------------------------------------------####
+### 4_8_4_mirrorORWA_twl Mirror trawl for oregon and washington  ----
+####------------------------------------------------####
+
+new_name <- "4_8_4_mirrorORWA_twl"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_3_tune482'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+#Mirror WA TWL to OR TWL
+mod$ctl$size_selex_types["3_WA_TWL", c("Pattern", "Male", "Special")] <- c(15, 0, 2)
+
+#Remove WA TWL selex parms
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep("_WA_TWL", rownames(mod$ctl$size_selex_parms)), ]
+
+#Remove WA TWL from time-varying 
+
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[-grep("_WA_TWL", rownames(mod$ctl$size_selex_parms_tv)), ]
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_8_3_tune482',
+                                                 '4_8_4_mirrorORWA_twl')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Unmirrored WA nontrawl tuned',
+                                     'and mirrored OR/WA trawl'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+pp_0 <- SS_output(here('models','4_8_3_tune482'))
+pp_1 <- SS_output(here('models','4_8_4_mirrorORWA_twl'))
+
+like_compare <- cbind(pp_0$likelihoods_used, "mir" = pp_1$likelihoods_used$values)
+like_compare$diff_from0 = round(like_compare$values - like_compare[,c("mir")]) #improving age comps then length, poorer survey index
+pp_0$likelihoods_by_fleet[pp_0$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1] - 
+  pp_1$likelihoods_by_fleet[pp_1$likelihoods_by_fleet$Label %in% c("Length_like","Age_like"), -1]
+
+xx <- r4ss::tune_comps(replist = pp, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 0, 
+                       extras = '-nohess',
+                       allow_up_tuning = TRUE)
+
+# ####------------------------------------------------####
+# ### 5_0_0_updateCatches Update catches from CA rec (for 2020 and 2021) and WA 2022 (and WA pacfin comps)  ----
+# ####------------------------------------------------####
+# 
+# #NOT READY YET TO DO - NEED TO CONFIRM WA CATCHES ARE IN FACT UPDATED IN PACFIN
+# 
+# new_name <- "5_0_0_updateCatches"
+# 
+# ##
+# #Copy inputs
+# ##
+# 
+# copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
+#                dir.new = here('models',new_name),
+#                overwrite = TRUE)
+# 
+# mod <- SS_read(here('models',new_name))
+# 
+# fleet.converter <- mod$dat$fleetinfo |>
+#   dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+#                 fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+#   dplyr::select(fleetname, fleet_no_num, fleet)
+# 
+# 
+# ##
+# #Make changes
+# ##
+# 
+# # Update catch time series ------------------------------------------------
+# catches <- read.csv(here('data/canary_total_removals.csv')) 
+# updated.catch.df <- catches |>
+#   dplyr::select(-rec.W.N) |>
+#   tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
+#   tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |> 
+#   # warning is ok, cuts off units in WA rec catch column name
+#   dplyr::mutate(gear = stringr::str_to_upper(gear),
+#                 state = dplyr::case_when(state == 'W' ~ 'WA',
+#                                          state == 'O' ~ 'OR',
+#                                          state == 'C' ~ 'CA'),
+#                 fleet_no_num = paste(state, gear, sep = '_')) |>
+#   dplyr::left_join(fleet.converter) |>
+#   dplyr::mutate(seas = 1, 
+#                 catch_se = 0.05) |>
+#   dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
+#   #rbind(c(-999, 1, 1, 0, 0.05)) |>
+#   dplyr::arrange(fleet, year) |>
+#   as.data.frame()
+# 
+# mod$dat$catch <- updated.catch.df
+# 
+# 
+# # Update WA comps ----------------------------------------------------
+# 
+# read.fishery.comps <- function(filename, exclude) {
+#   
+# }
+# 
+# pacfin.ages <- purrr::map(list('WA'), function(.x) {
+#   read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Acomps_{amin}_{amax}_formatted.csv',
+#                            area = .x,
+#                            amin = age.min,
+#                            amax = age.max))) |>
+#     dplyr::select(-state, -Ntows, -Nsamps) |>
+#     dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+#       fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+#                                                                        area = .x,
+#                                                                        fleet = .fleet)])) |> 
+#     `names<-`(names(mod$dat$agecomp))
+# }) |> 
+#   purrr::list_rbind() 
+# 
+# pacfin.lengths <- purrr::map(list('WA'), function(.x) {
+#   read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Lcomps_{lmin}_{lmax}_formatted.csv',
+#                            area = .x,
+#                            lmin = length.min,
+#                            lmax = length.max))) |>
+#     dplyr::select(-state, -Ntows, -Nsamps) |>
+#     dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+#       fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+#                                                                        area = .x, 
+#                                                                        fleet = .fleet)])) |>
+#     `names<-`(names(mod$dat$lencomp))
+# }) |>
+#   purrr::list_rbind()
+# 
+# 
+# mod$dat$agecomp <- mod$dat$agecomp |> 
+#   dplyr::filter(!(FltSvy %in% unique(pacfin.ages$FltSvy))) |>
+#   dplyr::bind_rows(pacfin.ages)
+# 
+# mod$dat$lencomp <- mod$dat$lencomp |> 
+#   dplyr::filter(!(FltSvy %in% unique(pacfin.lengths$FltSvy))) |>
+#   dplyr::bind_rows(pacfin.lengths)
+# 
+# 
+# 
+# ##----
+# #Output files and run
+# ##
+# 
+# SS_write(mod,
+#          dir = here('models',new_name),
+#          overwrite = TRUE)
+# 
+# r4ss::run(dir = here('models',new_name), 
+#           exe = here('models/ss_win.exe'), 
+#           extras = '-nohess',
+#           # show_in_console = TRUE,
+#           skipfinished = FALSE)
+# 
+# pp <- SS_output(here('models',new_name))
+# SS_plots(pp, plot = c(1:26))
+# 
+# plot_sel_comm(pp, sex=1)
+# plot_sel_comm(pp, sex=2)
+# plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+# plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+# 
+# xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+#                                       subdir = c('4_7_1_tune452',
+#                                                  '5_0_0_updateCatches')))
+# SSsummarize(xx) |>
+#   SSplotComparisons(legendlabels = c('Tuned model'
+#                                      'Update catches'),
+#                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
 
