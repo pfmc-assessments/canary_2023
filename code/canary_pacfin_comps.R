@@ -6,7 +6,7 @@
 #
 ##################################################################################################
 
-#devtools::install_github("nwfsc-assess/PacFIN.Utilities")
+#devtools::install_github("pfmc-assess/PacFIN.Utilities")
 library(PacFIN.Utilities)
 library(ggplot2)
 
