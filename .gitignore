@@ -49,6 +49,7 @@ literature/
 
 # ignore figures (take up a lot of space)
 *.png
+!documents/figures/*.png
 *.jpg
 *.jpeg
 data_workshop_figs/

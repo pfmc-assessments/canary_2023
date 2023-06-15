@@ -1,5 +1,5 @@
 SS-V3.24V-safe;_03/08/2015;_Stock_Synthesis_by_Richard_Methot_(NOAA)_using_ADMB_11.1x64
-Mon Jan 30 16:17:28 2023
+Tue Jun 06 10:46:31 2023
 
 Canary_data.SS  datfilename
 Canary_control.SS  ctlfilename
@@ -802,17 +802,17 @@ Now read cap for each fleet, then cap for each area (even if only 1 area), then 
 -1 # basis for input Fcast catch:  2=dead catch; 3=retained catch; 99=input Hrate(F); -1=read fleet/time specific (bio/num units are from fleetunits; note new codes in SSV3.20)
 Processed 
  -1 0
- -1 0
- -1 8.40703e-315
- -1 9.82392e+252
- -1 0
- -1 1.78022e-306
  -1 2.44845e-312
  -1 0
+ -1 1.50947e+161
+ -1 4.52647e-310
  -1 0
- -1 3.41894e+160
  -1 0
- -1 3.25237e-317
+ -1 0
+ -1 0
+ -1 0
+ -1 0
+ -1 0
  -1 0
  -1 0
  -1 0
