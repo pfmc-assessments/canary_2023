@@ -10816,6 +10816,165 @@ xx <- r4ss::tune_comps(replist = pp,
                        extras = '-nohess',
                        allow_up_tuning = TRUE)
 
+
+# Update triennial to gamma -------------------------------------------------
+
+new_name <- "4_10_1_gamma_tri"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+tri.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_gamma/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, ifelse(year <= 1992, '_Tri_early', '_Tri_late'))) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se) |>
+  dplyr::mutate(year = ifelse(index %in% fleet.converter$fleet[grep('coastwide', fleet.converter$fleetname)],
+                              year, -year))
+
+mod$dat$CPUE <- dplyr::filter(mod$dat$CPUE, 
+                              !(index %in% fleet.converter$fleet[grep('Tri', fleet.converter$fleetname)])) |>
+  dplyr::bind_rows(tri.cpue)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+# Update wcgbts to gamma -------------------------------------------------
+
+new_name <- "4_10_2_gamma_wcgbts"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_10_1_gamma_tri'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+wcgbts.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_gamma/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, '_NWFSC')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se) |>
+  dplyr::mutate(year = ifelse(index %in% fleet.converter$fleet[grep('coastwide', fleet.converter$fleetname)],
+                              year, -year))
+
+mod$dat$CPUE <- dplyr::filter(mod$dat$CPUE, 
+                              !(index %in% fleet.converter$fleet[grep('NWFSC', fleet.converter$fleetname)])) |>
+  dplyr::bind_rows(wcgbts.cpue)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+# Change triennial to float Q -------------------------------------------------
+
+new_name <- "4_10_3_tri_float_Q"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_10_2_gamma_wcgbts'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+# Move late tri data to early tri so it is in a single fleet
+tri.late.index <- fleet.converter$fleet[fleet.converter$fleet_no_num == 'coastwide_Tri_late']
+tri.early.index <- fleet.converter$fleet[fleet.converter$fleet_no_num == 'coastwide_Tri_early']
+mod$dat$CPUE <- dplyr::mutate(mod$dat$CPUE,
+                              index = ifelse(index == tri.late.index, tri.early.index, index))
+
+# Float early tri
+mod$ctl$Q_options['29_coastwide_Tri_early','float'] <- 1
+
+# Negative phase for early tri (float)
+mod$ctl$Q_parms[grep('Tri_early', rownames(mod$ctl$Q_parms)),'PHASE'] <- -1
+
+# Remove Q setup for late tri (no data)
+mod$ctl$Q_parms <- mod$ctl$Q_parms[-grep('Tri_late', rownames(mod$ctl$Q_parms)),]
+mod$ctl$Q_options <- mod$ctl$Q_options[-grep('Tri_late', rownames(mod$ctl$Q_options)),]
+
+# Do not need to touch selectivity. It is mirrored.
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+beepr::beep()
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_8_4_mirrorORWA_twl',
+                                                 '4_10_1_gamma_tri',
+                                                 '4_10_2_gamma_wcgbts',
+                                                 '4_10_3_tri_float_Q')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Mirrored OR/WA trawl',
+                                     'Tri w/gamma',
+                                     'WCGBTS w/gamma',
+                                     'Tri float Q'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 # ####------------------------------------------------####
 # ### 5_0_0_updateCatches Update catches from CA rec (for 2020 and 2021) and WA 2022 (and WA pacfin comps)  ----
 # ####------------------------------------------------####
