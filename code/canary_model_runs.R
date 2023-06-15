@@ -10816,6 +10816,268 @@ xx <- r4ss::tune_comps(replist = pp,
                        extras = '-nohess',
                        allow_up_tuning = TRUE)
 
+
+####------------------------------------------------####
+### 4_9_1_0agelambda Remove age comps by setting lambdas to 0  ----
+####------------------------------------------------####
+
+new_name <- "4_9_1_0agelambda"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+#Set up lambda dataframe for ages
+fleetAge <- unique(mod$dat$agecomp$FltSvy)[unique(mod$dat$agecomp$FltSvy)>0]
+
+mod$ctl$lambdas <- data.frame("like_comp" = 5, 
+                              "fleet" = sort(fleetAge),
+                              "phase" = 1,
+                              "value" = 1,
+                              "sizefreq_method" = 1)
+
+rownames(mod$ctl$lambdas) = paste0("ages_",fleet.converter[fleet.converter$fleet %in% fleetAge,"fleetname"])
+
+#Exclude spatial surveys (not used) and coastwide survey (which are CAAL)
+mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(16:24),]
+mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(28:30),]
+
+#Set lambdas
+mod$ctl$N_lambdas <- nrow(mod$ctl$lambdas)
+mod$ctl$lambdas$value <- 0
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+
+####------------------------------------------------####
+### 4_9_2_lowlength Lower length lambdas  ----
+####------------------------------------------------####
+
+new_name <- "4_9_2_lowlengthlambda"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+#Set up lambda dataframe for lengths
+fleetLen <- unique(mod$dat$lencomp$FltSvy)[unique(mod$dat$lencomp$FltSvy)>0]
+
+mod$ctl$lambdas <- data.frame("like_comp" = 4, 
+                              "fleet" = sort(fleetLen),
+                              "phase" = 1,
+                              "value" = 1,
+                              "sizefreq_method" = 1)
+
+rownames(mod$ctl$lambdas) = paste0("lengths_",fleet.converter[fleet.converter$fleet %in% fleetLen,"fleetname"])
+
+#Exclude spatial surveys (not used) and coastwide surveys
+mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(16:24),]
+mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(28:30),]
+
+#Set lambdas
+mod$ctl$N_lambdas <- nrow(mod$ctl$lambdas)
+mod$ctl$lambdas$value <- 0.01
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 4_9_3_lowlengthlambda_withSurvey Lower length and survey lambdas  ----
+####------------------------------------------------####
+
+new_name <- "4_9_3_lowlengthlambda_withSurvey"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+#Set up lambda dataframe for lengths
+fleetLen <- unique(mod$dat$lencomp$FltSvy)[unique(mod$dat$lencomp$FltSvy)>0]
+
+mod$ctl$lambdas <- data.frame("like_comp" = 4, 
+                              "fleet" = sort(fleetLen),
+                              "phase" = 1,
+                              "value" = 1,
+                              "sizefreq_method" = 1)
+
+rownames(mod$ctl$lambdas) = paste0("lengths_",fleet.converter[fleet.converter$fleet %in% fleetLen,"fleetname"])
+
+#Exclude ONLY spatial surveys (not used)
+mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(16:24),]
+
+#Set lambdas
+mod$ctl$N_lambdas <- nrow(mod$ctl$lambdas)
+mod$ctl$lambdas$value <- 0.01
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 4_9_4_upweightAge Increase francis age weights by 10fold  ----
+####------------------------------------------------####
+
+new_name <- "4_9_4_upweightAge"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==5,"Value"] = 10 *
+  mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==5,"Value"]
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 4_9_5_upweightLen Increase francis length weights by 10fold  ----
+####------------------------------------------------####
+
+new_name <- "4_9_5_upweightLen"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==4,"Value"] = 10 *
+  mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==4,"Value"]
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_8_4_mirrorORWA_twl',
+                                                 '4_9_1_noage',
+                                                 '4_9_2_lowlength',
+                                                 '4_9_3_lowlength_withSurvey',
+                                                 '4_9_4_upweightAge',
+                                                 '4_9_5_upweightLen')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('model 484',
+                                     'no ages',
+                                     'no lengths',
+                                     'lambda ages 2',
+                                     'lambda lengths 2'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
 # ####------------------------------------------------####
 # ### 5_0_0_updateCatches Update catches from CA rec (for 2020 and 2021) and WA 2022 (and WA pacfin comps)  ----
 # ####------------------------------------------------####
