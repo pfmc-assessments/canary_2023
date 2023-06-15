@@ -2,17 +2,7 @@
 
 Removals (1892-2022) for canary rockfish were compiled from multiple data sources. This assessment includes total removals (landings plus dead discards) by state for the following fleets: trawl, non-trawl, recreational, foreign trawl, and at-sea hake. A summary of total removals are provided in Table 5, Table 6, and Figure 2.
 
-<!-- ## Fishery-Dependent Data -->
-
-<!-- Commercial landings of rockfish and the biological characteristics of these landings were not consistently sampled for scientific purposes until the early 1960s (Niska, 1976). Statewide sampling programs to determine species compositions of the landed catches began in the late 1960s. The first rigorous monitoring programs that included routine collection of biological data (e.g., sex, age, size, maturity states, etc.) were begun in 1980. Currently, port biologists employed by each state fishery agency (\gls{cdfw}, \gls{odfw}, \gls{wdfw}) collect species-composition information and biological data from the landed catches of commercial trawling vessels that have completed their fishing trips. The sampling sites are commonly processing facilities located at ports along the coasts of California, Oregon and Washington. The monitoring programs currently in place are generally based on stratified, multistage sampling designs. -->
-
-<!-- Commercial length-frequency distributions were developed for each fleet for which observations were available, following the same bin structure as was used for research observations. For each fleet, the raw observations (compiled from \gls{pacfin}) were expanded to the sample level, to allow for any fish that were not measured, then to the trip level to account for the relative size of the landing from which the sample was obtained. These expanded length observations were then combined within years for each fleet. Age frequencies were computed in the same manner. Sampling statistics for each fleet and year are given in , and clearly show the different sampling targets employed over different time periods and between state agencies. -->
-
-<!-- The weighted length-frequency distributions are shown in . The annual observations were recorded as unidentified sex; both sexes were combined and are treated as such in the model. By fleet, a number of important patterns are visible in the data. The trawl fleets for each state, although the data are noisy, appear to show a decline in mean length of the catch from 1978 to 2000 (figures), with an increase in the mean length for recent years of the landed catch. The length composition data from the non-trawl fleet are much sparser compared to the trawl fleet making it difficult to discern a pattern in the mean length landed (Figures). The at-sea hake fishery was comprised of larger lengths relative to the trawl fishery, with the majority of length samples from Washington (Figures). All three recreational fleets appear to generally target smaller fish relative to the other fleets (Figures). -->
-
-<!-- Marginal commercial age-frequency distributions were compiled and are presented in FIGURES. Age composition samples are expanded similarly to the commercial length samples (i.e., first by sample, and then by trip). We expand age composition samples independently for each state, and also separately for three age determination categories: (1) ages read by using break-and-burn methods by \gls{odfw} or CAPS, (2) ages read by break-and-burn methods by \gls{wdfw}, and (3) ages read using surface methods by any lab. Age data for California were very sparse (no data between 1986 and 2000), but the majority of observed fish being younger than age 19 in recent years (Figure 24). Age compositions for the Oregon trawl fleet show a clear decline in both males and females older than \~ age 20 from the mid-1980s to recent years (Figure 25). In Washington, although missing age data from much of the time-series, there are larger proportions of older ages compared to the other two states (Figure 26). Age data for the non-trawl fleet for all states is sparse enough that little pattern can reliably be discerned (Figure 27-Figure 29). Age data from the at-sea hake fishery was available for 2003-2013 and shows little pattern. Washington is the only state with age data from the recreational fleets, and these data show a larger portion of the sample fish being less than 10 years of age (Figure 33). -->
-
-<!-- In aggregate, the biological data from fishery sources shows no evidence of strong year-classes moving through the population. This could be due to low recruitment variability, noisy data, or both. Further, declines in mean size and age seem to show a latitudinal cline, with more extreme declines to the south, and limited declines observed in Washington and Oregon. -->
+*Need to update table 5, 6, and figure 2 above*
 
 ### Commercial landings by State
 
@@ -33,12 +23,13 @@ Additional catches caught off the coast of Oregon or Washington but landed in Ca
 ### Commercial Discards
 
 *TO DO: Produce table 8*
+*TO DO: cite GEMM*
 
 Estimates of dead discards were combined with landed catch to provide estimates of total removals that were used as input catches within the Stock Synthesis model (Table 8). In recent years (2000--2022), estimates of dead discards were calculated from discard data, but in earlier years (before 2000), estimates of dead discards were calculated based on assumed discard ratios. 
 
 The ratio of discarded weight to landed weight (here termed the "discard ratio") for the domestic trawl and non-trawl fisheries was assumed at the following values: 1% discard ratio for 1892--1980, based on the assumption that discard rates were low prior to management actions due to the high-value nature of the fishery [and consistent with the previous assessment, @thorson_status_2015]; 5% discard ratio for 1981--1994 which is approximately the value calculated by J. Wallace, NMFS using data from @pikitch_evaluation_1988; 20% discard ratio for 1995--1999, based on the assumption that discard ratios would be higher than previous years but less than years when discard data was present due to the period of non-retention [and consistent with the previous assessment, @thorson_status_2015].  
 
-Onboard observers were deployed on fishing vessels starting in 2002 to collect data on discarding practices. Discard amounts for the domestic trawl, non-trawl, and at-sea hake fisheries from 2002--2021 were determined based on \gls{wcgop} data provided in the \gls{gemm} product (TO DO: cite GEMM). The \gls{gemm} provides estimates of dead discards coastwide. Therefore, the total coastwide estimates of dead discards in trawl and fixed gears as provided in the \gls{gemm} were allocated by state based on the total observed landings and discards for each state as observed by \gls{wcgop}. Dead discards were added to landings to obtain total removals for 2002--2021. Total removals in 2000, 2001, and 2022 where no \gls{wcgop} data were available were calculated by applying the average discard ratios from 2002--2004 (for estimates in 2000 and 2001) and 2019--2021 (for estimates in 2022) for each gear to landings for that gear. 
+Onboard observers were deployed on fishing vessels starting in 2002 to collect data on discarding practices. Discard amounts for the domestic trawl, non-trawl, and at-sea hake fisheries from 2002--2021 were determined based on \gls{wcgop} data provided in the \gls{gemm} product (available publically at <https://www.pcouncil.org/documents/2022/08/g-1-b-nwfsc-report-1-estimated-discard-and-catch-of-groundfish-species-in-the-2021-west-coast-fisheries.pdf>). The \gls{gemm} provides estimates of dead discards coastwide. Therefore, the total coastwide estimates of dead discards in trawl and fixed gears as provided in the \gls{gemm} were allocated by state based on the total observed landings and discards for each state as observed by \gls{wcgop}. Dead discards were added to landings to obtain total removals for 2002--2021. Total removals in 2000, 2001, and 2022 where no \gls{wcgop} data were available were calculated by applying the average discard ratios from 2002--2004 (for estimates in 2000 and 2001) and 2019--2021 (for estimates in 2022) for each gear to landings for that gear. 
 
 
 ### Recreational landings and discards by state
@@ -80,6 +71,40 @@ A number of years with missing or incomplete estimates for recreational removals
 
 The COVID-19 pandemic impacted recreational port sampling in 2020 and 2021. No sampling occurred at all in April-June, 2020. \Gls{cdfw} provided proxy values for these months (M. Parker, CDFW, personal communication). Total proxy values for canary rockfish weight were summed across district and added to the existing estimate for 2020 from \gls{recfin}. In addition, California recreational total mortality estimates in the "rockfish genus" were inflated due to \gls{crfs} samplers being unable to closely examine catch and identify catch to species. This was a problem for both PR and PC modes in 2020 and primarily for the PC mode in 2021. An effort was made to allocate some of the rockfish genus mortality to other rockfish species for these modes and years (J. Coates, CDFW, personal communication). An expected value of rockfish genus mortality in 2020 and 2021 was generated by mode and year according to the average proportion to the total rockfish mortality that this category represented in 2018 and 2019, when regulations were consistent with 2020 and 2021. Mortality above this expected value was attributed to the other species also based on proportions each species represented to the total from 2018 and 2019. Calculations were made by year, mode, and district. The shore-based modes were grouped in with the PR mode. Calculations were initially made in numbers of fish because rockfish genus mortality is only recorded this way. Numbers of fish by species were then converted to weight in kilograms based on average weights of fish recorded by the \gls{crfs} program by district in 2019. Total reallocated values for canary rockfish weight were summed across modes and districts and added to existing estimates for 2020 from the sum of the proxy value and \gls{recfin} and for 2021 from \gls{recfin}.
 
+### At Sea Hake Fishery
+
+Catches of canary rockfish are monitored aboard the vessel by observers in the \gls{ashop} and were provided for the years 1975--2022 (V. Tuttle, NOAA, personal communication, 4/3/2023). Observers use a spatial sample design, based on weight, to randomly choose a portion of the haul to sample for species composition. For the last decade, this is typically 30-50% of the total weight. The total weight of the sample is determined by all catch passing over a flow scale. All species other than hake are removed and weighed, by species, on a motion compensated flatbed scale. Observers record the weights of all non-hake species. Non-hake species total weights are expanded in the database by using the proportion of the haul sampled to the total weight of the haul. The catches of non-hake species in unsampled hauls is determined using bycatch rates determined from sampled hauls. Since 2001, more than 97% of the hauls have been observed and sampled.
+
+Values for percentages of the catch that was retained were available in the data starting in 1997. When not provided, we assumed percent retained was 100 percent. We also assumed that any canary rockfish not retained were dead. We therefore added the retained landings to the amount of landings not retained to obtained total removals.  
+
+Total removals were partitioned to state based on latitude, with retrieved hauls from 46.25 N to 49 N assigned to Washington, 42 N to 46.25 N assigned to Oregon, and < 42 N assigned to California. Starting in 1992, processing of at sea hake was restricted to north of 42 N [@fed_registry_1992]. Very small catches occurring south of 42 N were assigned to Oregon. Starting in 1997, percent retained was tracked. Due to confidentiality, catches in 1975 were not reported or used within the model, and catches in 1976 were combined and assigned to Oregon.
+
+### Foreign Catches
+
+From the 1960s through the early 1970s, foreign trawling enterprises harvested considerable amounts of rockfish off Washington and Oregon, including large quantities of canary rockfish. Foreign catches of individual species were estimated by @rogers_species_2003 and attributed to \gls{inpfc} areas from 1966-1976 for canary rockfish. \Gls{inpfc} areas do not coincide with the spatial strata defined in this assessment. Therefore, INPFC catches were translated to strata in the following manner: catches from the US Vancouver INPFC area were designated to the 46-49°N stratum (Washington), catches in the Columbia INPFC area were allocated to the 42-46°N stratum (Oregon), and catches from the Eureka and Monterey INPFC areas were assigned to the 32-42°N stratum (California). These definitions match where the majority of commercial trawl landings occur by state for each INPFC area within \gls{pacfin}.
+
+
+
+## Length and age compositions
+
+Commercial landings of rockfish and the biological characteristics of these landings were not consistently sampled for scientific purposes until the early 1960s (Niska, 1976). Statewide sampling programs to determine species compositions of the landed catches began in the late 1960s. The first rigorous monitoring programs that included routine collection of biological data (e.g., sex, age, size, maturity states, etc.) were begun in 1980. Currently, port biologists employed by each state fishery agency (\gls{cdfw}, \gls{odfw}, \gls{wdfw}) collect species-composition information and biological data from the landed catches of commercial vessels that have completed their fishing trips. The sampling sites are commonly processing facilities located at ports along the coasts of California, Oregon and Washington. The monitoring programs currently in place are generally based on stratified, multistage sampling designs.
+
+*Id like an overall summary of recreational sampling here. The below is my feeble attempt to start. I need help having it accurate but short*
+Sampling of the recreational fisheries begun in XXX. Currently, port biologists employed by each state fishery agency (\gls{cdfw}, \gls{odfw}, \gls{wdfw}) collect species-composition information and biological data from the landed catches of recreational vessels that have completed their fishing trips. Onboard sampling also occurs but is generally associated with larger charter recreational vessels.  
+
+
+
+<!-- ## Fishery-Dependent Data -->
+
+
+
+<!-- Commercial length-frequency distributions were developed for each fleet for which observations were available, following the same bin structure as was used for research observations. For each fleet, the raw observations (compiled from \gls{pacfin}) were expanded to the sample level, to allow for any fish that were not measured, then to the trip level to account for the relative size of the landing from which the sample was obtained. These expanded length observations were then combined within years for each fleet. Age frequencies were computed in the same manner. Sampling statistics for each fleet and year are given in , and clearly show the different sampling targets employed over different time periods and between state agencies. -->
+
+<!-- The weighted length-frequency distributions are shown in . The annual observations were recorded as unidentified sex; both sexes were combined and are treated as such in the model. By fleet, a number of important patterns are visible in the data. The trawl fleets for each state, although the data are noisy, appear to show a decline in mean length of the catch from 1978 to 2000 (figures), with an increase in the mean length for recent years of the landed catch. The length composition data from the non-trawl fleet are much sparser compared to the trawl fleet making it difficult to discern a pattern in the mean length landed (Figures). The at-sea hake fishery was comprised of larger lengths relative to the trawl fishery, with the majority of length samples from Washington (Figures). All three recreational fleets appear to generally target smaller fish relative to the other fleets (Figures). -->
+
+<!-- Marginal commercial age-frequency distributions were compiled and are presented in FIGURES. Age composition samples are expanded similarly to the commercial length samples (i.e., first by sample, and then by trip). We expand age composition samples independently for each state, and also separately for three age determination categories: (1) ages read by using break-and-burn methods by \gls{odfw} or CAPS, (2) ages read by break-and-burn methods by \gls{wdfw}, and (3) ages read using surface methods by any lab. Age data for California were very sparse (no data between 1986 and 2000), but the majority of observed fish being younger than age 19 in recent years (Figure 24). Age compositions for the Oregon trawl fleet show a clear decline in both males and females older than \~ age 20 from the mid-1980s to recent years (Figure 25). In Washington, although missing age data from much of the time-series, there are larger proportions of older ages compared to the other two states (Figure 26). Age data for the non-trawl fleet for all states is sparse enough that little pattern can reliably be discerned (Figure 27-Figure 29). Age data from the at-sea hake fishery was available for 2003-2013 and shows little pattern. Washington is the only state with age data from the recreational fleets, and these data show a larger portion of the sample fish being less than 10 years of age (Figure 33). -->
+  
+<!-- In aggregate, the biological data from fishery sources shows no evidence of strong year-classes moving through the population. This could be due to low recruitment variability, noisy data, or both. Further, declines in mean size and age seem to show a latitudinal cline, with more extreme declines to the south, and limited declines observed in Washington and Oregon. -->
 
 <!-- #### Length Compositions -->
 
@@ -103,24 +128,66 @@ The COVID-19 pandemic impacted recreational port sampling in 2020 and 2021. No s
 
 <!-- #### California -->
 
-### At Sea Hake Fishery
+### Commercial length and age composition data
 
-Catches of canary rockfish are monitored aboard the vessel by observers in the \gls{ashop} and were provided for the years 1975--2022 (V. Tuttle, NOAA, personal communication, 4/3/2023). Observers use a spatial sample design, based on weight, to randomly choose a portion of the haul to sample for species composition. For the last decade, this is typically 30-50% of the total weight. The total weight of the sample is determined by all catch passing over a flow scale. All species other than hake are removed and weighed, by species, on a motion compensated flatbed scale. Observers record the weights of all non-hake species. Non-hake species total weights are expanded in the database by using the proportion of the haul sampled to the total weight of the haul. The catches of non-hake species in unsampled hauls is determined using bycatch rates determined from sampled hauls. Since 2001, more than 97% of the hauls have been observed and sampled. 
+Commercial length- and age-frequency distributions were calculated for each fleet for which observations were available. For each fleet with the exception of the at-sea hake fishery, the raw observations (compiled from \gls{pacfin}) were expanded to the sample level, to allow for any fish that were not measured, then to the trip level to account for the relative size of the landing from which the sample was obtained. These expanded length and age observations were then combined within a year for each fleet. For the at-sea hake fishery, raw observations were aggregated wihtin a year for each fleet because individual weights from which biological samples were collected were not available.
 
-Catches were partitioned to state based on latitude, with retrieved hauls from 46.25 N to 49 N assigned to Washington, 42 N to 46.25 N assigned to Oregon, and < 42 N assigned to California. Starting in 1992, processing of at sea hake was restricted to north of 42 N. Very small catches occuring south of 42 N were assigned to Oregon. Due to confidentiality, catches in 1975 were not reported or used within the model, and catches in 1976 were combined and assigned to Oregon.
+The input sample sizes for the expanded commercial length and age data were calculated via the Stewart method (Ian Stewart, personal communication) which incorporate the number of trips or hauls and fish by year:
+
+\begin{centering}
+
+Input effN = $N_{\text{trips}} + 0.138 * N_{\text{fish}}$ if $N_{\text{fish}}/N_{\text{trips}}$ is $<$ 44
+
+Input effN = $7.06 * N_{\text{trips}}$ if $N_{\text{fish}}/N_{\text{trips}}$ is $\geq$ 44
+
+\end{centering}
+
+The input sample sizes for the at-sea hake length and age compositions was the number of hauls. 
+
+The magnitude of sampling for each fleet and year are given in TABLES and FIGURES, and show the different sampling frequencies employed over different time periods and between state agencies. These tables show both the total number of fish samples as well as the number of trip or hauls by year and state over which samples were obtained. 
+
+#### Washington
+
+#### Oregon
+
+#### California
+
+### Recreational length and age compositions
+
+Recreational length- and age-frequency distributions were calculated for each fleet for which observations were available. For each fleet, the raw observations were aggregated within a year for each fleet. 
+
+The approach to determine the number input sample sizes for the recreational length and age data varied by data source and data type. Some data sources had unique trip numbers within the data (Deb Wilson-Vandenberg). Other data sources that lacked a clear trip identifier used combinations of multiple fields to attempt to estimate unique combinations that represented the number of trips sampled. In general the number of trips for both age and length composition data was estimated based on a mix of time, location, and fishery type. The number of trips for length compositions from \gls{recfin} was estimated using sampling date, sampling site (COUNTY_NUMBER), and fishing area and mode. The number of trips for age composition from \gls{recfin} was estimated using sampling date, sampling site (PORT_NAME), and fishing vessel and mode.
+
+*continue with definitions by source and state*
+
+These values are likely to represent a reasonable starting point that generally reflects the degree of similarity of information from sampling a given number of fish from separate sampling events.
+
+The magnitude of sampling for each fleet and year are given in TABLES and FIGURES, and show the different sampling frequencies employed over different time periods and between state agencies. These tables show both the total number of fish samples as well as the number of trip by year and state over which samples were obtained. 
+
+
+
+
+#### Washington
+
+#### Oregon
+
+#### California
+
+Between 1987-1989 and 1993-1998 there were recreational length data for the CPFV fleet from both MRFSS and the Deb Wilson-Vandenberg data sets. During data exploration it was determined that the lengths in MRFSS from 1997 and 1998 were also included in the Deb Wilson-Vandenberg data, indicating that these data sources were duplicated for these years but also potentially other years where they overlapped. In order to avoid duplicate data, the length data from MRFSS, which had far fewer length samples for the overlapping years with Deb Wilson-Vandenberg for the CPFV fleet, were removed from the data used within the model (see [Appendix A](#excluded-data) for implied fits to these lengths).
+
+### At sea hake fishery
 
 ### Foreign Catches
 
-From the 1960s through the early 1970s, foreign trawling enterprises harvested considerable amounts of rockfish off Washington and Oregon, including large quantities of canary rockfish. Foreign catches of individual species were estimated by @rogers_species_2003 and attributed to \gls{inpfc} areas from 1966-1976 for canary rockfish. \Gls{inpfc} areas do not coincide with the spatial strata defined in this assessment. Therefore, INPFC catches were translated to strata in the following manner: catches from the US Vancouver INPFC area were designated to the 46-49°N stratum (Washington), catches in the Columbia INPFC area were allocated to the 42-46°N stratum (Oregon), and catches from the Eureka and Monterey INPFC areas were assigned to the 32-42°N stratum (California). These definitions match where the majority of commercial trawl landings occur by state for each INPFC area within  \gls{pacfin}.
+
+
+
+
 
 
 <!-- ### Expansion of length and age-composition samplmes -->
 
-<!-- Twenty-eight bins from 12 to 66 cm were used to summarize the length frequency of the survey catches in each year, the first bin including all observations less than 12 cm and the last bin including all fish larger than 66 cm. For the length-composition samples from the WCGBTS, these bins are populated with a modest, but consistent degree of sampling: 32-75 tows and 423-1467 fish per year (Table 1). The Triennial survey (Table 2) has a similar number of tows per year (13-95) but considerably larger numbers of fish per year (407-3119). Input sample sizes for length-composition data are calculated using the same formula as was used in the 2007 benchmark assessment. In summary, this method was based on analysis of the input and model-derived effective sample sizes from stock assessments completed in 2005 for west coast groundfish. It makes the input sample size a function of both the number of fish sampled and the number of trips or hauls sampled. A piece-wise linear regression was used to estimate the increase in effective sample size per sample based on fish-per-sample and the maximum effective sample size for large numbers of individual fish: -->
-
-<!-- *INSERT EQUATION HERE* -->
-
-<!-- These values are likely to represent a reasonable starting point that generally reflects the degree of observation error commensurate with sampling a given number of fish from a given number of samples. They were used most recently in the 2013 darkblotched rockfish benchmark assessment (Gertseva and Thorson, 2013). -->
+<!-- Twenty-eight bins from 12 to 66 cm were used to summarize the length frequency of the survey catches in each year, the first bin including all observations less than 12 cm and the last bin including all fish larger than 66 cm. For the length-composition samples from the WCGBTS, these bins are populated with a modest, but consistent degree of sampling: 32-75 tows and 423-1467 fish per year (Table 1). The Triennial survey (Table 2) has a similar number of tows per year (13-95) but considerably larger numbers of fish per year (407-3119).
 
 <!-- Age-frequency data from the Triennial and WCGBT surveys were compiled as conditional age-at-length distributions by sex and year. Individual length- and age-observations can be thought of as entries in an age-length key (matrix), with age across the columns and length down the rows. The approach consists of tabulating the sums within rows as the standard length-frequency distribution and, instead of also tabulating the sums to the age margin, instead the distribution of ages in each row of the age-length key is treated as a separate observation, conditioned on the row (length) from which it came. This approach has several benefits for analysis above the standard use of marginal age compositions. First, age structures are generally collected as a subset of the fish that have been measured. If the ages are to be used to create an external age-length key to transform the lengths to ages, then the uncertainty due to sampling and missing data in the key are not included in the resulting age-compositions used in the stock assessment. If the marginal age compositions are used with the length compositions in the assessment, the information content on sex-ratio and year class strength is largely double-counted as the same fish are contributing to likelihood components that are assumed to be independent. Using conditional age-distributions for each length bin allows only the additional information provided by the limited age data (relative to the generally far more numerous length observations) to be captured, without creating a 'double-counting' of the data in the total likelihood. The second major benefit to using conditional age-composition observations is that in addition to being able to estimate the basic growth parameters (L age-1, L age-30, K) inside the assessment model, the distribution of lengths at a given age, usually governed by two parameters; the CV of length at some young age and the CV at a much older age, are also quite reliably estimated. This information could only be derived from marginal age-composition observations where very strong and well-separated cohorts existed, that were quite accurately aged and measured; rare conditions at best. By fully estimating the growth specifications within the stock assessment model, this major source of uncertainty is included in the assessment results, and bias due to size-based selectivity is avoided. Therefore, to retain objective weighting of the length and age data, and to fully include the uncertainty in growth parameters (and avoid potential bias due to external estimation where size-based selectivity is operating) conditional age at-length compositions were developed for the triennial and WCGBT survey data. -->
 
