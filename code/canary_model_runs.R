@@ -11208,7 +11208,7 @@ SSsummarize(xx) |>
 
 
 
-# Update triennial to gamma -------------------------------------------------
+# 4_10_1 Update triennial to gamma -------------------------------------------------
 
 new_name <- "4_10_1_gamma_tri"
 
@@ -11259,7 +11259,7 @@ r4ss::run(dir = here('models',new_name),
           skipfinished = FALSE)
 beepr::beep()
 
-# Update wcgbts to gamma -------------------------------------------------
+# 4_10_2 Update wcgbts to gamma -------------------------------------------------
 
 new_name <- "4_10_2_gamma_wcgbts"
 
@@ -11306,7 +11306,7 @@ r4ss::run(dir = here('models',new_name),
           skipfinished = FALSE)
 beepr::beep()
 
-# Change triennial to float Q -------------------------------------------------
+# 4_10_3_tri_float_Q Change triennial to float Q -------------------------------------------------
 
 new_name <- "4_10_3_tri_float_Q"
 
@@ -11330,6 +11330,10 @@ tri.late.index <- fleet.converter$fleet[fleet.converter$fleet_no_num == 'coastwi
 tri.early.index <- fleet.converter$fleet[fleet.converter$fleet_no_num == 'coastwide_Tri_early']
 mod$dat$CPUE <- dplyr::mutate(mod$dat$CPUE,
                               index = ifelse(index == tri.late.index, tri.early.index, index))
+mod$dat$agecomp <- dplyr::mutate(mod$dat$agecomp, 
+                                 FltSvy = ifelse(FltSvy == tri.late.index, tri.early.index, FltSvy))
+mod$dat$lencomp <- dplyr::mutate(mod$dat$lencomp, 
+                                 FltSvy = ifelse(FltSvy == tri.late.index, tri.early.index, FltSvy))
 
 # Float early tri
 mod$ctl$Q_options['29_coastwide_Tri_early','float'] <- 1
@@ -11342,6 +11346,10 @@ mod$ctl$Q_parms <- mod$ctl$Q_parms[-grep('Tri_late', rownames(mod$ctl$Q_parms)),
 mod$ctl$Q_options <- mod$ctl$Q_options[-grep('Tri_late', rownames(mod$ctl$Q_options)),]
 
 # Do not need to touch selectivity. It is mirrored.
+
+##
+#Output files and run
+##
 
 SS_write(mod,
          dir = here('models',new_name),
@@ -11364,6 +11372,160 @@ SSsummarize(xx) |>
                                      'Tri w/gamma',
                                      'WCGBTS w/gamma',
                                      'Tri float Q'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+# 4_10_4_tri_est_Q estimate triennial Q with data fully combined -------------------------------------------------
+
+new_name <- "4_10_4_tri_est_Q"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_10_3_tri_float_Q'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+# Estimate Q, leave everything else unchanged
+
+mod$ctl$Q_options['29_coastwide_Tri_early', 'float'] <- 0
+mod$ctl$Q_parms[grep('Tri', rownames(mod$ctl$Q_parms)), 'PHASE'] <- 2
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+beepr::beep()
+
+# 4_10_5_tri_float_Q_late_weights -------------------------------------------------
+
+new_name <- "4_10_5_float_Q_late_weights"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_10_3_tri_float_Q'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+data.weights.new <- mod$ctl$Variance_adjustment_list |>
+  dplyr::group_by(Data_type) |>
+  dplyr::mutate(tri.late = ifelse(Fleet == tri.late.index, Value, 0), # this is a hack
+                  Value = ifelse(Fleet == tri.early.index, max(tri.late), Value)) |>
+  dplyr::select(-tri.late) |>
+  dplyr::ungroup() |>
+  as.data.frame() |>
+  `rownames<-`(rownames(mod$ctl$Variance_adjustment_list))
+
+mod$ctl$Variance_adjustment_list <- data.weights.new
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+beepr::beep()
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_8_4_mirrorORWA_twl',
+                                                 '4_10_1_gamma_tri',
+                                                 '4_10_2_gamma_wcgbts',
+                                                 '4_10_3_tri_float_Q',
+                                                 '4_10_4_tri_est_Q',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Mirrored OR/WA trawl',
+                                     'Tri w/gamma',
+                                     'WCGBTS w/gamma',
+                                     'Float Q, early Tri wts',
+                                     'Est Q, data combined, early Tri wts',
+                                     'Float Q, late Tri wts'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+# 4_10_6_tri_separate_late_weights  -------------------------------------------------
+
+new_name <- "4_10_6_tri_separate_late_weights"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+data.weights.new <- mod$ctl$Variance_adjustment_list |>
+  dplyr::group_by(Data_type) |>
+  dplyr::mutate(tri.late = ifelse(Fleet == tri.late.index, Value, 0), # this is a hack
+                Value = ifelse(Fleet == tri.early.index, max(tri.late), Value)) |>
+  dplyr::select(-tri.late) |>
+  dplyr::ungroup() |>
+  as.data.frame() |>
+  `rownames<-`(rownames(mod$ctl$Variance_adjustment_list))
+
+mod$ctl$Variance_adjustment_list <- data.weights.new
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+beepr::beep()
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_8_4_mirrorORWA_twl',
+                                                 new_name,
+                                                 '4_10_3_tri_float_Q',
+                                                 '4_10_4_tri_est_Q',
+                                                 '4_10_5_float_Q_late_weights')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Mirrored OR/WA trawl',
+                                     'Separate data, late Tri wts',
+                                     'Float Q, early Tri wts',
+                                     'Est Q, data combined, early Tri wts',
+                                     'Float Q, late Tri wts'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 # ####------------------------------------------------####
