@@ -10875,7 +10875,7 @@ r4ss::run(dir = here('models',new_name),
 
 
 ####------------------------------------------------####
-### 4_9_2_lowlength Lower length lambdas  ----
+### 4_9_2_lowlengthlambda Lower length lambdas  ----
 ####------------------------------------------------####
 
 new_name <- "4_9_2_lowlengthlambda"
@@ -11063,20 +11063,149 @@ r4ss::run(dir = here('models',new_name),
           skipfinished = FALSE)
 
 
+
+
+####------------------------------------------------####
+### 4_9_6_surveyagelambda1 Set survey age var adj to 1  ----
+####------------------------------------------------####
+
+new_name <- "4_9_6_surveyWeightAge1"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+#Set up lambda dataframe for ages
+mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==5 & 
+                                   mod$ctl$Variance_adjustment_list$Fleet > 26, "Value"] <- 1
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 4_9_7_orTWLage1 Set oregon trawl age var adj to 1  ----
+####------------------------------------------------####
+
+new_name <- "4_9_7_orTWLage1"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+#Set up lambda dataframe for ages
+mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==5 & 
+                                   mod$ctl$Variance_adjustment_list$Fleet == 2, "Value"] <- 1
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 4_9_8_orTWLlen1 Set oregon trawl length var adj to 1  ----
+####------------------------------------------------####
+
+new_name <- "4_9_8_orTWLlen1"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+#Set up lambda dataframe for ages
+mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==4 & 
+                                   mod$ctl$Variance_adjustment_list$Fleet == 2, "Value"] <- 1
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('4_8_4_mirrorORWA_twl',
-                                                 '4_9_1_noage',
-                                                 '4_9_2_lowlength',
-                                                 '4_9_3_lowlength_withSurvey',
+                                                 '4_9_1_0agelambda',
+                                                 '4_9_2_lowlengthlambda',
+                                                 '4_9_3_lowlengthlambda_withSurvey',
                                                  '4_9_4_upweightAge',
-                                                 '4_9_5_upweightLen')))
+                                                 '4_9_6_surveyWeightAge1',
+                                                 '4_9_7_orTWLage1',
+                                                 '4_9_5_upweightLen',
+                                                 '4_9_8_orTWLlen1')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('model 484',
-                                     'no ages',
-                                     'no lengths',
-                                     'lambda ages 2',
-                                     'lambda lengths 2'),
-                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+                                     'fishery age lambda = 0',
+                                     'low fishery length lambda',
+                                     'low all length lambda',
+                                     'all age comp weights x10',
+                                     'survey age comp weights = 1',
+                                     'OR TWL age comp weight = 1',
+                                     'all length comp weights x10',
+                                     'OR TWL length comp weight = 1'),
+                    print = TRUE, plotdir = here('models',new_name))
 
 # ####------------------------------------------------####
 # ### 5_0_0_updateCatches Update catches from CA rec (for 2020 and 2021) and WA 2022 (and WA pacfin comps)  ----
