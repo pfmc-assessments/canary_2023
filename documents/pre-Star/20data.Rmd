@@ -2,18 +2,17 @@
 
 ## Data sources used in this assessment
 
-This assessment uses data from the following sources, which includes all data that was used in the 2011 update assessment and additional data that have not previously been included in any canary assessment. All data sources (including abundance index, length composition, age composition, and catch time series) are split among three spatial strata. We split data sources among strata to allow for examination of strata-specific patterns in model residuals (Punt et al., 2015), and because subsequent comparison demonstrates that spatial partitioning improves fit to the available data. Each data sources is summarized here, and then discussed in more detail below:
+This assessment uses data from the following sources, updating the data that were used in the 2015 benchmark assessment and the corrections to catch applied for the 2017 catch only update, as well as utilizing additional data that were collected since the last benchmark. Fishery data sources (including length composition, age composition, and catch time series) are split among three strata to make comparisons to and explorations from the 2015 benchmark assessment more direct, whereas abundance indices and corresponding length and age compositions from the fishery-independent surveys are combined across these strata to match the population scale reflected in the model. Each data source is summarized here, and then discussed in more detail below:
 
-1.  Data regarding total removals of canary rockfish, from all fisheries and surveys, are reconstructed for years 1892-2022. These data are obtained from several sources:
+1.  Data regarding total removals of canary rockfish, from all fisheries and surveys, are compiled for years 1892-2022. These data are obtained from several sources:
 
-<!-- -->
-
-a.  In California catches came from state reconstructions, \gls{calcom}, \gls{recfin}, and \gls{pacfin}.
-b.  In Oregon, catches were provided directly by \gls{odfw} and come from state reconstructions, \gls{pacfin}, and \gls{recfin}
-c.  In Washington, recreational catches were provided directly by \gls{wdfw}. Historical commercial catches up to 1980 are based on those used in the previous assessment. Commercial catches from 1981--present are from \gls{pacfin}.
-d.  Foreign trawl fleet catches from 1966-1976 are based on the previous assessment.\
-e.  Total discards for recent years (2003-2014) are estimated in the annual mortality report using data from a variety of sources including the West Coast Groundfish Observer Program, and are publicly available: <http://www.nwfsc.noaa.gov/research/divisions/fram/observation/data_products/species_management.cfm>.
-f.  Discard rates for 1981-1994 are obtained from the Pikitch study as analyzed by J. Wallace.
+a.  In California, landed recreational (1928--2022) and commercial (1916--2022) catches along with estimates of recreational dead discards come from multiple data sources including state reconstructions, \gls{calcom}, \gls{recfin}, and \gls{pacfin}. Historical recreational landings up to 1980 are based on those used in the previous benchmark assessment.
+b.  In Oregon, landed recreational and commercial (1892--2022) catches along with estimates of recreational dead discards were provided directly by \gls{odfw} and come from multiple data sources including state reconstructions, \gls{pacfin}, and \gls{recfin}.
+c.  In Washington, landed recreational catches (1967--2022) along with estimates of recreational releases were provided directly by \gls{wdfw}. Historical commercial landed catches (1935--1980) are based on those used in the previous assessment. Commercial landed catches from 1981--2022 are from \gls{pacfin}.
+d.  Foreign trawl fleet catches from 1966--1976 are based on [@rogers_species_2003].
+e.  Total removals of canary in the at sea hake fishery (1973--2022) were provided by the \gls{nwfsc} \gls{ashop}. 
+f.  Total commercial discards for recent years (2003--2021) are estimated in the annual mortality report using data from a variety of sources including the West Coast Groundfish Observer Program, and are publicly available: <https://www.pcouncil.org/documents/2022/08/g-1-b-nwfsc-report-1-estimated-discard-and-catch-of-groundfish-species-in-the-2021-west-coast-fisheries.pdf/>. 
+g.  Discard rates for 1981-1994 are obtained from the Pikitch study as analyzed by J. Wallace.
 
 <!-- -->
 
@@ -21,9 +20,9 @@ f.  Discard rates for 1981-1994 are obtained from the Pikitch study as analyzed 
 
 <!-- -->
 
-a.  The Triennial survey conducted by the Alaska Fisheries Science Center provides abundance index, length composition, and age-composition samples and was included for years 1980-2001;
-b.  The \gls{s-wcgbts} conducted by the \gls{nwfsc} provides abundance index, length composition, and age-composition samples, and was available for years 2003-2022, with the exception of 2020 due to the COVID-19 pandemic;
-c.  The pre-recruit survey, which combines data collected by the \gls{swfsc}, \gls{nwfsc}, and Pacific Whiting Conservation Cooperative provides a relative index of density for pre-recruit fish, and was included for most years from 2001-2022.
+a.  The \gls{s-tri} conducted by the Alaska Fisheries Science Center provides abundance index, length composition, and age-composition samples and was included for years 1980-2001.
+b.  The \gls{s-wcgbts} conducted by the \gls{nwfsc} provides abundance index, length composition, and age-composition samples, and was available for years 2003-2022, with the exception of 2020 due to the COVID-19 pandemic.
+c.  The pre-recruit survey, which combines data collected by the \gls{swfsc}, \gls{nwfsc}, and Pacific Whiting Conservation Cooperative provides a relative index of density for pre-recruit fish, and was included for most years from 2001-2022. Composition data are not used for this survey. 
 
 <!-- -->
 
@@ -31,10 +30,9 @@ c.  The pre-recruit survey, which combines data collected by the \gls{swfsc}, \g
 
 <!-- -->
 
-a.  Length and age data from PacFIN
-b.  Length data from RecFIN
-c.  Length and age data from state sampling programs for Oregon and Washington
-d.  Length and age data from at-sea hake bycatch
+a.  Commercial length and age composition data were obtained from \gls{pacfin}.
+b.  Recreational length and age composition data from state sampling programs or historical sampling efforts were either provided by the state agencies or were obtained from \gls{recfin}.
+c.  Length and age data for canary rockfish from the at-sea hake fishery were obtained from the \gls{nwfsc} \gls{ashop}.
 
 <!-- -->
 
@@ -42,16 +40,25 @@ d.  Length and age data from at-sea hake bycatch
 
 <!-- -->
 
-a.  Updated maturity schedule, which now incorporates the average rate of skipped spawning, wherein mature individuals do not spawn in every year
-b.  Fecundity information is similar to the previous assessment, as provided by E.J. Dick
-c.  Updated prior for natural mortality rate
-d.  Updated prior on steepness
-e.  Updated weight-at-length relationship as estimated from the \gls{wcgbts}
-f.  Updated estimates of ageing error, which now estimates bias and imprecision for surface-read otoliths, as necessary for their inclusion in the current assessment
+a.  Updated maturity schedule from analyses based on functional age-at-maturity, which accounts for abortive maturation, wherein young spawners may have yolk present but are not yet spawning capable, and skip spawning, wherein mature individuals do not spawn in every year.
+b.  Updated fecundity relationship based on a meta-analysis assuming fecundity is a power function of length.
+c.  Updated prior for natural mortality rate along with updated treatment of mortality as age-invariant but sex dependent.
+d.  Updated prior on steepness according to best practices.
+e.  Updated weight-at-length relationship as estimated from the \gls{wcgbts}.
+f.  Estimates of ageing error for break-and-burn ages were maintained from the previous benchmark assessment. 
+
+
+*TO DO - add figure 3*
 
 These data sources are illustrated in Figure 3.
 
+
 ## Data sourced considered but not used
+
+
+*We should specify what sources of data (catch, lengths, ages, indices) these refer to*
+*Also possibly move to end of data section. Id prefer to say what we did first and what we didn't do later*
+
 
 ### California Collaborative Fisheries Research Program (CCRFP)
 

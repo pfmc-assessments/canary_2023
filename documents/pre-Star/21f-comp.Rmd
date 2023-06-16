@@ -1,0 +1,126 @@
+## Length and age compositions
+
+Commercial landings of rockfish and the biological characteristics of these landings were not consistently sampled for scientific purposes until the early 1960s (Niska, 1976). Statewide sampling programs to determine species compositions of the landed catches began in the late 1960s. The first rigorous monitoring programs that included routine collection of biological data (e.g., sex, age, size, maturity states, etc.) were begun in 1980. Currently, port biologists employed by each state fishery agency (\gls{cdfw}, \gls{odfw}, \gls{wdfw}) collect species-composition information and biological data from the landed catches of commercial vessels that have completed their fishing trips. The sampling sites are commonly processing facilities located at ports along the coasts of California, Oregon and Washington. The monitoring programs currently in place are generally based on stratified, multistage sampling designs.
+
+*Id like an overall summary of recreational sampling here. The below is my feeble attempt to start. I need help having it accurate but short*
+Sampling of the recreational fisheries begun in XXX. Currently, port biologists employed by each state fishery agency (\gls{cdfw}, \gls{odfw}, \gls{wdfw}) collect species-composition information and biological data from the landed catches of recreational vessels that have completed their fishing trips. Onboard sampling also occurs but is generally associated with larger charter recreational vessels.  
+
+
+
+<!-- ## Fishery-Dependent Data -->
+
+
+
+<!-- Commercial length-frequency distributions were developed for each fleet for which observations were available, following the same bin structure as was used for research observations. For each fleet, the raw observations (compiled from \gls{pacfin}) were expanded to the sample level, to allow for any fish that were not measured, then to the trip level to account for the relative size of the landing from which the sample was obtained. These expanded length observations were then combined within years for each fleet. Age frequencies were computed in the same manner. Sampling statistics for each fleet and year are given in , and clearly show the different sampling targets employed over different time periods and between state agencies. -->
+
+<!-- The weighted length-frequency distributions are shown in . The annual observations were recorded as unidentified sex; both sexes were combined and are treated as such in the model. By fleet, a number of important patterns are visible in the data. The trawl fleets for each state, although the data are noisy, appear to show a decline in mean length of the catch from 1978 to 2000 (figures), with an increase in the mean length for recent years of the landed catch. The length composition data from the non-trawl fleet are much sparser compared to the trawl fleet making it difficult to discern a pattern in the mean length landed (Figures). The at-sea hake fishery was comprised of larger lengths relative to the trawl fishery, with the majority of length samples from Washington (Figures). All three recreational fleets appear to generally target smaller fish relative to the other fleets (Figures). -->
+
+<!-- Marginal commercial age-frequency distributions were compiled and are presented in FIGURES. Age composition samples are expanded similarly to the commercial length samples (i.e., first by sample, and then by trip). We expand age composition samples independently for each state, and also separately for three age determination categories: (1) ages read by using break-and-burn methods by \gls{odfw} or CAPS, (2) ages read by break-and-burn methods by \gls{wdfw}, and (3) ages read using surface methods by any lab. Age data for California were very sparse (no data between 1986 and 2000), but the majority of observed fish being younger than age 19 in recent years (Figure 24). Age compositions for the Oregon trawl fleet show a clear decline in both males and females older than \~ age 20 from the mid-1980s to recent years (Figure 25). In Washington, although missing age data from much of the time-series, there are larger proportions of older ages compared to the other two states (Figure 26). Age data for the non-trawl fleet for all states is sparse enough that little pattern can reliably be discerned (Figure 27-Figure 29). Age data from the at-sea hake fishery was available for 2003-2013 and shows little pattern. Washington is the only state with age data from the recreational fleets, and these data show a larger portion of the sample fish being less than 10 years of age (Figure 33). -->
+  
+<!-- In aggregate, the biological data from fishery sources shows no evidence of strong year-classes moving through the population. This could be due to low recruitment variability, noisy data, or both. Further, declines in mean size and age seem to show a latitudinal cline, with more extreme declines to the south, and limited declines observed in Washington and Oregon. -->
+
+<!-- #### Length Compositions -->
+
+<!-- California: -->
+
+<!-- Recreational length-frequency distributions were compiled from data available through RecFIN for California, while data were obtained from Oregon (A. Dauble, personal communication) and Washington (P. Weyland, personal communication). Age-frequencies were only available for Washington (P. Weyland, personal -->
+
+<!-- Recreational length samples were obtained from two primary sources: MRFSS and RecFIN (ORBS). ODFW special project sampling data were considered but given the high sample sizes available from standard sampling, these data were not utilized. From 1980 -- 1989 and from 1993 -- 2000, the MRFSS program collected samples from both ocean and inland (estuary) areas (n = 46,656). ODFW provided MRFSS samples with the addition of a column that flagged length values imputed from weights to allow for selection of directly measured values (n = 7,176). From 1980 -- 1989, total lengths (mm) were collected by MRFSS, which were converted to fork length. From 1993 -- 2000, fork length (mm) was collected. Length samples from 2001 -- 2022 from the ORBS sampling program are available on RecFIN (n = 27,135). All ORBS samples are by fork length (mm). The vast majority (99.4%) of these samples are from ocean trips (n = 26,985). Table X details sample sizes by year and recreational fleet. -->
+
+<!-- #### Washington -->
+
+<!-- Length compositions were provided by \gls{wdfw}, as well. At least one sample is available from 1981-1983, 1987, 1995-1998, and 2002-2022. -->
+
+<!-- Washington sport catches were available in numbers of fish. We converted numbers of fish to biomass using length composition data from WDFW. BRIAN HOW DID YOU DO THIS? We used the applicable \gls{recfin} length-weight relationship of $W = aL^b$ where $a = 1.04058\text{E}-08$ and $b = 3.084136662$. -->
+
+<!-- #### Oregon -->
+
+<!-- ##### Length compositions -->
+
+<!-- Recreational length samples were obtained from two primary sources: \gls{mrfss} and \gls{recfin} (\gls{orbs}). \Gls{odfw} special project sampling data were considered but given the high sample sizes available from standard sampling, these data were not utilized. From 1980 -- 1989 and from 1993 -- 2000, the \gls{mrfss} program collected samples from both ocean and inland (estuary) areas (n = 46,656). \Gls{odfw} provided \gls{mrfss} samples with the addition of a column that flagged length values imputed from weights to allow for selection of directly measured values (n = 7,176). From 1980 -- 1989, total lengths (mm) were collected by \gls{mrfss}, which were converted to fork length. From 1993 -- 2000, fork length (mm) was collected. Length samples from 2001 -- 2022 from the \gls{orbs} sampling program are available on \gls{recfin} (n = 27,135). All \gls{orbs} samples are by fork length (mm). The vast majority (99.4%) of these samples are from ocean trips (n = 26,985). Table X details sample sizes by year and recreational fleet. -->
+
+<!-- #### California -->
+
+### Commercial length and age composition data
+
+Commercial length- and age-frequency distributions were calculated for each fleet for which observations were available. For each fleet with the exception of the at-sea hake fishery, the raw observations (compiled from \gls{pacfin}) were expanded to the sample level, to allow for any fish that were not measured, then to the trip level to account for the relative size of the landing from which the sample was obtained. These expanded length and age observations were then combined within a year for each fleet. For the at-sea hake fishery, raw observations were aggregated wihtin a year for each fleet because individual weights from which biological samples were collected were not available.
+
+The input sample sizes for the expanded commercial length and age data were calculated via the Stewart method (Ian Stewart, personal communication) which incorporate the number of trips or hauls and fish by year:
+
+\begin{centering}
+
+Input effN = $N_{\text{trips}} + 0.138 * N_{\text{fish}}$ if $N_{\text{fish}}/N_{\text{trips}}$ is $<$ 44
+
+Input effN = $7.06 * N_{\text{trips}}$ if $N_{\text{fish}}/N_{\text{trips}}$ is $\geq$ 44
+
+\end{centering}
+
+The input sample sizes for the at-sea hake length and age compositions was the number of hauls. 
+
+The magnitude of sampling for each fleet and year are given in TABLES and FIGURES, and show the different sampling frequencies employed over different time periods and between state agencies. These tables show both the total number of fish samples as well as the number of trip or hauls by year and state over which samples were obtained. 
+
+#### Washington
+
+#### Oregon
+
+#### California
+
+### Recreational length and age compositions
+
+Recreational length composition data were available from the following sources:
+
+* Recreational party/charter mode (CPFV/PC)
+
+  + Miller and Gotshall dockside survey (1959-1961, 1966)
+  + Don Pearson onboard PC survey (1978-1984)
+  + MRFSS CPFV/PC dockside survey (1980-1989, 1993-2003)
+  + CRFS CPFV/PC onboard dockside survey (2004-2022)
+  + Deb Wilson-Vandenberg onboard CPFV survey (1988-1998)
+
+* Recreational private/rental mode (PR)
+
+  + Miller and Gotshall dockside PR survey (1959)
+  + MRFSS dockside PR survey (1980-1989, 1993-2003)
+  + CRFS dockside PR survey (2004-2022)
+
+In all cases length and age composition were aggregated across party/charter and private/rental mode, consistent with past canary rockfish assessments. Only lengths from retained fish were used. A sensitivty to using lengths from both retained and released fish was explored.  
+
+
+Recreational length- and age-frequency distributions were calculated for each fleet for which observations were available. For each fleet, the raw observations were aggregated within a year for each fleet. 
+
+The approach to determine the number input sample sizes for the recreational length and age data varied by data source and data type. Some data sources had unique trip numbers within the data (Deb Wilson-Vandenberg). Other data sources that lacked a clear trip identifier used combinations of multiple fields to attempt to estimate unique combinations that represented the number of trips sampled. In general the number of trips for both age and length composition data was estimated based on a mix of time, location, and fishery type. The number of trips for length compositions from \gls{recfin} was estimated using sampling date, sampling site (COUNTY_NUMBER), and fishing area and mode. The number of trips for age composition from \gls{recfin} was estimated using sampling date, sampling site (PORT_NAME), and fishing vessel and mode.
+
+*continue with definitions by source and state*
+
+These values are likely to represent a reasonable starting point that generally reflects the degree of similarity of information from sampling a given number of fish from separate sampling events.
+
+The magnitude of sampling for each fleet and year are given in TABLES and FIGURES, and show the different sampling frequencies employed over different time periods and between state agencies. These tables show both the total number of fish samples as well as the number of trip by year and state over which samples were obtained. 
+
+
+
+
+#### Washington
+
+#### Oregon
+
+#### California
+
+Between 1987-1989 and 1993-1998 there were recreational length data for the CPFV fleet from both MRFSS and the Deb Wilson-Vandenberg data sets. During data exploration it was determined that the lengths in MRFSS from 1997 and 1998 were also included in the Deb Wilson-Vandenberg data, indicating that these data sources were duplicated for these years but also potentially other years where they overlapped. In order to avoid duplicate data, the length data from MRFSS, which had far fewer length samples for the overlapping years with Deb Wilson-Vandenberg for the CPFV fleet, were removed from the data used within the model (see [Appendix A](#excluded-data) for implied fits to these lengths).
+
+### At sea hake fishery
+
+### Foreign Catches
+
+
+
+
+
+
+
+<!-- ### Expansion of length and age-composition samplmes -->
+
+<!-- Twenty-eight bins from 12 to 66 cm were used to summarize the length frequency of the survey catches in each year, the first bin including all observations less than 12 cm and the last bin including all fish larger than 66 cm. For the length-composition samples from the WCGBTS, these bins are populated with a modest, but consistent degree of sampling: 32-75 tows and 423-1467 fish per year (Table 1). The Triennial survey (Table 2) has a similar number of tows per year (13-95) but considerably larger numbers of fish per year (407-3119).
+
+<!-- Age-frequency data from the Triennial and WCGBT surveys were compiled as conditional age-at-length distributions by sex and year. Individual length- and age-observations can be thought of as entries in an age-length key (matrix), with age across the columns and length down the rows. The approach consists of tabulating the sums within rows as the standard length-frequency distribution and, instead of also tabulating the sums to the age margin, instead the distribution of ages in each row of the age-length key is treated as a separate observation, conditioned on the row (length) from which it came. This approach has several benefits for analysis above the standard use of marginal age compositions. First, age structures are generally collected as a subset of the fish that have been measured. If the ages are to be used to create an external age-length key to transform the lengths to ages, then the uncertainty due to sampling and missing data in the key are not included in the resulting age-compositions used in the stock assessment. If the marginal age compositions are used with the length compositions in the assessment, the information content on sex-ratio and year class strength is largely double-counted as the same fish are contributing to likelihood components that are assumed to be independent. Using conditional age-distributions for each length bin allows only the additional information provided by the limited age data (relative to the generally far more numerous length observations) to be captured, without creating a 'double-counting' of the data in the total likelihood. The second major benefit to using conditional age-composition observations is that in addition to being able to estimate the basic growth parameters (L age-1, L age-30, K) inside the assessment model, the distribution of lengths at a given age, usually governed by two parameters; the CV of length at some young age and the CV at a much older age, are also quite reliably estimated. This information could only be derived from marginal age-composition observations where very strong and well-separated cohorts existed, that were quite accurately aged and measured; rare conditions at best. By fully estimating the growth specifications within the stock assessment model, this major source of uncertainty is included in the assessment results, and bias due to size-based selectivity is avoided. Therefore, to retain objective weighting of the length and age data, and to fully include the uncertainty in growth parameters (and avoid potential bias due to external estimation where size-based selectivity is operating) conditional age at-length compositions were developed for the triennial and WCGBT survey data. -->
+
+<!-- Age distributions included 35 bins from age 1 to age 35, with the last bin including all fish of greater age. Input sample sizes were fixed at the number of unique fish within a given length bin. The age samples consists of approximately one-quarter as many fish, as the samples for length (Table 3 and Table 4). These distributions show a tight range of ages at a given length, and clearly show the growth trajectory of females reaching larger sizes than males for a given age. It is often useful for interpretation to compute the marginal age-compositions, and include these in the assessment model (with the likelihood contribution turned off, so they do not affect model fit in any way) for comparison of the 'implied' fit to the margin of the age-length key. Although these NWFSC age distributions seem to show some diagonal structure, close inspection reveals that it does not track consistently through any of the recent cohorts. This time series is short, and does not encompass the period when substantial reductions in the canary population occurred, and so may be relatively uninformative in the assessment model, except for estimation of growth parameters. -->
