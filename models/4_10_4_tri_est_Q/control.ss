@@ -128,13 +128,13 @@
 #_Q_setup for fleets with cpue or survey data
 #_fleet	link	link_info	extra_se	biasadj	float  #  fleetname
    28	1	0	0	0	1	#_28_coastwide_NWFSC    
-   29	1	0	0	0	0	#_29_coastwide_Tri_early
+   29	1	0	0	0	1	#_29_coastwide_Tri_early
    31	1	0	1	0	1	#_31_coastwide_prerec   
 -9999	0	0	0	0	0	#_terminator            
 #_Q_parms(if_any);Qunits_are_ln(q)
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn  #  parm_name
 -25	25	 2.42704	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_28_coastwide_NWFSC(28)    
--25	25	 3.27912	  0	 1	0	 2	0	0	0	0	0	0	0	#_LnQ_base_29_coastwide_Tri_early(29)
+-25	25	 3.27912	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_29_coastwide_Tri_early(29)
 -25	25	-6.60196	  0	 1	0	-1	0	0	0	0	0	0	0	#_LnQ_base_31_coastwide_prerec(31)   
   0	 3	0.514511	0.1	99	0	 2	0	0	0	0	0	0	0	#_Q_extraSD_31_coastwide_prerec(31)  
 #_no timevary Q parameters

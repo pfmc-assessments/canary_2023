@@ -11331,9 +11331,11 @@ tri.early.index <- fleet.converter$fleet[fleet.converter$fleet_no_num == 'coastw
 mod$dat$CPUE <- dplyr::mutate(mod$dat$CPUE,
                               index = ifelse(index == tri.late.index, tri.early.index, index))
 mod$dat$agecomp <- dplyr::mutate(mod$dat$agecomp, 
-                                 FltSvy = ifelse(FltSvy == tri.late.index, tri.early.index, FltSvy))
+                                 FltSvy = ifelse(FltSvy == tri.late.index, tri.early.index, FltSvy),
+                                 FltSvy = ifelse(FltSvy == -tri.late.index, -tri.early.index, FltSvy))
 mod$dat$lencomp <- dplyr::mutate(mod$dat$lencomp, 
-                                 FltSvy = ifelse(FltSvy == tri.late.index, tri.early.index, FltSvy))
+                                 FltSvy = ifelse(FltSvy == tri.late.index, tri.early.index, FltSvy),
+                                 FltSvy = ifelse(FltSvy == -tri.late.index, -tri.early.index, FltSvy))
 
 # Float early tri
 mod$ctl$Q_options['29_coastwide_Tri_early','float'] <- 1
@@ -11373,6 +11375,9 @@ SSsummarize(xx) |>
                                      'WCGBTS w/gamma',
                                      'Tri float Q'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
 
 # 4_10_4_tri_est_Q estimate triennial Q with data fully combined -------------------------------------------------
 
