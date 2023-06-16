@@ -1,17 +1,41 @@
-## Length and age compositions
+## Composition data
 
 Commercial landings of rockfish and the biological characteristics of these landings were not consistently sampled for scientific purposes until the early 1960s (Niska, 1976). Statewide sampling programs to determine species compositions of the landed catches began in the late 1960s. The first rigorous monitoring programs that included routine collection of biological data (e.g., sex, age, size, maturity states, etc.) were begun in 1980. Currently, port biologists employed by each state fishery agency (\gls{cdfw}, \gls{odfw}, \gls{wdfw}) collect species-composition information and biological data from the landed catches of commercial vessels that have completed their fishing trips. The sampling sites are commonly processing facilities located at ports along the coasts of California, Oregon and Washington. The monitoring programs currently in place are generally based on stratified, multistage sampling designs.
 
 *Id like an overall summary of recreational sampling here. The below is my feeble attempt to start. I need help having it accurate but short*
 Sampling of the recreational fisheries begun in XXX. Currently, port biologists employed by each state fishery agency (\gls{cdfw}, \gls{odfw}, \gls{wdfw}) collect species-composition information and biological data from the landed catches of recreational vessels that have completed their fishing trips. Onboard sampling also occurs but is generally associated with larger charter recreational vessels.  
 
+### Fishery-Dependent Composition Data
 
+#### Commercial fisheries
 
-<!-- ## Fishery-Dependent Data -->
+Commercial length- and marginal age-frequency distributions were calculated for each fleet for which observations were available. Biological length and age data were extracted from the \gls{pacfin} Biological Data System on March 28, 2023. Biological data were divided into trawl and nontrawl fleets for each state according to the fleet structure used for this assessment. There was a mix of biological length samples with and without sex information but the majority of samples included information on sex.
 
+During data exploration it was noted that data previously labelled as special project samples from Oregon included samples appropriate to represent dynamics from the fishery. The majority of these occurred prior to 1987, and therefore special project samples from Oregon up through 1986 were retained for composition data.  
 
+For commercial trawl and nontrawl fleets, the raw observations (compiled from \gls{pacfin}) were expanded to the sample level, to allow for any fish that were not measured, then to the trip level to account for the relative size of the landing from which the sample was obtained. These expanded length and age observations were then combined within a year for each fleet.
 
-<!-- Commercial length-frequency distributions were developed for each fleet for which observations were available, following the same bin structure as was used for research observations. For each fleet, the raw observations (compiled from \gls{pacfin}) were expanded to the sample level, to allow for any fish that were not measured, then to the trip level to account for the relative size of the landing from which the sample was obtained. These expanded length observations were then combined within years for each fleet. Age frequencies were computed in the same manner. Sampling statistics for each fleet and year are given in , and clearly show the different sampling targets employed over different time periods and between state agencies. -->
+The input sample sizes for the expanded commercial length and age data were calculated via the Stewart method (Ian Stewart, personal communication) which incorporates the number of trips or hauls and fish by year:
+
+\begin{centering}
+
+Input effN = $N_{\text{trips}} + 0.138 * N_{\text{fish}}$ if $N_{\text{fish}}/N_{\text{trips}}$ is $<$ 44
+
+Input effN = $7.06 * N_{\text{trips}}$ if $N_{\text{fish}}/N_{\text{trips}}$ is $\geq$ 44
+
+\end{centering}
+
+The magnitude of sampling for each fleet and year are given in TABLES and FIGURES, and show the different magnitudes of sampling across time and between state agencies. These tables show both the total number of fish samples as well as the number of trips or hauls by year and state over which samples were obtained. 
+
+During modeling we noticed sparse length and age composition data of unsexed fish for a few years across fleets. Years with very few unsexed length and age samples relative to sexed samples were excluded from the model. See [Appendix A](#excluded-data) for implied fits to these length and age data.
+*We may not even need implied fits to these. A sensitivity would be to remove anything less than a certain number, where sexed or unsexed*
+
+#### Washington
+
+#### Oregon
+
+#### California
+
 
 <!-- The weighted length-frequency distributions are shown in . The annual observations were recorded as unidentified sex; both sexes were combined and are treated as such in the model. By fleet, a number of important patterns are visible in the data. The trawl fleets for each state, although the data are noisy, appear to show a decline in mean length of the catch from 1978 to 2000 (figures), with an increase in the mean length for recent years of the landed catch. The length composition data from the non-trawl fleet are much sparser compared to the trawl fleet making it difficult to discern a pattern in the mean length landed (Figures). The at-sea hake fishery was comprised of larger lengths relative to the trawl fishery, with the majority of length samples from Washington (Figures). All three recreational fleets appear to generally target smaller fish relative to the other fleets (Figures). -->
 
@@ -41,29 +65,12 @@ Sampling of the recreational fisheries begun in XXX. Currently, port biologists 
 
 <!-- #### California -->
 
-### Commercial length and age composition data
+#### At Sea Hake Fishery
 
-Commercial length- and age-frequency distributions were calculated for each fleet for which observations were available. For each fleet with the exception of the at-sea hake fishery, the raw observations (compiled from \gls{pacfin}) were expanded to the sample level, to allow for any fish that were not measured, then to the trip level to account for the relative size of the landing from which the sample was obtained. These expanded length and age observations were then combined within a year for each fleet. For the at-sea hake fishery, raw observations were aggregated wihtin a year for each fleet because individual weights from which biological samples were collected were not available.
+*CONTINUE HERE on 6/16*
 
-The input sample sizes for the expanded commercial length and age data were calculated via the Stewart method (Ian Stewart, personal communication) which incorporate the number of trips or hauls and fish by year:
+For the at-sea hake fishery, raw observations were aggregated wihtin a year for each fleet. The input sample sizes for the at-sea hake length and age compositions was the number of hauls. 
 
-\begin{centering}
-
-Input effN = $N_{\text{trips}} + 0.138 * N_{\text{fish}}$ if $N_{\text{fish}}/N_{\text{trips}}$ is $<$ 44
-
-Input effN = $7.06 * N_{\text{trips}}$ if $N_{\text{fish}}/N_{\text{trips}}$ is $\geq$ 44
-
-\end{centering}
-
-The input sample sizes for the at-sea hake length and age compositions was the number of hauls. 
-
-The magnitude of sampling for each fleet and year are given in TABLES and FIGURES, and show the different sampling frequencies employed over different time periods and between state agencies. These tables show both the total number of fish samples as well as the number of trip or hauls by year and state over which samples were obtained. 
-
-#### Washington
-
-#### Oregon
-
-#### California
 
 ### Recreational length and age compositions
 
