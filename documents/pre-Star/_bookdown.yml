@@ -1,3 +1,4 @@
 delete_merged_file: true
 
-rmd_files: ['00a.Rmd', '00authors.Rmd', '00bibliography.Rmd', '00title.Rmd', '21f-.Rmd', '49bibliography.Rmd']
+rmd_files: ['00a.Rmd', '00authors.Rmd', '00bibliography.Rmd', '00title.Rmd', 
+'22biology.Rmd', '49bibliography.Rmd', '53figures.Rmd']

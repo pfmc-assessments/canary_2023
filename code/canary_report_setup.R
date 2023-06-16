@@ -13,6 +13,7 @@
 #tryCatch(expr = pkgload::unload("sa4ss"), error = function(x) "")
 #remotes::install_github("pfmc-assessments/sa4ss")
 library(sa4ss)
+library(here)
 
 # Specify the directory for the document
 #User directories
@@ -39,8 +40,14 @@ sa4ss::draft(
   edit = FALSE
 )
 
-model_name <- "2015base"
+model_name <- "4_8_4_mirrorORWA_twl"
 model_dir <- file.path(dir, "models", model_name)
+
+setwd(here('documents/pre-Star'))
+
+sa4ss::read_model(mod_loc = here('models', model_name), 
+                  save_loc = here('documents/pre-Star'), 
+                  create_plots = FALSE)
 
 # Compile command
 if(file.exists("_main.Rmd")){

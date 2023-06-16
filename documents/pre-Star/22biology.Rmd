@@ -1,108 +1,308 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
 ## Biological Data
 
 \gls{nwfsc}
 
-The stock assessment model requires specifying several life history parameters from analyses external to the model.  These parameters include the maturity schedule, fecundity (the relationship between female length/weight and egg production), the natural mortality rate for males, the steepness of the stock-recruit relationship, the relationship between individual weight and length, and estimates of error for determinations of individual age from reading otoliths.
+The stock assessment model requires specifying several life history
+parameters from analyses external to the model. These parameters include
+the maturity schedule, fecundity (the relationship between female
+length/weight and egg production), the natural mortality rate for males,
+the steepness of the stock-recruit relationship, the relationship
+between individual weight and length, and estimates of error for
+determinations of individual age from reading otoliths.
 
-*NEED TO ADD THIS TABLE*
-Table \ref{tab:growth-tab} shows the length-at-age, weight-at-age, maturity-at-age, and spawning output (the product of fecundity and maturity) assumed in the base model.
+*NEED TO ADD THIS TABLE* Table \ref{tab:growth-tab} shows the
+length-at-age, weight-at-age, maturity-at-age, and spawning output (the
+product of fecundity and maturity) assumed in the base model.
 
-
-*Do we want to add sample sizes to these. For the sake of time Im not included samples sizes, yet other assessments have used these*
+*Do we want to add sample sizes to these. For the sake of time Im not
+included samples sizes, yet other assessments have used these*
 
 ### Natural Mortality
 
-Due to an unexplained male-skewed sex ratio at older ages observed across fishery-independent and fishery-dependent data sources, canary rockfish natural mortality has been modeled in a number of ways over the years. @sampson1996canary modeled a linear ramp in female natural mortality from 0.06 yr$^{-1}$ at age 9 to roughly 0.18 yr$^{-1}$ at age 25, the plus group. In 1999, the ramp was adjusted to be from 0.06 at age 11 to 0.20 at age 25, and the document contains an extensive review of life history theory regarding increasing female natural mortality [@stat1999canary]. @methot2002canary fixed male and young female natural mortality at 0.06, but estimated an offset for older females, and based the slope of increasing natural mortality on maturity, not age, resulting in a non-linear ramp by age. In 2005, that option was no longer available in stock synthesis, so the assessment approximated the 2001 pattern by using a linear ramp from age 6 to age 14, again estimating a female offset [@methot2005canary]. This has been the approach for all canary rockfish assessments since 2005. 
+Due to an unexplained male-skewed sex ratio at older ages observed
+across fishery-independent and fishery-dependent data sources, canary
+rockfish natural mortality has been modeled in a number of ways over the
+years. @sampson1996canary modeled a linear ramp in female natural
+mortality from 0.06 yr$^{-1}$ at age 9 to roughly 0.18 yr$^{-1}$ at age
+25, the plus group. In 1999, the ramp was adjusted to be from 0.06 at
+age 11 to 0.20 at age 25, and the document contains an extensive review
+of life history theory regarding increasing female natural mortality
+[@stat1999canary]. @methot2002canary fixed male and young female natural
+mortality at 0.06, but estimated an offset for older females, and based
+the slope of increasing natural mortality on maturity, not age,
+resulting in a non-linear ramp by age. In 2005, that option was no
+longer available in stock synthesis, so the assessment approximated the
+2001 pattern by using a linear ramp from age 6 to age 14, again
+estimating a female offset [@methot2005canary]. This has been the
+approach for all canary rockfish assessments since 2005.
 
-The increased ramp in natural mortality was also used in yellowtail rockfish assessments prior to 2005 with support from [@tagart_yellowtail_1991] that the senescent mortality hypothesis fit the fishery age data well, and was a better biological explanation for the disappearance of older age females than the alternative hypothesis that the older females were not vulnerable to the fishery. 
-The pattern of male-skewed sex ratio at older ages has been observed along the U.S. West Coast in fishery data off Oregon (Rasmussen pers. comm. ODFW) and Alaska and in black rockfish in addition to canary and yellowtail rockfishes. Although it has been found in these three semi-pelagic species, the pattern has not been observed for bocaccio, chilipepper rockfish, shortbelly rockfish, or dusky rockfishes (in Alaska), which are also semi-pelagic. However, starting in the 2010's the male-skewed sex ratio has evened out in fishery data off Oregon (Rasmussen pers. comm. ODFW). The pattern has remained within the \gls{s-wcgbt} and has not evened off in recent years. 
+The increased ramp in natural mortality was also used in yellowtail
+rockfish assessments prior to 2005 with support from
+[@tagart_yellowtail_1991] that the senescent mortality hypothesis fit
+the fishery age data well, and was a better biological explanation for
+the disappearance of older age females than the alternative hypothesis
+that the older females were not vulnerable to the fishery. The pattern
+of male-skewed sex ratio at older ages has been observed along the U.S.
+West Coast in fishery data off Oregon (Rasmussen pers. comm. ODFW) and
+Alaska and in black rockfish in addition to canary and yellowtail
+rockfishes. Although it has been found in these three semi-pelagic
+species, the pattern has not been observed for bocaccio, chilipepper
+rockfish, shortbelly rockfish, or dusky rockfishes (in Alaska), which
+are also semi-pelagic. However, starting in the 2010's the male-skewed
+sex ratio has evened out in fishery data off Oregon (Rasmussen pers.
+comm. ODFW). The pattern has remained within the \gls{s-wcgbt} and has
+not evened off in recent years.
 
-*Probably add more background maybe if we have time. We have the Brooks thesis, and then the Sampson paper that offer alternatives but aren't complete.*
+*Probably add more background maybe if we have time. We have the Brooks
+thesis, and then the Sampson paper that offer alternatives but aren't
+complete.*
 
-IF USE A BREAKPOINT: In this assessment, we updated the longevity-based prior for the natural mortality rate for males and young females based on @hamel2022development, using a maximum age of 84 yrs as was done in the previous assessment [@thorson_status_2015; @love2002rockfishes]. This results in a lognormal prior with a log-mean of -2.74, a log-standard deviation of 0.31, and a median natural mortality of 0.0643 yr$^{-1}$ (used as the fixed value). Instead of a ramp, which requires the analyst to select two ages, we used a breakpoint, which only requires selecting a single age and is thus more parsimonious. Rather than placing the breakpoint around the point of 50 percent maturity, at which point there is little evidence in the data of sex ratios deviating from 50:50, we placed the breakpoint between ages 20 and 21. This means female mortality stayed at the low value for more years than in recent assessments, and is more aligned with where the ratio of females begins to decline in survey data.
+IF USE A BREAKPOINT: In this assessment, we updated the longevity-based
+prior for the natural mortality rate for males and young females based
+on @hamel2022development, using a maximum age of 84 yrs as was done in
+the previous assessment [@thorson_status_2015; @love2002rockfishes].
+This results in a lognormal prior with a log-mean of -2.74, a
+log-standard deviation of 0.31, and a median natural mortality of 0.0643
+yr$^{-1}$ (used as the fixed value). Instead of a ramp, which requires
+the analyst to select two ages, we used a breakpoint, which only
+requires selecting a single age and is thus more parsimonious. Rather
+than placing the breakpoint around the point of 50 percent maturity, at
+which point there is little evidence in the data of sex ratios deviating
+from 50:50, we placed the breakpoint between ages 20 and 21. This means
+female mortality stayed at the low value for more years than in recent
+assessments, and is more aligned with where the ratio of females begins
+to decline in survey data.
 
-IF USE A SINGLE VALUE: In this assessment, we elected to model natural mortality for males and females separately. We updated the longevity-based prior for the natural mortality rate for males and females based on @hamel2022development, using a maximum age of 84 yrs as was done in the previous assessment [@thorson_status_2015; @love2002rockfishes]. This results in a lognormal prior with a log-mean of -2.74, a log-standard deviation of 0.31, and a median natural mortality of 0.0643 yr$^{-1}$ for both sexes. As was done in the previous assessments, we fixed the male natural mortality value at the prior and estimate female natural mortality. The same maximum age for males and females was used. Estimating separate male and female natural mortality removes the need for a user-selected breakpoint at which natural mortality changes, and has been done in the past assessments for yellowtail [@stephens_status_2017] and black rockfish for Washington and California [@cope_assessments_2016]. 
-
+IF USE A SINGLE VALUE: In this assessment, we elected to model natural
+mortality for males and females separately. We updated the
+longevity-based prior for the natural mortality rate for males and
+females based on @hamel2022development, using a maximum age of 84 yrs as
+was done in the previous assessment [@thorson_status_2015;
+@love2002rockfishes]. This results in a lognormal prior with a log-mean
+of -2.74, a log-standard deviation of 0.31, and a median natural
+mortality of 0.0643 yr$^{-1}$ for both sexes. As was done in the
+previous assessments, we fixed the male natural mortality value at the
+prior and estimate female natural mortality. The same maximum age for
+males and females was used. Estimating separate male and female natural
+mortality removes the need for a user-selected breakpoint at which
+natural mortality changes, and has been done in the past assessments for
+yellowtail [@stephens_status_2017] and black rockfish for Washington and
+California [@cope_assessments_2016].
 
 ### Maturation and Fecundity
 
 #### Maturity
 
-We estimate the maturity schedule using available histological measurements from female ovaries. This includes 163 samples collected by \gls{odfw} and \gls{wdfw} during winter (October--February) in 2014, 2015, and 2016; and 527 ovaries collected during the \gls{s-wcbt} in 2009--2016 across a range of depths (57--222 m) and latitudes (35.7--48.3$^\circ N$) and 53 collected during the \gls{s-hkl} between 2009--2022. 
+We estimate the maturity schedule using available histological
+measurements from female ovaries. This includes 163 samples collected by
+\gls{odfw} and \gls{wdfw} during winter (October--February) in 2014,
+2015, and 2016; and 527 ovaries collected during the \gls{s-wcgbt} in
+2009--2016 across a range of depths (57--222 m) and latitudes
+(35.7--48.3$^\circ N$) and 53 collected during the \gls{s-hkl} between
+2009--2022.
 
-We use functional maturity as opposed to biological maturity as the measure of maturity in this assessment. Rockfish begin the process of maturing a couple years before they reach spawning potential. Thus biological maturity would indicate that yolk is present but not that the fish is spawning capable. Juveniles in abortive maturation and adults in skip spawning would be marked as biologically mature but functionally immature. Biological maturity indicates the fish was putting energy reserves toward spawning, but not necessarily spawning capable for the year; while functional maturity captures the actual spawners. 
+We use functional maturity as opposed to biological maturity as the
+measure of maturity in this assessment. Rockfish begin the process of
+maturing several years before they reach spawning potential. Thus
+biological maturity would indicate that yolk is present but not that the
+fish is spawning capable. Juveniles in abortive maturation and adults in
+skip spawning would be marked as biologically mature but functionally
+immature. Biological maturity indicates the fish was putting energy
+reserves toward spawning, but not necessarily spawning capable for the
+year; while functional maturity captures the actual spawners.
 
-We estimate maturity in this assessment using age at maturity. Not all histological samples included ages, so a total of 777 samples were used for estimating age at maturity.  We assume age at maturity follows a two-parameter logistic regression model with an asymptote at 1.0 based on the findings of [@head_maturity_2016] and fits to histological samples. Parameters were fixed in the model at estimates from the logistic regression, and were $A_{50\%}$ = `r round(model$MGparmAdj$Mat50%_Fem_GP_1[1], 2)` and slope $\alpha$ = `r round(model$MGparmAdj$Mat_slope_Fem_GP_1, 2)`^. The new relationship results in a rightward shift and increase at older ages in maturity compared to the relationship derived within the 2015 assessment (Figure \ref{fig:compare_maturity}).
+We estimate maturity in this assessment using age at maturity. Not all
+histological samples included ages, so a total of 777 samples were used
+for estimating age at maturity. We assume age at maturity follows a
+two-parameter logistic regression model with an asymptote at 1 based on
+the findings of [@head_maturity_2016] and fits to histological samples.
+Parameters were fixed in the model at estimates from the logistic
+regression, and were
+`r paste0('$A_{50\\%} =', round(model$Growth_Parameters$Mat1[1], 2), '$')` and
+slope `r paste0('$\\alpha =', round(model$Growth_Parameters$Mat2[1], 2), '$')`.
+This relationship is an advance on the maturity curve used in the
+previous assessment, as it uses functional maturity instead of
+biological maturity. This, in addition to the use of age instead of
+length, eliminated the need for a third parameter in the maturity curve
+estimating the probability of skip spawning. Due to the relatively steep
+growth curve of `r spp`, a given length can represent a wide
+range of ages. The new relationship results in a rightward shift in
+maturity and increase in maturity at older ages compared to the
+relationship derived within the 2015 assessment (Figure
+\ref{fig:compare_maturity}). *TO DO: add data to figure*
 
-*Text that melissa provided is below but simplified. This may be too detailed. Dont have to defend the previous assessment*
-The previous assessments used length at maturity modeled as a three parameter logistic which allowed an asymptote other than 1.0 to account for occurence of skip spawning [@thorson_status_2015]. Previous maturity results were based on maturity estimates similar to biological maturity. Maturity was defined if yolk or more advanced stages of maturity were present and the fish was not in mass atresia. Thus abortive maturation fish may have been included in results, and would have been assumed to be adult skip spawning. This would impact the asymptote. For this assessment samples were re-read to provide a more accurate maturity determination that identifies the differences between biologically mature and functionally mature fish as well as to minimize any mis-classified post spawning/recovering fish as skip spawners because of the timing of collection for some samples. While many maturity determinations didn’t change, there were greater uncertainties about whether a fish was post spawning/recovering or post skip spawning. It is possible that errors in previous maturity determinations made it appear that there was a higher rate of skip spawning that was actually occurring. Using the updated analysis, there was more variability length at maturity when the asymptote approaches 1, which appears to look like skip spawning, and that variability was reduced when age at maturity was used because ages can represent a wide range of lengths. 
+*Text that melissa provided is below but simplified. This may be too
+detailed. Dont have to defend the previous assessment KLO: I took the
+key points from this and moved them into the paragraph above. I think
+reviewers will appreciate conciseness, but feel free to edit further.*
+<!-- The previous assessments used length at maturity modeled as a three parameter logistic which allowed an asymptote less than 1 to account for occurrence of skip spawning [@thorson_status_2015]. Previous maturity results were based on maturity estimates similar to biological maturity. Maturity was defined if yolk or more advanced stages of maturity were present and the fish was not in mass atresia. Thus abortive maturation fish may have been included in results, and would have been assumed to be adult skip spawning. This would impact the asymptote. For this assessment samples were re-read to provide a more accurate maturity determination that identifies the differences between biologically mature and functionally mature fish as well as to minimize any mis-classified post spawning/recovering fish as skip spawners because of the timing of collection for some samples. While many maturity determinations didn’t change, there were greater uncertainties about whether a fish was post spawning/recovering or post skip spawning. It is possible that errors in previous maturity determinations made it appear that there was a higher rate of skip spawning that was actually occurring. Using the updated analysis, there was more variability length at maturity when the asymptote approaches 1, which appears to look like skip spawning, and that variability was reduced when age at maturity was used because ages can represent a wide range of lengths.  -->
 
 #### Fecundity
 
-Fecundity was fixed at the parameter values from the meta-analysis in [@dick_meta-analysis_2017]. Existing species specific fecundity information for canary rockfish is limited and only 9 samples of canary rockfish exist within the rockfish fecundity database housed at the \gls{sefsc} (S. Beyer, personal communication, May 22, 2023, University of Washington). [@dick_meta-analysis_2017] performed their analysis on subgenera with at least three species, which excluded canary rockfish, so the relationship in [@dick_meta-analysis_2017] for general *Sebastes* species was used for this assessment. Fecundity was assumed as a power function of length, as in [@dick_meta-analysis_2017], whereas the previous assessment assumed fecundity was linearly proportional to weight and used parameter estimates from [@dick_modeling_2009]. Although these reflect different parameterizations, they are transferrable based on the weight-length relationship. The fecundity relationship for this assessment was `r format(model$MGparmAdj$Eggs_scalar_Fem[1], scientific = TRUE)`$L$^`r round(model$MGparmAdj$Eggs_exp_len_Fem[1],2)`^ in millions of eggs where $L$ is length in cm. The new relationship results in a decrease in fecundity at larger sizes compared to the relationship used in the 2015 assessment (Figure \ref{fig:compare_fecundity}).
+Fecundity was fixed at the parameter values from the meta-analysis in
+[@dick_meta-analysis_2017]. Existing species specific fecundity
+information for canary rockfish is limited and only 9 samples of canary
+rockfish exist within the rockfish fecundity database housed at the
+\gls{sefsc} (S. Beyer, personal communication, May 22, 2023, University
+of Washington). [@dick_meta-analysis_2017] performed their analysis on
+subgenera with at least three species, which excluded canary rockfish,
+so the relationship in [@dick_meta-analysis_2017] for general *Sebastes*
+species was used for this assessment. Fecundity was assumed as a power
+function of length, as in [@dick_meta-analysis_2017], whereas the
+previous assessment assumed fecundity was linearly proportional to
+weight and used parameter estimates from [@dick_modeling_2009]. Although
+these reflect different parameterizations, they are transferrable based
+on the weight-length relationship. The fecundity relationship for this
+assessment was
+`r paste0('$', format(model$FecPar1, scientific = TRUE), 'L^{', round(model$FecPar2,2), '}$')`
+in millions of eggs where $L$ is length in cm. The new relationship
+results in a decrease in fecundity at larger sizes compared to the
+relationship used in the 2015 assessment (Figure
+\ref{fig:compare_fecundity}).
 
 ### Steepness
 
-Steepness is defined as the proportion of average recruitment for an unfished population that is expected for a population with 20% of unfished spawning output.  It represents a measure of compensation in the spawner-recruit relationship. It is typically difficult to estimate using data for a single population (Conn et al., 2010), which has led to a series of meta-analyses to estimate its likely value (Dorn, 2002; Myers et al., 1995).  
+Steepness is defined as the proportion of average recruitment for an
+unfished population that is expected for a population with 20% of
+unfished spawning output. It represents a measure of compensation in the
+spawner-recruit relationship. It is typically difficult to estimate
+using data for a single population (Conn et al., 2010), which has led to
+a series of meta-analyses to estimate its likely value (Dorn, 2002;
+Myers et al., 1995).
 
-Steepness in this assessment was fixed at the prior mean value. The SSC-approved prior for steepness in 2023 assumes a beta distribution with a mean of 0.72 and standard deviation of 0.16 [@pfmc_accepted_2023]. The prior parameters are based on the Thorson-Dorn rockfish prior (commonly used in past West Coast rockfish assessments) conducted by James Thorson (personal communication, NWFSC, NOAA) which was reviewed and endorsed by the Scientific and Statistical Committee (SSC) in 2017. However, this approach was subsequently rejected for future analysis in 2019 when the new meta-analysis resulted in a mean value of approximately 0.95. In the absence of a new method for generating a prior for steepness the default approach reverts to the previously endorsed method, the 2017 value.
-
+Steepness in this assessment was fixed at the prior mean value. The
+SSC-approved prior for steepness in 2023 assumes a beta distribution
+with a mean of 0.72 and standard deviation of 0.16
+[@pfmc_accepted_2023]. The prior parameters are based on the
+Thorson-Dorn rockfish prior (commonly used in past West Coast rockfish
+assessments) conducted by James Thorson (personal communication, NWFSC,
+NOAA) which was reviewed and endorsed by the Scientific and Statistical
+Committee (SSC) in 2017. However, this approach was subsequently
+rejected for future analysis in 2019 when the new meta-analysis resulted
+in a mean value of approximately 0.95. In the absence of a new method
+for generating a prior for steepness the default approach reverts to the
+previously endorsed method, the 2017 value.
 
 ### Length-Weight Relationship
+```{r include=FALSE}
+library(here)
+w.l <- read.csv(here('data/W_L_pars.csv'))
+```
 
-The length-weight relationship for `r spp` was estimated outside the model using available coastwide biological data collected from fishery-independent data sources. Sources included the \gls{s-wcgbt}, and the early and late \gls{s-tri}. The estimated length-weight relationship for `r spp` was $W$ = `r format(model$MGparmAdj$Wtlen_1_Fem[1], scientific = TRUE)`$L$^`r round(model$MGparmAdj$Wtlen_2_Fem[1],2)`^ for females and $W$ = `r format(model$MGparmAdj$Wtlen_1_Mal[1], scientific = TRUE)`$L$^`r round(model$MGparmAdj$Wtlen_2_Mal[1],2)`^ for males, where $L$ is fork length in cm and $W$ is weight in kg (Figures \ref{fig:WL}). The relationship indicates that males increase weight faster than females as a function of length, and that both male and females weight increases with length similarly to that assumed in the previous 2015 benchmark assessment (Figures \ref{fig:compare_WL}).
-
+The length-weight relationship for `r spp` was estimated outside the
+model using available coastwide biological data collected from
+the \gls{s-wcgbt}. This included `r w.l$n[w.l$Sex=='F']` females and `r w.l$n[w.l$Sex=='M']` males. The estimated length-weight
+relationship for `r spp` was 
+`r paste0('$W =', format(model$Growth_Parameters$WtLen1[1], scientific = TRUE), 'L^{', round(model$Growth_Parameters$WtLen2[1],2), '}$')`
+for females and 
+`r paste0('$W =', format(model$Growth_Parameters$WtLen1[2], scientific = TRUE), 'L^{', round(model$Growth_Parameters$WtLen2[2],2), '}$')`
+for males, where $L$ is fork length in cm and $W$ is weight in kg
+(Figure \ref{fig:WL}). The curve was fit as a linear model in log space and then corrected for lognormal bias. The relationship is similar to the relationship used in the previous 2015 benchmark assessment and indicates that male and female `r spp` have similar length-weight relationships (Figure \ref{fig:compare_WL}).
 
 ### Growth (Length-at-Age)
 
-*Need to update text to include analysis to confirm growth did not vary across latitude*
+*Need to update text to include analysis to confirm growth did not vary
+across latitude*
 
-`r Spp` display sexually dimorphic growth. Females grow faster but obtain larger sizes than males. Estimates of growth parameters and latitudinal variability were investigated and starting values for model inputs were updated using the \gls{s-wcgbt} data. Spatial differences were investigated by fitting an overall von Bertalanffy relationship between age and length across all coastwide samples and then comparing the residuals across latitude and depth using Tukey's honestly significant difference test for pairwise multiple comparisons at state boundaries and then again at regions identified by [@Brooks_thesis_2021] at representing biological breaks. 
+`r Spp` display sexually dimorphic growth. Females grow faster and
+obtain larger sizes than males. Estimates of growth parameters and
+latitudinal variability were investigated and starting values for model
+inputs were updated using the \gls{s-wcgbt} data. Spatial differences
+were investigated by fitting an overall von Bertalanffy relationship
+between age and length across all coastwide samples and then comparing
+the residuals across latitude and depth using Tukey's honestly
+significant difference test for pairwise multiple comparisons at state
+boundaries and then again at regions identified by [@Brooks_thesis_2021]
+at representing biological breaks.
 
-The breaks observed by [@Brooks_thesis_2021] were not observed when using the \gls{s-wcgbt} data and so growth was assumed constant across the coast, as was assumed in the 2015 benchmark assessment. Externally estimated von-Bertalanffy growth parameters for `r spp` using \gls{s-wcgbt} data were as follows:
-$L_\infty$ = `r model$MGparmAdj$L_at_Amax_Fem_GP_1[1]` and $k$ = `r model$MGparmAdj$VonBert_K_Fem_GP_1[1]` for females with length at age 1 equal to `r model$MGparmAdj$L_at_Amin_Fem_GP_1[1]`, and 
-$L_\infty$ = `r model$MGparmAdj$L_at_Amax_Mal_GP_1[1]` and $k$ = `r model$MGparmAdj$VonBert_K_Mal_GP_1[1]` for males with length at age 1 set equal to the length at age 1 for females. We therefore assume size of young males and females are identical, consistent with the assumptions in the 2015 bechmark assessment. These estimates were used as initial values within the base model for estimating growth.
+The breaks observed by [@Brooks_thesis_2021] were not observed when
+using the \gls{s-wcgbt} data and so growth was assumed constant across
+the coast, as was assumed in the 2015 benchmark assessment. Externally
+estimated von-Bertalanffy growth parameters for `r spp` using
+\gls{s-wcgbt} data were as follows: $L_\infty$ =
+`r model$MGparmAdj$L_at_Amax_Fem_GP_1[1]` and $k$ =
+`r model$MGparmAdj$VonBert_K_Fem_GP_1[1]` for females with length at age
+1 equal to `r model$MGparmAdj$L_at_Amin_Fem_GP_1[1]`, and $L_\infty$ =
+`r model$MGparmAdj$L_at_Amax_Mal_GP_1[1]` and $k$ =
+`r model$MGparmAdj$VonBert_K_Mal_GP_1[1]` for males with length at age 1
+set equal to the length at age 1 for females. We therefore assume size
+of young males and females are identical, consistent with the
+assumptions in the 2015 bechmark assessment. These estimates were used
+as initial values within the base model for estimating growth.
 
-*This was used in the lingcod assessment. I'd like some treatment of our analysis described for showing growth didn't differ between areas*
-A model based change-point analysis [@kapur2020]
-was used to identify a biologically relevant stock boundary using size-at-age data
-from the \gls{s-wcgbt} and `r get_fleet("Lam", col="label_long")` [@lam2021geographic].
-A generalized additive model was fit to
-observed `r spp` lengths of a single age as the response variable.
-Predictor variables included a smoother for latitude.
-Each age-sex combination was analyzed separately.
-The first derivative was taken from the fitted spline
-to detect the latitude at which differences in size-at-age were most pronounced
-(i.e., the maximum absolute value) and
-statistically significant
-(i.e., where the confidence interval does not include 0).
-The resulting latitude was rounded to the nearest integer
-as there were no detectable differences when half-degrees were used.
-77.8\% of significant age-sex combinations detected a break between latitudes
-$38^\circ 00^\prime$ and $40^\circ 00^\prime$ N
-(Figure \@ref(fig:Lam-kapurage7latitude)).
-This range is in agreement with the genetic break point identified for
-`r spp` by Longo et al. [-@longo2020strong].
-
-
+<!-- *This was used in the lingcod assessment. I'd like some treatment of our -->
+<!-- analysis described for showing growth didn't differ between areas* A -->
+<!-- model based change-point analysis [@kapur2020] was used to identify a -->
+<!-- biologically relevant stock boundary using size-at-age data from the -->
+<!-- \gls{s-wcgbt} and -->
+<!-- [@lam2021geographic]. A generalized additive model was fit to observed -->
+<!-- `r spp` lengths of a single age as the response variable. Predictor -->
+<!-- variables included a smoother for latitude. Each age-sex combination was -->
+<!-- analyzed separately. The first derivative was taken from the fitted -->
+<!-- spline to detect the latitude at which differences in size-at-age were -->
+<!-- most pronounced (i.e., the maximum absolute value) and statistically -->
+<!-- significant (i.e., where the confidence interval does not include 0). -->
+<!-- The resulting latitude was rounded to the nearest integer as there were -->
+<!-- no detectable differences when half-degrees were used. 77.8% of -->
+<!-- significant age-sex combinations detected a break between latitudes -->
+<!-- $38^\circ 00^\prime$ and $40^\circ 00^\prime$ N (Figure -->
+<!-- \@ref(fig:Lam-kapurage7latitude)). This range is in agreement with the -->
+<!-- genetic break point identified for `r spp` by Longo et al. -->
+<!-- [-@longo2020strong]. -->
 
 ### Sex Ratio
 
-As described in the mortality section, the observed sex ratio is skewed towards males at older ages. Sex ratio based on length is largely similar despite evidence for dimorphic growth between males and females. A cursory look at sex ratios within the \gls{s-wcgbt} and \gls{s-tri} by latitude indicate that males and females are similarly dispersed coastwide, and that differences in sex ratios at age are not due to latitudinal or depth specific differences (Figure \@ref(fig:biology-sexratio-lengthbylatitude)), and thus, a sex ratio of 50:50 was assumed for this assessment, as was done in the 2015 benchmark assessment.
-
+As described in the mortality section, the observed sex ratio is skewed
+towards males at older ages. Sex ratio based on length is largely
+similar despite evidence for dimorphic growth between males and females.
+A cursory look at sex ratios within the \gls{s-wcgbt} and \gls{s-tri} by
+latitude indicate that males and females are similarly dispersed
+coastwide, and that differences in sex ratios at age are not due to
+latitudinal or depth specific differences (Figure
+\@ref(fig:biology-sexratio-lengthbylatitude)), and thus, a sex ratio of
+50:50 was assumed for this assessment, as was done in the 2015 benchmark
+assessment.
 
 ### Ageing Precision and Bias
 
-The ageing error matrices used in the 2015 benchmark assessment for break and burn samples were retained for this analysis. Ageing error was explored in the 2015 assessment including extensive model selection and exploration on the ageing methods to includes and the appropriate aging lab to treat as unbiased [@thorson_status_2015]. An extensive description on the history of including ageing error and bias into past canary assessments was also provided in the 2015 asessment [@thorson_status_2015]. Surface read ages were not included in this assessment and therefore surface read ageing error matrices from the 2015 assessment were not retained in the model.
+The ageing error matrices used in the 2015 benchmark assessment for
+break and burn samples were retained for this analysis. Ageing error was
+explored in the 2015 assessment including extensive model selection and
+exploration on the ageing methods to includes and the appropriate aging
+lab to treat as unbiased [@thorson_status_2015]. An extensive
+description on the history of including ageing error and bias into past
+canary assessments was also provided in the 2015 asessment
+[@thorson_status_2015]. Surface read ages were not included in this
+assessment and therefore surface read ageing error matrices from the
+2015 assessment were not retained in the model.
 
-Per the 2015 assessment, ages from the CAPS ageing laboratory were assumed unbiased, and a linear bias for break-and-burn reads from ODFW and WDFW ageing labs were estimated alongwith a constant coefficient of variation (CV) for imprecision for break-and-burn reads from CAPS, ODFW, and WDFW. The estimated pattern for bias and imprecision (*Add figure here. Jim's figure 37*) indicates that ODFW break-and-burn reads are almost unbiased relative to CAPS break-and-burn reads, and the WDFW break-and-burn reads have a positive bias relative to CAPS break-and-burn reads (+3.76 yrs. at age 30).
+Per the 2015 assessment, ages from the CAPS ageing laboratory were
+assumed unbiased, and a linear bias for break-and-burn reads from ODFW
+and WDFW ageing labs were estimated alongwith a constant coefficient of
+variation (CV) for imprecision for break-and-burn reads from CAPS, ODFW,
+and WDFW. The estimated pattern for bias and imprecision (*Add figure
+here. Jim's figure 37*) indicates that ODFW break-and-burn reads are
+almost unbiased relative to CAPS break-and-burn reads, and the WDFW
+break-and-burn reads have a positive bias relative to CAPS
+break-and-burn reads (+3.76 yrs. at age 30).
 
-A qualitative examination of the new break and burn double reads showed no evidence that the ageing estimation had changed over time relative to the samples included in the previous analyses. Furthermore, a new TMB-based ageing error software has been developed (A. Punt pers. comm.) but has not yet been fully explored or documented. Therefore, revision of the ageing error matrices has been left as a research project to be completed in time for the next full assessment.
- 
-*We need to do this qualitative analysis. TO DO: KIVA*
-*Add figure of ageing error*
-*We need to add in the bomb radiocarbon bias to these*
+A qualitative examination of the new break and burn double reads showed
+no evidence that the ageing estimation had changed over time relative to
+the samples included in the previous analyses. Furthermore, a new
+TMB-based ageing error software has been developed (A. Punt pers. comm.)
+but has not yet been fully explored or documented. Therefore, revision
+of the ageing error matrices has been left as a research project to be
+completed in time for the next full assessment.
 
-*Do we want to keep in sample size information? Im commenting this out in part because we dont update so new data numbers are irrelevant*
+*We need to do this qualitative analysis. TO DO: KIVA* *Add figure of
+ageing error* *We need to add in the bomb radiocarbon bias to these*
+
+*Do we want to keep in sample size information? Im commenting this out
+in part because we dont update so new data numbers are irrelevant*
 <!-- In this assessment, we obtain all available double read data and re-estimate bias and imprecision for reads provided by ODFW, WDFW, and CAPS labs using either break-and-burn or surface read techniques.  This includes 2,307 unique otoliths with double-reads primarily among readers at the CAPS laboratory, obtained from P. McDonald (personal communication, Nov. 20, 2014), as well as 6,544 unique otoliths with double-reads between CAPS or ODFW laboratories and the WDFW laboratory, obtained from P. Weyland (personal communication, Dec. 17, 2014).  Exploratory analysis indicated memory problems with the analysis software unless reads were restricted to those aged 60 or younger, and this restriction decreased the total sample size to 8,812 (from 8,851).  All reads were classified by laboratory and reader method, resulting in five unique categories for ageing error:  CAPS break-and-burn (4,991 unique reads); ODFW break-and-burn (2,400 unique reads); WDFW break-and-burn (10,180 unique reads); ODFW surface reads (199 unique reads); and WDFW surface reads (576 unique reads), where the total number of unique reads for each lab exceeds the number of unique otoliths because otoliths are read twice or three times each. -->
-

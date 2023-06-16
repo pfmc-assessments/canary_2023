@@ -38,28 +38,22 @@ dev.off()
 ##
 #Plot WL relationship
 ##
-png(
-  filename = here('documents','figures','WL.png'),
-  width = 6.5, height = 5.0, units = "in", res = 300, pointsize = 10
-)
+wcgbts_date <- '2023-02-13'
+load(here(paste0('data-raw/Bio_All_NWFSC.Combo_', wcgbts_date, '.rda')))
 
-plot(mod23$biology$Len_mean, mod23$parameters['Wtlen_1_Fem', 'Value']*
-       mod23$biology$Len_mean^mod23$parameters['Wtlen_2_Fem', 'Value'], 
-     type = "n", lty = 1, lwd=3, col = 2, ylab = "Weight (kg)", xlab = "Length (cm)")
-
-#Females
-lines(mod23$biology$Len_mean, mod23$parameters['Wtlen_1_Fem', 'Value']*
-        mod23$biology$Len_mean^mod23$parameters['Wtlen_2_Fem', 'Value'], 
-      lty = 1, lwd=3, col = 2)
-
-#Males
-lines(mod23$biology$Len_mean, mod23$parameters['Wtlen_1_Mal', 'Value']*
-        mod23$biology$Len_mean^mod23$parameters['Wtlen_2_Mal', 'Value'], 
-      lty = 1, lwd = 3, col = 4)
-
-legend("topleft", c("Females", "Males"), 
-       lty = 1, lwd = 3, col = c(2,4), bty = "n")
-dev.off()
+read.csv(here('data/W_L_pars.csv')) |>
+  dplyr::mutate(out.dfr = purrr::map2(A, B, ~ dplyr::tibble(x = 1:66, y = .x*x^.y))) |>
+  tidyr::unnest(out.dfr) |>
+  dplyr::filter(Sex != 'B') |>
+  ggplot() +
+  geom_point(aes(x = Length_cm, y = Weight, col = Sex), alpha = 0.05, 
+             data = dplyr::filter(Data, Sex != 'U')) +
+  geom_line(aes(x, y, col = Sex), linewidth = 1) +
+  labs(x = 'Length (cm)', y = 'Weight (kg)') +
+  scale_color_manual(values = c('F' = 'red', 'M' = 'blue')) +
+  theme_classic()
+ggsave(here('documents/figures/WL.png'), device = 'png', width = 6.5,
+       height = 5, units = 'in', dpi = 300)
 
 ##
 #Compare WL relationship with previous assessment
