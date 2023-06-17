@@ -11533,131 +11533,153 @@ SSsummarize(xx) |>
                                      'Float Q, late Tri wts'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
-# ####------------------------------------------------####
-# ### 5_0_0_updateCatches Update catches from CA rec (for 2020 and 2021) and WA 2022 (and WA pacfin comps)  ----
-# ####------------------------------------------------####
+####------------------------------------------------####
+### 5_0_0_base Update catches from CA rec (for 2020 and 2021) and WA 2022 (but not WA pacfin comps). ----
+###  Remove sex dependent selex for CA rec, update the inits and name for WA NTWL selex  
+####------------------------------------------------####
+
+#WA catches are not yet in PacFIN so just manually adjust here
+
+new_name <- "5_0_1_all"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/4_8_4_mirrorORWA_twl'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make changes
+##
+
+# Update catch time series ------------------------------------------------
+catches <- read.csv(here('data/canary_total_removals.csv'))
+updated.catch.df <- catches |>
+  dplyr::select(-rec.W.N) |>
+  tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
+  tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |>
+  # warning is ok, cuts off units in WA rec catch column name
+  dplyr::mutate(gear = stringr::str_to_upper(gear),
+                state = dplyr::case_when(state == 'W' ~ 'WA',
+                                         state == 'O' ~ 'OR',
+                                         state == 'C' ~ 'CA'),
+                fleet_no_num = paste(state, gear, sep = '_')) |>
+  dplyr::left_join(fleet.converter) |>
+  dplyr::mutate(seas = 1,
+                catch_se = 0.05) |>
+  dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
+  #rbind(c(-999, 1, 1, 0, 0.05)) |>
+  dplyr::arrange(fleet, year) |>
+  as.data.frame()
+
+mod$dat$catch <- updated.catch.df
+
+#Manually update the WA 2022 trawl and nontrawl amounts 
+mod$dat$catch[mod$dat$catch$fleet == 3 & mod$dat$catch$year == 2022, "catch"] <- 102.4 + 0.01
+
+
+
+# Update inits for WA NTWL (previously had copied from OR NTWL) ----------------------------------------------
+
+selex_modes <- mod$dat$lencomp |>
+  dplyr::arrange(FltSvy) |>
+  dplyr::group_by(FltSvy) |>
+  dplyr::summarise(dplyr::across(f12:m66, ~ sum(Nsamp*.x)/sum(Nsamp))) |>
+  tidyr::pivot_longer(cols = -FltSvy, names_to = 'len_bin', values_to = 'dens') |>
+  tidyr::separate(col = len_bin, into = c('sex', 'length'), sep = 1) |>
+  dplyr::group_by(FltSvy, sex) |>
+  dplyr::summarise(mode = length[which.max(dens)]) |>
+  dplyr::summarise(mode = mean(as.numeric(mode))) |>
+  dplyr::mutate(asc.slope = log(8*(mode - min(mod$dat$lbin_vector))),
+                desc.slope = log(8*(max(mod$dat$lbin_vector)-mode)))
+
+mod$ctl$size_selex_parms[intersect(grep("6_WA_NTWL",rownames(mod$ctl$size_selex_parms)),
+                                   grep("SizeSel_P_1",rownames(mod$ctl$size_selex_parms))),"INIT"] <- 
+  selex_modes[selex_modes$FltSvy == 6,"mode"]
+
+mod$ctl$size_selex_parms[intersect(grep("6_WA_NTWL",rownames(mod$ctl$size_selex_parms)),
+                                   grep("SizeSel_P_3",rownames(mod$ctl$size_selex_parms))),"INIT"] <- 
+  selex_modes[selex_modes$FltSvy == 6,"asc.slope"]
+
+mod$ctl$size_selex_parms[intersect(grep("6_WA_NTWL",rownames(mod$ctl$size_selex_parms)),
+                                   grep("SizeSel_P_4",rownames(mod$ctl$size_selex_parms))),"INIT"] <- 
+  selex_modes[selex_modes$FltSvy == 6,"desc.slope"]
+
+# Remove sex dependent selex from CA rec -----------------------------------------------
+
+# mod$ctl$size_selex_types[grep("7_CA_REC",rownames(mod$ctl$size_selex_types)),"Male"] <- 0
 # 
-# #NOT READY YET TO DO - NEED TO CONFIRM WA CATCHES ARE IN FACT UPDATED IN PACFIN
+# mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[
+#   -intersect(grep("SizeSel_PFemOff", rownames(mod$ctl$size_selex_parms)),
+#             grep("7_CA_REC", rownames(mod$ctl$size_selex_parms))),]
 # 
-# new_name <- "5_0_0_updateCatches"
-# 
-# ##
-# #Copy inputs
-# ##
-# 
-# copy_SS_inputs(dir.old = here('models/4_3_1_M_ramp_update'),  
-#                dir.new = here('models',new_name),
-#                overwrite = TRUE)
-# 
-# mod <- SS_read(here('models',new_name))
-# 
-# fleet.converter <- mod$dat$fleetinfo |>
-#   dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
-#                 fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
-#   dplyr::select(fleetname, fleet_no_num, fleet)
-# 
-# 
-# ##
-# #Make changes
-# ##
-# 
-# # Update catch time series ------------------------------------------------
-# catches <- read.csv(here('data/canary_total_removals.csv')) 
-# updated.catch.df <- catches |>
-#   dplyr::select(-rec.W.N) |>
-#   tidyr::pivot_longer(cols = -Year, names_to = 'fleet', values_to = 'catch') |>
-#   tidyr::separate(col = fleet, into = c('gear', 'state'), sep = '\\.') |> 
-#   # warning is ok, cuts off units in WA rec catch column name
-#   dplyr::mutate(gear = stringr::str_to_upper(gear),
-#                 state = dplyr::case_when(state == 'W' ~ 'WA',
-#                                          state == 'O' ~ 'OR',
-#                                          state == 'C' ~ 'CA'),
-#                 fleet_no_num = paste(state, gear, sep = '_')) |>
-#   dplyr::left_join(fleet.converter) |>
-#   dplyr::mutate(seas = 1, 
-#                 catch_se = 0.05) |>
-#   dplyr::select(year = Year, seas, fleet, catch, catch_se) |>
-#   #rbind(c(-999, 1, 1, 0, 0.05)) |>
-#   dplyr::arrange(fleet, year) |>
-#   as.data.frame()
-# 
-# mod$dat$catch <- updated.catch.df
-# 
-# 
-# # Update WA comps ----------------------------------------------------
-# 
-# read.fishery.comps <- function(filename, exclude) {
-#   
-# }
-# 
-# pacfin.ages <- purrr::map(list('WA'), function(.x) {
-#   read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Acomps_{amin}_{amax}_formatted.csv',
-#                            area = .x,
-#                            amin = age.min,
-#                            amax = age.max))) |>
-#     dplyr::select(-state, -Ntows, -Nsamps) |>
-#     dplyr::mutate(fleet = sapply(fleet, function(.fleet)
-#       fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
-#                                                                        area = .x,
-#                                                                        fleet = .fleet)])) |> 
-#     `names<-`(names(mod$dat$agecomp))
-# }) |> 
-#   purrr::list_rbind() 
-# 
-# pacfin.lengths <- purrr::map(list('WA'), function(.x) {
-#   read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Lcomps_{lmin}_{lmax}_formatted.csv',
-#                            area = .x,
-#                            lmin = length.min,
-#                            lmax = length.max))) |>
-#     dplyr::select(-state, -Ntows, -Nsamps) |>
-#     dplyr::mutate(fleet = sapply(fleet, function(.fleet)
-#       fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
-#                                                                        area = .x, 
-#                                                                        fleet = .fleet)])) |>
-#     `names<-`(names(mod$dat$lencomp))
-# }) |>
-#   purrr::list_rbind()
-# 
-# 
-# mod$dat$agecomp <- mod$dat$agecomp |> 
-#   dplyr::filter(!(FltSvy %in% unique(pacfin.ages$FltSvy))) |>
-#   dplyr::bind_rows(pacfin.ages)
-# 
-# mod$dat$lencomp <- mod$dat$lencomp |> 
-#   dplyr::filter(!(FltSvy %in% unique(pacfin.lengths$FltSvy))) |>
-#   dplyr::bind_rows(pacfin.lengths)
-# 
-# 
-# 
-# ##----
-# #Output files and run
-# ##
-# 
-# SS_write(mod,
-#          dir = here('models',new_name),
-#          overwrite = TRUE)
-# 
-# r4ss::run(dir = here('models',new_name), 
-#           exe = here('models/ss_win.exe'), 
-#           extras = '-nohess',
-#           # show_in_console = TRUE,
-#           skipfinished = FALSE)
-# 
-# pp <- SS_output(here('models',new_name))
-# SS_plots(pp, plot = c(1:26))
-# 
-# plot_sel_comm(pp, sex=1)
-# plot_sel_comm(pp, sex=2)
-# plot_sel_noncomm(pp, sex=1, spatial = FALSE)
-# plot_sel_noncomm(pp, sex=2, spatial = FALSE)
-# 
-# xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-#                                       subdir = c('4_7_1_tune452',
-#                                                  '5_0_0_updateCatches')))
-# SSsummarize(xx) |>
-#   SSplotComparisons(legendlabels = c('Tuned model'
-#                                      'Update catches'),
-#                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+# mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[
+#   -intersect(grep("SizeSel_PFemOff", rownames(mod$ctl$size_selex_parms_tv)),
+#              grep("7_CA_REC", rownames(mod$ctl$size_selex_parms_tv))),]
+
+# Fix male and female selectivity to be the same for CA rec -----------------------------------------------
+
+mod$ctl$size_selex_parms[grep("SizeSel_PFemOff_3_7_CA_REC", rownames(mod$ctl$size_selex_parms)), "PHASE"] <- -99
+mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_7_CA_REC", rownames(mod$ctl$size_selex_parms_tv)), "PHASE"] <- -99
+
+##----
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- r4ss::tune_comps(replist = pp, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 0, 
+                       extras = '-nohess', write = TRUE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('4_8_4_mirrorORWA_twl',
+                                                 '5_0_1_justCatch',
+                                                 '5_0_1_justCatch_old_DELETE',
+                                                 '5_0_1_justInits',
+                                                 '5_0_1_justSexDepend_DELETE',
+                                                 '5_0_1_CArec_fem4_fixed',
+                                                 '5_0_1_CArec_fem4_fixed_noTV',
+                                                 '5_0_1_all')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('model 484',
+                                     'Update catch',
+                                     'Update catch automatically',
+                                     'Update inits',
+                                     'update CA rec sex dependent BAD',
+                                     'fix rec sex dependent at 0 for 1892-2003',
+                                     'fix rec sex dependent at 0 for all',
+                                     '5_0_1_all'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
 
