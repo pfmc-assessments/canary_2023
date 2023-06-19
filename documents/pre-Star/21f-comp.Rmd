@@ -9,9 +9,12 @@ Sampling of the recreational fisheries begun in XXX. Currently, port biologists 
 
 #### Commercial fisheries
 
-Commercial length- and marginal age-frequency distributions were calculated for each fleet for which observations were available. Biological length and age data were extracted from the \gls{pacfin} Biological Data System on March 28, 2023. Biological data were divided into trawl and nontrawl fleets for each state according to the fleet structure used for this assessment. There was a mix of biological length samples with and without sex information but the majority of samples included information on sex.
+Commercial length- and marginal age-frequency distributions were calculated for each fleet for which observations were available. Biological length and age data were extracted from the \gls{pacfin} Biological Data System on May 8, 2023. Biological data were divided into trawl and nontrawl fleets for each state according to the fleet structure used for this assessment. Length samples were available starting in 1977 for California fleets, 1973 for Oregon fleets, and 1968 for Washington fleets. Age samples were available starting in 1980 for all state's fleets. There was a mix of biological length and age samples with and without sex information but the majority of samples included information on sex, with nearly all age samples having information on sex.
 
-During data exploration it was noted that data previously labelled as special project samples from Oregon included samples appropriate to represent dynamics from the fishery. The majority of these occurred prior to 1987, and therefore special project samples from Oregon up through 1986 were retained for composition data.  
+During data exploration it was noted that data previously labelled as special project samples from Oregon included samples appropriate to represent dynamics from the fishery. The majority of these occurred during 1973--1986, and therefore 5,859 special project samples from Oregon up through 1986 were retained for composition data. Also during data exploration, there were 700 age samples from Washington without a final age determination. These represented a small enough proportion of samples among the year they occurred and so were excluded.
+
+*TO DO: DO surface read sensitivity or exclude the text below about doing it*
+Among age samples, 6,645 were from surface reads, starting in 1973 for Oregon and 1975 for Washington. Ages of surface reads were truncated to around 30 prior to 1980, and were more similar to break and burn reads when both were available starting in 1980. Given known biases of surface reads, and the clear truncation in years were only surface years were available, we excluded surface reads from age compositions. A sensitivity to the presence of surface read showed negliable effect on model results (see Section @ref(sensitivites)). 
 
 For commercial trawl and nontrawl fleets, the raw observations (compiled from \gls{pacfin}) were expanded to the sample level, to allow for any fish that were not measured, then to the trip level to account for the relative size of the landing from which the sample was obtained. These expanded length and age observations were then combined within a year for each fleet.
 
@@ -25,7 +28,8 @@ Input effN = $7.06 * N_{\text{trips}}$ if $N_{\text{fish}}/N_{\text{trips}}$ is 
 
 \end{centering}
 
-The magnitude of sampling for each fleet and year are given in TABLES and FIGURES, and show the different magnitudes of sampling across time and between state agencies. These tables show both the total number of fish samples as well as the number of trips or hauls by year and state over which samples were obtained. 
+*TO DO: Need to create this table and include*
+The magnitude of sampling for each fleet and year are given in TABLES, and show the different magnitudes of sampling across time and between state agencies. These tables show both the total number of fish samples as well as the number of trips or hauls by year and state over which samples were obtained. 
 
 During modeling we noticed sparse length and age composition data of unsexed fish for a few years across fleets. Years with very few unsexed length and age samples relative to sexed samples were excluded from the model. See [Appendix A](#excluded-data) for implied fits to these length and age data.
 *We may not even need implied fits to these. A sensitivity would be to remove anything less than a certain number, where sexed or unsexed*

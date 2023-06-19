@@ -57,7 +57,7 @@ f.  Estimates of ageing error for break-and-burn ages were maintained from the p
 These data sources are illustrated in Figure 3.
 
 
-## Data sourced considered but not used
+## Data sources considered but not used
 
 
 *We should specify what sources of data (catch, lengths, ages, indices) these refer to*
