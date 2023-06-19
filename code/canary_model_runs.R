@@ -11677,6 +11677,110 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
+####------------------------------------------------####
+### 5_0_2_base Extend bounds on WA rec paramaeters at their bound to negative values, which are sensible
+####------------------------------------------------####
+
+new_name <- "5_0_2_base2"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_1_base'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Adjust bound on tv parms. This is model 5_0_2_base
+mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_3_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep('BLK5repl_2006',rownames(mod$ctl$size_selex_parms_tv))),"LO"] <- -9
+mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_4_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep('BLK5repl_2021',rownames(mod$ctl$size_selex_parms_tv))),"LO"] <- -9
+
+#Get a lot of warnings that regular parameters are below limits. Thus to adjust bounds on time-varying parameters
+#need to change the bound on the original because replace (block_fxn = 2). This is model 5_0_2_base2
+mod$ctl$size_selex_parms[grep('SizeSel_P_3_9_WA_REC',rownames(mod$ctl$size_selex_parms)),"LO"] <- -9
+mod$ctl$size_selex_parms[grep('SizeSel_P_4_9_WA_REC',rownames(mod$ctl$size_selex_parms)),"LO"] <- -9
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 5_0_3_base Liklihood is worse when extend bounds so fix at 0
+####------------------------------------------------####
+
+#WA catches are not yet in PacFIN so just manually adjust here
+
+new_name <- "5_0_3_base"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_1_base'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_3_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep('BLK5repl_2006',rownames(mod$ctl$size_selex_parms_tv))),c("INIT","PHASE")] <- c(0,-99)
+mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_4_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep('BLK5repl_2021',rownames(mod$ctl$size_selex_parms_tv))),c("INIT","PHASE")] <- c(0,-99)
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
 
 ##########################################################################################
 
