@@ -3,6 +3,34 @@
 
 # Figures
 
+![Length composition data for the California trawl fishery \label{fig:CA_twl_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt1mkt0_page2.png){width=100% height=100% alt="Bubble plot of California trawl length compositions for males, females, and unsexed fish"}
+![Length composition data for the Oregon trawl fishery \label{fig:OR_twl_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt2mkt0_page3.png){width=100% height=100% alt="Bubble plot of Oregon trawl length compositions for males and females"}
+![Length composition data for the Washington trawl fishery \label{fig:WA_twl_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt3mkt0_page3.png){width=100% height=100% alt="Bubble plot of Washington trawl length compositions for males, females, and unsexed fish"}
+
+![Length composition data for the California non-trawl fishery \label{fig:CA_ntwl_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt4mkt0_page2.png){width=100% height=100% alt="Bubble plot of California non-trawl length compositions for males, females, and unsexed fish"}
+![Length composition data for the Oregon non-trawl fishery \label{fig:OR_ntwl_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt5mkt0.png){width=100% height=100% alt="Bubble plot of Oregon non-trawl length compositions for males and females"}
+![Length composition data for the Washington non-trawl fishery \label{fig:WA_ntwl_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt6mkt0.png){width=100% height=100% alt="Bubble plot of Washington non-trawl length compositions for males and females"}
+
+
+![Age composition data for the California trawl fishery \label{fig:CA_twl_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt1mkt0.png){width=100% height=100% alt="Bubble plot of California trawl age compositions for males and females"}
+![Age composition data for the Oregon trawl fishery \label{fig:OR_twl_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt2mkt0_page2.png){width=100% height=100% alt="Bubble plot of Oregon trawl age compositions for males and females"}
+![Age composition data for the Washington trawl fishery \label{fig:WA_twl_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt3mkt0_page3.png){width=100% height=100% alt="Bubble plot of Washington trawl age compositions for males and females"}
+![Age composition data for the California non-trawl fishery \label{fig:CA_ntwl_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt4mkt0.png){width=100% height=100% alt="Bubble plot of California non-trawl age compositions for males and females"}
+![Age composition data for the Oregon non-trawl fishery \label{fig:OR_ntwl_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt5mkt0.png){width=100% height=100% alt="Bubble plot of Oregon non-trawl age compositions for males and females"}
+![Age composition data for the Washington non-trawl fishery \label{fig:WA_ntwl_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt6mkt0.png){width=100% height=100% alt="Bubble plot of Washington non-trawl age compositions for males and females"}
+
+![Length composition data for the Oregon at-sea-hake fishery \label{fig:OR_hake_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt11mkt0.png){width=100% height=100% alt="Bubble plot of Oregon at-sea-hake length compositions for males and females"}
+![Length composition data for the Washington at-sea-hake fishery \label{fig:WA_hake_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt12mkt0.png){width=100% height=100% alt="Bubble plot of Washington at-sea-hake length compositions for males and females"}
+![Age composition data for the Oregon at-sea-hake fishery \label{fig:OR_hake_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt11mkt0.png){width=100% height=100% alt="Bubble plot of Oregon at-sea-hake age compositions for males and females"}
+![Age composition data for the Washington at-sea-hake fishery \label{fig:WA_hake_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt12mkt0.png){width=100% height=100% alt="Bubble plot of Washington at-sea-hake age compositions for males and females"}
+![Length composition data for the California recreational fishery \label{fig:CA_rec_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt7mkt0_page2.png){width=100% height=100% alt="Bubble plot of California recreational length compositions for unsexed fish"}
+![Length composition data for the Oregon recreational fishery \label{fig:OR_rec_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt8mkt0_page2.png){width=100% height=100% alt="Bubble plot of Oregon recreational length compositions for males, females, and unsexed fish"}
+![Length composition data for the Washington recreational fishery \label{fig:WA_rec_lencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat_bubflt9mkt0_page2.png){width=100% height=100% alt="Bubble plot of Washington non-trawl length compositions for males, females, and unsexed fish"}
+![Aggregate length composition data for the all fisheries \label{fig:agglencomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_lendat__aggregated_across_time.png){width=100% height=100% alt="Aggregate plots of length compositions for males, females, and unsexed fish across all length distributions"}
+
+![Age composition data for the Oregon recreational fishery \label{fig:OR_rec_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt8mkt0.png){width=100% height=100% alt="Bubble plot of Oregon recreational age compositions for males and females"}
+![Age composition data for the Washington recreational fishery \label{fig:WA_rec_agecomp}](../../models/4_8_4_mirrorORWA_twl/plots/comp_agedat_bubflt9mkt0.png){width=100% height=100% alt="Bubble plot of Washington recreational age compositions for males and females"}
+
 ![Maturity at age relationship \label{fig:compare_maturity}](../figures/compare_maturity.png){width=100% height=100% alt="Two logistic curves for 2015 and 2023, 2015 is shifted left of 2023 and asymptotes below 1, 2023 asymptotes at 1"}
 
 ![Fecundity at length relationship \label{fig:compare_fecundity}](../figures/compare_fecundity.png){width=100%, height=100%, alt="Two exponential curves for 2015 and 2023, 2023 is lower"}
