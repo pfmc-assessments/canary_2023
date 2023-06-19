@@ -11534,13 +11534,14 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 ####------------------------------------------------####
-### 5_0_0_base Update catches from CA rec (for 2020 and 2021) and WA 2022 (but not WA pacfin comps). ----
-###  Remove sex dependent selex for CA rec, update the inits and name for WA NTWL selex  
+### 5_0_1_base Update catches from CA rec (for 2020 and 2021) and WA 2022 (but not WA pacfin comps). ----
+### Remove sex dependent selex for CA rec, update the inits and name for WA NTWL selex  
+### I tested these individually in 5_0_0_ models 
 ####------------------------------------------------####
 
 #WA catches are not yet in PacFIN so just manually adjust here
 
-new_name <- "5_0_1_all"
+new_name <- "5_0_1_base"
 
 ##
 #Copy inputs
@@ -11584,9 +11585,8 @@ updated.catch.df <- catches |>
 
 mod$dat$catch <- updated.catch.df
 
-#Manually update the WA 2022 trawl and nontrawl amounts 
+#Manually update the WA 2022 trawl and nontrawl amounts because not in the updated catch time series
 mod$dat$catch[mod$dat$catch$fleet == 3 & mod$dat$catch$year == 2022, "catch"] <- 102.4 + 0.01
-
 
 
 # Update inits for WA NTWL (previously had copied from OR NTWL) ----------------------------------------------
@@ -11615,7 +11615,9 @@ mod$ctl$size_selex_parms[intersect(grep("6_WA_NTWL",rownames(mod$ctl$size_selex_
                                    grep("SizeSel_P_4",rownames(mod$ctl$size_selex_parms))),"INIT"] <- 
   selex_modes[selex_modes$FltSvy == 6,"desc.slope"]
 
+
 # Remove sex dependent selex from CA rec -----------------------------------------------
+# Removing this altogether gave poor gradient so likely wasnt doing correctly
 
 # mod$ctl$size_selex_types[grep("7_CA_REC",rownames(mod$ctl$size_selex_types)),"Male"] <- 0
 # 
@@ -11627,8 +11629,7 @@ mod$ctl$size_selex_parms[intersect(grep("6_WA_NTWL",rownames(mod$ctl$size_selex_
 #   -intersect(grep("SizeSel_PFemOff", rownames(mod$ctl$size_selex_parms_tv)),
 #              grep("7_CA_REC", rownames(mod$ctl$size_selex_parms_tv))),]
 
-# Fix male and female selectivity to be the same for CA rec -----------------------------------------------
-
+# Instead, fix male and female selectivity to be the same for CA rec 
 mod$ctl$size_selex_parms[grep("SizeSel_PFemOff_3_7_CA_REC", rownames(mod$ctl$size_selex_parms)), "PHASE"] <- -99
 mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_7_CA_REC", rownames(mod$ctl$size_selex_parms_tv)), "PHASE"] <- -99
 
@@ -11663,20 +11664,14 @@ xx <- r4ss::tune_comps(replist = pp,
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('4_8_4_mirrorORWA_twl',
-                                                 '5_0_1_justCatch',
-                                                 '5_0_1_justCatch_old_DELETE',
-                                                 '5_0_1_justInits',
-                                                 '5_0_1_justSexDepend_DELETE',
-                                                 '5_0_1_CArec_fem4_fixed',
-                                                 '5_0_1_CArec_fem4_fixed_noTV',
-                                                 '5_0_1_all')))
+                                                 '5_0_0_justCatch',
+                                                 '5_0_0_justInits',
+                                                 '5_0_0_CArec_fem4_fixed_noTV',
+                                                 '5_0_1_base')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('model 484',
                                      'Update catch',
-                                     'Update catch automatically',
                                      'Update inits',
-                                     'update CA rec sex dependent BAD',
-                                     'fix rec sex dependent at 0 for 1892-2003',
                                      'fix rec sex dependent at 0 for all',
                                      '5_0_1_all'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
