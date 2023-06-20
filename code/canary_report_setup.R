@@ -18,7 +18,7 @@ library(here)
 # Specify the directory for the document
 #User directories
 if(Sys.getenv("USERNAME") == "Brian.Langseth") {
-  dir <- "U:/Stock assessments/canary_2023"
+  dir <- "C:\\Users\\Brian.Langseth\\Desktop\\canary_2023"
 }
 
 #Create directory

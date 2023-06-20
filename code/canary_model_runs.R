@@ -11534,13 +11534,14 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 ####------------------------------------------------####
-### 5_0_0_base Update catches from CA rec (for 2020 and 2021) and WA 2022 (but not WA pacfin comps). ----
-###  Remove sex dependent selex for CA rec, update the inits and name for WA NTWL selex  
+### 5_0_1_base Update catches from CA rec (for 2020 and 2021) and WA 2022 (but not WA pacfin comps). ----
+### Remove sex dependent selex for CA rec, update the inits and name for WA NTWL selex  
+### I tested these individually in 5_0_0_ models 
 ####------------------------------------------------####
 
 #WA catches are not yet in PacFIN so just manually adjust here
 
-new_name <- "5_0_1_all"
+new_name <- "5_0_1_base"
 
 ##
 #Copy inputs
@@ -11584,9 +11585,8 @@ updated.catch.df <- catches |>
 
 mod$dat$catch <- updated.catch.df
 
-#Manually update the WA 2022 trawl and nontrawl amounts 
+#Manually update the WA 2022 trawl and nontrawl amounts because not in the updated catch time series
 mod$dat$catch[mod$dat$catch$fleet == 3 & mod$dat$catch$year == 2022, "catch"] <- 102.4 + 0.01
-
 
 
 # Update inits for WA NTWL (previously had copied from OR NTWL) ----------------------------------------------
@@ -11615,7 +11615,9 @@ mod$ctl$size_selex_parms[intersect(grep("6_WA_NTWL",rownames(mod$ctl$size_selex_
                                    grep("SizeSel_P_4",rownames(mod$ctl$size_selex_parms))),"INIT"] <- 
   selex_modes[selex_modes$FltSvy == 6,"desc.slope"]
 
+
 # Remove sex dependent selex from CA rec -----------------------------------------------
+# Removing this altogether gave poor gradient so likely wasnt doing correctly
 
 # mod$ctl$size_selex_types[grep("7_CA_REC",rownames(mod$ctl$size_selex_types)),"Male"] <- 0
 # 
@@ -11627,8 +11629,7 @@ mod$ctl$size_selex_parms[intersect(grep("6_WA_NTWL",rownames(mod$ctl$size_selex_
 #   -intersect(grep("SizeSel_PFemOff", rownames(mod$ctl$size_selex_parms_tv)),
 #              grep("7_CA_REC", rownames(mod$ctl$size_selex_parms_tv))),]
 
-# Fix male and female selectivity to be the same for CA rec -----------------------------------------------
-
+# Instead, fix male and female selectivity to be the same for CA rec 
 mod$ctl$size_selex_parms[grep("SizeSel_PFemOff_3_7_CA_REC", rownames(mod$ctl$size_selex_parms)), "PHASE"] <- -99
 mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_7_CA_REC", rownames(mod$ctl$size_selex_parms_tv)), "PHASE"] <- -99
 
@@ -11663,26 +11664,215 @@ xx <- r4ss::tune_comps(replist = pp,
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('4_8_4_mirrorORWA_twl',
-                                                 '5_0_1_justCatch',
-                                                 '5_0_1_justCatch_old_DELETE',
-                                                 '5_0_1_justInits',
-                                                 '5_0_1_justSexDepend_DELETE',
-                                                 '5_0_1_CArec_fem4_fixed',
-                                                 '5_0_1_CArec_fem4_fixed_noTV',
-                                                 '5_0_1_all')))
+                                                 '5_0_0_justCatch',
+                                                 '5_0_0_justInits',
+                                                 '5_0_0_CArec_fem4_fixed_noTV',
+                                                 '5_0_1_base')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('model 484',
                                      'Update catch',
-                                     'Update catch automatically',
                                      'Update inits',
-                                     'update CA rec sex dependent BAD',
-                                     'fix rec sex dependent at 0 for 1892-2003',
                                      'fix rec sex dependent at 0 for all',
                                      '5_0_1_all'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
+####------------------------------------------------####
+### 5_0_2_base Extend bounds on WA rec paramaeters at their bound to negative values, which are sensible
+####------------------------------------------------####
+
+new_name <- "5_0_2_base2"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_1_base'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Adjust bound on tv parms. This is model 5_0_2_base
+mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_3_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep('BLK5repl_2006',rownames(mod$ctl$size_selex_parms_tv))),"LO"] <- -9
+mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_4_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep('BLK5repl_2021',rownames(mod$ctl$size_selex_parms_tv))),"LO"] <- -9
+
+#Get a lot of warnings that regular parameters are below limits. Thus to adjust bounds on time-varying parameters
+#need to change the bound on the original because replace (block_fxn = 2). This is model 5_0_2_base2
+mod$ctl$size_selex_parms[grep('SizeSel_P_3_9_WA_REC',rownames(mod$ctl$size_selex_parms)),"LO"] <- -9
+mod$ctl$size_selex_parms[grep('SizeSel_P_4_9_WA_REC',rownames(mod$ctl$size_selex_parms)),"LO"] <- -9
 
 
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 5_0_3_base Liklihood is worse when extend bounds so fix at 0
+####------------------------------------------------####
+
+#WA catches are not yet in PacFIN so just manually adjust here
+
+new_name <- "5_0_3_base"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_1_base'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_3_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep('BLK5repl_2006',rownames(mod$ctl$size_selex_parms_tv))),c("INIT","PHASE")] <- c(0,-99)
+mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_4_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep('BLK5repl_2021',rownames(mod$ctl$size_selex_parms_tv))),c("INIT","PHASE")] <- c(0,-99)
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+####------------------------------------------------####
+### 5_0_4_OR_Rec_fix2 No sex specific selectivity for OR Rec. It was really struggling.  
+####------------------------------------------------####
+
+new_name <- "5_0_4_OR_Rec_fix2"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_1_base'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms[grep("SizeSel_PFemOff_3_8_OR_REC", rownames(mod$ctl$size_selex_parms)), "PHASE"] <- -99
+mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_8_OR_REC\\(8\\)_BLK4repl_2004", rownames(mod$ctl$size_selex_parms_tv)), "PHASE"] <- -99
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+# pp <- SS_output(here('models',new_name))
+# SS_plots(pp)
+
+####------------------------------------------------####
+### 5_0_5_OR_Rec_fix1 No sex specific selectivity for OR Rec. It was really struggling.  
+####------------------------------------------------####
+
+new_name <- "5_0_5_OR_Rec_fix1"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_1_base'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_8_OR_REC\\(8\\)_BLK4repl_2004", rownames(mod$ctl$size_selex_parms_tv)), "PHASE"] <- -99
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_0_1_base',
+                                                 '5_0_1_base_best_jitter',
+                                                 '5_0_2_OR_Rec_fix2',
+                                                 new_name)))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'Best jitter from base',
+                                     'Fix blk 1 & 2 OR Rec female offset',
+                                     'Fix blk 2 OR Rec female offset'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+SSsummarize(xx) |>
+  SStableComparisons()
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp)
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities
