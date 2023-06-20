@@ -24,6 +24,13 @@ wcgbts_bio <- Data
 load(here(paste0('data-raw/Bio_All_Triennial_', triennial_date, '.rda')))
 triennial_bio <- Data
 
+if(Sys.getenv("USERNAME") == "Brian.Langseth") {
+  wd = "L:/"
+}
+if(Sys.getenv("USERNAME") == "Kiva.Oken") {
+  wd = "Q:/"
+}
+
 # load data from gdrive
 # wcgbts_bio <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreadsheets/d/1GfsJ4oJNqXm6tjSA3NeBR9L6F1ZwQp5b7-f7nHMKM2A/edit#gid=0')
 # triennial_bio <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreadsheets/d/1cStwfD0-jaNj44ANCEmNNw7lWrMRVdrmt3GjwiqVfl8/edit#gid=0',
@@ -335,6 +342,30 @@ strata <- nwfscSurvey::CreateStrataDF.fn(
 biomass <- nwfscSurvey::Biomass.fn(dir = NULL, 
                                    dat = wcgbts_catch,  
                                    strat.df = strata)
+
+# Compare to model-based indices
+lognormal.ind <- read.csv(
+  paste0(wd, 'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_lognormal/index/est_by_area.csv')) |>
+  dplyr::filter(area == 'coastwide') |>
+  dplyr::select(Year = year, Value = est)
+
+gamma.ind <- read.csv(
+  paste0(wd, '
+         Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/wcgbts/delta_gamma/index/est_by_area.csv')) |>
+  dplyr::filter(area == 'coastwide') |>
+  dplyr::select(Year = year, Value = est)
+
+design.ind <- biomass$Bio |>
+  dplyr::select(Year, Value) |>
+  dplyr::mutate(Year = as.integer(Year))
+  
+dplyr::bind_rows(list(lognormal = lognormal.ind, 
+                      gamma = gamma.ind,
+                      design = design.ind),
+                 .id = 'method') |>
+  ggplot(aes(x = Year, y = Value, col = method)) +
+  geom_point() +
+  geom_line()
 
 plot_comps(age.freq)
 
