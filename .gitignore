@@ -108,3 +108,6 @@ suggested_tuning.ss
 
 #powerpoint files (may want to change once get to STAR panel)
 *.ppt*
+
+# Rdata files are usually too large for github
+*.Rdata
