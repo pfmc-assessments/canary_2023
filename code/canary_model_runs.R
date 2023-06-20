@@ -12028,11 +12028,6 @@ r4ss::run(dir = here('models',new_name),
 pp <- SS_output(here('models',new_name))
 SS_plots(pp, plot = c(1:26))
 
-dir.create(file.path(pp$inputs$dir, "custom_plots"))
-r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
-file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
-          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
-
 plot_sel_comm(pp, sex=1)
 plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
@@ -12340,6 +12335,12 @@ r4ss::run(dir = here('models',new_name),
 
 pp <- SS_output(here('models',new_name))
 SS_plots(pp, plot = c(1:26))
+
+dir.create(file.path(pp$inputs$dir, "custom_plots"))
+r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
+file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
+          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
+unlink(file.path(pp$inputs$dir, "custom_plots"))
 
 plot_sel_comm(pp, sex=1)
 plot_sel_comm(pp, sex=2)
