@@ -20,7 +20,9 @@ library(here)
 if(Sys.getenv("USERNAME") == "Brian.Langseth") {
   dir <- "C:\\Users\\Brian.Langseth\\Desktop\\canary_2023"
 }
-
+if(Sys.getenv("USERNAME") == "Kiva.Oken") {
+  dir <- "C:/Users/Kiva.Oken/Desktop/canary_2023"
+}
 #Create directory
 doc_dir <- file.path(dir, "documents","pre-Star")
 if(!dir.exists(doc_dir)){
@@ -43,11 +45,14 @@ sa4ss::draft(
 model_name <- "4_8_4_mirrorORWA_twl"
 model_dir <- file.path(dir, "models", model_name)
 
-setwd(here('documents/pre-Star'))
-
-sa4ss::read_model(mod_loc = here('models', model_name), 
-                  save_loc = here('documents/pre-Star'), 
+sa4ss::read_model(mod_loc = model_dir, 
+                  save_loc = doc_dir, 
                   create_plots = FALSE)
+
+R.utils::copyDirectory(from = file.path(model_dir, 'plots'),
+                       to = file.path(dir, 'documents/figures/plots'),
+                       overwrite = TRUE)
+
 
 # Compile command
 if(file.exists("_main.Rmd")){
