@@ -111,3 +111,5 @@ suggested_tuning.ss
 
 # Rdata files are usually too large for github
 *.Rdata
+*.Rds
+*.Rda
