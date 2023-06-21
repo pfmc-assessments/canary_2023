@@ -12478,12 +12478,12 @@ unlink(file.path(pp$inputs$dir, "custom_plots"))
 
 
 
-# 5_5_1_recruitment -------------------------------------------------------
+# 5_5_3_recruitment -------------------------------------------------------
 ## Include 2010, 2012, 2022 for prerecruit survey
 ## Change early rec dev settings
 ####------------------------------------------------####
 
-new_name <- "5_5_1_recruitment"
+new_name <- "5_5_3_recruitment"
 
 ##
 #Copy inputs
@@ -12515,7 +12515,75 @@ mod$dat$CPUE <- mod$dat$CPUE |>
   dplyr::filter(!(index %in% unique(prerecruit$index))) |>
   dplyr::bind_rows(prerecruit)
 
-View(mod$dat$CPUE)
+mod$ctl$MainRdevYrFirst <- 1955
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+
+# 5_5_4_recdev_only -------------------------------------------------------
+## Change early rec dev settings
+####------------------------------------------------####
+
+new_name <- "5_5_4_recdev_only"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_5_0_hessian'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$MainRdevYrFirst <- 1955
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_5_0_hessian',
+                                                 new_name,
+                                                 '5_5_3_recruitment')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Old base model',
+                                     'Change main rec dev period',
+                                     'Main rec dev + update prerec'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 ##########################################################################################
 
