@@ -12426,6 +12426,58 @@ plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
+####------------------------------------------------####
+### 5_5_2_bestJitter Running with ctl.ss_new as ctl file 
+####------------------------------------------------####
+
+new_name <- "5_5_2_bestJitter_hessian"
+old_name <- "5_5_0_profile_best_jitter_hessian"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name), ss_new = TRUE)
+
+
+##
+#Make changes
+##
+
+mod$start$init_values_src <- 0
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+dir.create(file.path(pp$inputs$dir, "custom_plots"))
+r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
+file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
+          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
+unlink(file.path(pp$inputs$dir, "custom_plots"))
+
+
+
+
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities
