@@ -32,6 +32,7 @@
 ![Length composition data for the Washington at-sea-hake fishery \label{fig:WA_hake_lencomp}](../figures/plots/comp_lendat_bubflt12mkt0.png){width=100% height=100% alt="Bubble plot of Washington at-sea-hake length compositions for males and females"}
 
 ![Age composition data for the Oregon at-sea-hake fishery \label{fig:OR_hake_agecomp}](../figures/plots/comp_agedat_bubflt11mkt0.png){width=100% height=100% alt="Bubble plot of Oregon at-sea-hake age compositions for males and females"}
+
 ![Age composition data for the Washington at-sea-hake fishery \label{fig:WA_hake_agecomp}](../figures/plots/comp_agedat_bubflt12mkt0.png){width=100% height=100% alt="Bubble plot of Washington at-sea-hake age compositions for males and females"}
 
 ![Length composition data for the California recreational fishery \label{fig:CA_rec_lencomp}](../figures/plots/comp_lendat_bubflt7mkt0_page2.png){width=100% height=100% alt="Bubble plot of California recreational length compositions for unsexed fish"}
@@ -40,7 +41,7 @@
 
 ![Length composition data for the Washington recreational fishery \label{fig:WA_rec_lencomp}](../figures/plots/comp_lendat_bubflt9mkt0_page2.png){width=100% height=100% alt="Bubble plot of Washington non-trawl length compositions for males, females, and unsexed fish"}
 
-![Aggregate length composition data for the all fisheries \label{fig:agglencomp}](../figures/plots/comp_lendat__aggregated_across_time.png){width=100% height=100% alt="Aggregate plots of length compositions for males, females, and unsexed fish across all length distributions"}
+![Aggregate length composition data for fisehries with bimodal patterns \label{fig:agglencomp}](../figures/plots/comp_lendat__aggregated_across_time.png){width=100% height=100% alt="Aggregate plots of length compositions for males, females, and unsexed fish across all length distributions"}
 
 ![Age composition data for the Oregon recreational fishery \label{fig:OR_rec_agecomp}](../figures/plots/comp_agedat_bubflt8mkt0.png){width=100% height=100% alt="Bubble plot of Oregon recreational age compositions for males and females"}
 

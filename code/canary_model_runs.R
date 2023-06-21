@@ -12347,6 +12347,136 @@ plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
+xx=r4ss::tune_comps(replist = pp, 
+                    option = 'Francis', 
+                    dir = here('models', new_name), 
+                    exe = here('models/ss_win.exe'), 
+                    niters_tuning = 0, 
+                    extras = '-nohess',
+                    allow_up_tuning = TRUE)
+
+
+
+####------------------------------------------------####
+### 5_5_1_biasAdj - Overall this doesn't seem to be worthwhile. Minor changes and more params on bounds
+####------------------------------------------------####
+
+new_name <- "5_5_1_biasAdj"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_5_0_hessian'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models/5_5_0_hessian'),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/5_5_0_hessian'),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/5_5_0_hessian'),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models/5_5_0_hessian'),"covar.sso"),
+          to = file.path(here('models',new_name),"covar.sso"), overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+pp <- SS_output(here('models',new_name), covar = TRUE)
+
+
+##
+#Make changes
+##
+
+#Update sigmaR with tuned value? Suggests 0.5 is good so keep it
+pp$sigma_R_info[pp$sigma_R_info$period == "Main","alternative_sigma_R"]
+
+#Update bias adjust? Not really, just maybe start, last full bias, and max bias adj
+pp$breakpoints_for_bias_adjustment_ramp
+biasadj <- SS_fitbiasramp(pp, verbose = TRUE)
+
+mod$ctl$last_early_yr_nobias_adj <- biasadj$newbias$par[1]
+mod$ctl$last_yr_fullbias_adj <- biasadj$newbias$par[3]
+mod$ctl$max_bias_adj <- biasadj$newbias$par[5]
+
+#Need to fix femoffset for WA Rec in last block because it hits a bound and hessian cant be inverted
+mod$ctl$size_selex_parms_tv[
+  grep("SizeSel_PFemOff_3_9_WA_REC\\(9\\)_BLK5repl_2021",rownames(mod$ctl$size_selex_parms_tv)), c("INIT","PHASE")] <- c(-9,-99)
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 5_5_2_bestJitter Running with ctl.ss_new as ctl file 
+####------------------------------------------------####
+
+new_name <- "5_5_2_bestJitter_hessian"
+old_name <- "5_5_0_profile_best_jitter_hessian"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name), ss_new = TRUE)
+
+
+##
+#Make changes
+##
+
+mod$start$init_values_src <- 0
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+dir.create(file.path(pp$inputs$dir, "custom_plots"))
+r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
+file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
+          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
+unlink(file.path(pp$inputs$dir, "custom_plots"))
+
+
+
 
 # 5_5_1_recruitment -------------------------------------------------------
 ## Include 2010, 2012, 2022 for prerecruit survey
