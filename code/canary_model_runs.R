@@ -12334,7 +12334,7 @@ r4ss::run(dir = here('models',new_name),
           skipfinished = FALSE)
 
 pp <- SS_output(here('models',new_name))
-SS_plots(pp, plot = c(1:26))
+SS_plots(pp)
 
 dir.create(file.path(pp$inputs$dir, "custom_plots"))
 r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
@@ -12477,6 +12477,45 @@ unlink(file.path(pp$inputs$dir, "custom_plots"))
 
 
 
+
+# 5_5_1_recruitment -------------------------------------------------------
+## Include 2010, 2012, 2022 for prerecruit survey
+## Change early rec dev settings
+####------------------------------------------------####
+
+new_name <- "5_5_1_recruitment"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_5_0_hessian'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+##
+#Make changes
+##
+
+prerecruit <- read.csv(here('data/canary_prerecruit_indices.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(region, '_prerec')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7,
+                YEAR = ifelse(region == 'coastwide', YEAR, -YEAR)) |>
+  dplyr::select(year = YEAR, seas, index = fleet, obs = est, se_log = se)
+
+mod$dat$CPUE <- mod$dat$CPUE |>
+  dplyr::filter(!(index %in% unique(prerecruit$index))) |>
+  dplyr::bind_rows(prerecruit)
+
+View(mod$dat$CPUE)
 
 ##########################################################################################
 
