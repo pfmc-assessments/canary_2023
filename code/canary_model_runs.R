@@ -11836,55 +11836,6 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_0_3_base Liklihood is worse when extend bounds so fix at 0
-####------------------------------------------------####
-
-#WA catches are not yet in PacFIN so just manually adjust here
-
-new_name <- "5_0_3_base"
-
-##
-#Copy inputs
-##
-
-copy_SS_inputs(dir.old = here('models/5_0_1_base'),
-               dir.new = here('models',new_name),
-               overwrite = TRUE)
-
-mod <- SS_read(here('models',new_name))
-
-##
-#Make changes
-##
-
-mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_3_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
-                                      grep('BLK5repl_2006',rownames(mod$ctl$size_selex_parms_tv))),c("INIT","PHASE")] <- c(0,-99)
-mod$ctl$size_selex_parms_tv[intersect(grep('SizeSel_P_4_9_WA_REC',rownames(mod$ctl$size_selex_parms_tv)),
-                                      grep('BLK5repl_2021',rownames(mod$ctl$size_selex_parms_tv))),c("INIT","PHASE")] <- c(0,-99)
-
-##
-#Output files and run
-##
-
-SS_write(mod,
-         dir = here('models',new_name),
-         overwrite = TRUE)
-
-r4ss::run(dir = here('models',new_name),
-          exe = here('models/ss_win.exe'),
-          extras = '-nohess',
-          # show_in_console = TRUE,
-          skipfinished = FALSE)
-
-pp <- SS_output(here('models',new_name))
-SS_plots(pp, plot = c(1:26))
-
-plot_sel_comm(pp, sex=1)
-plot_sel_comm(pp, sex=2)
-plot_sel_noncomm(pp, sex=1, spatial = FALSE)
-plot_sel_noncomm(pp, sex=2, spatial = FALSE)
-
-####------------------------------------------------####
 ### 5_0_4_OR_Rec_fix2 No sex specific selectivity for OR Rec. It was really struggling.  
 ####------------------------------------------------####
 
@@ -11976,7 +11927,427 @@ SSsummarize(xx) |>
   SStableComparisons()
 
 pp <- SS_output(here('models',new_name))
-SS_plots(pp)
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 5_1_1_wa_rec_par3_4_lowbound Make a number of corrections. 
+##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
+##  Change WA rec params at bounds by allowing parameters 3 and 4 (and timevarying) to have lower bound of -9 
+####------------------------------------------------####
+
+new_name <- "5_1_1_wa_rec_par3_4_lowbound"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_5_OR_Rec_fix1'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Change parmaeters 3 and 4 for WA rec selectivity to have lower bound of -9
+mod$ctl$size_selex_parms[grep("SizeSel_P_3_9_WA_REC\\(9\\)", rownames(mod$ctl$size_selex_parms)), "LO"] <- -9
+mod$ctl$size_selex_parms[grep("SizeSel_P_4_9_WA_REC\\(9\\)", rownames(mod$ctl$size_selex_parms)), "LO"] <- -9
+
+mod$ctl$size_selex_parms_tv[grep("SizeSel_P_3_9_WA_REC\\(9\\)_BLK5", rownames(mod$ctl$size_selex_parms_tv)), "LO"] <- -9
+mod$ctl$size_selex_parms_tv[grep("SizeSel_P_4_9_WA_REC\\(9\\)_BLK5", rownames(mod$ctl$size_selex_parms_tv)), "LO"] <- -9
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+####------------------------------------------------####
+### 5_1_2_WA_NTWL_descend_lowbound Set lower bound for parm 4 of WA NTWL to -9
+####------------------------------------------------####
+
+new_name <- "5_1_2_WA_NTWL_descend_lowbound"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_1_1_wa_rec_par3_4_lowbound'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Set lower bound for parm 4 of WA NTWL to -9
+mod$ctl$size_selex_parms[grep("SizeSel_P_4_6_WA_NTWL\\(6\\)", rownames(mod$ctl$size_selex_parms)), "LO"] <- -9
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 5_1_3_no_WA_REC_midblock Gradient on peak in middle block is lowish, mid block doesnt seem to change so remove
+####------------------------------------------------####
+
+new_name <- "5_1_3_no_WA_REC_midblock"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_1_2_WA_NTWL_descend_lowbound'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$Block_Design[[5]] <- c(2021, 2022)
+mod$ctl$blocks_per_pattern[5] <- 1
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[
+  -grep("WA_REC\\(9\\)_BLK5repl_2006",rownames(mod$ctl$size_selex_parms_tv)),]
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+
+####------------------------------------------------####
+### 5_2_1_wa_rec_parm_fix Make a number of corrections. 
+##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
+##  Change WA rec params at bounds by fixing at values 
+####------------------------------------------------####
+
+new_name <- "5_2_1_wa_rec_parm_fix"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_5_OR_Rec_fix1'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Change parameters 3 in 2006 block and 4 in 2021 block for WA rec selectivity to 0
+mod$ctl$size_selex_parms_tv[grep("SizeSel_P_3_9_WA_REC\\(9\\)_BLK5repl_2006", rownames(mod$ctl$size_selex_parms_tv)), c("INIT","PHASE")] <- c(0, -99)
+mod$ctl$size_selex_parms_tv[grep("SizeSel_P_4_9_WA_REC\\(9\\)_BLK5repl_2021", rownames(mod$ctl$size_selex_parms_tv)), c("INIT","PHASE")] <- c(0, -99)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 5_3_1_no_WA_rec_midBlock Make a number of corrections
+##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
+##  Change WA rec params at bounds by removing the middle block
+####------------------------------------------------####
+
+new_name <- "5_3_1_no_WA_rec_midBlock"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_5_OR_Rec_fix1'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+mod$ctl$Block_Design[[5]] <- c(2021, 2022)
+mod$ctl$blocks_per_pattern[5] <- 1
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[
+  -grep("WA_REC\\(9\\)_BLK5repl_2006",rownames(mod$ctl$size_selex_parms_tv)),]
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 5_4_1_all_parm34_lowerBound Make a number of corrections
+##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
+##  Change WA rec params at bounds by setting lower bound for ALL parameter 3 and 4 to -9
+####------------------------------------------------####
+
+new_name <- "5_4_1_all_parm34_lowerBound"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_5_OR_Rec_fix1'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Change parameters 3 and 4 for WA rec selectivity to have lower bound of -9
+mod$ctl$size_selex_parms[grep("SizeSel_P_3", rownames(mod$ctl$size_selex_parms)), "LO"] <- -9
+mod$ctl$size_selex_parms[grep("SizeSel_P_4", rownames(mod$ctl$size_selex_parms)), "LO"] <- -9
+
+mod$ctl$size_selex_parms_tv[grep("SizeSel_P_3", rownames(mod$ctl$size_selex_parms_tv)), "LO"] <- -9
+mod$ctl$size_selex_parms_tv[grep("SizeSel_P_4", rownames(mod$ctl$size_selex_parms_tv)), "LO"] <- -9
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 5_4_2_some_parm34_lowerBound Make a number of corrections
+##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
+##  Change WA rec params at bounds by setting lower bound for NTWL and REC parameters 3 and 4 from OR or WA to -9
+####------------------------------------------------####
+
+new_name <- "5_4_2_some_parm34_lowerBound"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_0_5_OR_Rec_fix1'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+##
+#Make changes
+##
+
+#Change parameters 3 and 4 for WA rec selectivity to have lower bound of -9
+mod$ctl$size_selex_parms[intersect(grep("SizeSel_P_3", rownames(mod$ctl$size_selex_parms)),
+                                   grep("OR_REC|WA_REC|OR_NTWL|WA_NTWL", rownames(mod$ctl$size_selex_parms))), "LO"] <- -9
+mod$ctl$size_selex_parms[intersect(grep("SizeSel_P_4", rownames(mod$ctl$size_selex_parms)),
+                                   grep("OR_REC|WA_REC|OR_NTWL|WA_NTWL", rownames(mod$ctl$size_selex_parms))), "LO"] <- -9
+
+mod$ctl$size_selex_parms_tv[intersect(grep("SizeSel_P_3", rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep("OR_REC|WA_REC|OR_NTWL|WA_NTWL", rownames(mod$ctl$size_selex_parms_tv))),"LO"] <- -9
+mod$ctl$size_selex_parms_tv[intersect(grep("SizeSel_P_4", rownames(mod$ctl$size_selex_parms_tv)),
+                                      grep("OR_REC|WA_REC|OR_NTWL|WA_NTWL", rownames(mod$ctl$size_selex_parms_tv))),"LO"] <- -9
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_0_1_base',
+                                                 '5_0_5_OR_Rec_fix1',
+                                                 '5_1_1_wa_rec_par3_4_lowbound',
+                                                 '5_1_2_WA_NTWL_descend_lowbound',
+                                                 '5_2_1_wa_rec_parm_fix',
+                                                 '5_4_1_all_parm34_lowerBound',
+                                                 '5_4_2_some_parm34_lowerBound')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Old base model',
+                                         'Fix blk 2 OR Rec female offset',
+                                         'Set lower bound WA REC parm 3 and 4',
+                                         '+ set lower bound WA NTWL 4',
+                                         'Set WA REC parm 3 and 4 to 0',
+                                         'Set lower bound for ALL fleets parm 3 and 4',
+                                         'Set lower bound for WA|OR REC|NTWL fleets parm 3 and 4'),
+                        subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 5_5_0_hessian Run hessian 
+####------------------------------------------------####
+
+new_name <- "5_5_0_hessian"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models/5_4_2_some_parm34_lowerBound'),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+dir.create(file.path(pp$inputs$dir, "custom_plots"))
+r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
+file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
+          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
+unlink(file.path(pp$inputs$dir, "custom_plots"))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities
