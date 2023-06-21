@@ -1,0 +1,10 @@
+Warning 1 : Setting in starter does not request all priors, and 15 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 3 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 4 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 5 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Warning 6 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 7 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 8 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 9 Adjustment: setting positive forecast relF for forecast only fleet: 15
+ 9 warnings 

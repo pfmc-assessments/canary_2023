@@ -1,0 +1,14 @@
+Warning 1 : Setting in starter does not request all priors, and 15 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 : 1st iteration warning: ssb(endyr)/ssb(styr)= 1.37074e-10; suggest start with larger R0 to get near 0.4; or use depletion fleet option
+Warning 3 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
+Warning 4 : Final gradient: 0.000262648 is larger than final_conv: 0.0001
+Warning 5 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 6 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 7 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 8 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Warning 9 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 10 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 11 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 12 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Note 1 Information:  N parameters that are on or within 1% of min-max bound: 1; check results, variance may be suspect
+ 12 warnings  and 1 note 
