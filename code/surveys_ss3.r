@@ -166,12 +166,31 @@ for(survey in 1:2) {
 # whew!
 
 # Also write table for document
+bio.summary <- wcgbts_bio |>
+  dplyr::group_by(Year) |>
+  dplyr::summarise(`N ages` = sum(!is.na(Age)),
+                   `N lengths` = sum(!is.na(Length_cm)))
+
 wcgbts_catch |>
   dplyr::group_by(Year) |>
-  dplyr::summarise(n_tows = dplyr::n(),
-                   n_pos_tows = sum(total_catch_numbers > 0),
-                   n_caught = sum(total_catch_numbers)) |>
-  dplyr::mutate(eff_n_age = GetN.fn(dat = wcgbts_bio, 
-                                    type = 'age',
-                                    species = 'shelfrock',
-                                    verbose = FALSE))
+  dplyr::summarise(`N tows` = dplyr::n(),
+                   `N positive tows` = sum(total_catch_numbers > 0),
+                   `N caught` = sum(total_catch_numbers)) |>
+  dplyr::left_join(bio.summary) |>
+  write.csv(here('documents/tables/wcgbts_summary.csv'), row.names = FALSE)
+
+length.summary <- triennial_bio$Lengths |>
+  dplyr::group_by(Year) |>
+  dplyr::summarise(`N lengths` = dplyr::n())
+age.summary <- triennial_bio$Ages |>
+  dplyr::group_by(Year) |>
+  dplyr::summarise(`N ages` = dplyr::n())
+
+triennial_catch |>
+  dplyr::group_by(Year) |>
+  dplyr::summarise(`N tows` = dplyr::n(),
+                   `N positive tows` = sum(total_catch_numbers > 0),
+                   `N caught` = sum(total_catch_numbers)) |>
+  dplyr::left_join(age.summary) |>
+  dplyr::left_join(length.summary) |>
+  write.csv(here('documents/tables/triennial_summary.csv'), row.names = FALSE)
