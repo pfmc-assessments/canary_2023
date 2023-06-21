@@ -12358,7 +12358,7 @@ xx=r4ss::tune_comps(replist = pp,
 
 
 ####------------------------------------------------####
-### 5_5_1_biasAdj 
+### 5_5_1_biasAdj - Overall this doesn't seem to be worthwhile. Minor changes and more params on bounds
 ####------------------------------------------------####
 
 new_name <- "5_5_1_biasAdj"
