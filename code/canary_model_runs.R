@@ -12700,9 +12700,10 @@ SSsummarize(xx) |>
                                      'Best 2nd jittering model with M phase 2'),
                     subplots = c(1:4, 11, 13:14, 16), print = TRUE, plotdir = here('models',new_name))
 
-#Compared to model 5_5_6_bestJitter_Mphase_hessian, 5_6_0 fits rec devs better (less extreme), 
+#Compared to model 5_5_2_bestJitter_Mphase, 5_6_0 fits rec devs better (less extreme), 
 #length comps better but age comps worse, survey comps slightly worse, but has better stability.
 #Both have comparable gradients (worse for R0), and when female phase is 1 the gradient is better.
+#Weights have changed a bit. 
 
 ##########################################################################################
 
