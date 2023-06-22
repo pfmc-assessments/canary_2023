@@ -21,7 +21,6 @@ pp_2023 <- pp_2023$timeseries[,c("Yr","Area","Bio_all","Bio_smry","SpawnBio","Re
 colnames(pp_2023)[3:6] <- paste0("X2023_",colnames(pp_2023)[3:6])
 
 
-
 ##
 #Read in old report files where I can from updates and full assessments
 ##
@@ -30,7 +29,6 @@ pp_2015 <- SS_output("CanaryRf_2015\\post-SSC base model")
 pp_2015 <- pp_2015$timeseries[pp_2015$timeseries$Era!="FORE",c("Yr","Area","Bio_all","Bio_smry","SpawnBio","Recruit_0")]
 pp_2015_agg <- pp_2015 %>% group_by(Yr) %>% summarize_all(sum)
 colnames(pp_2015_agg)[3:6] <- paste0("X2015_",colnames(pp_2015_agg)[3:6])
-
 
 pp_2011 <- SS_output("CanaryRf_2011\\Canary base case model files")
 pp_2011 <- pp_2011$timeseries[pp_2011$timeseries$Era!="FORE",c("Yr","Bio_all","Bio_smry","SpawnBio","Recruit_0")]
@@ -121,8 +119,6 @@ all_values <- left_join(pp_2015_agg[-2],
                                   by = "Yr"),
                         by = "Yr") %>% data.frame()
 
-
-
 # compare summary biomass across previous stock assessments
 
 smry <- all_values[,grep("Yr|smry",colnames(all_values))]
@@ -211,7 +207,7 @@ plot(0, type='n', xlim=c(1892, 2022), ylim=c(0, 10000),
 axis(1)
 axis(2, at=pretty(c(0,10000)), lab=pretty(c(0,10000))/1000, las=1)
 # add lines for the older assessments
-matplot(x=recruit[,"Yr"], y=recruit[,-1],
+matplot(x=recruit[,"Yr"], y=recruit[,-c(1,grep("smry3|scen2",colnames(smry)))],
         col=assess.colors, type='l', lty=1,
         lwd=2, add=TRUE)
 # add current model estimate
