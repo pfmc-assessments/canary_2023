@@ -214,26 +214,34 @@ relationships (Figure \ref{fig:compare_WL}).
 
 ### Growth (Length-at-Age)
 
-*Need to update text to include analysis to confirm growth did not vary
-across latitude*
-
-`r Spp` display sexually dimorphic growth. Females grow faster and
+`r Spp` display sexually dimorphic growth. Females grow slower and
 obtain larger sizes than males. Recent research also indicates that
-`r spp` grow slower and achieve larger maximum sizes farther north, with
-a break point estimated between Newport, OR and Coos Bay, OR
-[@Brooks_thesis_2021]. However, estimating spatial growth differences
-outside of the stock assessment model on the more numerous \gls{s-wcgbt}
-data (1567 vs. `r sum(wcgbts.summary[,'N ages'])` samples; maximum age
-of 51 vs. 65) indicated that although individuals captured north of Coos
-Bay, OR did grow to slightly larger sizes than those captured south of
-Coos Bay, particularly female individuals, the differences were
-biologically minor and did not warrant the additional complexity in the
-stock assessment model (Figure \ref{fig:spatial_AL}). Thus, growth was
-assumed constant across the coast, as was assumed in the 2015 benchmark
-assessment. \*\*TODO: These values are wrong, Brian I am not sure where
-the right values are\*\* Externally estimated von-Bertalanffy growth
-parameters for `r spp` using \gls{s-wcgbt} data were as follows:
-$L_\infty$ = `r model$MGparmAdj$L_at_Amax_Fem_GP_1[1]` and $k$ =
+`r spp` growth varies latitudinally [@keller2018canary;
+@Brooks_thesis_2021]. Using \gls{s-wcgbt} and \gls{s-hkl} data and
+considering breakpoints at the biogeographic boundaries of Point
+Conception and Cape Mendocino, Keller et al. [-@keller2018canary] found
+growth differences that were statistically significant but inconsistent
+across sexes. However, the bulk of the `r spp` population, and
+particularly the bulk of older individuals needed to reliably estimate a
+growth curve, are found north of Cape Mendocino. More consistent with
+theory, Brooks [-@Brooks_thesis_2021] found that individuals of both
+sexes tended to grow slower and to larger sizes farther north, with a
+break point estimated between Coos Bay, OR and Newport, OR based on data
+from samples collected in untrawlable habitat, with similar numbers
+coming from each major port along the coast. We explored estimating two
+growth curves external to the assessment model split at Coos Bay, OR,
+but using the more expansive \gls{s-wcgbt} data (1567 vs.
+`r sum(wcgbts.summary[,'N ages'])` samples; maximum age of 51 vs. 65).
+Results indicated that although individuals captured north of Coos Bay
+did grow to slightly larger sizes than those captured south of Coos Bay,
+particularly female individuals, the differences were biologically minor
+and did not warrant the additional complexity in the stock assessment
+model (Figure \ref{fig:spatial_AL}). Thus, growth was assumed constant
+across the coast, as was assumed in the 2015 benchmark assessment.
+**TODO: These values are wrong, Brian I am not sure where the right
+values are** Externally estimated von-Bertalanffy growth parameters for
+`r spp` using \gls{s-wcgbt} data were as follows: $L_\infty$ =
+`r model$MGparmAdj$L_at_Amax_Fem_GP_1[1]` and $k$ =
 `r model$MGparmAdj$VonBert_K_Fem_GP_1[1]` for females with length at age
 1 equal to `r model$MGparmAdj$L_at_Amin_Fem_GP_1[1]`, and $L_\infty$ =
 `r model$MGparmAdj$L_at_Amax_Mal_GP_1[1]` and $k$ =

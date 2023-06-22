@@ -42,7 +42,7 @@ sa4ss::draft(
   edit = FALSE
 )
 
-model_name <- "4_8_4_mirrorORWA_twl"
+model_name <- "5_5_0_hessian"
 model_dir <- file.path(dir, "models", model_name)
 
 sa4ss::read_model(mod_loc = model_dir, 
