@@ -12637,9 +12637,72 @@ file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregat
 unlink(file.path(pp$inputs$dir, "custom_plots"))
 
 
+####------------------------------------------------####
+### 5_6_0_Mphase Change female M phase back to 2
+####------------------------------------------------####
+
+new_name <- "5_6_0_Mphase"
+old_name <- "5_5_6_bestJitter" #run from copying over the winning jitter profile
+
 ##
-#5_5_6_bestJitter_Mphase resets the phase of female M back to 2 - I did that manually but noting here
+#Copy inputs
 ##
+
+mod <- SS_read(here('models',old_name))
+
+
+##
+#Make changes
+##
+
+mod$ctl$MG_parms[grep("NatM_p_1_Fem_GP_1", rownames(mod$ctl$MG_parms)),"PHASE"] <- 2
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+dir.create(file.path(pp$inputs$dir, "custom_plots"))
+r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
+file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
+          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
+unlink(file.path(pp$inputs$dir, "custom_plots"))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_5_0_hessian',
+                                                 '5_5_2_bestJitter_hessian',
+                                                 '5_5_2_bestJitter_hessian_Mphase',
+                                                 '5_5_5_bestJitter_hessian_best_jitter',
+                                                 '5_6_0_Mphase')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Old base model 500',
+                                     'Best jitter of model 500',
+                                     'Best jitter of model 500 with M phase 2',
+                                     'Best 2nd jittering model',
+                                     'Best 2nd jittering model with M phase 2'),
+                    subplots = c(1:4, 11, 13:14, 16), print = TRUE, plotdir = here('models',new_name))
+
+#Compared to model 5_5_6_bestJitter_Mphase_hessian, 5_6_0 fits rec devs better (less extreme), 
+#length comps better but age comps worse, survey comps slightly worse, but has better stability.
+#Both have comparable gradients (worse for R0), and when female phase is 1 the gradient is better.
 
 ##########################################################################################
 

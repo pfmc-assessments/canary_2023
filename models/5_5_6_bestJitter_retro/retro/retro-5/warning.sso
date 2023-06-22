@@ -1,0 +1,22 @@
+Warning 1 : Block:1 2 ends in: 2022 after retroyr+1:  2018
+Warning 2 : Block:2 1 ends in: 2019 after retroyr+1:  2018
+Warning 3 : Block:2 2 starts after retroyr+1; should not estimate 
+Warning 4 : Block:2 2 ends in: 2022 after retroyr+1:  2018
+Warning 5 : Block:3 2 ends in: 2022 after retroyr+1:  2018
+Warning 6 : Block:4 2 ends in: 2022 after retroyr+1:  2018
+Warning 7 : Block:5 1 ends in: 2020 after retroyr+1:  2018
+Warning 8 : Block:5 2 starts after retroyr+1; should not estimate 
+Warning 9 : Block:5 2 ends in: 2022 after retroyr+1:  2018
+Warning 10 Adjustment:  recdev_end: 2022 > retro_yr: 2017 reset 
+Warning 11 : Setting in starter does not request all priors, and 15 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 12 : 1st iteration warning: ssb(endyr)/ssb(styr)= 3.12532e-09; suggest start with larger R0 to get near 0.4; or use depletion fleet option
+Warning 13 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
+Warning 14 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 15 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 16 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 17 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Warning 18 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 19 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 20 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 21 Adjustment: setting positive forecast relF for forecast only fleet: 15
+ 21 warnings 

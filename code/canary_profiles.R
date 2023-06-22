@@ -179,7 +179,7 @@ saveRDS(fit, here('models', new_name, 'mcmc_run.rds'))
 
 # Need to run on a model with .exe included in the folder, and which has phase for another parameter set to 1
 
-base_name <- '5_5_0_profile'
+base_model <- '5_5_6_bestJitter'
 
 # new_name <- '5_5_0_profile'
 # 
@@ -211,8 +211,8 @@ get = get_settings_profile( parameters =  c("NatM_uniform_Fem_GP_1", "NatM_unifo
 
 #Should do usepar because stabilizes. Testing this showed instability with some runs when not using it
 #No effect with globalpar so using it for consistency
-model_settings = get_settings(settings = list(base_name = base_name,
-                                              run = c("jitter"),
+model_settings = get_settings(settings = list(base_name = base_model,
+                                              run = c("retro"),
                                               profile_details = get[4,], #adjust value in get[x,] to each individually
                                               exe = 'ss_win',
                                               extras = '-nohess',
@@ -234,7 +234,7 @@ tictoc::toc()
 new_name <- paste0(base_model, '_best_jitter')
 r4ss::copy_SS_inputs(dir.old = here('models', base_model),
                      dir.new = here('models', new_name))
-file.copy(from = here('models', paste0(base_model, '_10_jitter_0.05'), 'ss.par_3.sso'),
+file.copy(from = here('models', paste0(base_model, '_jitter_0.05'), 'ss.par_35.sso'),
           to = here('models', new_name, 'ss.par'))
 mod <- SS_read(here('models', new_name))
 mod$start$init_values_src <- 1
@@ -244,7 +244,7 @@ SS_write(mod,
          overwrite = TRUE)
 
 pp <- SS_output(here('models',new_name))
-SS_plots(pp, plot = c(1:26))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
 
 plot_sel_comm(pp, sex=1)
 plot_sel_comm(pp, sex=2)

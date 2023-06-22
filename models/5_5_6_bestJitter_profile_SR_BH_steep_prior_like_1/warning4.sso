@@ -1,0 +1,11 @@
+Warning 1 : 1st iteration warning: ssb(endyr)/ssb(styr)= 7.18902e-10; suggest start with larger R0 to get near 0.4; or use depletion fleet option
+Warning 2 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
+Warning 3 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 4 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 5 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 6 Adjustment: setting positive forecast relF for forecast only fleet: 15
+Warning 7 Adjustment: setting positive forecast relF for forecast only fleet: 10
+Warning 8 Adjustment: setting positive forecast relF for forecast only fleet: 13
+Warning 9 Adjustment: setting positive forecast relF for forecast only fleet: 14
+Warning 10 Adjustment: setting positive forecast relF for forecast only fleet: 15
+ 10 warnings 
