@@ -56,7 +56,7 @@
 ![Weight-length relationship \label{fig:WL}](../figures/WL.png){width=100%, height=100%,
 alt="Exponential weight-length curves for males and females nearly overlapping, with relatively small spread of data"}
 
-![Weight-length comparison for curve used for unsexed data \label{fig:compare_WL}](../figures/compare_WL.png){width=100%, height=100%, alt="2015 and 2023 exponential weight-length relationships nearly overlapping"}
+![Weight-length comparison for females \label{fig:compare_WL}](../figures/compare_WL.png){width=100%, height=100%, alt="2015 and 2023 exponential weight-length relationships nearly overlapping"}
 
 ![Externally estimated age-length relationship by Sex and latitude, where "North" is latitudes greater than $43.3672^\circ$N (Coos Bay, OR) \label{fig:spatial_AL}](../figures/growth_diffs.png){width=100%, height=100%, alt="Figure showing age-length data and four fitted curves for north and south males and females. Females are larger than males, but northern individuals are only slightly larger than southern individuals"}
 

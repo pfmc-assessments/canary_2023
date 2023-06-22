@@ -14,8 +14,9 @@ library(dplyr)
 
 source(here('code/selexComp.R'))
 
+base_mod <- '5_5_0_hessian'
 mod15 <- SS_output(here('models','2015base'))
-mod23 <- SS_output(here('models','3_0_0_MaturitySlope'))
+mod23 <- SS_output(here('models', base_mod))
 
 
 ##
@@ -131,3 +132,21 @@ legend("topleft", c("2015 relationship", "2023 relationship"),
        lty = 1, lwd = 3, col = c(2,1), bty = "n")
 dev.off()
 
+
+# ACL table ---------------------------------------------------------------
+catch.ts <- readr::read_csv(here('models', base_mod, 'tables/a_Catches_ES.csv')) |>
+  dplyr::mutate(TWL = `1_CA_TWL` + `2_OR_TWL` + `3_WA_TWL`,
+              NTWL = `4_CA_NTWL` + `5_OR_NTWL` + `6_WA_NTWL`,
+              REC = `7_CA_REC` + `8_OR_REC` + `9_WA_REC`,
+              ASHOP = `10_CA_ASHOP` + `11_OR_ASHOP` + `12_WA_ASHOP`,
+              FOR = `13_CA_FOR` + `14_OR_FOR` + `15_WA_FOR`,
+              TOTAL = TWL + NTWL + REC + ASHOP + FOR) |>
+  dplyr::select(Year, TOTAL, TWL, NTWL, REC, ASHOP, FOR) 
+
+readr::read_csv(here('data/ACLs.csv')) |>
+  dplyr::select(-STOCK_NAME, -AREA_NAME, -OUTPUT_ORDER, -SPECIFICATION_NAME) |>
+  tidyr::pivot_wider(names_from = SPECIFICATION_TYPE, values_from = VAL) |> 
+  dplyr::arrange(YEAR) |>
+  dplyr::select(Year = YEAR, OFL:ACL) |>
+  dplyr::inner_join(dplyr::select(catch.ts, Year, `Total Mortality` = TOTAL)) |>
+  write.csv(file = here('documents/tables/ACL_history.csv'), row.names = FALSE)
