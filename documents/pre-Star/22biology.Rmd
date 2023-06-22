@@ -107,7 +107,7 @@ measurements from female ovaries. This includes 163 samples collected by
 (35.7--48.3$^\circ N$) and 53 collected during the \gls{s-hkl} between
 2009--2022.
 
-We use functional maturity as opposed to biological maturity as the
+We use functional maturity rather than biological maturity as the
 measure of maturity in this assessment. Rockfish begin the process of
 maturing several years before they reach spawning potential. Thus
 biological maturity would indicate that yolk is present but not that the
@@ -124,18 +124,19 @@ two-parameter logistic regression model with an asymptote at 1 based on
 the findings of [@head_maturity_2016] and fits to histological samples.
 Parameters were fixed in the model at estimates from the logistic
 regression, and were
-`r paste0('$A_{50\\%} =', round(model$Growth_Parameters$Mat1[1], 2), '$')` and
-slope `r paste0('$\\alpha =', round(model$Growth_Parameters$Mat2[1], 2), '$')`.
+`r paste0('$A_{50\\%} =', round(model$Growth_Parameters$Mat1[1], 2), '$')`
+and slope
+`r paste0('$\\alpha =', round(model$Growth_Parameters$Mat2[1], 2), '$')`.
 This relationship is an advance on the maturity curve used in the
 previous assessment, as it uses functional maturity instead of
 biological maturity. This, in addition to the use of age instead of
 length, eliminated the need for a third parameter in the maturity curve
 estimating the probability of skip spawning. Due to the relatively steep
-growth curve of `r spp`, a given length can represent a wide
-range of ages. The new relationship results in a rightward shift in
-maturity and increase in maturity at older ages compared to the
-relationship derived within the 2015 assessment (Figure
-\ref{fig:compare_maturity}). *TO DO: add data to figure*
+growth curve of `r spp`, a given length can represent a wide range of
+ages. The new relationship results in a rightward shift in maturity and
+increase in maturity at older ages compared to the relationship derived
+within the 2015 assessment (Figure \ref{fig:compare_maturity}). *TO DO:
+add data to figure*
 
 *Text that melissa provided is below but simplified. This may be too
 detailed. Dont have to defend the previous assessment KLO: I took the
@@ -190,20 +191,26 @@ for generating a prior for steepness the default approach reverts to the
 previously endorsed method, the 2017 value.
 
 ### Length-Weight Relationship
+
 ```{r include=FALSE}
 library(here)
 w.l <- read.csv(here('data/W_L_pars.csv'))
 ```
 
 The length-weight relationship for `r spp` was estimated outside the
-model using available coastwide biological data collected from
-the \gls{s-wcgbt}. This included `r w.l$n[w.l$Sex=='F']` females and `r w.l$n[w.l$Sex=='M']` males. The estimated length-weight
-relationship for `r spp` was 
+model using available coastwide biological data collected from the
+\gls{s-wcgbt}. This included `r w.l$n[w.l$Sex=='F']` females and
+`r w.l$n[w.l$Sex=='M']` males. The estimated length-weight relationship
+for `r spp` was
 `r paste0('$W =', format(model$Growth_Parameters$WtLen1[1], scientific = TRUE), 'L^{', round(model$Growth_Parameters$WtLen2[1],2), '}$')`
-for females and 
+for females and
 `r paste0('$W =', format(model$Growth_Parameters$WtLen1[2], scientific = TRUE), 'L^{', round(model$Growth_Parameters$WtLen2[2],2), '}$')`
 for males, where $L$ is fork length in cm and $W$ is weight in kg
-(Figure \ref{fig:WL}). The curve was fit as a linear model in log space and then corrected for lognormal bias. The relationship is similar to the relationship used in the previous 2015 benchmark assessment and indicates that male and female `r spp` have similar length-weight relationships (Figure \ref{fig:compare_WL}).
+(Figure \ref{fig:WL}). The curve was fit as a linear model in log space
+and then corrected for lognormal bias. The relationship is similar to
+the relationship used in the previous 2015 benchmark assessment and
+indicates that male and female `r spp` have similar length-weight
+relationships (Figure \ref{fig:compare_WL}).
 
 ### Growth (Length-at-Age)
 
@@ -211,22 +218,22 @@ for males, where $L$ is fork length in cm and $W$ is weight in kg
 across latitude*
 
 `r Spp` display sexually dimorphic growth. Females grow faster and
-obtain larger sizes than males. Estimates of growth parameters and
-latitudinal variability were investigated and starting values for model
-inputs were updated using the \gls{s-wcgbt} data. Spatial differences
-were investigated by fitting an overall von Bertalanffy relationship
-between age and length across all coastwide samples and then comparing
-the residuals across latitude and depth using Tukey's honestly
-significant difference test for pairwise multiple comparisons at state
-boundaries and then again at regions identified by [@Brooks_thesis_2021]
-at representing biological breaks.
-
-The breaks observed by [@Brooks_thesis_2021] were not observed when
-using the \gls{s-wcgbt} data and so growth was assumed constant across
-the coast, as was assumed in the 2015 benchmark assessment. Externally
-estimated von-Bertalanffy growth parameters for `r spp` using
-\gls{s-wcgbt} data were as follows: $L_\infty$ =
-`r model$MGparmAdj$L_at_Amax_Fem_GP_1[1]` and $k$ =
+obtain larger sizes than males. Recent research also indicates that
+`r spp` grow slower and achieve larger maximum sizes farther north, with
+a break point estimated between Newport, OR and Coos Bay, OR
+[@Brooks_thesis_2021]. However, estimating spatial growth differences
+outside of the stock assessment model on the more numerous \gls{s-wcgbt}
+data (1567 vs. `r sum(wcgbts.summary[,'N ages'])` samples; maximum age
+of 51 vs. 65) indicated that although individuals captured north of Coos
+Bay, OR did grow to slightly larger sizes than those captured south of
+Coos Bay, particularly female individuals, the differences were
+biologically minor and did not warrant the additional complexity in the
+stock assessment model (Figure \ref{fig:spatial_AL}). Thus, growth was
+assumed constant across the coast, as was assumed in the 2015 benchmark
+assessment. \*\*TODO: These values are wrong, Brian I am not sure where
+the right values are\*\* Externally estimated von-Bertalanffy growth
+parameters for `r spp` using \gls{s-wcgbt} data were as follows:
+$L_\infty$ = `r model$MGparmAdj$L_at_Amax_Fem_GP_1[1]` and $k$ =
 `r model$MGparmAdj$VonBert_K_Fem_GP_1[1]` for females with length at age
 1 equal to `r model$MGparmAdj$L_at_Amin_Fem_GP_1[1]`, and $L_\infty$ =
 `r model$MGparmAdj$L_at_Amax_Mal_GP_1[1]` and $k$ =
@@ -236,38 +243,19 @@ of young males and females are identical, consistent with the
 assumptions in the 2015 bechmark assessment. These estimates were used
 as initial values within the base model for estimating growth.
 
-<!-- *This was used in the lingcod assessment. I'd like some treatment of our -->
-<!-- analysis described for showing growth didn't differ between areas* A -->
-<!-- model based change-point analysis [@kapur2020] was used to identify a -->
-<!-- biologically relevant stock boundary using size-at-age data from the -->
-<!-- \gls{s-wcgbt} and -->
-<!-- [@lam2021geographic]. A generalized additive model was fit to observed -->
-<!-- `r spp` lengths of a single age as the response variable. Predictor -->
-<!-- variables included a smoother for latitude. Each age-sex combination was -->
-<!-- analyzed separately. The first derivative was taken from the fitted -->
-<!-- spline to detect the latitude at which differences in size-at-age were -->
-<!-- most pronounced (i.e., the maximum absolute value) and statistically -->
-<!-- significant (i.e., where the confidence interval does not include 0). -->
-<!-- The resulting latitude was rounded to the nearest integer as there were -->
-<!-- no detectable differences when half-degrees were used. 77.8% of -->
-<!-- significant age-sex combinations detected a break between latitudes -->
-<!-- $38^\circ 00^\prime$ and $40^\circ 00^\prime$ N (Figure -->
-<!-- \@ref(fig:Lam-kapurage7latitude)). This range is in agreement with the -->
-<!-- genetic break point identified for `r spp` by Longo et al. -->
-<!-- [-@longo2020strong]. -->
-
 ### Sex Ratio
 
 As described in the mortality section, the observed sex ratio is skewed
-towards males at older ages. Sex ratio based on length is largely
-similar despite evidence for dimorphic growth between males and females.
-A cursory look at sex ratios within the \gls{s-wcgbt} and \gls{s-tri} by
-latitude indicate that males and females are similarly dispersed
-coastwide, and that differences in sex ratios at age are not due to
-latitudinal or depth specific differences (Figure
+towards males at older ages (Figure \ref{fig:sex_ratio_age}). Sex ratio
+based on length is skewed towards females at larger sizes due to the
+sexually dimorphic growth (Figure \ref{fig:sex_ratio_length}). A cursory
+look at sex ratios within the \gls{s-wcgbt} and \gls{s-tri} by latitude
+indicate that males and females are similarly dispersed coastwide, and
+that differences in sex ratios at age are not due to latitudinal or
+depth specific differences (Figure
 \@ref(fig:biology-sexratio-lengthbylatitude)), and thus, a sex ratio of
 50:50 was assumed for this assessment, as was done in the 2015 benchmark
-assessment.
+assessment. **TODO: Figure**
 
 ### Ageing Precision and Bias
 
