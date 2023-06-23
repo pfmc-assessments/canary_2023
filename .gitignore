@@ -62,6 +62,7 @@ admodel.hes
 checkup.sso
 *.tmp
 console.output.txt
+covar.sso
 CumReport.sso
 derived_posteriors.sso
 echoinput.sso
@@ -90,6 +91,7 @@ ss.r0*
 ss.rep
 ss.std
 suggested_tuning.ss
+!5_5_0_hessian/covar.sso
 
 # rmarkdown / latex files
 *.aux
