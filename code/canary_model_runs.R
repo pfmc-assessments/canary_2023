@@ -12337,10 +12337,11 @@ pp <- SS_output(here('models',new_name))
 SS_plots(pp)
 
 dir.create(file.path(pp$inputs$dir, "custom_plots"))
-r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
-file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
-          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
-unlink(file.path(pp$inputs$dir, "custom_plots"))
+r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), datonly = TRUE,
+                  print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
+file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lendat__aggregated_across_time.png"),
+          to = file.path(pp$inputs$dir, "plots", "comp_lendat__aggregated_across_time_custom.png"))
+unlink(file.path(pp$inputs$dir, "custom_plots"), recursive = TRUE)
 
 plot_sel_comm(pp, sex=1)
 plot_sel_comm(pp, sex=2)
@@ -12469,11 +12470,6 @@ plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
-dir.create(file.path(pp$inputs$dir, "custom_plots"))
-r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
-file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
-          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
-unlink(file.path(pp$inputs$dir, "custom_plots"))
 
 ##
 #5_5_2_bestJitter_hessian_Mphase resets the phase of female M back to 2 - I did that manually but noting here
@@ -12630,11 +12626,6 @@ plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
-dir.create(file.path(pp$inputs$dir, "custom_plots"))
-r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
-file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
-          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
-unlink(file.path(pp$inputs$dir, "custom_plots"))
 
 
 ####------------------------------------------------####
@@ -12678,12 +12669,6 @@ plot_sel_comm(pp, sex=1)
 plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
-
-dir.create(file.path(pp$inputs$dir, "custom_plots"))
-r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
-file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lenfit__aggregated_across_time.png"),
-          to = file.path(pp$inputs$dir, "plots", "comp_lenfit__aggregated_across_time_custom.png"))
-unlink(file.path(pp$inputs$dir, "custom_plots"))
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('5_5_0_hessian',
