@@ -51,6 +51,7 @@
 ![Age composition data for the Oregon recreational fishery \label{fig:OR_rec_agecomp}](../figures/plots/comp_agedat_bubflt8mkt0.png){width=100% height=100% alt="Bubble plot of Oregon recreational age compositions for males and females"}
 
 ![Age composition data for the Washington recreational fishery \label{fig:WA_rec_agecomp}](../figures/plots/comp_agedat_bubflt9mkt0.png){width=100% height=100% alt="Bubble plot of Washington recreational age compositions for males and females"}
+## Biology
 
 ![Maturity at age relationship \label{fig:compare_maturity}](../figures/compare_maturity.png){width=100% height=100% alt="Two logistic curves for 2015 and 2023, 2015 is shifted left of 2023 and asymptotes below 1, 2023 asymptotes at 1"}
 
@@ -66,5 +67,12 @@ alt="Exponential weight-length curves for males and females nearly overlapping, 
 ![Sex ratio by age in the \gls{s-wcgbt} \label{fig:sex_ratio_age}](../figures/age_fraction_female.png){width=100%, alt='Figure showing fraction female close to 50% until around age 20 when it becomes almost all male'}
 
 ![Sex ratio by length in the \gls{s-wcgbt} \label{fig:sex_ratio_length}](../figures/length_fraction_female.png){width=100%, alt='Figure showing fraction female close to 50% until around 45 when it becomes almost all female'}
+
+##Diagnostics
+
+![Change in spawning output when the most recent five years of data are sequentially removed from the model \label{fig:retro_bio}](../figures/plots/compare2_spawnbio_uncertainty.png){width=100%, alt='Figure showing 5 retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model'}
+
+![Change in spawning output relative to unfished when the most recent five years of data are sequentially removed from the model \label{fig:retro_relbio}](../figures/plots/compare4_Bratio_uncertainty.png){width=100%, alt='Figure showing 5 retrospective runs with similar estimates for fraction of unfished compared to the base model'}
+
 
 ![Summary biomass of current and past full and update assessments in 1000s of mt. Summary biomass shows age 5+ canary rockfish with the exception of the 2001 update, which provided summary biomass for age 3+ canary rockfish \label{fig:hist_compare}](../figures/historical_assessment_smry_biomss.png){width=100%, alt='Figure showing biomass trajectories showing a decline to 2000 followed by an increase until the end year of the assessment'}

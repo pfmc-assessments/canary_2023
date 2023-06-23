@@ -15,7 +15,7 @@ Indices of abundance are shown for each survey fleet in Figure 87-Figure 90.  Th
 
 ### Convergence status
 
-The base model has a final gradient of <0.0001, and we therefore conclude that the parameter estimates represent either a local or global minimum.  Three parameters are at or near a boundary, and all three parameters are regarding dome-shaped selectivity.  Given that these three parameters do not negatively impact model convergence of computation of the model hessian, we have chosen to leave these parameters unfixed (such that their uncertainty is propagated during subsequent sensitivity analyses, likelihood profiles, and retrospective evaluations).
+The base model has a final gradient of <0.00001 and the hessian is determinant. We therefore conclude that the parameter estimates represent a local minimum and near enough to a global minimum so as not to differ appreciably in results. No parameters are at or within 5 percent of a boundary yet some are highly correlated but less than 0.95.
 
 #### Evidence of search for global convergence
 
@@ -70,7 +70,7 @@ Finally, we demonstrate the impact of low movement rates among strata upon estim
 
 <!-- Brian has updated this section -->
 
-A five-year retrospective was done by successively removing years of data to obtain models with ending years from 2017 to 2021. The retrospective analysis shows that initial spawning output and recent spawning output generally decline as more years of data are removed, suggesting a negative retrospective bias. The magnitude of change in initial and recent spawning output differs; the removal of the most recent year of data and the removal of all five years of data contribute to the greatest decrease in spawning output relative unfished. Estimates of Mohn's $\rho$ [@mohn_rho_1999], which measure the magnitude of retrospective bias are -0.40 over all years (-0.08 per year) for the spawning output and -0.18 over all years (-0.035 per year) for spawning output relative to unfished. According to [@hurtado-ferro_looking_2015], Mohn's $\rho$ values on a per-year basis of less than -0.15 are not cause for concern, but should not be taken as lack of true bias. Changes with each successive year of data removal are within the uncertainty intervals of the base model, which also indicated that retrospective patterns are not cause for serious concern.  
+A five-year retrospective was done by successively removing years of data to obtain models with ending years ranging from 2017 to 2021. The retrospective analysis shows a slight negative retrospective bias in that initial spawning output and recent spawning output generally decline as more years of data are removed, but changes are within the uncertainty intervals of the base model (Figure \ref{fig:retro_bio}). The magnitude of change in initial and recent spawning output differs; the removal of two years of data causes an increase in spawning output relative to unfished, with all other runs similar in pattern to the base model (Figure \ref{fig:retro_relbio}). Estimates of Mohn's $\rho$ [@mohn_rho_1999], which measure the magnitude of retrospective bias are -0.25 over all years (average of -0.05 per year) for spawning output and -0.04 over all years (average of -0.008 per year) for spawning output relative to unfished. According to [@hurtado-ferro_looking_2015], Mohn's $\rho$ values on a per-year basis of less than -0.15 are not cause for concern, but should not be taken as lack of true bias.
 
 ### Likelihood Profiles
 
