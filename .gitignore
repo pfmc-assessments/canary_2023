@@ -62,7 +62,6 @@ admodel.hes
 checkup.sso
 *.tmp
 console.output.txt
-covar.sso
 CumReport.sso
 derived_posteriors.sso
 echoinput.sso
