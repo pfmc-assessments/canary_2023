@@ -70,9 +70,24 @@ alt="Exponential weight-length curves for males and females nearly overlapping, 
 
 ##Diagnostics
 
-![Change in spawning output when the most recent five years of data are sequentially removed from the model \label{fig:retro_bio}](../figures/plots/compare2_spawnbio_uncertainty.png){width=100%, alt='Figure showing 5 retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model'}
+<!-- ![Change in spawning output when the most recent five years of data are sequentially removed from the model \label{fig:retro_bio}](../figures/plots/compare2_spawnbio_uncertainty.png){width=100%, alt='Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model'} -->
 
-![Change in spawning output relative to unfished when the most recent five years of data are sequentially removed from the model \label{fig:retro_relbio}](../figures/plots/compare4_Bratio_uncertainty.png){width=100%, alt='Figure showing 5 retrospective runs with similar estimates for fraction of unfished compared to the base model'}
+<!-- ![Change in spawning output relative to unfished when the most recent five years of data are sequentially removed from the model \label{fig:retro_relbio}](../../models/plots/compare4_Bratio_uncertainty.png){width=100%, alt='Figure showing five retrospective runs with similar estimates for fraction of unfished compared to the base model'} -->
 
+```{r, results = 'asis'}
+add_figure(
+filein = file.path(dir, "models", paste0(model_name,"_retro"), "compare2_spawnbio_uncertainty.png"), 
+caption = "Change in spawning output when the most recent five years of data are sequentially removed from the model",
+alt_caption = "Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model",
+label = 'retro_bio')
+```
+
+```{r, results = 'asis'}
+add_figure(
+filein = file.path(dir, "models", paste0(model_name,"_retro"), "compare4_Bratio_uncertainty.png"), 
+caption = "Change in spawning output relative to unfished when the most recent five years of data are sequentially removed from the model",
+alt_caption = "Figure showing five retrospective runs with similar estimates for fraction of unfished compared to the base model",
+label = 'retro_relbio')
+```
 
 ![Summary biomass of current and past full and update assessments in 1000s of mt. Summary biomass shows age 5+ canary rockfish with the exception of the 2001 update, which provided summary biomass for age 3+ canary rockfish \label{fig:hist_compare}](../figures/historical_assessment_smry_biomss.png){width=100%, alt='Figure showing biomass trajectories showing a decline to 2000 followed by an increase until the end year of the assessment'}
