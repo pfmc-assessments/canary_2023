@@ -12705,6 +12705,18 @@ SSsummarize(xx) |>
 #Both have comparable gradients (worse for R0), and when female phase is 1 the gradient is better.
 #Weights have changed a bit. 
 
+#For report
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_5_0_hessian',
+                                                 '5_5_2_bestJitter_hessian',
+                                                 '5_5_5_bestJitter_hessian_best_jitter')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Current base model',
+                                     '1st jitter lowest likelihood',
+                                     '2nd jitter lowest likelihood'),
+                    subplots = c(1:4, 11, 13:14, 16), print = TRUE, plotdir = here('models',new_name,'jitter_compare_for_report'))
+
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities
