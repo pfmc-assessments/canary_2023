@@ -12336,12 +12336,10 @@ r4ss::run(dir = here('models',new_name),
 pp <- SS_output(here('models',new_name))
 SS_plots(pp)
 
-dir.create(file.path(pp$inputs$dir, "custom_plots"))
 r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), datonly = TRUE,
-                  print = TRUE, plot = TRUE, plotdir = file.path(pp$inputs$dir, "custom_plots"))
-file.copy(from = file.path(pp$inputs$dir, "custom_plots", "comp_lendat__aggregated_across_time.png"),
-          to = file.path(pp$inputs$dir, "plots", "comp_lendat__aggregated_across_time_custom.png"))
-unlink(file.path(pp$inputs$dir, "custom_plots"), recursive = TRUE)
+                  print = TRUE, plot = TRUE, plotdir = here('documents/figures'))
+file.rename(from = file.path(here('documents/figures'), "comp_lendat__aggregated_across_time.png"),
+          to = file.path(here('documents/figures'), "comp_lendat__aggregated_across_time_custom.png"))
 
 plot_sel_comm(pp, sex=1)
 plot_sel_comm(pp, sex=2)
