@@ -3,9 +3,9 @@
 
 *We should specify what sources of data (catch, lengths, ages, indices) these refer to*
 
-### \gls{CCfrp}
+### \gls{s-ccfrp}
 
-The \gls{ccfrp} has conducted fishery-independent data collection efforts onboard commercial passenger fishing vessels both inside and outside of MPAs between 2007 and present. Aspects of canary rockfish life history make the data set less than ideal. One important consideration is the limitation of sampling to less than 150 ft to minimize barotrauma for fish released by this hook and line survey, which limits access to the primary depth distribution of adult canary rockfish. In addition, until 2017 the sampling was focused on central California at the southern edge of the species range in California. While additional data has been collected subsequently to better represent the statewide abundance of groundfish stocks, the limited depths sampled and spatial limitations early in the survey further the utility and representativeness of the survey for this northernly distributed stock. Lastly, the high degree of vagility of canary rockfish makes accounting for MPA effects of lesser importance reducing the impetus to account for trends in closed areas for this species.
+The \gls{s-ccfrp} has conducted fishery-independent data collection efforts onboard commercial passenger fishing vessels both inside and outside of MPAs between 2007 and present. Aspects of canary rockfish life history make the data set less than ideal. One important consideration is the limitation of sampling to less than 150 ft to minimize barotrauma for fish released by this hook and line survey, which limits access to the primary depth distribution of adult canary rockfish. In addition, until 2017 the sampling was focused on central California at the southern edge of the species range in California. While additional data has been collected subsequently to better represent the statewide abundance of groundfish stocks, the limited depths sampled and spatial limitations early in the survey further the utility and representativeness of the survey for this northernly distributed stock. Lastly, the high degree of vagility of canary rockfish makes accounting for MPA effects of lesser importance reducing the impetus to account for trends in closed areas for this species.
 
 ### Commercial Collection Report System
 
@@ -25,7 +25,7 @@ Fishery-independent data available for this assessment came from two distinct WD
 
 ### Oregon indices
 
-Two indices of relative abundance were developed for canary rockfish in Oregon using the \gls{sdmTMB} package, but ultimately not included in the base model.  Given the period of non-retention for canary rockfish, the only viable fishery-dependent index was based on onboard sampling of charter vessels that includes both retained and released fish.  Additionally, a second index from Oregon’s marine reserve hook and line survey was also developed.
+Two indices of relative abundance were developed for canary rockfish in Oregon using the \gls{sdmtmb} package, but ultimately not included in the base model.  Given the period of non-retention for canary rockfish, the only viable fishery-dependent index was based on onboard sampling of charter vessels that includes both retained and released fish.  Additionally, a second index from Oregon’s marine reserve hook and line survey was also developed.
 
 ### \gls{s-hkl}
 

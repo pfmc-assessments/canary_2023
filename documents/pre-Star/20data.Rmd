@@ -25,7 +25,7 @@ g.  Discard rates for 1981-1994 are obtained from the Pikitch study as analyzed 
 <!-- -->
 
 a.  The \gls{s-tri} conducted by the Alaska Fisheries Science Center provides abundance index, length composition, and age-composition samples and was included for years 1980-2001.
-b.  The \gls{s-wcgbts} conducted by the \gls{nwfsc} provides abundance index, length composition, and age-composition samples, and was available for years 2003-2022, with the exception of 2020 due to the COVID-19 pandemic.
+b.  The \gls{s-wcgbt} conducted by the \gls{nwfsc} provides abundance index, length composition, and age-composition samples, and was available for years 2003-2022, with the exception of 2020 due to the COVID-19 pandemic.
 c.  The pre-recruit survey, which combines data collected by the \gls{swfsc}, \gls{nwfsc}, and Pacific Whiting Conservation Cooperative provides a relative index of density for pre-recruit fish, and was included for most years from 2001-2022. Composition data are not used for this survey. 
 
 <!-- -->
@@ -48,7 +48,7 @@ a.  Updated maturity schedule from analyses based on functional age-at-maturity,
 b.  Updated fecundity relationship based on a meta-analysis assuming fecundity is a power function of length.
 c.  Updated prior for natural mortality rate along with updated treatment of mortality as age-invariant but sex dependent.
 d.  Updated prior on steepness according to best practices.
-e.  Updated weight-at-length relationship as estimated from the \gls{wcgbts}.
+e.  Updated weight-at-length relationship as estimated from the \gls{s-wcgbt}.
 f.  Estimates of ageing error for break-and-burn ages were maintained from the previous benchmark assessment. 
 
 
