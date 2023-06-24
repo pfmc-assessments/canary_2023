@@ -117,6 +117,34 @@ SSsummarize(xx) |>
 
 
 
+
+
+####------------------------------------------------####
+### converted_detailed_hessian converted detailed with hessian ----
+####------------------------------------------------####
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models','converted_detailed'))
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models','converted_detailed_hessian'),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+
 ####------------------------------------------------####
 ### 3_1_1_update_data ----
 ####------------------------------------------------####
@@ -3299,4 +3327,40 @@ tunings$Name <- paste0(fleet.converter$fleet_no_num[tunings$Fleet],
 
 write.csv(tunings[c("Data_type","Fleet","lambda_2015","Value_2015","Value_data","Value_bio","Value_coast", "Name")], 
           here('models','Bridging coastwide',"tunings_comparison.csv"), row.names=FALSE)
+
+
+
+#############################################################
+##
+#Create plots for using in the report. ----
+#Since the above was run WA 2022 rec catch and CA  
+##
+#############################################################
+
+#Convert to new .exe --------------------------------
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('2015base',
+                                                 'converted_detailed_hessian')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015:SSv3.20',
+                                     '2015:SSv3.30'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/Bridging coastwide','report_figures'))
+
+
+#Data plots --------------------------------
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models','Bridging coastwide'),
+                                      subdir = c('3_0_0_2015hessian',
+                                                 '3_1_2_catch',
+                                                 '3_2_9_tuned',
+                                                 '3_3_6_coastwide_tuned')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Spatial (M as constant)',
+                                     'Coastwide (M as constant)',
+                                     'Spatial tuned',
+                                     'Coastwide tuned'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+
+
   
