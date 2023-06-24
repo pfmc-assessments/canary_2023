@@ -12700,6 +12700,10 @@ SSsummarize(xx) |>
                                      '2nd jitter lowest likelihood'),
                     subplots = c(1:4, 11, 13:14, 16), print = TRUE, plotdir = here('models',new_name,'jitter_compare_for_report'))
 
+file.copy(from = file.path(here('models',new_name,'jitter_compare_for_report'), "compare1_spawnbio.png"),
+            to = file.path(here('documents/figures'), "jitter_compare1_spawnbio.png"))
+
+
 ##########################################################################################
 
 #Sensitivities on base can probably go into separate script called sensitivities

@@ -50,6 +50,8 @@ literature/
 # ignore figures (take up a lot of space)
 *.png
 !documents/figures/*.png
+!models/5_5_0_hessian_retro/*.png
+!models/5_5_0_profile_profile*/*.png
 *.jpg
 *.jpeg
 data_workshop_figs/
