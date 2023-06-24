@@ -3289,12 +3289,9 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
 
 
-
 ########################################################
-### 
 #Compare tunings between various models to understand what changed
 #Var adj depends on lambdas and sample sizes
-###
 ########################################################
 
 #All of these are tuned
@@ -3329,6 +3326,212 @@ write.csv(tunings[c("Data_type","Fleet","lambda_2015","Value_2015","Value_data",
           here('models','Bridging coastwide',"tunings_comparison.csv"), row.names=FALSE)
 
 
+########################################################
+#Add two more model runs for bridging for report
+# Clean up model inputs
+# Sex dependent selectivity
+########################################################
+
+
+####------------------------------------------------####
+### 3_3_7_ssInputs Similar to model 0_4_1 and 2_0_0 ----
+####------------------------------------------------####
+
+new_name <- 'Bridging coastwide/3_3_7_ssInputs'
+old_name <- 'Bridging coastwide/3_3_4_coastwide_tuned'
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make Changes
+##
+
+##Changes for 0_4_1 ssInputs
+
+#Make changes to starter ------------------------------------------------
+mod$start$N_bootstraps <- 1 #generate ss_new datafile
+mod$start$SPR_basis <- 4 #This may not be needed (1 is ok) but use raw (1-SPR). 
+
+#Make changes to forecast ------------------------------------------------
+mod$fore$MSY <- 2 #calculate actual MSY
+mod$fore$Bmark_years <- c(-999,0, 0,0, 0,0, -999,0, -999,0) #start year and end year for all but selectivity (because of blocks) and relF
+mod$fore$Nforecastyrs <- 12
+mod$fore$Fcast_years <- c(0,0, -3,0, -999,0) #last year for selex, last three years for relF, full time series for average recruitment (though using fcast_rec_option = 0 ignores this)
+mod$fore$ControlRuleMethod <- 3
+mod$fore$Flimitfraction <- -1 #Set year and pstar buffers
+mod$fore$Flimitfraction_m <- data.frame("Year" = 2023:2034, 
+                                        "Fraction" = get_buffer(c(2023:2034), sigma = 0.5, pstar = 0.45)[,2])
+mod$fore$FirstYear_for_caps_and_allocations <- 2025
+mod$fore$InputBasis <- 2
+mod$fore$ForeCatch <- data.frame("Year" = rep(2023:2024, each = mod$dat$Nfleet),
+                                 "Seas" = 1,
+                                 "Fleet" = rep(1:mod$dat$Nfleet, 2),
+                                 "Catch or F" = 0)
+
+#Make changes to data ------------------------------------------------
+mod$dat$len_info$minsamplesize <- 0.01 #Manual says CAAL could have sample size < 1 so setting lower
+mod$dat$age_info$minsamplesize <- 0.01 #Manual says CAAL could have sample size < 1 so setting lower
+
+#Make changes to control ------------------------------------------------
+mod$ctl$Growth_Age_for_L2 <- 999 #set equivalent to Linf
+mod$ctl$First_Mature_Age <- 2 #Keep at 2. IGNORED when maturity option is 3 but Id like to set it to whatever it is in case we change maturity option
+mod$ctl$MG_parms[c('RecrDist_Area_2','RecrDist_Area_3'),'dev_maxyr'] <- 2022 #update to current end year
+mod$ctl$Use_steep_init_equi <- 1 #include in init eq. equations
+mod$ctl$Fcast_recr_phase <- mod$ctl$recdev_phase+1
+mod$ctl$F_Method <- 3 #TO DO: RECOMMENDED APPROACH IS 4 but IM NOT SURE WHAT DIFFERENCE IS. Looks like its useful if the model has issues (fleet specific F phases). THIS SLOWS DOWN RUNTIME A BIT
+mod$ctl$maxF <- 4
+mod$ctl$F_iter <-  5
+
+
+##Changes for 2_0_0 minor fixes
+
+# Replace unused but weird values in MGparms (devPH, cohort growth min/max) ------------------------------------------------
+mod$ctl$MG_parms$dev_PH <- 0
+mod$ctl$MG_parms['CohortGrowDev', c('dev_minyr', 'dev_maxyr')] <- 0
+
+# Remove final block, which does not appear to be used anywhere ------------------------------------------------
+mod$ctl$Block_Design <- mod$ctl$Block_Design[-3]
+mod$ctl$N_Block_Designs <- 2
+mod$ctl$blocks_per_pattern <- c(1,2)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:2)
+
+# Adjust recdev start (early devs) and last year (main devs) and bias adj (update to recent years) ------------------------------------------------
+#mod$ctl$recdev_early_start <- mod$dat$styr
+mod$ctl$last_yr_fullbias_adj <- 2020
+mod$ctl$first_recent_yr_nobias_adj <- 2022
+mod$ctl$MainRdevYrLast <- 2022
+
+#Change recruitment distribution method to 4 (none) and change params in MG_parm ------------------------------------------------
+mod$ctl$recr_dist_method <- 4
+mod$ctl$MG_parms <- mod$ctl$MG_parms[!grepl("RecrDist",rownames(mod$ctl$MG_parms)),]
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+##
+#Comparison plots
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('Bridging coastwide/3_3_4_coastwide_tuned',
+                                                 'Bridging coastwide/3_3_7_ssInputs')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Coastwide tuned',
+                                     'ssInputs and minor fixes'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
+
+####------------------------------------------------####
+### 3_3_8_sexDependentSelex Similar to model 4_4_3 ----
+####------------------------------------------------####
+
+new_name <- 'Bridging coastwide/3_3_8_sexDependentSelex'
+old_name <- 'Bridging coastwide/3_3_7_ssInputs'
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make Changes
+##
+
+#Pick fleets want to have an offset for. Here we are doing all
+maleFleets <- rownames(mod$ctl$size_selex_types[mod$ctl$size_selex_types$Pattern == 24, ]) 
+#Male offset from female (using option 4 (female offset from male) makes no difference)
+mod$ctl$size_selex_types[maleFleets, "Male"] <- 4
+
+for(i in maleFleets){
+  ifelse(i != tail(maleFleets,1),
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)], #only output 5 parameters. Use P_2 for the fifth parameter name
+                                                                (max(grep(i, rownames(mod$ctl$size_selex_parms)))+1):
+                                                                  length(rownames(mod$ctl$size_selex_parms))),],
+         mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[c(1:max(grep(i,rownames(mod$ctl$size_selex_parms))),
+                                                                grep(i,rownames(mod$ctl$size_selex_parms))[c(1,3,4,6,2)]),]) #only output 5 parameters. Use P_2 for the fifth parameter name
+}
+#female parm 1 added to male parm 1. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_1", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-25, 25, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#female parm 2 added to male parm 3. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_3", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#female parm 3 added to male parm 4. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_4", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-9, 9, 0, 0, 50, 0, 5, 0, 0), each = length(maleFleets))
+
+#female parm 4 added to male parm 6. Use 0 for no change
+mod$ctl$size_selex_parms[intersect(grep("_P_6", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(-99, 99, 0, 0, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+#female parm 5 is a scalar to apical selectivity AND descending limb (rescales the whole thing). Use 1 for no change
+#search for P_2 for this because I arbitrarily copied the parm2 line for the 5th female parameter
+mod$ctl$size_selex_parms[intersect(grep("_P_2", rownames(mod$ctl$size_selex_parms)),
+                                   grep(").1", rownames(mod$ctl$size_selex_parms))),
+                         c("LO", "HI", "INIT", "PRIOR", "PR_SD", "PR_type", "PHASE", "Block", "Block_Fxn")] <-
+  rep(c(0, 2, 1, 1, 50, 0, -99, 0, 0), each = length(maleFleets))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('Bridging coastwide/3_3_4_coastwide_tuned',
+                                                 'Bridging coastwide/3_3_7_ssInputs',
+                                                 'Bridging coastwide/3_3_8_sexDependentSelex')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Coastwide tuned',
+                                     'ssInputs and minor fixes',
+                                     'Sex dependent selectivity parameter 4'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
+
+
 
 #############################################################
 ##
@@ -3344,23 +3547,136 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  'converted_detailed_hessian')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015:SSv3.20',
-                                     '2015:SSv3.30'),
-                    subplots = c(1,3), print = TRUE, plotdir = here('models/Bridging coastwide','report_figures'))
+                                     '2015:SSv3.30.21'),
+                    subplots = c(1:4,9,11), print = TRUE, plotdir = here('models','converted_detailed_hessian'),
+                    uncertainty = c(TRUE,FALSE))
+
+file.copy(from =  here('models','converted_detailed_hessian',
+                       c("compare2_spawnbio_uncertainty.png","compare4_Bratio_uncertainty.png")),
+          to = here('documents','figures',
+                    c("bridge0_exe_spawnbio_uncertainty.png","bridg0_exe_compare4_Bratio_uncertainty.png")))
 
 
 #Data plots --------------------------------
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models','Bridging coastwide'),
-                                      subdir = c('3_0_0_2015hessian',
+                                      subdir = c('../converted_detailed_hessian',
                                                  '3_1_2_catch',
+                                                 '3_1_6_fisheryComps',
+                                                 '3_1_7_fishery',
+                                                 '3_1_3_survey',
+                                                 '3_1_8_survey',
+                                                 '3_1_1_update_data')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+                                     '+Removals',
+                                     '+Fishery comps',
+                                     '+Fishery removals and comps',
+                                     '+Surveys indices',
+                                     '+Survey indices and comps',
+                                     'All data updated'),
+                    subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,6)),
+                    plotdir = here('models','Bridging coastwide', '3_1_1_update_data'))
+
+file.copy(from =  here('models','Bridging coastwide', '3_1_1_update_data',
+                       c("compare2_spawnbio_uncertainty.png","compare4_Bratio_uncertainty.png")),
+          to = here('documents','figures',
+                    c("bridge1_data_spawnbio_uncertainty.png","bridge1_data_compare4_Bratio_uncertainty.png")))
+
+
+#Biology plots --------------------------------
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models','Bridging coastwide'),
+                                      subdir = c('../converted_detailed_hessian',
+                                                 '3_1_1_update_data',
+                                                 '3_2_2_M_justValue',
+                                                 '3_2_3_maturity',
+                                                 '3_2_4_steepness',
+                                                 '3_2_5_fecund',
+                                                 '3_2_6_WL',
+                                                 '3_2_7_update_bio_Mval_phases')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+                                     'All data updated',
+                                     '+Mortality',
+                                     '+Maturity',
+                                     '+Steepness',
+                                     '+Fecundity',
+                                     '+Weight-length',
+                                     "All biology and data updated"),
+                    subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,7)),
+                    plotdir = here('models','Bridging coastwide', '3_2_1_update_bio_Mval'))
+
+file.copy(from =  here('models','Bridging coastwide', '3_2_1_update_bio_Mval',
+                       c("compare2_spawnbio_uncertainty.png","compare4_Bratio_uncertainty.png")),
+          to = here('documents','figures',
+                    c("bridge2_bio_spawnbio_uncertainty.png","bridge2_bio_compare4_Bratio_uncertainty.png")))
+
+
+#Natural mortality choice plots --------------------------------
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models','Bridging coastwide'),
+                                      subdir = c('../converted_detailed_hessian',
+                                                 '3_1_1_update_data',
+                                                 '3_2_7_update_bio_Mval_phases',
+                                                 '3_2_7_update_bio_Mconstant_phases')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+                                     'All data updated',
+                                     'All biology and data updated',
+                                     'M as constant'),
+                    subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,3)),
+                    plotdir = here('models','Bridging coastwide', '3_2_7_update_bio_Mval_phases'))
+
+file.copy(from =  here('models','Bridging coastwide', '3_2_7_update_bio_Mval_phases',
+                       c("compare2_spawnbio_uncertainty.png","compare4_Bratio_uncertainty.png")),
+          to = here('documents','figures',
+                    c("bridge3_M_spawnbio_uncertainty.png","bridge3_M_compare4_Bratio_uncertainty.png")),overwrite = TRUE)
+
+
+#Spatial structure and tuning --------------------------------
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models','Bridging coastwide'),
+                                      subdir = c('../converted_detailed_hessian',
+                                                 '3_2_7_update_bio_Mconstant_phases',
+                                                 '3_3_1_coastwide',
                                                  '3_2_9_tuned',
                                                  '3_3_6_coastwide_tuned')))
+
+dir.create(here('models','Bridging coastwide', '3_3_6_coastwide_tuned', 'for_report'))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('Spatial (M as constant)',
-                                     'Coastwide (M as constant)',
-                                     'Spatial tuned',
-                                     'Coastwide tuned'),
-                    subplots = c(1,3), print = TRUE, plotdir = here('models',new_name) )
+  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+                                     'Spatial model',
+                                     "Coastwide model",
+                                     'Spatial model (tuned)',
+                                     'Coastwide model (tuned)'),
+                    subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,4)),
+                    plotdir = here('models','Bridging coastwide', '3_3_6_coastwide_tuned', 'for_report'))
+
+file.copy(from =  here('models','Bridging coastwide', '3_3_6_coastwide_tuned', 'for_report',
+                       c("compare2_spawnbio_uncertainty.png","compare4_Bratio_uncertainty.png")),
+          to = here('documents','figures',
+                    c("bridge4_spatialAndTuning_spawnbio_uncertainty.png","bridge4_spatialAndTuning_compare4_Bratio_uncertainty.png")))
 
 
-  
+#Selectivity changes --------------------------------
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models','Bridging coastwide'),
+                                      subdir = c('../converted_detailed_hessian',
+                                                 '3_3_6_coastwide_tuned',
+                                                 '3_3_4_coastwide_tuned')))
+
+dir.create(here('models','Bridging coastwide', '3_3_4_coastwide_tuned', 'for_report'))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+                                     'Coastwide model (tuned)',
+                                     'Coastwide: update selectivity (tuned)'),
+                    subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,2)),
+                    plotdir = here('models','Bridging coastwide', '3_3_4_coastwide_tuned', 'for_report'))
+
+file.copy(from =  here('models','Bridging coastwide', '3_3_6_coastwide_tuned', 'for_report',
+                       c("compare2_spawnbio_uncertainty.png","compare4_Bratio_uncertainty.png")),
+          to = here('documents','figures',
+                    c("bridge4_spatialAndTuning_spawnbio_uncertainty.png","bridge4_spatialAndTuning_compare4_Bratio_uncertainty.png")))
+
+
