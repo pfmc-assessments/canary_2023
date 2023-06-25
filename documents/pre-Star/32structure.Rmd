@@ -1,13 +1,44 @@
 ## Model Structure and Assumptions
 
+### Modeling Platform and Structure
 
-### Model Changes from the Last Assessment (not required for an update assessment)
+**Brian has updated this section**
+
+We used Stock Synthesis version 3.30.21, compiled February 10, 2023 by Rick Methot at the \gls{noaa} \gls{nwfsc} using the 64-bit version of ADMB 13.1 [@methot_stock_2013]. This most recent version includes improvements and corrections to older model versions. The previous benchmark assessment used an older version of Stock Synthesis, version 3.24V. The R package r4ss, version 1.48.0, along with R version 4.2.2 were used to investigate and plot model fits. 
+
+### Model Changes from the Last Assessment
+
+*Remove survey catches*
+*Remove surface read ages*
+*Simplify population structure*
+*Unmirror selectivity for fleets*
+*Remove fleets with limited contributions (e.g. CA rec ages, CA ASHOP comps)*
+*Natural mortality structure constant*
+*Selectivity structure sex-dependent*
 
 
 ### Bridging analysis from the 2015 Benchmark Assessment
 
-### Modeling Platform and Structure
-We used Stock Synthesis 3 version 3.24V, compiled March 8, 2015 by Rick Methot using the 64-bit version of ADMB 11.1.  Relative to version 3.24U, this version of stock synthesis contains a new feature which allows migration rates to be mirrored, i.e., allowing the movement rate between Oregon and Washington to be identical to the movement rate between Washington and Oregon.  
+**Brian has updated this section**
+
+The exploration of models began by bridging from the 2015 benchmark assessment model to the newest version of Stock Synthesis, version 3.30.21. Using the newest Stock Synthesis version resulting in a slightly lower spawning output starting around 1995 (Figures \ref{fig:bridge-exe-bio} and \ref{fig:bridge-exe-relbio}) due to a higher value of catchability for the Washington late triennial survey. From there, bridging from the 2015 benchmark assessment model to the current base model followed five general steps: 
+
+1. Update data inputs to reflect best information currently available. Data was updated by source (fishery independent, fishery independent) and type (catch, compositions, indices). 
+2. Update life history information including natural mortality value and pattern, maturity, steepness, fecundity, and weight-length relationship.
+3. Update the structure of the modeled population, going from a spatial structure for recruitment to a single-area structure for recruitment.
+4. Reapply current data weighting practices.
+5. Update structure of selectivity.
+
+A thorough description of the current base model is presented separately below. This section is intended only to more clearly identify where substantive changes were made from the previous benchmark assessment. Sensitivities to many of the components within the steps above are included in the Sensitivities (Section \ref{sensitivities}).
+
+Changes due to updating data streams are shown in Figures \ref{fig:bridge-data-bio} and \ref{fig:bridge-data-relbio}. Updating the fishery catch and composition data increases initial spawning output and produces a steady increase in recent spawning output. Updating survey indices and composition data results in a decreasing trend in spawning output in the most recent years. Changes in life history parameter values are shown in Figures \ref{fig:bridge-bio-bio} and \ref{fig:bridge-bio-relbio}. Individually these changes produce different estimates for initial spawning output, but collectively offset and result in continuing the trajectory from the 2015 benchmark assessment.   
+
+Changes due to altering the structure of natural mortality are substantial (Figures \ref{fig:bridge-Mcons-bio} and \ref{fig:bridge-Mcons-relbio}). Assuming constant natural mortality results in similar parameter estimates for male and female natural mortality, and reduces the degree of recovery in spawning output relative to unfished, as also shown within sensitivities from the 2015 benchmark assessment. Also similar to the findings from the 2015 benchmark assessment, changing the structure of the population from spatial to non-spatial resulted in small changes in the current model (Figures \ref{fig:bridge-spatial-bio} and \ref{fig:bridge-spatial-relbio}). Updating the data weighting process to current standard weighting practices and to account for the new updated data however resulted in a decrease in the degree of recovery in spawning output relative to unfished. 
+
+Changes in how selectivity was modeled are shown in Figures \ref{fig:bridge-selex-bio} and \ref{fig:bridge-selex-relbio}. Allowing selectivity to be sex-dependent had a large change in the degree of recovery in spawning output relative to unfished, due to an increase in the estimated value of female natural mortality. Other changes in selectivity including unmirroring fleets and using alternative parameterizations resulted in small changes.
+
+To arrive at a final base model additional revisions to the fleet structure, weightings, selectivity blocks, and selectivity parameterizations were made after the five aforementioned steps in order to determine the best fit to the data.
+
 
 ### Definition of fleets and areas
 
