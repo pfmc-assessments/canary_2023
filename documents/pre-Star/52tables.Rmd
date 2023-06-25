@@ -3,6 +3,7 @@
 
 # Tables
 
+
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/ACL_history.csv')) |>
   knitr::kable(caption = 'The OFL, ABC, ACL, and total mortality (landings + discards) in metric tons',
@@ -11,6 +12,52 @@ readr::read_csv(here('documents/tables/ACL_history.csv')) |>
                booktabs = TRUE)
 ```
 
+<!-- ======================================================= -->
+<!-- ********  Commercial sample size tables *************** --> 
+<!-- ======================================================= -->
+
+```{r, results='asis', message=FALSE}
+readr::read_csv(here('documents/tables/pacfin_lengths.csv')) |>
+  dplyr::select(Year, 
+         Trips_TWL.C, Lengths_TWL.C, Trips_NTWL.C, Lengths_NTWL.C,
+         Trips_TWL.O, Lengths_TWL.O, Trips_NTWL.O, Lengths_NTWL.O,
+         Trips_TWL.W, Lengths_TWL.W, Trips_NTWL.W, Lengths_NTWL.W) |>
+  knitr::kable(caption = 'Summary of the number of trips and length samples for commercial fleets',
+               label = 'comm-sample-lengths', 
+               format = 'latex',
+               col.names = c("Year",
+                            "Trips - CA TWL", "Lengths - CA TWL", "Trips - CA NTWL", "Lengths - NCA TWL", 
+                            "Trips - OR TWL", "Lengths - OR TWL", "Trips - OR NTWL", "Lengths - OR TWL", 
+                            "Trips - WA TWL", "Lengths - WA TWL", "Trips - WA NTWL", "Lengths - WA TWL"),
+               booktabs = TRUE,
+               longtable = TRUE,
+               escape = TRUE) #%>%
+  #kable_styling(font_size = 7) Need to install this package though to have this work
+```
+
+
+```{r, results='asis', message=FALSE}
+
+readr::read_csv(here('documents/tables/pacfin_ages.csv')) |>
+  dplyr::select(Year, 
+         Trips_TWL.C, Ages_TWL.C, Trips_NTWL.C, Ages_NTWL.C,
+         Trips_TWL.O, Ages_TWL.O, Trips_NTWL.O, Ages_NTWL.O,
+         Trips_TWL.W, Ages_TWL.W, Trips_NTWL.W, Ages_NTWL.W) |>
+  knitr::kable(caption = 'Summary of the number of trips and age samples for commercial fleets',
+               label = 'comm-sample-age', 
+               format = 'latex',
+               col.names = c("Year",
+                            "Trips \n CA TWL", "Ages - CA TWL", "Trips - CA NTWL", "Ages - NCA TWL", 
+                            "Trips - OR TWL", "Ages - OR TWL", "Trips - OR NTWL", "Ages - OR TWL", 
+                            "Trips - WA TWL", "Ages - WA TWL", "Trips - WA NTWL", "Ages - WA TWL"),
+               booktabs = TRUE,
+               longtable = TRUE)  #%>%
+  #kable_styling(font_size = 7) Need to install this package though to have this work
+```
+
+<!-- ======================================================= -->
+<!-- ********  Survey sample size tables *************** --> 
+<!-- ======================================================= -->
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/wcgbts_summary.csv')) |>
