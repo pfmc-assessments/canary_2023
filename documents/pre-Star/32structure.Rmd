@@ -8,14 +8,14 @@ We used Stock Synthesis version 3.30.21, compiled February 10, 2023 by Rick Meth
 
 ### Model Changes from the Last Assessment
 
-*Remove survey catches*
-*Remove surface read ages*
-*Simplify population structure*
-*Unmirror selectivity for fleets*
-*Remove fleets with limited contributions (e.g. CA rec ages, CA ASHOP comps)*
-*Natural mortality structure constant*
-*Selectivity structure sex-dependent*
-
+1. *Remove survey catches*
+2. *Remove surface read ages*
+3. *Simplify population structure*
+4. *Unmirror selectivity for fleets*
+5. *Remove fleets with limited contributions (e.g. CA rec ages, CA ASHOP comps)*
+6. *Natural mortality structure constant*
+7. *Selectivity structure sex-dependent*
+8. *Shrimp trawl as trawl gear*
 
 ### Bridging analysis from the 2015 Benchmark Assessment
 
