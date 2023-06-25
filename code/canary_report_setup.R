@@ -31,15 +31,15 @@ if(!dir.exists(doc_dir)){
 setwd(doc_dir)
 
 # Create the needed items to generate the "right" template that would be based on the inputs here:
-# Need to only do this once
-sa4ss::draft(
-  authors = c("Brian J. Langseth", "Kiva L. Oken"),
-  species = "Canary Rockfish",
-  latin = "Sebastes pinniger",
-  coast = "U.S. West",
-  type = c("sa"),
-  create_dir = FALSE,
-  edit = FALSE
+# Need to only do this once. Commenting out so dont accidentally run
+# sa4ss::draft(
+#   authors = c("Brian J. Langseth", "Kiva L. Oken"),
+#   species = "Canary Rockfish",
+#   latin = "Sebastes pinniger",
+#   coast = "U.S. West",
+#   type = c("sa"),
+#   create_dir = FALSE,
+#   edit = FALSE
 )
 
 model_name <- "5_5_0_hessian"

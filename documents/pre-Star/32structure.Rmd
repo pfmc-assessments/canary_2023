@@ -21,7 +21,7 @@ We used Stock Synthesis version 3.30.21, compiled February 10, 2023 by Rick Meth
 
 **Brian has updated this section**
 
-The exploration of models began by bridging from the 2015 benchmark assessment model to the newest version of Stock Synthesis, version 3.30.21. Using the newest Stock Synthesis version resulting in a slightly lower spawning output starting around 1995 (Figures \ref{fig:bridge-exe-bio} and \ref{fig:bridge-exe-relbio}) due to a higher value of catchability for the Washington late triennial survey. From there, bridging from the 2015 benchmark assessment model to the current base model followed five general steps: 
+The exploration of models began by bridging from the 2015 benchmark assessment model to the newest version of Stock Synthesis, version 3.30.21. Using the newest Stock Synthesis version resulted in a slightly lower spawning output starting around 1995 (Figures \ref{fig:bridge-exe-bio} and \ref{fig:bridge-exe-relbio}) due to a higher value of catchability for the Washington late triennial survey. From there, bridging from the 2015 benchmark assessment model to the current base model followed five general steps: 
 
 1. Update data inputs to reflect best information currently available. Data was updated by source (fishery independent, fishery independent) and type (catch, compositions, indices). 
 2. Update life history information including natural mortality value and pattern, maturity, steepness, fecundity, and weight-length relationship.

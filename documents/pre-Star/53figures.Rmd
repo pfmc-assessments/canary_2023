@@ -68,7 +68,7 @@ alt="Exponential weight-length curves for males and females nearly overlapping, 
 
 ![Sex ratio by length in the \gls{s-wcgbt} \label{fig:sex_ratio_length}](../figures/length_fraction_female.png){width=100%, alt='Figure showing fraction female close to 50% until around 45 when it becomes almost all female'}
 
-##Model bridging
+## Model bridging
 
 ![Model version bridge comparison of estimated spawning output \label{fig:bridge-exe-bio}](../figures/bridge0_exe_spawnbio_uncertainty.png){width=100%, alt='Figure showing spawning output from 2015 benchmark is similar when using the 2015 and 2023 versions of stock synthesis'}
 
@@ -95,7 +95,7 @@ alt="Exponential weight-length curves for males and females nearly overlapping, 
 ![Selectivity bridge comparisons of estimated spawning output relative to unfished \label{fig:bridge-selex-relbio}](../figures/bridge5_selex_compare4_Bratio_uncertainty.png){width=100%, alt='Figure showing that allowing sex-dpendent selectivity increases recent spawning output relative to unfished'}
 
 
-##Diagnostics
+## Diagnostics
 
 ![Comparison of base model spawning output with estimates from the models with lower likelihood found during the two rounds of jitter analyses \label{fig:jitter_compare}](../figures/jitter_compare1_spawnbio.png){width=100%, alt='Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model'}
 

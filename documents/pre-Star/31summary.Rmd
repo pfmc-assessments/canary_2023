@@ -54,8 +54,6 @@ The 2007 model was subsequently updated twice, in 2009 (Stewart, 2009) and 2011 
 
 **Response:** This assessment includes fecundity and maturity curves based on new data made available since the last benchmark assessment. While efforts have been undertaken to understand the apparent loss of older females, this has not resulted in any clear resolution. A research study sampling in non-trawlable habitat along the U.S. West Coast found a similar lack of old females in the data [@Brooks_thesis_2021]. Examination of data from the Oregon trawl fleet indicates that sex ratios have been more constant across ages in the last decade than they had been previously (L. Rasmuson, pers. comm.).
 
-## Response to recommendations for future research from the 2015 benchmark assessment
-
-FYI This is not required in the TOR
-
 ## Response to Groundfish Subcommittee Requests (not required in draft)
+
+To be complete after the STAR panel
