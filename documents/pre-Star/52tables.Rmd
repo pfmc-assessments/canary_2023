@@ -3,10 +3,52 @@
 
 # Tables
 
+<!-- ======================================================= -->
+<!-- ********  Catch tables *************** --> 
+<!-- ======================================================= -->
+
+```{r, results='asis', message=FALSE}
+readr::read_csv(here('data/canary_total_removals.csv')) |> 
+  dplyr::select(Year,
+                 TWL.C, TWL.O, TWL.W,
+                 NTWL.C, NTWL.O, NTWL.W,
+                 rec.C, rec.O, rec.W.mt.2) |>
+  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the trawl (TWL), non-trawl (NTWL), and the recreational (Rec) fleets used in the assessment model. See text for description of sources',
+               label = 'catches1', 
+               format = 'latex',
+               col.names = c("Year", 
+                             "TWL CA", "TWL OR", "TWL WA",
+                             "NTWL CA", "NTWL OR", "NTWL WA",
+                             "Rec CA", "Rec OR", "Rec WA"),
+               booktabs = TRUE,
+               longtable = TRUE,
+               digits = 1)
+```
+
+```{r, results='asis', message=FALSE}
+readr::read_csv(here('data/canary_total_removals.csv')) |> 
+  dplyr::select(Year,
+                 FOR.C, FOR.O, FOR.W,
+                 ASHOP.C, ASHOP.O, ASHOP.W) |>
+  dplyr::filter(Year > 1965) |>
+  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the foreign (FOR) and at-sea-hake (ASH) fleets used in the assessment model. Removals before 1966 are zero. See text for description of sources',
+               label = 'catches2', 
+               format = 'latex',
+               col.names = c("Year",
+                             "FOR CA", "FOR OR", "FOR WA",
+                             "ASH CA", "ASH OR", "ASH WA"),
+               booktabs = TRUE,
+               longtable = TRUE,
+               digits = 1)
+```
+
+<!-- ======================================================= -->
+<!-- ********  ACL tables *************** --> 
+<!-- ======================================================= -->
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/ACL_history.csv')) |>
-  knitr::kable(caption = 'The OFL, ABC, ACL, and total mortality (landings + discards) in metric tons',
+  knitr::kable(caption = 'The OFL, ABC, ACL, and total mortality (landings + dead discards) in metric tons',
                label = 'acls', 
                format = 'latex',
                booktabs = TRUE)
@@ -22,7 +64,7 @@ readr::read_csv(here('documents/tables/pacfin_lengths.csv')) |>
          Trips_TWL.C, Lengths_TWL.C, Trips_NTWL.C, Lengths_NTWL.C,
          Trips_TWL.O, Lengths_TWL.O, Trips_NTWL.O, Lengths_NTWL.O,
          Trips_TWL.W, Lengths_TWL.W, Trips_NTWL.W, Lengths_NTWL.W) |>
-  knitr::kable(caption = 'Summary of the number of trips and length samples for commercial fleets',
+  knitr::kable(caption = 'Summary of the number of trips and length samples for commercial trawl (TWL) and non-trawl (NTWL) fleets',
                label = 'comm-sample-lengths', 
                format = 'latex',
                col.names = c("Year",
@@ -43,16 +85,40 @@ readr::read_csv(here('documents/tables/pacfin_ages.csv')) |>
          Trips_TWL.C, Ages_TWL.C, Trips_NTWL.C, Ages_NTWL.C,
          Trips_TWL.O, Ages_TWL.O, Trips_NTWL.O, Ages_NTWL.O,
          Trips_TWL.W, Ages_TWL.W, Trips_NTWL.W, Ages_NTWL.W) |>
-  knitr::kable(caption = 'Summary of the number of trips and age samples for commercial fleets',
+  knitr::kable(caption = 'Summary of the number of trips and aged samples for commercial trawl (TWL) and non-trawl (NTWL) fleets',
                label = 'comm-sample-age', 
                format = 'latex',
                col.names = c("Year",
-                            "Trips \n CA TWL", "Ages - CA TWL", "Trips - CA NTWL", "Ages - NCA TWL", 
+                            "Trips \\\n CA TWL", "Ages - CA TWL", "Trips - CA NTWL", "Ages - NCA TWL", 
                             "Trips - OR TWL", "Ages - OR TWL", "Trips - OR NTWL", "Ages - OR TWL", 
                             "Trips - WA TWL", "Ages - WA TWL", "Trips - WA NTWL", "Ages - WA TWL"),
                booktabs = TRUE,
                longtable = TRUE)  #%>%
   #kable_styling(font_size = 7) Need to install this package though to have this work
+```
+
+<!-- ======================================================= -->
+<!-- ********  ASHOP sample size tables *************** --> 
+<!-- ======================================================= -->
+
+```{r, results='asis', message=FALSE}
+readr::read_csv(here('data/Canary_ashop_LengthComps_hauls_and_samples.csv')) |> 
+  dplyr::select(Year, OR_nhaul, OR_N, WA_nhaul, WA_N) |>
+  knitr::kable(caption = 'Summary of the number of hauls and length samples for the at-sea-hake fleets. No samples were collected in California',
+               label = 'ashop-sample-lengths', 
+               format = 'latex',
+               col.names = c("Year", "Hauls OR", "Lengths OR", "Hauls WA", "Lengths WA"),
+               booktabs = TRUE)
+```
+
+```{r, results='asis', message=FALSE}
+readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')) |>
+  dplyr::select(Year, OR_nhaul, OR_N, WA_nhaul, WA_N) |>
+  knitr::kable(caption = 'Summary of the number of trips and aged samples for the at-sea-hake fleets. No samples were collected in California',
+               label = 'ashop-sample-age', 
+               format = 'latex',
+               col.names = c("Year", "Hauls OR", "Ages OR", "Hauls WA", "Ages WA"),
+               booktabs = TRUE)
 ```
 
 <!-- ======================================================= -->
@@ -76,7 +142,7 @@ readr::read_csv(here('documents/tables/rec_lengths.csv')) |>
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/rec_ages.csv')) |>
   dplyr::select(year, O_or_ora_N, O_or_ora_ntrip, W_wa_sport_N, W_wa_sport_ntrip) |>
-  knitr::kable(caption = 'Summary of the number of trips and age samples for recreational fleets. No age data is available for the California recreational fleet',
+  knitr::kable(caption = 'Summary of the number of trips and aged samples for recreational fleets. No aged samples are available for the California recreational fleet',
                label = 'rec-sample-age', 
                format = 'latex',
                col.names = c("Year", "Ages OR", "Trips OR", "Ages WA", "Trips WA"),
