@@ -22,7 +22,11 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                              "Rec CA", "Rec OR", "Rec WA"),
                booktabs = TRUE,
                longtable = TRUE,
-               digits = 1)
+               linesep = "",
+               digits = 1) #|>
+  # kableExtra::kable_styling( 
+  #     latex_options = c("repeat_header"),
+  #     font_size = 8)
 ```
 
 ```{r, results='asis', message=FALSE}
