@@ -1,6 +1,6 @@
 ## Fishery-Independent Data
 
-Fishery-independent data are derived from three main sampling programs: the \gls{s-tri} (1980-2004), the \gls{s-wcgbt},  and the pre-recruit survey (2001-2022).  Each source of information is used to generate an index of abundance.  The triennial and WCGBTS also provide age and length-composition sampling data.
+Fishery-independent data are derived from three main sampling programs: the \gls{s-tri} (1980-2004), the \gls{s-wcgbt},  and the pre-recruit survey (2001-2022).  Each source of information is used to generate an index of abundance.  The triennial and WCGBTS also provide age and length-composition sampling data and were extracted on May 1, 2023 and February 13, 2023, respectively.
 
 ### West Coast Groundfish Bottom Trawl Survey
 

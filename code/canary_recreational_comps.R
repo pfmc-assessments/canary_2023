@@ -387,6 +387,16 @@ out_sample_size_ss3 <- out %>% dplyr::filter(!is.na(sourceSS3)) %>%
 out_sample_size_ss3[is.na(out_sample_size_ss3)] <- 0
 #write.csv(out_sample_size, file = file.path(git_dir,"data", "forSS", "Canary_recLen_sample_size_forSS.csv"), row.names = FALSE)
 
+# #Put in format for the report
+# write.csv(out %>% dplyr::filter(!is.na(sourceSS3)) %>%
+#   dplyr::group_by(year, sourceSS3) %>%
+#   dplyr::summarise(
+#     ntrip = length(unique(trip)),
+#     N = length(lengthcm)) %>%
+#   tidyr::pivot_wider(names_from = c(sourceSS3), values_from = c(N,ntrip), values_fill = 0) %>%
+#     dplyr::arrange(year) %>% data.frame(),
+#   row.names = FALSE, file = file.path(git_dir,"documents","tables","rec_lengths.csv"))
+
 
 #For ages based on all data sources (recfin is duplicated by state provided data)
 out_sample_size_age <- out_age %>%
@@ -411,6 +421,17 @@ out_sample_size_age_ss3 <- out_age %>% dplyr::filter(!is.na(sourceSS3)) %>%
   data.frame()
 out_sample_size_age_ss3[is.na(out_sample_size_age_ss3)] <- 0
 #write.csv(out_sample_size_age_ss3, file = file.path(git_dir,"data", "Canary_recAge_sample_size_forSS.csv"), row.names = FALSE)
+
+# #Put in format for the report
+# write.csv(out_age %>% dplyr::filter(!is.na(sourceSS3)) %>%
+#   dplyr::group_by(year, state, source) %>%
+#   dplyr::summarise(
+#     ntrip = length(unique(trip)),
+#     N = length(age)) %>%
+#   tidyr::pivot_wider(names_from = c(source, state), values_from = c(N,ntrip), values_fill = 0,
+#                      names_glue = "{state}_{source}_{.value}", names_sort = TRUE) %>%
+#     dplyr::arrange(year) %>% data.frame(),
+#   row.names = FALSE, file = file.path(git_dir,"documents","tables","rec_ages.csv"))
 
 
 ############################################################################################

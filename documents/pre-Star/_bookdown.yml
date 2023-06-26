@@ -12,6 +12,7 @@ rmd_files: [
   '21s-.Rmd', 
   '22biology.Rmd', 
   '24unused.Rmd',
+  '32structure.Rmd',
   '49bibliography.Rmd', 
   '52tables.Rmd', 
   '53figures.Rmd'

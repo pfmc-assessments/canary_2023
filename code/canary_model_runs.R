@@ -12335,6 +12335,11 @@ r4ss::run(dir = here('models',new_name),
 
 pp <- SS_output(here('models',new_name))
 SS_plots(pp)
+SSplotData(pp, print = TRUE, subplots = c(1), plotdir = here('documents/figures'),
+           pwidth = 5.5, pheight = 7, ptsize = 8,margins = c(5.1, 2.1, 2.1, 10.1))
+file.rename(from = file.path(here('documents/figures'), "data_plot.png"),
+            to = file.path(here('documents/figures'), "data_plot_custom.png"))
+
 
 r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), datonly = TRUE,
                   print = TRUE, plot = TRUE, plotdir = here('documents/figures'))
