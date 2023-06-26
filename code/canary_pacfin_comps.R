@@ -154,11 +154,11 @@ colnames(trips_sample)[2] <- "Year"
 # write.csv(trips_sample, row.names = FALSE, file = file.path(git_dir, "data", "Canary_PacFIN_LengthComps_trips_and_samples.csv"))
 #Coast samples we can sum together
 
-#Put in format for the report
-write.csv(tidyr::pivot_wider(trips_sample,names_from = "fleet", values_from = c("Trips","Lengths"), 
-                             names_sort = TRUE, values_fill = 0) %>%
-            arrange(Year),
-          row.names = FALSE, file = file.path(git_dir,"documents","tables","pacfin_lengths.csv"))
+# #Put in format for the report
+# write.csv(tidyr::pivot_wider(trips_sample,names_from = "fleet", values_from = c("Trips","Lengths"), 
+#                              names_sort = TRUE, values_fill = 0) %>%
+#             arrange(Year),
+#           row.names = FALSE, file = file.path(git_dir,"documents","tables","pacfin_lengths.csv"))
 
 
 trips_sample <- PdataAge %>%
@@ -171,11 +171,11 @@ colnames(trips_sample)[2] <- "Year"
 # write.csv(trips_sample, row.names = FALSE, file = file.path(git_dir, "data", "Canary_PacFIN_AgeComps_trips_and_samples.csv"))
 #Coast samples we can sum together
 
-#Put in format for the report
-write.csv(tidyr::pivot_wider(trips_sample,names_from = "fleet", values_from = c("Trips","Ages"), 
-                             names_sort = TRUE, values_fill = 0) %>%
-            arrange(Year),
-          row.names = FALSE, file = file.path(git_dir,"documents","tables","pacfin_ages.csv"))
+# #Put in format for the report
+# write.csv(tidyr::pivot_wider(trips_sample,names_from = "fleet", values_from = c("Trips","Ages"), 
+#                              names_sort = TRUE, values_fill = 0) %>%
+#             arrange(Year),
+#           row.names = FALSE, file = file.path(git_dir,"documents","tables","pacfin_ages.csv"))
 
 
 #################################################################################
