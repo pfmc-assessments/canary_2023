@@ -101,10 +101,6 @@ alt="Exponential weight-length curves for males and females nearly overlapping, 
 
 ![Comparison of base model spawning output with estimates from the models with lower likelihood found during the two rounds of jitter analyses \label{fig:jitter_compare}](../figures/jitter_compare1_spawnbio.png){width=100%, alt='Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model'}
 
-![Change in spawning output when the most recent five years of data are sequentially removed from the model \label{fig:retro_bio}](../figures/plots/compare2_spawnbio_uncertainty.png){width=100%, alt='Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model'}
-
-![Change in spawning output relative to unfished when the most recent five years of data are sequentially removed from the model \label{fig:retro_relbio}](../../models/plots/compare4_Bratio_uncertainty.png){width=100%, alt='Figure showing five retrospective runs with similar estimates for fraction of unfished compared to the base model'}
-
 ```{r, results = 'asis'}
 sa4ss::add_figure(
 filein = file.path(dir, "models", paste0(model_name,"_retro"), "compare2_spawnbio_uncertainty.png"), 
