@@ -32,7 +32,7 @@ Although the base model indicates an overall global minimum can be obtained that
 The recent assessments for canary rockfish in Canada have shown a decline and subsequent rebuilding of the stock in Canadian waters (COSEWIC, 2007; DFO, 2010; Stanley et al., 2005), where the magnitude of decline and the timing of the commencement of rebuilding are generally similar to the current assessment.  Canadian assessments have been based upon trends in abundance in the southern portion of the Canadian stock.  The Canadian model (COSEWIC 2007) was premised on a maximum age of 84 yr., and available age data clearly showed the decreased prevalence of old females relative to old males, thus supporting the increase in female natural mortality that is also used in our base model.  The Alaska assessment (Green et al., 2014) has historical been based upon density estimates from manned or remotely operated vehicles, and therefore contains no information regarding catchability for bottom trawl surveys, natural mortality rates, or sex-specific age structure. 
 
 
-### Sensitivity Analyses
+### Sensitivity Analyses {#sensitivities}
 
 
 #### Sensitivity to leading parameters

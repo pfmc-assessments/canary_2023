@@ -16,6 +16,7 @@ We used Stock Synthesis version 3.30.21, compiled February 10, 2023 by Rick Meth
 6. *Natural mortality structure constant*
 7. *Selectivity structure sex-dependent*
 8. *Shrimp trawl as trawl gear*
+9. *Reorganize FOR catches by INPFC area*
 
 ### Bridging analysis from the 2015 Benchmark Assessment
 

@@ -3,7 +3,7 @@
 
 # Figures
 
-![Map of management and the 2023 assessment area along with fleet and survey spatial structure for `r spp` off the U.S. West Coast \label{fig:map}](../figures/assessment_map.png){width=100%, height=100%, alt="Map of U.S. West Coast showing indicating coastwide management, assessment, and survey structure, and state-specific fleet structure"}
+![Map of management and the 2023 assessment area along with fleet spatial structure and survey ranges for `r spp` off the U.S. West Coast \label{fig:map}](../figures/assessment_map.png){width=100%, height=100%, alt='Map of U.S. West Coast showing indicating coastwide management, assessment, and survey structure, and state-specific fleet structure'}
 
 ![Illustration of types of data used for each fleet within the assessment for `r spp` off the U.S. West Coast \label{fig:data-plot}](../figures/data_plot_custom.png){width=100%, height=100%, alt='Horizontal bar plot showing data types available by year for each fleet. Commerical catches started in the early 1900s, and recreational in the 1920s for California and around 1970 for other states. Commercial and recreational composition data started in the 1970s and 1980s, with fewer years of age data compared to lengths. Fishery independent indices and composition data started in the 1980s'}
 
@@ -52,6 +52,7 @@
 ![Age composition data for the Oregon recreational fishery \label{fig:OR_rec_agecomp}](../figures/plots/comp_agedat_bubflt8mkt0.png){width=100% height=100% alt="Bubble plot of Oregon recreational age compositions for males and females"}
 
 ![Age composition data for the Washington recreational fishery \label{fig:WA_rec_agecomp}](../figures/plots/comp_agedat_bubflt9mkt0.png){width=100% height=100% alt="Bubble plot of Washington recreational age compositions for males and females"}
+
 ## Biology
 
 ![Maturity at age relationship \label{fig:compare_maturity}](../figures/compare_maturity.png){width=100% height=100% alt="Two logistic curves for 2015 and 2023, 2015 is shifted left of 2023 and asymptotes below 1, 2023 asymptotes at 1"}
