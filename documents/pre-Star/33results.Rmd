@@ -1,8 +1,13 @@
 ## Base Model Results
 
-### Evaluation of model parameters
+1762 The base model parameter estimates along with approximate asymptotic standard errors
+1763 (SD column) are shown in Table 20 and the likelihood components are shown in Table 21.
+1764 The estimated data weights by the Francis method are shown in Table 22. Estimates of the
+1765 copper rockfish population size south of Point Conception over time are shown in Table 23.
+1766 The full r4ss plotting output is available in the supplementary material on the Pacific Fishery
+1767 Management Council website(these figures will not be available until the assessment is
+1768 finalized).
 
-We estimate catchability analytically for every state-specific index of abundance (i.e., fleets 16-27, see Table 20).  Estimates of catchability range from 0.234 (WA late triennial) to 1.983 (CA late triennial), except for the pre-recruit index which is not weighted by area.  We are not surprised that catchability estimates are highly variable, given that indices of abundance are highly variable due to the large variability in the spatial distribution and shoaling behavior for canary rockfish (Thorson et al., 2011).  We are also unsurprised that catchability is generally less than one for indices, given that a substantial portion of canary biomass is likely to unavailable to bottom trawl sampling gear, as is used for all indices of abundance (except the pre-recruit index).
 
 ### Parameter Estimates
 

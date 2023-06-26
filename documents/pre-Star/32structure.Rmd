@@ -1,12 +1,23 @@
 ## Model Structure and Assumptions
 
 ### Modeling Platform and Structure
+<!-- First part of TOR Appendix B E.5 -->
 
-**Brian has updated this section**
+*Brian has updated this section*
 
 We used Stock Synthesis version 3.30.21, compiled February 10, 2023 by Rick Methot at the \gls{noaa} \gls{nwfsc} using the 64-bit version of ADMB 13.1 [@methot_stock_2013]. This most recent version includes improvements and corrections to older model versions. The previous benchmark assessment used an older version of Stock Synthesis, version 3.24V. The R package r4ss, version 1.48.0, along with R version 4.2.2 were used to investigate and plot model fits. 
 
+### Balance of realism and parsimony
+<!-- First part of TOR Appendix B F.2 -->
+
+*Brian has updated this section*
+
+The base assessment model for `r spp` was developed to balance parsimony and realism, and the goal was to estimate a spawning output trajectory for the population of `r spp` off the U.S. West Coast. The model contains many assumptions to achieve parsimony and uses many different sources of data to estimate reality. A series of investigative model runs were done to achieve the final base model, some of which are described as sensitivities (Section \ref{sensitivities}) and some of which are included in the bridging steps described below. Notably, we simplify the population structure of the model by assuming a single coastwide stock, yet increase spatial fleet structure by unmirroring fleet selectivities between states. We balance the increased complexity in spatial fleet structure by simplifying the selectivity parameterization by combining fleets and minimizing the use of blocks where able to balance tradeoffs in realism and parsimony.
+
 ### Model Changes from the Last Assessment
+<!-- TOR Appendix B E.4 I like it better here because the logic flows better-->
+
+**Need to do**
 
 1. *Remove survey catches*
 2. *Remove surface read ages*
@@ -17,10 +28,12 @@ We used Stock Synthesis version 3.30.21, compiled February 10, 2023 by Rick Meth
 7. *Selectivity structure sex-dependent*
 8. *Shrimp trawl as trawl gear*
 9. *Reorganize FOR catches by INPFC area*
+10. *Update life history set up (e.g. using Linf instead of Length at 30) but probably specify this is structure*
 
 ### Bridging analysis from the 2015 Benchmark Assessment
+<!-- TOR Appendix B F.1 -->
 
-**Brian has updated this section**
+*Brian has updated this section*
 
 The exploration of models began by bridging from the 2015 benchmark assessment model to the newest version of Stock Synthesis, version 3.30.21. Using the newest Stock Synthesis version resulted in a slightly lower spawning output starting around 1995 (Figures \ref{fig:bridge-exe-bio} and \ref{fig:bridge-exe-relbio}) due to a higher value of catchability for the Washington late triennial survey. From there, bridging from the 2015 benchmark assessment model to the current base model followed five general steps: 
 
@@ -40,8 +53,12 @@ Changes in how selectivity was modeled are shown in Figures \ref{fig:bridge-sele
 
 To arrive at a final base model additional revisions to the fleet structure, weightings, selectivity blocks, and selectivity parameterizations were made after the five aforementioned steps in order to determine the best fit to the data.
 
+### Key Assumptions and Structural Choices
+<!-- Move section from below to match later part TOR Appendix B E.5 and TOR Appendix B F.2 and -->
 
-### Definition of fleets and areas
+
+#### Definition of fleets and areas
+
 
 We use a multi-area model that treats each state (defined previously) as a separate spatial stratum.  We then generate all data sources as occurring in one unique area.  In particular, catches (defined as landings plus dead discards) for each fleet are specific to either California, Oregon, or Washington.  Fleets include:
 1-3.  	Trawl -- Bottom trawl gears
@@ -63,7 +80,13 @@ Finally, we include coast-wide indices of abundance, which are mirrored to have 
 31. 	Coast-wide pre-recruit 
 
 
+#### Initialization of the model
+
+We start the model in the first year of reconstructed catch data, i.e., 1892.  The population is assumed to experience no fishing mortality prior to this year, and to start in stable age-distribution.  Recruitment deviations, and deviations in the distribution of recruitment among states, are estimated starting in 1933, as justified previously.
+
+
 ### Model Parameters
+<!-- second half of TOR Appendix B E.6 -->
 
 #### Model likelihood components
 
@@ -99,9 +122,6 @@ We approximate recruitment by estimating deviations around a Beverton-Holt stock
 
 The magnitude of recruitment deviations (σR) and the distribution deviations (σD) are both tuned to approximate their treatment as random effects.  Specifically, they are tuned to ensure that they approximately equal the square-root of the sample variance of deviations plus the average squared-standard error of estimated deviations.  Previous research indicates that this is a reasonable approximation to their estimation via maximum marginal likelihood when treating recruitment deviations as a random effect (Methot and Taylor, 2011; Thorson et al., 2015a).  Tuning results in the values σR = σD = 0.5.  Given these values, we then estimate bias-adjustment for recruitment deviations using a bias-adjustment ramp estimated using the R-package r4ss (Taylor et al., 2015). 
 
-#### Initialization of the model
-
-We start the model in the first year of reconstructed catch data, i.e., 1892.  The population is assumed to experience no fishing mortality prior to this year, and to start in stable age-distribution.  Recruitment deviations, and deviations in the distribution of recruitment among states, are estimated starting in 1933, as justified previously.
 
 #### Key Assumptions and Structural Choices
 
@@ -109,7 +129,3 @@ We note two critical assumptions that are implied by our use of a spatial model:
 1.	Low or no movement:  The base model assumes that there is no movement after the settlement of age-0 juveniles.  We explore the impact of low rates of adult movement in a later sensitivity analysis (Figure 117).  
 
 2.	Accurate assignment of fishery landings among states:  The base model drives differences in population status among states by spatial variation in recruitment (estimated using deviations in the spatial distribution of recruitment) and by variation in exploitation history among states.  This exploitation history is estimated by allocating reconstructed landings by stratum.  In particular, data regarding fishery harvest is available by landed port.  We have assumed that the quantity of fish landed in a given stratum (e.g., 46-49 N) is a close approximation to the quantity caught within that stratum.  We evaluate the consequences of this assumption in a sensitivity analysis that compares performance with a nonspatial model (Figure 40).  
-
-#### Balance of realism and parsimony
-
-We first present results for comparing (1) a nonspatial model with (2) a spatial model that lacks any deviations in the spatial distribution of recruitment.  The latter model is equivalent to the base model, with all distribution-deviations turned off.  Model (1) has two fewer parameters than Model (2) (i.e., it lacks the two parameters governing the relative proportion of recruitment assigned to different strata), and therefore represents a comparison of accounting or not accounting for spatial variation in exploitation history.  Model (1) has a negative log-likelihood of 5738.78, while model (2) has a negative log-likelihood of 5681.48.  The spatial model (which accounts for variation in exploitation history) therefore provides a substantial improvement in fit to available data.

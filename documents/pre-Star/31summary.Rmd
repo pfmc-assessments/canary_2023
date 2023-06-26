@@ -1,4 +1,7 @@
 ## History of Modeling Approaches
+<!-- TOR Appendix B E.1 -->
+
+**Probably good to pare down and highlight key points**
 
 The first formal assessment of the canary rockfish resource off the U.S. Pacific coast was done in 1984 (Golden and Demory, 1984).The final results from the initial assessment in 1984 were largely based on qualitative examinations of trends in age and size distributions generated from both fishery and survey data. The 1984 research also included exploratory efforts to fit dynamic models to time series data, using tools such as Virtual Population Analysis and Stock Reduction Analysis. However, due largely to highly variable sample data and its lack of availability in all years, results from the modeling were not considered scientifically valid. The 1984 assessment concluded that the canary rockfish resource was generally stable at that time and that the current restrictions were still applicable, i.e., the ABC for canary rockfish was roughly 2,700 mt in the early 1980s.
 
@@ -28,7 +31,10 @@ The 2007 model was subsequently updated twice, in 2009 (Stewart, 2009) and 2011 
 
 ### 2015 Benchmark
 
+**Need to write about this**
+
 ## Most recent STAR panel and SSC recommendations from 2015 benchmark assessment
+<!-- TOR Appendix B E.2 -->
 
 **Recommendation:** Catch and discard history for this stock in US waters is highly uncertain. While the STAT was able to construct alternative upper and lower bounds for catch using simple multipliers on certain years of historical catch, this is arbitrary. Work to assess the uncertainty related to each individual data source would allow a better investigation of the overall combined uncertainty and its effect on 10 stock assessments.
 
@@ -55,5 +61,6 @@ The 2007 model was subsequently updated twice, in 2009 (Stewart, 2009) and 2011 
 **Response:** This assessment includes fecundity and maturity curves based on new data made available since the last benchmark assessment. While efforts have been undertaken to understand the apparent loss of older females, this has not resulted in any clear resolution. A research study sampling in non-trawlable habitat along the U.S. West Coast found a similar lack of old females in the data [@Brooks_thesis_2021]. Examination of data from the Oregon trawl fleet indicates that sex ratios have been more constant across ages in the last decade than they had been previously (L. Rasmuson, pers. comm.).
 
 ## Response to Groundfish Subcommittee Requests (not required in draft)
+<!-- TOR Appendix B E.3 -->
 
-To be complete after the STAR panel
+To be complete after the STAR panel, though unsure if needed given this is not an update assessment. 
