@@ -45,10 +45,10 @@ mod$dat$catch <- canada_catches
 
 # Write model and run
 new_name <- 'canada_catches'
-SS_write(mod, here('models/sensitivities', new_dir),
+SS_write(mod, here('models/sensitivities', new_name),
          overwrite = TRUE)
 
-r4ss::run(dir = here('models/sensitivities', new_dir), 
+r4ss::run(dir = here('models/sensitivities', new_name), 
           exe = here('models/ss_win.exe'), 
           extras = '-nohess', 
           show_in_console = FALSE, 
@@ -86,3 +86,102 @@ purrr::map(xx, ~ select(.$recruit, Yr, dev)) |>
 # These look nothing like each other. 
 # BC also sees slow steady increase.
 # WC sees slow steady decrease
+
+
+# Prerecruit survey add 3 years -------------------------------------------
+
+mod <- base_mod
+
+prerecruit <- read.csv(here('data/canary_prerecruit_indices.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(region, '_prerec')) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7,
+                YEAR = ifelse(region == 'coastwide', YEAR, -YEAR)) |>
+  dplyr::select(year = YEAR, seas, index = fleet, obs = est, se_log = se)
+
+mod$dat$CPUE <- mod$dat$CPUE |>
+  dplyr::filter(!(index %in% unique(prerecruit$index))) |>
+  dplyr::bind_rows(prerecruit)
+
+new_name <- 'prerec_data'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+
+# Prerecruit units --------------------------------------------------------
+
+mod <- base_mod
+
+mod$dat$fleetinfo[grep('prerec', mod$dat$fleetinfo$fleetname), 'units'] <- 33
+
+# Assume survey is recruitment index but occurs after density-dependence. 
+# May be more statistically defensible? This was Owen's idea.
+
+new_name <- 'prerec_units'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+
+# Sex-constant selectivity ------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
+mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- 99
+
+new_name <- 'no_sex_selectivity'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+
+# M ramp ------------------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(6, 14)
+
+# Add extra rows to MG table
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+# Fix young female M at male M
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+new_name <- 'M_ramp'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
