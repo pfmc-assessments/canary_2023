@@ -3,10 +3,10 @@
 
 # Figures
 
-![Map of management and the 2023 assessment area along with fleet and survey spatial structure for `r spp` off the U.S. West Coast \label{fig:map}](../figures/assessment_map.png){width=100%, height=100%, alt='Map of U.S. West Coast showing indicating coastwide management, assessment, and survey structure, and state-specific fleet structure}
+![Map of management and the 2023 assessment area along with fleet and survey spatial structure for `r spp` off the U.S. West Coast \label{fig:map}](../figures/assessment_map.png){width=100%, height=100%, alt="Map of U.S. West Coast showing indicating coastwide management, assessment, and survey structure, and state-specific fleet structure"}
 
 
-![Historical catch reconstruction for `r spp` off the U.S. West Coast from 1892-2022 by fleet \label{fig:catches}](../figures/plots/catch2 landings stacked.png){width=100%, height=100%, alt='Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly}
+![Historical catch reconstruction for `r spp` off the U.S. West Coast from 1892-2022 by fleet \label{fig:catches}](../figures/plots/catch2 landings stacked.png){width=100%, height=100%, alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
 
 ![Length composition data for the California trawl fishery \label{fig:CA_twl_lencomp}](../figures/plots/comp_lendat_bubflt1mkt0_page2.png){width=100% height=100% alt="Bubble plot of California trawl length compositions for males, females, and unsexed fish"}
 
@@ -46,7 +46,7 @@
 
 ![Length composition data for the Washington recreational fishery \label{fig:WA_rec_lencomp}](../figures/plots/comp_lendat_bubflt9mkt0_page2.png){width=100% height=100% alt="Bubble plot of Washington non-trawl length compositions for males, females, and unsexed fish"}
 
-<!-- ![Aggregate length composition data for the three fisheries with bimodal patterns in length \label{fig:agglencomp}](../figures/plots/comp_lendat__aggregated_across_time_custom.png){width=100% height=100% alt="Aggregate plots of length compositions for males, females, and unsexed fish across all length distributions"} -->
+![Aggregate length composition data for the three fisheries with bimodal patterns in length \label{fig:agglencomp}](../figures/plots/comp_lendat__aggregated_across_time_custom.png){width=100% height=100% alt="Aggregate plots of length compositions for males, females, and unsexed fish across all length distributions"}
 
 ![Age composition data for the Oregon recreational fishery \label{fig:OR_rec_agecomp}](../figures/plots/comp_agedat_bubflt8mkt0.png){width=100% height=100% alt="Bubble plot of Oregon recreational age compositions for males and females"}
 
@@ -72,9 +72,9 @@ alt="Exponential weight-length curves for males and females nearly overlapping, 
 
 ![Comparison of base model spawning output with estimates from the models with lower likelihood found during the two rounds of jitter analyses \label{fig:jitter_compare}](../figures/jitter_compare1_spawnbio.png){width=100%, alt='Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model'}
 
-<!-- ![Change in spawning output when the most recent five years of data are sequentially removed from the model \label{fig:retro_bio}](../figures/plots/compare2_spawnbio_uncertainty.png){width=100%, alt='Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model'} -->
+![Change in spawning output when the most recent five years of data are sequentially removed from the model \label{fig:retro_bio}](../figures/plots/compare2_spawnbio_uncertainty.png){width=100%, alt='Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model'}
 
-<!-- ![Change in spawning output relative to unfished when the most recent five years of data are sequentially removed from the model \label{fig:retro_relbio}](../../models/plots/compare4_Bratio_uncertainty.png){width=100%, alt='Figure showing five retrospective runs with similar estimates for fraction of unfished compared to the base model'} -->
+![Change in spawning output relative to unfished when the most recent five years of data are sequentially removed from the model \label{fig:retro_relbio}](../../models/plots/compare4_Bratio_uncertainty.png){width=100%, alt='Figure showing five retrospective runs with similar estimates for fraction of unfished compared to the base model'}
 
 ```{r, results = 'asis'}
 sa4ss::add_figure(
