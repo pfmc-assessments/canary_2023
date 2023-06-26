@@ -23,14 +23,18 @@ The WDFW provided recreational dockside fisheries data from 1981 through 2022 fo
 
 Fishery-independent data available for this assessment came from two distinct WDFW research projects. The first was the Rockfish Tagging Program that was initiated in the early 2010s primarily off the central coast of Washington with sparse coverage in the northern and southern coast. The second data set was from the standardized Coastwide Rod-and-Reel Survey that began in 2019. The tagging program had strong focus on black rockfish and had little information for canary. The new nearshore survey was impacted by the COVID pandemic and was not completed as originally designed. Due to their short time spans and spatial coverage limited to Washington waters, these two datasets are not used in this assessment.
 
+### WA olympic coast YOY survey (NOAA)
+
+Dive surveys represent a promising data source for `r spp` as their habitat preferences for rocky untrawlable habitat means they are poorly sampled by NMFS trawl surveys. However, this seven-year dataset covering juvenile rockfish habitat (2015-2022, missing 2020) contained three years without any canary observations, and only covers the northern Washington coast. Due to limited sample sizes and coverage of only a small fraction of the assessed area, this dataset was deemed insufficient for inclusion in the assessment. Future research could synthesize dive surveys from throughout the range of canary to build a more robust recruitment index post-density dependence that may be more appropriate for inclusion in an assessment. 
+
 ### Oregon indices
 
 Two indices of relative abundance were developed for canary rockfish in Oregon using the \gls{sdmtmb} package, but ultimately not included in the base model.  Given the period of non-retention for canary rockfish, the only viable fishery-dependent index was based on onboard sampling of charter vessels that includes both retained and released fish.  Additionally, a second index from Oregon’s marine reserve hook and line survey was also developed.
 
 ### \gls{s-hkl}
 
-Need to add this.
+This survey operates south of Point Conception, whereas `r spp` density decreases substantially after that major biogeographic barrier. CITE MAP OF WCGBTS TOWS. Thus, this survey does not cover the main spatial range of the stock and was not considered representative.
 
 ### \gls{iphc} survey
 
-Need to add this
+This survey caught 178 canary rockfish over 23 years, and thus was deemed insufficient for developing an index.

@@ -17,8 +17,9 @@ between individual weight and length, and estimates of error for
 determinations of individual age from reading otoliths.
 
 *NEED TO ADD THIS TABLE* Table \ref{tab:growth-tab} shows the
-length-at-age, weight-at-age, maturity-at-age, and spawning output (the
-product of fecundity and maturity) assumed in the base model.
+weight-at-age, maturity-at-age, and spawning output (the product of
+fecundity and maturity) assumed in the base model, as well as the
+internally estimated length-at-age relationship.
 
 *Do we want to add sample sizes to these. For the sake of time Im not
 included samples sizes, yet other assessments have used these*
@@ -135,8 +136,8 @@ estimating the probability of skip spawning. Due to the relatively steep
 growth curve of `r spp`, a given length can represent a wide range of
 ages. The new relationship results in a rightward shift in maturity and
 increase in maturity at older ages compared to the relationship derived
-within the 2015 assessment (Figure \ref{fig:compare_maturity}). 
-*TO DO:add data to figure*
+within the 2015 assessment (Figure \ref{fig:compare_maturity}). *TO
+DO:add data to figure*
 
 *Text that melissa provided is below but simplified. This may be too
 detailed. Dont have to defend the previous assessment KLO: I took the
