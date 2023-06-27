@@ -1,19 +1,51 @@
 ## Base Model Results
 
-1762 The base model parameter estimates along with approximate asymptotic standard errors
-1763 (SD column) are shown in Table 20 and the likelihood components are shown in Table 21.
-1764 The estimated data weights by the Francis method are shown in Table 22. Estimates of the
-1765 copper rockfish population size south of Point Conception over time are shown in Table 23.
-1766 The full r4ss plotting output is available in the supplementary material on the Pacific Fishery
-1767 Management Council website(these figures will not be available until the assessment is
-1768 finalized).
-
-
 ### Parameter Estimates
 
-Table 22 lists all parameters estimated in the model.  This table enumerates 13 biological parameters, 43 parameters governing selectivity and catchability, 82 recruitment deviations, and 164 distribution deviations.  The 246 recruitment and distribution deviations are interpreted as random effects, resulting in 56 fixed effects.  The 13 biological parameters primarily represent individual growth.
+*Ensure WL1 for male and female and eggs scalar are sceientific method*
+*Set priors of unestimated values to -99 uniformly*
+*Remove the really large sd for triennial late*
+
+The base model parameter estimates along with approximate asymptotic standard errors (SD column) are shown in Table \@ref{tab:params}. This table enumerates a total of 241 estimated parameters. These include one parameter for $R_0$, one parameter for female natural mortality, 10 parameters describing growth, one parameter for survey catchability in the \gls{s-tri}, one parameter for extra variability for the pre-recruit survey, 71 parameters for length-based selectivity and block along with 25 parameters for sex-dependent selectivity, and 131 recruitment deviations.
 
 #### Life history parameters
+
+The estimates of growth parameters by sex varied relative to the externally estimated starting values.  The length-at-age 1 for both sexes were less than the external estimates using the survey age data while the $L_\infty$ estimates for both sexes were higher than the external estimates. The estimated $k$ for females and males was greater than the values estimated externally, with the value for females being more similar. Although estimated growth differed from external estimates, external estimates were within the 95 percent confidence interval (with males near the lower edge) given the estimated uncertainty from the model (Table \ref{tab:params} and Figure \ref{fig:mod-est-len-age}). 
+
+Length-based selectivity curves were estimated for the fishery and survey fleets. The majority of fishery and survey fleets were parameterized using the double normal selectivity parameterization in SS3 except for the commercial dead and `r hkl` fleets that were parameterized as logistic asymptotic selectivity. The estimated selectivities are shown in Figure \ref{fig:est-selex}. The selectivity for the commercial dead fleet was estimated to be asymptotic and constant across the model period. The commercial live fish fishery selects fish at small sizes with dome-shaped selectivity. Both recreational fleets were estimated to have dome-shaped selectivity for each selectivity period with the CPFV fleet selecting a higher portion of large fish in the final time block relative to the PR fleet. The peak in selectivity for both the CPFV and PR fleets in the final time block were estimated at `r round(model$estimated_non_dev_parameters[rownames(model$estimated_non_dev_parameters) == "Size_DblN_peak_Rec_CPFV(3)", "Value"], 1)` and `r round(model$estimated_non_dev_parameters[rownames(model$estimated_non_dev_parameters) == "Size_DblN_peak_Rec_Private(4)", "Value"], 1)`, respectively.  While the recreational fleets selects a wide range of sizes, the estimated peak of selectivity for both fleets were notably less than the size-at-50 percent maturity of 34.1 cm.
+
+The CCFRP Hook and Line estimated peak selectivity around 40 cm with selectivity decreasing for larger fish. The `r hkl` estimated asymptotic selectivity only reaching maximum selectivity for the largest fish. The `r wcgbt` which samples soft bottom via trawl gear had relatively low selectivity for the majority of sizes with only selectivity peaking at the largest sizes. Finally, the estimated length-based selectivity from the CPFV cooperative collection and Pearson Research study was asymptotic with full selectivity for fish of 35 cm and larger.  Both of these last two fleets included only lengths and ages to inform growth estimation. As noted in the Growth Data, Section \ref{growth-data}, that describes these data, the estimated selectivity for the samples collected by the CPFV vessels participating in the cooperative sampling program was distinctly different than that from the CPFV fleet operating `r area` as a whole. This is likely due to the areas accessible and trip type (half-day, three-quarter day, or overnight) between the CRFS districts 1 and 2 within this area where all vessels participating in the collaborative collections operating out of district 2 (see Appendix Section \ref{cpfv-samples} for additional information about the CPFV trip types across California).
+
+The catchability for each of the surveys was analytically solved comparing observed to expected vulnerable biomass across all years. The analytical values for catchability were very small given the survey methodologies and are reported in Table \ref{tab:params} in log-space. Additional fishery and survey index variability, process error added directly to each year's input standard deviation for the were estimated within the model. The model estimated the largest added variance of `r round(model$parameters[model$parameters$Label == "Q_extraSD_Rec_Private(4)", 3], 3)` for the recreational PR fishery index. In contrast the model estimated only limited additional variability in order to fit the recreational CRFS CPFV fishery-dependent index of abundance (`r round(model$parameters[model$parameters$Label == "Q_extraSD_CRFS_CPFV(8)", 3], 3)`). The model fit the trends in the `r hkl` index of abundance relatively well with only a small amount of added variance  being estimated to fit this time series (`r round(model$parameters[model$parameters$Label == "Q_extraSD_NWFSC_HKL(7)", 3], 3)`). The model estimated an added variance of `r round(model$parameters[model$parameters$Label == "Q_extraSD_CCFRP(5)", 3], 3)` to the index from the CCFRP Hook and Line survey.
+
+The time series of estimated recruitments and annual recruitment deviations are shown in Figures \ref{fig:recruits} and \ref{fig:rec-devs}. Years with the highest recruitment deviations were estimated to have occurred in 2010 and 2013 with the lowest being estimated in 2018 and 2019. There is limited information regarding recruitment prior to 1980 but are estimated in the base model to account for uncertainty around the unfished condition. The historical age data from the CPFV fleet from 1975 were identified to have a disproportional influence on estimated recruitment in the late 1960s relative to all other data sources in the model. These data resulted in a sharp spike in recruitment during these years that was substantially higher than any other year in the model.  Given that these estimates were extreme and appeared to be informed by limited data, the decision was made to reduce the influence of this one year of limited age data for model stability (lambda value of 0.10 for these data). Sensitivities showed that the overall ending model estimates were not impacted by this decision (show below in Sensitivities Section \ref{sensitivities}). Estimated recruitment deviations during the early years when compositional data began, 1975 - 1995, have relatively high uncertainty intervals indicating lack of support for clear strong or poor recruitment years across data sources. Recruitment deviations after 2017 are relatively uncertain but with large negative recruitment deviations. Recruitment in 2021 and 2022 are not estimated and fixed to be equal to the spawner-recruit curve values (Figure \ref{fig:bh-curve}). The recruitment bias adjustment applied within the model across years is shown in Figure \ref{fig:bias-adjust}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 The von Bertalanffy growth function was used to model the relationship between length and age in canary rockfish. Sex-specific length and age data are available, so we elected to estimate separate growth curves for males and females (Table 21).  Sex-specific data were used to fit a 5-parameter growth model which includes parameters L1(s), L2(s), k(s), CV1(s) and CV2(s), where L1(s) is the length for sex s at age a1=1 yr., L2(s) is the length for sex s at age a2=30 yr., k(s) is the Brody growth coefficient for sex s, CV1(s) is the coefficient of variation in individual length at age for sex s at age a1, and CV2(s) is the coefficient of variation in individual length at age for sex s at ages at or greater than age a2.  The CV for ages between a1 and a2 is linearly interpolated.  We assume that males and females have identical average length at age a1 (i.e., L1(s)=L1 for both sexes s).  Growth was estimated to differ substantially between males and females, as has been noted in previous assessments (Stewart 2007), as shown in Figure 91.  
 
