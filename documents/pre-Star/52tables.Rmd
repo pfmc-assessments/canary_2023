@@ -260,7 +260,7 @@ timeseries = read.csv(file.path(dir, "models", paste0(model_name), "tables", "Ti
 col_names = c("Year", "Total Biomass (mt)", "Spawning Output", "Total Biomass 5+ (mt)", "Fraction Unfished", "Age-0 Recruits", "Total Mortality (mt)", "1-SPR", "Exploitation Rate")
 
 table_format(x = round(timeseries,2),
-                 caption = "Time series of population estimates from the base model. Spawning output is in billions of eggs and age-0 recruits is in numbers of 1000s.",
+                 caption = "Time series of population estimates from the base model. Spawning output is in millions of eggs and age-0 recruits is in numbers of 1000s.",
                  label = "timeseries",
                  longtable = TRUE,
                  col_names = col_names,
