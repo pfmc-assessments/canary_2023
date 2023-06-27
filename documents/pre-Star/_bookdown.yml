@@ -15,6 +15,7 @@ rmd_files: [
   '24unused.Rmd',
   '30model.Rmd',
   '32structure.Rmd',
+  '33results.Rmd',
   '49bibliography.Rmd', 
   '52tables.Rmd', 
   '53figures.Rmd'

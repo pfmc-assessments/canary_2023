@@ -121,6 +121,8 @@ label = 'retro_relbio')
 
 ## Model results
 
+### Estimated growth
+
 ![Model estimated length-at-age in the beginning of the year. Shaded area indicates 95 percent distribution of length-at-age around the estimated growth curve \label{fig:mod-est-len-age}](../figures/plots/bio1_sizeatage.png){width=100%, alt='Figure showing length at age relationship for males and females with females reaching a greater maximium size at age than males'}
 
 ### Selectivity
@@ -174,13 +176,6 @@ label = 'unavail-bio')
 ![Stock-recruit curve with labels on first, last, and years with log-deviations greater than 0.50. Point colors indicate year, with warmer colors indicating earlier years and cooler colors in showing later years \label{fig:bh-curve}](../figures/plots/SR_curve2.png){width=100%, alt='Figure showing lowering of spawning output with recruits in early years generally falling above the curve and recruits in recent years falling below the time series'}
 
 ![Points are transformed variances. Red line shows current settings for bias adjustment specified in control file. Blue line shows least squares estimate of alternative bias adjustment relationship for recruitment deviations \label{fig:bias-adjust}](../figures/plots/recruit_fit_bias_adjust.png){width=100%, alt='Figure showing lowering of spawning output with recruits in early years generally falling above the curve and recruits in recent years falling below the time series'}
-
-```{r, results = 'asis'}
-add_figure(
-filein = file.path(model_dir, "plots", "recruit_fit_bias_adjust.png"), 
-caption = "Points are transformed variances. Red line shows current settings for bias adjustment specified in control file. Blue line shows least squares estimate of alternative bias adjustment relationship for recruitment deviations (which may or may not be an improvement)",
-label = 'bias-adjust')
-```
 
 ### Time series
 
