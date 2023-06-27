@@ -119,4 +119,49 @@ label = 'retro_relbio')
 
 ![Summary biomass of current and past full and update assessments in 1000s of mt. Summary biomass shows age 5+ canary rockfish with the exception of the 2001 update, which provided summary biomass for age 3+ canary rockfish \label{fig:hist_compare}](../figures/historical_assessment_smry_biomss.png){width=100%, alt='Figure showing biomass trajectories showing a decline to 2000 followed by an increase until the end year of the assessment'}
 
+## Model results
 
+![Model estimated length-at-age in the beginning of the year. Shaded area indicates 95 percent distribution of length-at-age around the estimated growth curve. \label{fig:mod-est-len-age}](../figures/plots/bio1_sizeatage.png){width=100%, alt='Figure showing length at age relationship for males and females with females reaching a greater maximium size at age than males'}
+<!-- Selectivity plots -->
+
+```{r, results = 'asis'}
+sa4ss::add_figure(
+filein = file.path(dir, "models", paste0(model_name), "selectivity_comm.png"), 
+caption = "Selectivity curves for commercial fleets over time for females",
+alt_caption = "Figure showing logistic curves of length-based selectivty that tend to be shifted towards larger fish in the earlier time periods",
+label = 'comm-selex-female')
+```
+
+```{r, results = 'asis'}
+sa4ss::add_figure(
+filein = file.path(dir, "models", paste0(model_name), "selectivity_comm_males.png"), 
+caption = "Selectivity curves for commercial fleets over time for males",
+alt_caption = "Figure showing logistic curves of length-based selectivty that tend to be shifted towards larger fish in the earlier time periods and show a steep truncation at larger sizes",
+label = 'comm-selex-male')
+```
+
+```{r, results = 'asis'}
+sa4ss::add_figure(
+filein = file.path(dir, "models", paste0(model_name), "selectivity_noncomm.png"), 
+caption = "Selectivity curves for recreational and survey fleets over time for females",
+alt_caption = "Figure showing logistic curves of length-based selectivty that tend to be shifted towards smaller fish in the earlier time periods for recreational fleets. Survey curves are not time varying",
+label = 'noncomm-selex-female')
+```
+
+```{r, results = 'asis'}
+sa4ss::add_figure(
+filein = file.path(dir, "models", paste0(model_name), "selectivity_noncomm_males.png"), 
+caption = "Selectivity curves for recreational and survey fleets over time for males",
+alt_caption = "Figure showing logistic curves of length-based selectivty that tend to be shifted towards smaller fish in the earlier time periods for recreational fleets. Survey curves are not time varying. All curves show a steep truncation at larger sizes",
+label = 'noncomm-selex-male')
+```
+
+<!-- Unavailable biomass plot -->
+
+```{r, results = 'asis'}
+sa4ss::add_figure(
+filein = file.path(dir, "models", paste0(model_name), "UnavailableSpawningOutput.png"), 
+caption = "Proportion of spawning output unavailable due to selectivity for small and large fish. Panels are the amount (a: top left) and proportion (b: top right) of spawning output that is unavailable; c) mean age over time (bottom left); and d) mean selectivity of all fleets over time (bottom right)",
+alt_caption = "Four panel figure showing high proportion of unavailable biomass before 1940s, a lower proportion from 1940 to 2000, and an increasing proportin since 2000",
+label = 'unavail-bio')
+```
