@@ -386,6 +386,9 @@ out_sample_size_ss3 <- out %>% dplyr::filter(!is.na(sourceSS3)) %>%
   data.frame()
 out_sample_size_ss3[is.na(out_sample_size_ss3)] <- 0
 #write.csv(out_sample_size, file = file.path(git_dir,"data", "forSS", "Canary_recLen_sample_size_forSS.csv"), row.names = FALSE)
+#Noticed the above wasnt pulling from out_sample_size_ss3 but instead out_sample_size. We never use that (even below for the report) so that isn't a problem
+#If include released fish
+#write.csv(out_sample_size_ss3, file = file.path(git_dir,"data", "forSS", "Canary_recLen_sample_size_withRELEASED_forSS.csv"), row.names = FALSE)
 
 # #Put in format for the report
 # write.csv(out %>% dplyr::filter(!is.na(sourceSS3)) %>%
@@ -494,6 +497,51 @@ for(s in unique(na.omit(out$sourceSS3))) {
     lfs <- NULL
   } #if loop from dim(df)
 }
+
+#IF doing this with included released fish
+#This creates the composition data for each SS3 fleet. 
+#Right now the script for sexed comps is in the unsexed_comps branch of nwfscSurvey
+#so need to navigate to there and then load_all
+# devtools::load_all("U:/Other github repos/nwfscSurvey") ###IMPORTANT TO UNCOMMENT THIS IF RERUN
+for(s in unique(na.omit(out$sourceSS3))) {
+  
+  use_n <- n[n$sourceSS3 %in% s, ]
+  df <- out[out$sourceSS3 %in% s, -which(colnames(out)=="sex_group")]
+  
+  if(dim(df)[1] > 0) {
+    lfs <-  nwfscSurvey::UnexpandedLFs.fn(
+      datL = df, 
+      lgthBins = length_bins,
+      partition = 0, 
+      fleet = s, 
+      month = 7)
+    
+    if(!is.null(lfs$unsexed) & is.null(lfs$sexed)){
+      lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+      write.csv(lfs$unsexed[,c(1:6,63,7:62)], 
+                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_withRELEASED_Lcomp",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
+                row.names = FALSE) 
+    } 
+    if(!is.null(lfs$sexed) & is.null(lfs$unsexed)){
+      lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+      write.csv(lfs$sexed[,c(1:6,63,7:62)], 
+                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_withRELEASED_Lcomp",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
+                row.names = FALSE) 
+    }
+    
+    if(!is.null(lfs$sexed) & !is.null(lfs$unsexed)){
+      lfs$sexed[,"InputN"] <- use_n[use_n$sex_group == "b", 'ntrip']
+      lfs$unsexed[,"InputN"] <- use_n[use_n$sex_group == "u", 'ntrip']
+      colnames(lfs$unsexed) <- colnames(lfs$sexed)
+      write.csv(rbind(lfs$unsexed, lfs$sexed)[,c(1:6,63,7:62)], 
+                file = file.path(git_dir, "data", "forSS", paste0(s,"_rec_not_expanded_withRELEASED_Lcomp",length_bins[1],"_", tail(length_bins,1),"_formatted.csv")),
+                row.names = FALSE) 
+    }
+    
+    lfs <- NULL
+  } #if loop from dim(df)
+}
+#Washington doesn't have released fish so can delete the WA file
 
 
 # ############################################################################################
