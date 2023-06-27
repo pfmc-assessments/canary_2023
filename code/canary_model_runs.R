@@ -12339,6 +12339,8 @@ SSplotData(pp, print = TRUE, subplots = c(1), plotdir = here('documents/figures'
            pwidth = 5.5, pheight = 7, ptsize = 8,margins = c(5.1, 2.1, 2.1, 10.1))
 file.rename(from = file.path(here('documents/figures'), "data_plot.png"),
             to = file.path(here('documents/figures'), "data_plot_custom.png"))
+# #To make CAAL plots on fewer figures. These were copied to documents/figures
+# SS_plots(pp, maxrows2 = 4, maxcols2 = 5)
 
 
 r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), datonly = TRUE,
