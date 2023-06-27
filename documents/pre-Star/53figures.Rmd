@@ -122,7 +122,8 @@ label = 'retro_relbio')
 ## Model results
 
 ![Model estimated length-at-age in the beginning of the year. Shaded area indicates 95 percent distribution of length-at-age around the estimated growth curve. \label{fig:mod-est-len-age}](../figures/plots/bio1_sizeatage.png){width=100%, alt='Figure showing length at age relationship for males and females with females reaching a greater maximium size at age than males'}
-<!-- Selectivity plots -->
+
+### Selectivity
 
 ```{r, results = 'asis'}
 sa4ss::add_figure(
@@ -156,8 +157,6 @@ alt_caption = "Figure showing logistic curves of length-based selectivty that te
 label = 'noncomm-selex-male')
 ```
 
-<!-- Unavailable biomass plot -->
-
 ```{r, results = 'asis'}
 sa4ss::add_figure(
 filein = file.path(dir, "models", paste0(model_name), "UnavailableSpawningOutput.png"), 
@@ -165,3 +164,21 @@ caption = "Proportion of spawning output unavailable due to selectivity for smal
 alt_caption = "Four panel figure showing high proportion of unavailable biomass before 1940s, a lower proportion from 1940 to 2000, and an increasing proportin since 2000",
 label = 'unavail-bio')
 ```
+
+### Recruitment
+
+![Estimated time series of age-0 recruits (1000s). \label{fig:recruits}](../figures/plots/ts11_Age-0_recruits_(1000s)_with_95_asymptotic_intervals.png){width=100%, alt='Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years'}
+
+![Estimated time series of recruitment deviations (circles) and 95% confidence intervals (whiskers) for the main recruitment deviations (black) and early deviations (blue). \label{fig:rec-devs}](../figures/plots/recdevs2_withbars.png){width=100%, alt='Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years'}
+
+![Stock-recruit curve with labels on first, last, and years with log-deviations greater than 0.50. Point colors indicate year, with warmer colors indicating earlier years and cooler colors in showing later years". \label{fig:bh-curve}](../figures/plots/SR_curve2.png){width=100%, alt='Figure showing lowering of spawning output with recruits in early years generally falling above the curve and recruits in recent years falling below the time series'}
+
+![Points are transformed variances. Red line shows current settings for bias adjustment specified in control file. Blue line shows least squares estimate of alternative bias adjustment relationship for recruitment deviations". \label{fig:bias-adjust}](../figures/plots/recruit_fit_bias_adjust.png){width=100%, alt='Figure showing lowering of spawning output with recruits in early years generally falling above the curve and recruits in recent years falling below the time series'}
+
+```{r, results = 'asis'}
+add_figure(
+filein = file.path(model_dir, "plots", "recruit_fit_bias_adjust.png"), 
+caption = "Points are transformed variances. Red line shows current settings for bias adjustment specified in control file. Blue line shows least squares estimate of alternative bias adjustment relationship for recruitment deviations (which may or may not be an improvement)",
+label = 'bias-adjust')
+```
+
