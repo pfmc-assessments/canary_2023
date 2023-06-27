@@ -6,7 +6,7 @@ preamble: |
 csl: canadian-journal-of-fisheries-and-aquatic-sciences.csl
 output:
   sa4ss::techreport_pdf:
-    default
+    extra_dependencies: ["array"]
   bookdown::pdf_document2:
     keep_tex: true
 lang: en

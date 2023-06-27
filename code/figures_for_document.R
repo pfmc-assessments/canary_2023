@@ -300,3 +300,155 @@ file.copy(from =  here('models','Bridging coastwide', '3_3_8_sexDependentSelex',
           to = here('documents','figures',
                     c("bridge5_selex_spawnbio_uncertainty.png","bridge5_selex_compare4_Bratio_uncertainty.png")))
 
+
+# Parameter table ---------------------------------------------------------
+
+mod_params = mod23$parameters[, 
+                              (names(model$parameters) %in%
+                                 c("Num","Label","Value","Phase","Min",
+                                   "Max","Status","Parm_StDev",
+                                   "Pr_type","Prior","Pr_SD"))] 
+
+#Remove female offsets that aren't used
+rm <- grep("Fem_Peak|Fem_Ascend|Fem_Final|Fem_Scale",mod_params$Label)
+mod_params <- mod_params[-rm, ]
+
+#Set parameters with scientific values to round to 3 units
+sci_note <- which(mod_params$Label %in% c("Wtlen_1_Fem_GP_1", "Wtlen_1_Mal_GP_1", "Eggs_scalar_Fem_GP_1"))
+mod_params[-sci_note,'Value'] <- round(as.numeric(mod_params[-sci_note,'Value']), 3)
+
+# Combine bounds into one column
+mod_params$Min = paste('(', mod_params$Min, ', ', mod_params$Max, ')', sep='')
+
+# Combine prior info to one column
+mod_params$PR_type = ifelse(mod_params$Pr_type == 'No_prior' , 'None', paste(mod_params$Pr_type,' (', mod_params$Prior,  ', ', mod_params$Pr_SD, ')', sep = ''))
+#Remove priors for things that aren't ever used
+mod_params$PR_type[-grep("NatM|steep",mod_params$Label)] <- "None"
+
+# Set long value to scientific notation
+mod_params[mod_params$Label == "Wtlen_1_Fem_GP_1",3] = format(mod_params[mod_params$Label == "Wtlen_1_Fem_GP_1",3], scientific = TRUE)
+mod_params[mod_params$Label == "Wtlen_1_Mal_GP_1",3] = format(as.numeric(mod_params[mod_params$Label == "Wtlen_1_Mal_GP_1",3]), scientific = TRUE)
+mod_params[mod_params$Label == "Eggs_scalar_Fem_GP_1",3] = format(as.numeric(mod_params[mod_params$Label == "Eggs_scalar_Fem_GP_1",3]), scientific = TRUE)
+
+#Change offset to be on normal scale
+mod_params[mod_params$Label == "L_at_Amin_Mal_GP_1",3] = exp(as.numeric(mod_params[mod_params$Label == "L_at_Amin_Mal_GP_1",3])) * as.numeric(mod_params[mod_params$Label == "L_at_Amin_Fem_GP_1",3])
+
+mod_params[,'Value'] = round(as.numeric(mod_params[,'Value']),3)  
+remove <- which(grepl("ForeRecr", mod_params$Label ))
+mod_params <- mod_params[-remove, ]
+mod_params[,'Parm_StDev'] = round(as.numeric(mod_params[,'Parm_StDev']), 3) 
+
+#Set recruitment sd's to not be in scientific notation
+find <- which(mod_params$Label == "Early_RecrDev_1892"):which(mod_params$Label == "Main_RecrDev_2022")
+mod_params[find, "Value"] <- round(as.numeric(mod_params[find, "Value"]), 3)
+
+# Remove the max, prior and prior sd columns
+drops = c('Max', 'Prior', 'Pr_type', 'Pr_SD', 'Num')
+mod_params = mod_params[, !(names(mod_params) %in% drops)]
+rownames(mod_params) = c()
+mod_params[,"Label"] = gsub("\\_", " ", mod_params[,"Label"])
+mod_params[,"PR_type"] = gsub("\\_", " ", mod_params[,"PR_type"])
+# Add column names
+
+names(mod_params) <- c('Parameter',
+                       'Value',
+                       'Phase',
+                       'Bounds',
+                       'Status',
+                       'SD',
+                       'Prior (Exp. Val, SD)')
+
+write.csv(mod_params, 
+          file = here('Documents/tables/parameters.csv'), 
+          row.names = FALSE)
+
+
+# Sensitivity summary -----------------------------------------------------
+sens_names <- c('canada_catches',
+                'dirichlet_multinomial',
+                'Float_Q',
+                'Unmirror_tri',
+                'M_ramp',
+                'no_sex_selectivity',
+                'prerec_data',
+                'prerec_units')
+
+pretty_names <- c('Add WCVI catches', 
+                  'Dirichlet DW',
+                  'Float Tri Q, combined',
+                  'Float Tri Q, separate',
+                  'Female M ramp',
+                  'No sex selectivity',
+                  'All prerec years',
+                  'Prerec post-DD')
+
+current.year <- 2023
+CI <- 0.95
+
+sensitivity_output <- SSgetoutput(dirvec = c(here('models', base_mod),
+                                             glue::glue("{models}/{subdir}", 
+                                                        models = here('models/sensitivities'),
+                                                        subdir = sens_names))) |>
+  `names<-`(c('base', sens_names)) |>
+  SSsummarize()
+
+dev.quants.SD <- c(
+  sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == "SSB_Initial", 1],
+  (sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == paste0("SSB_", current.year), 1]),
+  sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == paste0("Bratio_", current.year), 1],
+  sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == "Dead_Catch_SPR", 1],
+  sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == "annF_SPR", 1]
+)
+
+dev.quants <- rbind(
+  sensitivity_output$quants[sensitivity_output$quants$Label == "SSB_Initial", 
+                            1:(dim(sensitivity_output$quants)[2] - 2)],
+  sensitivity_output$quants[sensitivity_output$quants$Label == paste0("SSB_", current.year), 
+                            1:(dim(sensitivity_output$quants)[2] - 2)],
+  sensitivity_output$quants[sensitivity_output$quants$Label == paste0("Bratio_", current.year), 
+                            1:(dim(sensitivity_output$quants)[2] - 2)],
+  sensitivity_output$quants[sensitivity_output$quants$Label == "Dead_Catch_SPR", 
+                            1:(dim(sensitivity_output$quants)[2] - 2)],
+  sensitivity_output$quants[sensitivity_output$quants$Label == "annF_SPR", 
+                            1:(dim(sensitivity_output$quants)[2] - 2)]
+) |>
+  cbind(baseSD = dev.quants.SD) |>
+  dplyr::mutate(Metric = c("SB0", paste0("SSB_", current.year), paste0("Bratio_", current.year), "MSY_SPR", "F_SPR")) |>
+  tidyr::pivot_longer(-c(base, Metric, baseSD), names_to = 'Model', values_to = 'Est') |>
+  dplyr::mutate(relErr = (Est - base)/base,
+                logRelErr = log(Est/base),
+                mod_num = rep(1:length(sens_names), 5))
+
+metric.labs <- c(
+  SB0 = expression(SB[0]),
+  SSB_2023 = as.expression(bquote("SB"[.(current.year)])),
+  Bratio_2023 = bquote(frac(SB[.(current.year)], SB[0])),
+  MSY_SPR = expression(Yield['SPR=0.50']),
+  F_SPR = expression(F['SPR=0.50'])
+)
+
+CI.quants <- dev.quants |>
+  dplyr::filter(Model == 'canada_catches') |>
+  dplyr::select(base, baseSD, Metric) |>
+  dplyr::mutate(CI = qnorm((1-CI)/2, 0, baseSD)/base)
+
+ggplot(dev.quants, aes(x = relErr, y = mod_num, col = Metric, pch = Metric)) +
+  geom_vline(xintercept = 0, linetype = 'dotted') +
+  geom_point() +
+  geom_segment(aes(x = CI, xend = abs(CI), col = Metric,
+                   y = length(sens_names) + 1.5 + seq(-0.5, 0.5, length.out = length(metric.labs)),
+                   yend = length(sens_names) + 1.5 + seq(-0.5, 0.5, length.out = length(metric.labs))), 
+               data = CI.quants, linewidth = 2, show.legend = FALSE) +
+  theme_bw() +
+  scale_shape_manual(
+    values = c(15:18, 12),
+    # name = "",
+    labels = metric.labs
+  ) +
+  scale_color_discrete(labels = metric.labs) +
+  scale_y_continuous(breaks = 1:length(sens_names), name = '', labels = pretty_names, 
+                     limits = c(1, length(pretty_names) + 2), minor_breaks = NULL) +
+  xlab("Relative change") 
+ggsave(here('documents/figures/sens_summary.png'),  dpi = 300,  
+       width = 6.5, height = 5.0, units = "in")
+)

@@ -182,72 +182,20 @@ readr::read_csv(here('documents/tables/triennial_summary.csv')) |>
 <!-- ======================================================= -->
 
 
-```{r, results = 'asis'}
-mod_params = model$parameters[, 
-                                (names(model$parameters) %in%
-                                c("Num","Label","Value","Phase","Min",
-                                  "Max","Status","Parm_StDev",
-                                  "Pr_type","Prior","Pr_SD"))] 
-
-#Remove female offsets that aren't used
-rm <- grep("Fem_Peak|Fem_Ascend|Fem_Final|Fem_Scale",mod_params$Label)
-mod_params <- mod_params[-rm, ]
-
-#Set parameters with scientific values to round to 3 units
-sci_note <- which(mod_params$Label %in% c("Wtlen_1_Fem_GP_1", "Wtlen_1_Mal_GP_1", "Eggs_scalar_Fem_GP_1"))
-mod_params[-sci_note,'Value'] <- round(as.numeric(mod_params[-sci_note,'Value']), 3)
-
-# Combine bounds into one column
-mod_params$Min = paste('(', mod_params$Min, ', ', mod_params$Max, ')', sep='')
-
-# Combine prior info to one column
-mod_params$PR_type = ifelse(mod_params$Pr_type == 'No_prior' , 'None', paste(mod_params$Pr_type,' (', mod_params$Prior,  ', ', mod_params$Pr_SD, ')', sep = ''))
-#Remove priors for things that aren't ever used
-mod_params$PR_type[-grep("NatM|steep",mod_params$Label)] <- "None"
-
-# Set long value to scientific notation
-mod_params[mod_params$Label == "Wtlen_1_Fem_GP_1",3] = format(mod_params[mod_params$Label == "Wtlen_1_Fem_GP_1",3], scientific = TRUE)
-mod_params[mod_params$Label == "Wtlen_1_Mal_GP_1",3] = format(as.numeric(mod_params[mod_params$Label == "Wtlen_1_Mal_GP_1",3]), scientific = TRUE)
-mod_params[mod_params$Label == "Eggs_scalar_Fem_GP_1",3] = format(as.numeric(mod_params[mod_params$Label == "Eggs_scalar_Fem_GP_1",3]), scientific = TRUE)
-
-#Change offset to be on normal scale
-mod_params[mod_params$Label == "L_at_Amin_Mal_GP_1",3] = exp(as.numeric(mod_params[mod_params$Label == "L_at_Amin_Mal_GP_1",3])) * as.numeric(mod_params[mod_params$Label == "L_at_Amin_Fem_GP_1",3])
-
-mod_params[,'Value'] = round(as.numeric(mod_params[,'Value']),3)  
-remove <- which(grepl("ForeRecr", mod_params$Label ))
-mod_params <- mod_params[-remove, ]
-mod_params[,'Parm_StDev'] = round(as.numeric(mod_params[,'Parm_StDev']), 3) 
-
-#Set recruitment sd's to not be in scientific notation
-find <- which(mod_params$Label == "Early_RecrDev_1892"):which(mod_params$Label == "Main_RecrDev_2022")
-mod_params[find, "Value"] <- round(as.numeric(mod_params[find, "Value"]), 3)
-
-# Remove the max, prior and prior sd columns
-drops = c('Max', 'Prior', 'Pr_type', 'Pr_SD', 'Num')
-mod_params = mod_params[, !(names(mod_params) %in% drops)]
-rownames(mod_params) = c()
-mod_params[,"Label"] = gsub("\\_", " ", mod_params[,"Label"])
-mod_params[,"PR_type"] = gsub("\\_", " ", mod_params[,"PR_type"])
-# Add column names
-col_names = c('Parameter',
-                         'Value',
-                         'Phase',
-                         'Bounds',
-                         'Status',
-                         'SD',
-                         'Prior (Exp.Val, SD)')
-sa4ss::table_format(x = mod_params,
-             caption = "List of parameters used in the base model, including estimated values and standard deviations (SD), bounds (minimum and maximum), estimation phase (negative values not estimated), status (indicates if parameters are near bounds), and prior type information (mean and SD).",
-             label = "params",
-             align = 'l',
-             col_names = col_names,
-             longtable = TRUE,
-             font_size = 9,
-             digits = 3,
-             landscape = TRUE,
-             custom_width = TRUE,
-             col_to_adjust = c(1,7), 
-             width = c("7.5cm", "3.5cm"))                         
+```{r, results = 'asis', message=FALSE}
+readr::read_csv(here('documents/tables/parameters.csv')) |>
+  as.data.frame() |>
+  sa4ss::table_format(caption = "List of parameters used in the base model, including estimated values and standard deviations (SD), bounds (minimum and maximum), estimation phase (negative values not estimated), status (indicates if parameters are near bounds), and prior type information (mean and SD).",
+                      label = "params",
+                      align = 'l',
+                      # col_names = col_names,
+                      longtable = TRUE,
+                      font_size = 9,
+                      digits = 3,
+                      landscape = TRUE,
+                      custom_width = TRUE,
+                      col_to_adjust = c(1,7),
+                      width = c("7.5cm", "3.5cm"))
 ```
 
 

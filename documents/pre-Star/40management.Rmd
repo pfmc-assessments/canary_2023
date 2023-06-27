@@ -53,7 +53,7 @@ Recommendations are summarized for brevity:
 
 2.  We endorse a systematic (rather than ad hoc and species-specific) exploration and analysis of Canadian data sources (length and age-composition, indices of abundance, landings, and discards) for several rockfishes.
 
-**Response:** Progress remains species-specific. However, progress for major commercial species (sablefish, petrale sole) is occurring outside of regular stock assessment cycles so that it can be completed in a more intentional and less ad hoc fashion. Canary rockfish has not been prioritized for these activities by NWFSC or DFO.
+**Response:** Progress remains species-specific. However, progress for major commercial groundfish species (sablefish, petrale sole) is occurring outside of regular stock assessment cycles so that it can be completed in a more intentional and less ad hoc fashion. Canary rockfish has not been prioritized for these activities by NWFSC or DFO.
 
 3.  We therefore recommend that future research explore methods to stitch these time series back together (i.e., using covariates and a meta-analytic information regarding the ratio of catchability in the two periods).
 
@@ -61,7 +61,7 @@ Recommendations are summarized for brevity:
 
 4.  We suggest that basic life history research be highly prioritized for future research.
 
-**Response:** This assessment includes updated data and relationships on growth, condition (weight-length), fecundity, and maturity. A number of studies on canary rockfish life history and population structure have been published since the previous assessment [@budrick2016evolutionary; @keller2018canary; @Brooks_thesis_2021]. Unfortunately, these have not resulted in a better understanding of natural mortality and the apparent loss of older females. This remains a research priority. In absence of better understanding of canary rockfish natural mortality, we use natural mortality rates from a newly updated prior [@hamel2022development]
+**Response:** This assessment includes updated data and relationships on growth, condition (weight-length), fecundity, and maturity. A number of studies on canary rockfish life history and population structure have been published since the previous assessment [@budrick2016evolutionary; @keller2018canary; @Brooks_thesis_2021]. Unfortunately, these have not resulted in a better understanding of natural mortality and the apparent loss of older females. This remains a research priority. In absence of better understanding of canary rockfish natural mortality, we use natural mortality rates from a newly updated prior [@hamel2022development].
 
 ### Current research and data neds
 

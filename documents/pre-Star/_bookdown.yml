@@ -1,22 +1,22 @@
 delete_merged_file: true
 
 rmd_files: [
-  '00a.Rmd', 
-  '00authors.Rmd', 
-  '00bibliography.Rmd', 
-  '00title.Rmd', 
-  '11introduction.Rmd', 
+  '00a.Rmd',
+  '00authors.Rmd',
+  '00bibliography.Rmd',
+  '00title.Rmd',
+  '11introduction.Rmd',
   '20data.Rmd',
   '21f-.Rmd',
-  '21f-comp.Rmd', 
-  '21s-.Rmd', 
+  '21f-comp.Rmd',
+  '21s-.Rmd',
   '22biology.Rmd',
   '23enviro.Rmd',
   '24unused.Rmd',
   '30model.Rmd',
   '32structure.Rmd',
   '33results.Rmd',
-  '49bibliography.Rmd', 
+  '49bibliography.Rmd',
   '52tables.Rmd', 
   '53figures.Rmd'
 ]
