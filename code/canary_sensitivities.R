@@ -282,6 +282,144 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           skipfinished = FALSE)
 
 
+# Simplified blocks -----------------------------------------------------
+
+#Based on looking at the selectivity patterns:
+#No blocks for CA trawl, CA non-trawl, and one block for OR non-trawl
+#No blocks for CA rec, OR rec, and only one block for WA rec (recent)
+
+mod <- base_mod
+
+mod$ctl$N_Block_Designs <- 3
+mod$ctl$blocks_per_pattern <- c(2,2,1)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+
+#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+#Keeping 2000 block instead of 2001 since the data seems to suggest change there (also same as last assessment)
+mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2022), #OR/WA TWL fleets
+                             c(2000, 2019, 2020, 2022), #OR ntwl
+                             c(2021, 2022)) #WA rec
+
+# Use new block set up
+selex_new <- mod$ctl$size_selex_parms
+selex_new[grepl('CA_TWL|CA_NTWL|CA_REC|OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 0
+selex_new[intersect(
+  grep('CA_REC', rownames(selex_new)),
+  grep('PFemOff', rownames(selex_new))), c('Block', 'Block_Fxn')] <- 0
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 0
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+
+mod$ctl$size_selex_parms <- selex_new
+
+
+#Time varying selectivity table
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+new_name <- 'simpler_block'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# Add released fish into length comps for CA and OR rec fleets -----------------------------------------------------
+
+mod <- base_mod
+
+#Update CA and OR rec length comps
+
+length.min <- min(mod$dat$lbin_vector)
+length.max <- max(mod$dat$lbin_vector)
+age.min <- min(mod$dat$agebin_vector)
+age.max <- max(mod$dat$agebin_vector)
+
+read.fishery.comps <- function(filename, exclude) {
+  
+}
+
+rec.lengths <- purrr::map(list('CA', 'OR'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_withRELEASED_Lcomp{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)]) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(rec.lengths$FltSvy))) |>
+  dplyr::bind_rows(rec.lengths)
+
+
+new_name <- 'released_lengths_in'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# Use MRFSS lengths instead of DebWV lengths for PC mode in CA -----------------------------------------------------
+
+mod <- base_mod
+
+#Update CA rec length comps
+
+length.min <- min(mod$dat$lbin_vector)
+length.max <- max(mod$dat$lbin_vector)
+age.min <- min(mod$dat$agebin_vector)
+age.max <- max(mod$dat$agebin_vector)
+
+read.fishery.comps <- function(filename, exclude) {
+  
+}
+
+rec.lengths <- purrr::map(list('CA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_rec_not_expanded_noDebWV_Lcomp{lmin}_{lmax}_formatted.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-Nsamp) |>
+    dplyr::mutate(fleet = fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_REC',
+                                                                                           area = .x)]) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(rec.lengths$FltSvy))) |>
+  dplyr::bind_rows(rec.lengths)
+
+
+new_name <- 'noDebWV_lengths'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
 # Sex-constant M (TOR)-----------------------------------------------------
 
 
