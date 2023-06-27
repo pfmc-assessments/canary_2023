@@ -12359,6 +12359,8 @@ xx=r4ss::tune_comps(replist = pp,
                     extras = '-nohess',
                     allow_up_tuning = TRUE)
 
+SSunavailableSpawningOutput(pp)
+
 
 
 ####------------------------------------------------####
