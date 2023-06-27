@@ -186,3 +186,69 @@ label = 'unavail-bio')
 ![Estimated time series of spawning output relative to unfished with 95% confidence interval \label{fig:depl}](../figures/plots/ts9_Relative_spawning_output_intervals.png){width=100%, alt='Figure showing similar trends to spawning output surpassing the 0.4 target around 1980, going below the 0.25 threshold shortly thereafter, and then recovering to between the threshold and target starting in around 2015'}
 
 ![Estimated time series of fishing intensity (1-SPR) \label{fig:spr}](../figures/plots/SPR2_minusSPRseries.png){width=100%, alt='Figure showing fishing intensity increasing in the 1940, surpassing 0.5 consistently in the 1960s, declining greatly in 2000 and reching near 0.4 in 2022'}
+
+### Fits to data
+
+#### Length compositions
+
+![Length composition aggregated across years by fleet with the model estimated fit to the data by sex (green unsexed, red female, and blue male \label{fig:len-agg-fit}](../figures/plots/comp_lenfit__aggregated_across_time.png){width=100%, alt='Figure showing fits of modeled length composition for all fleets generally matching the distribution observed in the data'}
+
+![Pearson residuals for the California trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson1}](../figures/plots/comp_lenfit_residsflt1mkt0_page2.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years'}
+
+![Mean length for the California trawl fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit1}](../figures/plots/comp_lenfit_data_weighting_TA1.8_1_CA_TWL.png){width=100%, alt='Two panel figure with uncertainty around each point of mean length slightly decreasing in early years and stable since'}
+
+![Pearson residuals for the Oregon trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson2}](../figures/plots/comp_lenfit_residsflt2mkt0_page3.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years'}
+
+![Mean length for the Oregon trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit2}](../figures/plots/comp_lenfit_data_weighting_TA1.8_2_OR_TWL.png){width=100%, alt='Figure of mean length with uncertainty around each point showing a decrease early years, stable until 2010, and increasing since'}
+
+![Pearson residuals for the Washington trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson3}](../figures/plots/comp_lenfit_residsflt3mkt0_page3.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern'}
+
+![Mean length for the Washington trawl fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit3}](../figures/plots/comp_lenfit_data_weighting_TA1.8_3_WA_TWL.png){width=100%, alt='Two panel figure with uncertainty around each point of mean length slightly decreasing in early years and stable since'}
+
+![Pearson residuals for the California non-trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson4}](../figures/plots/comp_lenfit_residsflt4mkt0_page2.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern'}
+
+![Mean length for the California non-trawl fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit4}](../figures/plots/comp_lenfit_data_weighting_TA1.8_4_CA_NTWL.png){width=100%, alt='Two panel figure with uncertainty around each point of mean length changing little except an increase in the most recent years'}
+
+![Pearson residuals for the Oregon non-trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson5}](../figures/plots/comp_lenfit_residsflt5mkt0.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern and indicating bimodality in recent years'}
+
+![Mean length for the Oregon non-trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit5}](../figures/plots/comp_lenfit_data_weighting_TA1.8_5_OR_NTWL.png){width=100%, alt='Figure with uncertainty around each point of sparse mean length data declining to 2000, experiencing a shift downward until 2020, after which length shifts upward'}
+
+![Pearson residuals for the Washington non-trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson6}](../figures/plots/comp_lenfit_residsflt6mkt0.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern'}
+
+![Mean length for the Washington non-trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit6}](../figures/plots/comp_lenfit_data_weighting_TA1.8_6_WA_NTWL.png){width=100%, alt='Figure with uncertainty around each point of sparse and variable mean length data'}
+
+![Pearson residuals for the California recreational fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson7}](../figures/plots/comp_lenfit_residsflt7mkt0_page2.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern'}
+
+![Mean length for the California recreational fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit7}](../figures/plots/comp_lenfit_data_weighting_TA1.8_7_CA_REC.png){width=100%, alt='Figure with uncertainty around each point of mean length data that cycles over time'}
+
+![Pearson residuals for the Oregon recreational fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson8}](../figures/plots/comp_lenfit_residsflt8mkt0_page2.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern excpet for some underfitting of large length between 1992 and 2008'}
+
+![Mean length for the Oregon recreational fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit8}](../figures/plots/comp_lenfit_data_weighting_TA1.8_8_OR_REC.png){width=100%, alt='Two panel figure with uncertainty around each point of mean length that is variable and slightly increasing over time'}
+
+![Pearson residuals for the Washington recreational fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson9}](../figures/plots/comp_lenfit_residsflt9mkt0_page2.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern and indicating bimodality in recent years'}
+
+![Mean length for the Washington recreational fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit9}](../figures/plots/comp_lenfit_data_weighting_TA1.8_9_WA_REC.png){width=100%, alt='Two panel figure with uncertainty around each point of mean length that is generally unchanging over time with an increase in recent years'}
+
+![Pearson residuals for the Oregon at-sea-hake fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson11}](../figures/plots/comp_lenfit_residsflt11mkt0.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern}
+
+![Mean length for the Oregon at-sea-hake fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit11}](../figures/plots/comp_lenfit_data_weighting_TA1.8_11_OR_ASHOP.png){width=100%, alt='Figure with uncertainty around each point of mean length that is unchanging over time'}
+
+![Pearson residuals for the Washington at-sea-hake fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson12}](../figures/plots/comp_lenfit_residsflt12mkt0.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with underfitting of larger lengths in the early 2000s}
+
+![Mean length for the Washington at-sea-hake fleet with 95 percent confidence intervals based on current samples \label{fig:mean-len-fit12}](../figures/plots/comp_lenfit_data_weighting_TA1.8_12_WA_ASHOP.png){width=100%, alt='Figure with uncertainty around each point of mean length that is unchanging over time'}
+
+![Pearson residuals for the West Coast Groundfish Bottomtrawl Survey. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson28}](../figures/plots/comp_lenfit_residsflt28mkt0.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern}
+
+![Mean length for the West Coast Groundfish Bottomtrawl Survey with 95 percent confidence intervals based on current samples \label{fig:mean-len-fit28}](../figures/plots/comp_lenfit_data_weighting_TA1.8_28_coastwide_NWFSC.png){width=100%, alt='Figure with uncertainty around each point of mean length that is variable but non-trending over time'}
+
+![Pearson residuals for the early Triennial Survey. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson29}](../figures/plots/comp_lenfit_residsflt29mkt0.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern}
+
+![Mean length for the early Triennial Survey with 95 percent confidence intervals based on current samples \label{fig:mean-len-fit29}](../figures/plots/comp_lenfit_data_weighting_TA1.8_29_coastwide_Tri_early.png){width=100%, alt='Figure with uncertainty around each point of mean length that is declining over time'}
+
+![Pearson residuals for the late Triennial Survey. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) \label{fig:len-pearson30}](../figures/plots/comp_lenfit_residsflt30mkt0.png){width=100%, alt='Figure showing bubble plot of Pearson residuals with limited pattern}
+
+![Mean length for the late Triennial Survey with 95 percent confidence intervals based on current samples \label{fig:mean-len-fit30}](../figures/plots/comp_lenfit_data_weighting_TA1.8_30_coastwide_Tri_late.png){width=100%, alt='Figure with uncertainty around each point of mean length that is increasing over time'}
+
+#### Age compositions
+
+![Age composition aggregated across years by fleet with the model estimated fit to the data by sex (red female, and blue male \label{fig:age-agg-fit}](../figures/plots/comp_agefit__aggregated_across_time.png){width=100%, alt='Figure showing fits of modeled age composition for all fleets generally matching the distribution observed in the data'}
