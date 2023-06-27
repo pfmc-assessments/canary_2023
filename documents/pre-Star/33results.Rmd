@@ -1,6 +1,6 @@
 ## Base Model Results
 
-**Brian is working on this**
+**Brian is working on this section - just need to do fits to data**
 
 ### Parameter Estimates
 
@@ -49,9 +49,9 @@ Years with the highest recruitment deviations were estimated to have occurred in
 
 ### Fits to the Data
 
+**need to do fits to data**
+
 ### Population Trajectory
 
-Summary time series are listed in Table 23, and visualized in Figure 102 through Figure 106.  These summaries indicate that fishing mortality peaked in 1991-1992 when the stock was being overfished (FSPR > 1.7), and that overfishing ceased (FSPR < 1.0) in 2000, after the stock was declared overfished.  Spawning output across all three strata reached its lowest level in 1994 (relative spawning output = 13.7%), and has since steadily recovered (relative spawning output = 0.552 in 2014).  Recovery has been aided by strong recruitment in 2001-2003, 2007, and 2010, and the pattern of reduced recruitment 2003-2006 is consistent with many other groundfishes in the California Current (J. Thorson et al., 2013).  Recovery (defined as the year of lowest spawning output, Figure 101) began earlier in Washington than either Oregon or California, and relative spawning output in Washington (Figure 103) is estimated to be higher than in Oregon or California in 2014.  California is estimated to have experienced the lowest level of relative spawning output during the historical period of any state (occurring in 1999), and is estimated as having the lowest relative spawning output in 2014.
-
-
+Summary time series of population trajectories are provided in Table \ref{tab:timeseries}. The estimated spawning output (in billions of eggs) is shown in Figure \ref{fig:ssb}, total biomass in Figure \ref{fig:totb}, spawning output relative to unfished in Figure \ref{fig:depl}, and fishing intensity measured as one minus the spawning potential ratio (1-SPR) in Figure \ref{fig:spr}. Spawning output declines from the 1940s with the increase in harvest (Figure \ref{fig:catches}), stabilizes in the 1970s, and then declines to its lowest point in 1995. Spawning output stabilizes until 2000 when levels increase steadily to recent years with a slowing trend. The estimated total biomass follows the same general trend as observed in spawning output but with a more pronounced decrease from 1980 to 1995 (Figure \ref{fig:tot-bio}). The estimated spawning output relative to the unfished equilibrium spawning output was at its lowest (`r round(100*model_recent_depl[model_recent_depl$depl == max(model_recent_depl$dep), 'depl'], 1)` percent) in 1995 and has since increase to within the precautionary zone at `r round(100*model$current_depletion, 1)` percent in 2022 (Figure \ref{fig:depl}). Population trajectories track the patterns in fishing intensity, where fishing intensity was steadily above that which would produce an SPR of 0.5 starting in the 1960s (Figure \ref{fig:spr}). Fishing intensity has been low since 2000 but has increased to levels near to an SPR of 0.5. 
 
