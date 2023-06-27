@@ -1,131 +1,358 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
 ## Model Structure and Assumptions
 
 ### Modeling Platform and Structure
+
 <!-- First part of TOR Appendix B E.5 -->
 
 *Brian has updated this section*
 
-We used Stock Synthesis version 3.30.21, compiled February 10, 2023 by Rick Methot at the \gls{noaa} \gls{nwfsc} using the 64-bit version of ADMB 13.1 [@methot_stock_2013]. This most recent version includes improvements and corrections to older model versions. The previous benchmark assessment used an older version of Stock Synthesis, version 3.24V. The R package r4ss, version 1.48.0, along with R version 4.2.2 were used to investigate and plot model fits. 
+We used Stock Synthesis version 3.30.21, compiled February 10, 2023 by
+Rick Methot at the \gls{noaa} \gls{nwfsc} using the 64-bit version of
+ADMB 13.1 [@methot_stock_2013]. This most recent version includes
+improvements and corrections to older model versions. The previous
+benchmark assessment used an older version of Stock Synthesis, version
+3.24V. The R package r4ss, version 1.48.0, along with R version 4.2.2
+were used to investigate and plot model fits.
 
 ### Balance of realism and parsimony
+
 <!-- First part of TOR Appendix B F.2 -->
 
 *Brian has updated this section*
 
-The base assessment model for `r spp` was developed to balance parsimony and realism, and the goal was to estimate a spawning output trajectory for the population of `r spp` off the U.S. West Coast. The model contains many assumptions to achieve parsimony and uses many different sources of data to estimate reality. A series of investigative model runs were done to achieve the final base model, some of which are described as sensitivities (Section \ref{sensitivities}) and some of which are included in the bridging steps described below. Notably, we simplify the population structure of the model by assuming a single coastwide stock, yet increase spatial fleet structure by unmirroring fleet selectivities between states. We balance the increased complexity in spatial fleet structure by simplifying the selectivity parameterization by combining fleets and minimizing the use of blocks where able to balance tradeoffs in realism and parsimony.
+*Kiva: suggest moving this down to be more in line with where it falls in the TOR, with base model selection*
+
+The base assessment model for `r spp` was developed to balance parsimony
+and realism, and the goal was to estimate a spawning output trajectory
+for the population of `r spp` off the U.S. West Coast. The model
+contains many assumptions to achieve parsimony and uses many different
+sources of data to estimate reality. A series of investigative model
+runs were done to achieve the final base model, some of which are
+described as sensitivities (Section \ref{sensitivities}) and some of
+which are included in the bridging steps described below. Notably, we
+simplify the population structure of the model by assuming a single
+coastwide stock, yet increase spatial fleet structure by unmirroring
+fleet selectivities between states. We balance the increased complexity
+in spatial fleet structure by simplifying the selectivity
+parameterization by combining fleets and minimizing the use of blocks
+where able to balance tradeoffs in realism and parsimony.
 
 ### Model Changes from the Last Assessment
+
 <!-- TOR Appendix B E.4 I like it better here because the logic flows better-->
 
 **Need to do**
 
-1. *Remove survey catches*
-2. *Remove surface read ages*
-3. *Simplify population structure*
-4. *Unmirror selectivity for fleets*
-5. *Remove fleets with limited contributions (e.g. CA rec ages, CA ASHOP comps)*
-6. *Natural mortality structure constant*
-7. *Selectivity structure sex-dependent*
-8. *Shrimp trawl as trawl gear*
-9. *Reorganize FOR catches by INPFC area*
-10. *Update life history set up (e.g. using Linf instead of Length at 30) but probably specify this is structure*
+1.  *Remove survey catches*
+2.  *Remove surface read ages*
+3.  *Simplify population structure*
+4.  *Unmirror selectivity for fleets*
+5.  *Remove fleets with limited contributions (e.g. CA rec ages, CA
+    ASHOP comps)*
+6.  *Natural mortality structure constant*
+7.  *Selectivity structure sex-dependent*
+8.  *Shrimp trawl as trawl gear*
+9.  *Reorganize FOR catches by INPFC area*
+10. \*Update life history set up (e.g. using Linf instead of Length at
+    30) but probably specify this is structure\*
 
 ### Bridging analysis from the 2015 Benchmark Assessment
+
 <!-- TOR Appendix B F.1 -->
 
 *Brian has updated this section*
 
-The exploration of models began by bridging from the 2015 benchmark assessment model to the newest version of Stock Synthesis, version 3.30.21. Using the newest Stock Synthesis version resulted in a slightly lower spawning output starting around 1995 (Figures \ref{fig:bridge-exe-bio} and \ref{fig:bridge-exe-relbio}) due to a higher value of catchability for the Washington late triennial survey. From there, bridging from the 2015 benchmark assessment model to the current base model followed five general steps: 
+The exploration of models began by bridging from the 2015 benchmark
+assessment model to the newest version of Stock Synthesis, version
+3.30.21. Using the newest Stock Synthesis version resulted in a slightly
+lower spawning output starting around 1995 (Figures
+\ref{fig:bridge-exe-bio} and \ref{fig:bridge-exe-relbio}) due to a
+higher value of catchability for the Washington late triennial survey.
+From there, bridging from the 2015 benchmark assessment model to the
+current base model followed five general steps:
 
-1. Update data inputs to reflect best information currently available. Data was updated by source (fishery independent, fishery independent) and type (catch, compositions, indices). 
-2. Update life history information including natural mortality value and pattern, maturity, steepness, fecundity, and weight-length relationship.
-3. Update the structure of the modeled population, going from a spatial structure for recruitment to a single-area structure for recruitment.
-4. Reapply current data weighting practices.
-5. Update structure of selectivity.
+1.  Update data inputs to reflect best information currently available.
+    Data was updated by source (fishery independent, fishery
+    independent) and type (catch, compositions, indices).
+2.  Update life history information including natural mortality value
+    and pattern, maturity, steepness, fecundity, and weight-length
+    relationship.
+3.  Update the structure of the modeled population, going from a spatial
+    structure for recruitment to a single-area structure for
+    recruitment.
+4.  Reapply current data weighting practices.
+5.  Update structure of selectivity.
 
-A thorough description of the current base model is presented separately below. This section is intended only to more clearly identify where substantive changes were made from the previous benchmark assessment. Sensitivities to many of the components within the steps above are included in the Sensitivities (Section \ref{sensitivities}).
+A thorough description of the current base model is presented separately
+below. This section is intended only to more clearly identify where
+substantive changes were made from the previous benchmark assessment.
+Sensitivities to many of the components within the steps above are
+included in the Sensitivities (Section \ref{sensitivities}).
 
-Changes due to updating data streams are shown in Figures \ref{fig:bridge-data-bio} and \ref{fig:bridge-data-relbio}. Updating the fishery catch and composition data increases initial spawning output and produces a steady increase in recent spawning output. Updating survey indices and composition data results in a decreasing trend in spawning output in the most recent years. Changes in life history parameter values are shown in Figures \ref{fig:bridge-bio-bio} and \ref{fig:bridge-bio-relbio}. Individually these changes produce different estimates for initial spawning output, but collectively offset and result in continuing the trajectory from the 2015 benchmark assessment.   
+Changes due to updating data streams are shown in Figures
+\ref{fig:bridge-data-bio} and \ref{fig:bridge-data-relbio}. Updating the
+fishery catch and composition data increases initial spawning output and
+produces a steady increase in recent spawning output. Updating survey
+indices and composition data results in a decreasing trend in spawning
+output in the most recent years. Changes in life history parameter
+values are shown in Figures \ref{fig:bridge-bio-bio} and
+\ref{fig:bridge-bio-relbio}. Individually these changes produce
+different estimates for initial spawning output, but collectively offset
+and result in continuing the trajectory from the 2015 benchmark
+assessment.
 
-Changes due to altering the structure of natural mortality are substantial (Figures \ref{fig:bridge-Mcons-bio} and \ref{fig:bridge-Mcons-relbio}). Assuming constant natural mortality results in similar parameter estimates for male and female natural mortality, and reduces the degree of recovery in spawning output relative to unfished, as also shown within sensitivities from the 2015 benchmark assessment. Also similar to the findings from the 2015 benchmark assessment, changing the structure of the population from spatial to non-spatial resulted in small changes in the current model (Figures \ref{fig:bridge-spatial-bio} and \ref{fig:bridge-spatial-relbio}). Updating the data weighting process to current standard weighting practices and to account for the new updated data however resulted in a decrease in the degree of recovery in spawning output relative to unfished. 
+Changes due to altering the structure of natural mortality are
+substantial (Figures \ref{fig:bridge-Mcons-bio} and
+\ref{fig:bridge-Mcons-relbio}). Assuming constant natural mortality
+results in similar parameter estimates for male and female natural
+mortality, and reduces the degree of recovery in spawning output
+relative to unfished, as also shown within sensitivities from the 2015
+benchmark assessment. Also similar to the findings from the 2015
+benchmark assessment, changing the structure of the population from
+spatial to non-spatial resulted in small changes in the current model
+(Figures \ref{fig:bridge-spatial-bio} and
+\ref{fig:bridge-spatial-relbio}). Updating the data weighting process to
+current standard weighting practices and to account for the new updated
+data however resulted in a decrease in the degree of recovery in
+spawning output relative to unfished.
 
-Changes in how selectivity was modeled are shown in Figures \ref{fig:bridge-selex-bio} and \ref{fig:bridge-selex-relbio}. Allowing selectivity to be sex-dependent had a large change in the degree of recovery in spawning output relative to unfished, due to an increase in the estimated value of female natural mortality. Other changes in selectivity including unmirroring fleets and using alternative parameterizations resulted in small changes.
+Changes in how selectivity was modeled are shown in Figures
+\ref{fig:bridge-selex-bio} and \ref{fig:bridge-selex-relbio}. Allowing
+selectivity to be sex-dependent had a large change in the degree of
+recovery in spawning output relative to unfished, due to an increase in
+the estimated value of female natural mortality. Other changes in
+selectivity including unmirroring fleets and using alternative
+parameterizations resulted in small changes.
 
-To arrive at a final base model additional revisions to the fleet structure, weightings, selectivity blocks, and selectivity parameterizations were made after the five aforementioned steps in order to determine the best fit to the data.
+To arrive at a final base model additional revisions to the fleet
+structure, weightings, selectivity blocks, and selectivity
+parameterizations were made after the five aforementioned steps in order
+to determine the best fit to the data.
 
 ### Key Assumptions and Structural Choices
-<!-- Move section from below to match later part TOR Appendix B E.5 and TOR Appendix B F.2 and -->
 
+<!-- Move section from below to match later part TOR Appendix B E.5 and TOR Appendix B F.2 and -->
 
 #### Definition of fleets and areas
 
+*Kiva has updated this*
 
-We use a multi-area model that treats each state (defined previously) as a separate spatial stratum.  We then generate all data sources as occurring in one unique area.  In particular, catches (defined as landings plus dead discards) for each fleet are specific to either California, Oregon, or Washington.  Fleets include:
-1-3.  	Trawl -- Bottom trawl gears
-4-6.	Non-trawl – the non-trawl fleet includes a variety of sources of directed and bycatch mortality in commercial fisheries.  
-7-9. 	Recreational
-10-12. 	At-sea hake – The at-sea hake fleet includes both tribal and non-tribal at-sea hake fisheries.
-13-15. 	Foreign – The foreign fleet operated 1966-1976, and does not generally include any data regarding catch rates, length composition, or age composition.  We assume that the foreign fleet has selectivity equal to that of the Trawl gear.
-16-18. 	WCGBTS – The removals for the WCGBT survey are included for years 2003-2014.
-19-21. 	Triennial early – Following the 2007 assessment, we analyze length and age-composition samples from the triennial survey separately for 1980-1995, and 1998-2004.  
-22-24. 	Triennial late – The triennial late fleets include years 1998-2004.
+To foster comparability between the coast-wide base model and a
+state-stratified model more similar to the 2015 base model, we retain
+state-specific fleets for each fleet type from the 2015 assessment. All
+fleets are ordered from south to north. That is, fleet 1 is California
+trawl, fleet 2 Oregon trawl, and fleet 3 Washington trawl.
 
-We additionally include as a research index:
-25-27. 	Pre-recruit – The pre-recruit survey is as described previously, and a separate index is developed for each state.
+Fleets in the base model include:
 
-Finally, we include coast-wide indices of abundance, which are mirrored to have identical selectivity to the state-specific indices.  These coast-wide indices do not contribute to the model likelihood (their emphasis factor is fixed at zero), and are included to allow comparison of model predictions to coastwide indices:
-28.	Coast-wide WCGBTS
-29. 	Coast-wide Triennial early
-30. 	Coast-wide Triennial late
-31. 	Coast-wide pre-recruit 
+1-3. Trawl -- Bottom trawl gears, including shrimp trawl and mid-water
+trawl.
 
+4-6. Non-trawl -- The non-trawl fleet includes a variety of sources of
+directed and bycatch mortality in commercial fisheries.
+
+7-9. Recreational -- Including both private-rental and party-charter
+catches.
+
+10-12. At-sea hake -- The at-sea hake fleet includes both tribal and
+non-tribal at-sea hake fisheries.
+
+13-15. Foreign -- The foreign fleet operated 1966-1976, and does not
+generally include any data regarding catch rates, length composition, or
+age composition. We assume that the foreign fleet has selectivity equal
+to that of trawl fleet.
+
+28. WCGBTS
+
+29. Triennial early -- because canary rockfish sampling should be
+    minimally impacted by the changes in the triennial survey that
+    occurred in 1998, we chose to mirror selectivity and catchability
+    between the early and late triennial fleets, but maintain two fleets
+    to explore sensitivity to this assumption.
+
+30. Triennial late -- The triennial late fleets include years 1998-2004.
+
+31. Pre-recruit
+
+The following state-stratified fleets were retained from 2015 and had
+data updated to 2022 for comparison between the base model and a current
+spatial model, but do not appear in the likelihood in the base model:
+
+16-18. State-stratified WCGBTS
+
+19-21. State-stratified triennial early
+
+22-24. State-stratified triennial late
+
+25-27. State-stratified pre-recruit
 
 #### Initialization of the model
 
-We start the model in the first year of reconstructed catch data, i.e., 1892.  The population is assumed to experience no fishing mortality prior to this year, and to start in stable age-distribution.  Recruitment deviations, and deviations in the distribution of recruitment among states, are estimated starting in 1933, as justified previously.
+*Kiva has updated this*
 
+We start the model in the first year of reconstructed catch data, i.e.,
+1892. The population is assumed to experience no fishing mortality prior
+to this year, and to start in stable age-distribution. Early recruitment
+deviations are estimated starting in the first model year (1892), and
+main period recruitment deviations begin in 1960 and end in 2022, as
+justified previously.
 
 ### Model Parameters
+
 <!-- second half of TOR Appendix B E.6 -->
 
 #### Model likelihood components
 
-The model contains four primary likelihood components (see Table 17 and Table 18):
-1.	Fit to survey indices of abundance (included for fleets 16-25)
-2.	Fit to length composition samples (included for fleets 1-12 and 16-24, i.e., all state-specific fleets except the foreign fleet)
-3.	Fit to age composition samples (marginal ages are included for fisheries, i.e., fleets 1-6 and 9-12, and conditional age-at-length samples are included for surveys, i.e., fleets 16-24).  
-4.	Penalties on recruitment deviations and deviations in the distribution of recruitment among states, both of which range from 1933-2014.
+*Kiva has updated this but it needs a couple internal references.*
 
-Indices of abundance are assumed to exhibit lognormal measurement errors, where the log-standard deviation from the model used to standardize the relevant survey data is treated as an accurate estimate of measurement errors.  Length, marginal age, and conditional age at length samples are all assumed to follow a multinomial sampling distribution, where the sample size is fixed at the input sample size calculated during compositional expansion, and where this input sample size is subsequently downweighted to account for additional sources of overdispersion.  Recruitment deviations and deviations in the spatial distribution of recruitment are assumed to follow a lognormal distribution, where the standard deviation of this distribution is tuned as explained in section 2.6.1.2.
+The model contains four primary likelihood components (see Table
+REFERENCE): 1. Fit to survey indices of abundance (included for fleets
+28-31) 2. Fit to length composition samples (included for fleets 1-12
+and 28-30, i.e., all fishing fleets except the foreign fleet and the
+coast-wide \gls{s-wcgbt} and \gls{s-tri}), 3. Fit to age composition
+samples (marginal ages are included for fisheries, i.e., fleets 1-6 and
+8-12, and conditional age-at-length samples are included for surveys,
+i.e., fleets 28-30).\
+4. Penalties on recruitment deviations which range from 1892-2014.
+
+Indices of abundance are assumed to exhibit lognormal measurement
+errors, where the log-standard deviation from the model used to
+standardize the relevant survey data is treated as an accurate estimate
+of measurement errors. Length, marginal age, and conditional age at
+length samples are all assumed to follow a multinomial sampling
+distribution, where the sample size is fixed at the input sample size
+calculated during compositional expansion, and where this input sample
+size is subsequently downweighted to account for additional sources of
+overdispersion. Recruitment deviations are assumed to follow a lognormal
+distribution, where the standard deviation of this distribution is tuned
+as explained in section WHERE.
 
 #### Data weighting
 
-Given the estimated standard errors for abundance indices and estimated input sample sizes for compositional data, Stock Synthesis weights each data source according to its contribution to the joint likelihood (Francis, 2011).  However, there are two problems with using these input sample sizes:
-1.	Input sample size may not accurately reflect additional process errors caused, e.g., by unmodeled spatial variation and aggregation among fishes of different size or length classes (Thorson, 2014). 
-2.	Fishes that are sampled for age are generally also included in any length composition sampling protocol.  Therefore, including both marginal length and marginal age composition may “double count” the same fish, and this double-counting is problematic whenever there is a strong association between length and age (i.e., the two variables are correlated).   
+Given the estimated standard errors for abundance indices and estimated
+input sample sizes for compositional data, Stock Synthesis weights each
+data source according to its contribution to the joint likelihood
+(Francis, 2011). However, there are two problems with using these input
+sample sizes: 1. Input sample size may not accurately reflect additional
+process errors caused, e.g., by unmodeled spatial variation and
+aggregation among fishes of different size or length classes (Thorson,
+2014). 2. Fishes that are sampled for age are generally also included in
+any length composition sampling protocol. Therefore, including both
+marginal length and marginal age composition may "double count" the same
+fish, and this double-counting is problematic whenever there is a strong
+association between length and age (i.e., the two variables are
+correlated).
 
-We deal with the second concern in the following manner.  Assume a fleet has an expanded sample size n for length composition samples, and an expanded sample size m for age composition samples.  We treat n2/(n+m) as the input sample size for length compositions, and m2/(n+m) as the input sample size for age compositions.  We deal with the first concern by subsequently decreasing these input sample sizes to account for the match between expected and observed compositional data (i.e., to account for overdispersed errors).  We specifically use a new Francis weighting method that is implemented in r4ss.  The Francis method computes the additional variance which is necessary to ensure that the standard deviation in average length/age in the sample matches the expected standard deviation in length/age in the portion of the population that is available to that fleet.  In a later section, we compare alternative treatments of data weighting to illustrate that results are relatively insensitive to data-weighting decisions.
+We deal with the second concern in the following manner. Assume a fleet
+has an expanded sample size n for length composition samples, and an
+expanded sample size m for age composition samples. We treat n2/(n+m) as
+the input sample size for length compositions, and m2/(n+m) as the input
+sample size for age compositions. We deal with the first concern by
+subsequently decreasing these input sample sizes to account for the
+match between expected and observed compositional data (i.e., to account
+for overdispersed errors). We specifically use a new Francis weighting
+method that is implemented in r4ss. The Francis method computes the
+additional variance which is necessary to ensure that the standard
+deviation in average length/age in the sample matches the expected
+standard deviation in length/age in the portion of the population that
+is available to that fleet. In a later section, we compare alternative
+treatments of data weighting to illustrate that results are relatively
+insensitive to data-weighting decisions.
+
+We also explored the use of Dirichlet-multinomial data weighting for
+compositional data, which is appealing as it conducts the data weighting
+internally by estimating additional model parameters and does not
+require additional tuning runs [@thorson_model-based_2017]. However,
+Dirichlet-multinomial weighting has not been simulation tested on
+assessments containing length composition data. Nearly all data weights
+for both lengths and ages were estimated close to one. This was deemed
+implausible and it was not explored further.
 
 #### Constraints on parameters
 
-We fix parameters representing the yield curve for canary rockfish, given that we have little confidence in our ability to estimate this curve internally to the model.  Specifically, we fix steepness (h=0.773) and natural mortality rate for young females and males (M=0.0521).  We do freely estimate the “ramp” in natural mortality rate for old females relative to young females, as well as parameters representing growth (k and Linf for males and females) and variability in growth, and such that some but not all parameters that govern the yield curve are estimated (Mangel et al., 2013).
+*Kiva has updated this, with one question to Brian in final paragraph*
 
-We do not include any informative priors in the model (except for penalties on recruitment deviations and deviations in the distribution of recruitment, which can be interpreted as hyperpriors).  Priors are most often included for either steepness or natural mortality rates, which are both fixed in this model.  
+We fix many parameters representing the yield curve for canary rockfish,
+given that we have little confidence in our ability to freely estimate
+this curve internally to the model. Specifically, we fix stock-recruit
+steepness ($h=0.72$) and natural mortality rate for males ($M=0.0643$
+yr$^{-1}$). We do estimate the female natural mortality rate, as well as
+parameters representing growth (k and Linf for males and females) and
+variability in growth. Thus, some, but not all parameters that govern
+the yield curve are estimated [@mangel2013perspective].
 
-Selectivity is allowed to be dome-shaped for all surveys and fisheries, with the exception of the foreign fishery, for which length/age composition samples are not available, and which is mirrored to have identical selectivity to the domestic trawl fishery.  However, we specify that selectivity is identical for a given survey/fishery among all three states.  
+We include an informative prior on female natural mortality
+[lognormal(-2.74, 0.31); @hamel2022development] and penalties on
+recruitment deviations and deviations in the distribution of
+recruitment, which can be interpreted as hyperpriors (where the variance
+of the "hyperprior," $\sigma_R=0.5$, is fixed).
+
+Selectivity is allowed to be dome-shaped for all surveys and fisheries.
+The foreign fishery does not have length or age composition samples are
+not available, and is mirrored to have identical selectivity to the
+domestic trawl fishery. We specify that commercial trawl selectivity is
+shared between Oregon and Washington due to similar composition data and
+the fact that many vessels cross the border while fishing and then
+return to home ports to land their catch. *Brian do you want do add
+something here about changes in likelihood?* These landings and,
+particularly, composition data that is caught off of the coast of one
+state and landed in the other is difficult to disentangle. Finally, we
+specify that selectivity for the at-sea hake fleet is shared among all
+three states.
 
 #### Stock Recruitment function
 
-We approximate recruitment by estimating deviations around a Beverton-Holt stock-recruit relationship.  We fix steepness, representing the magnitude of compensation in the stock-recruit relationship, at the mean of the 2015 prior distribution for rockfishes, 0.773, and freely estimate the average magnitude of unfished recruitment, ln(R0).  Deviations around the stock-recruit relationship are penalized towards zero, and are interpreted as an Empirical Bayes approximation to their treatment as random effects (Thorson and Minto, 2015).  Deviations are estimated for all years of composition data, i.e., 1968-2015, as well as for the 35 years prior to composition data (i.e., starting in 1933), to allow the population age-structure to represent plausible deviations away from its expected value upon first direct observations of length or age-structure.  Deviations from 1933-1959 are classified as “early” recruitment deviations, while the period 1960-2014 is classified as “main” recruitment deviations.  Deviations during the “main” period are specified to sum to zero, such that the stock-recruit relationship can be interpreted as the mean of deviations during this period.  The year 1960 was selected as the year at which annual deviations became well-informed by compositional data.
+*Kiva updated this, but second paragraph needs comments on tuning, which I did not do.*
 
-	In addition to recruitment deviations, we also estimate the distribution of recruitment among three spatial strata.  We estimate two fixed effects, representing the expected distribution of recruitment among the three states (where the third degree of freedom is achieved by the requirement that this expected distribution sums to one).  We also estimate deviations in the distribution of recruitment among the three strata (termed “dist-devs”).  We estimate deviations in distribution for all strata and all years for which recruitment deviations are also estimated, i.e., 1933-2014.  The magnitude of deviations in the distribution of recruitment (σD) is assumed to be constant for all three strata.  
+We approximate recruitment by estimating deviations around a
+Beverton-Holt stock-recruit relationship. We fix steepness, representing
+the magnitude of compensation in the stock-recruit relationship, at the mean of the
+SSC-approved prior for rockfishes, 0.72, and freely
+estimate the average magnitude of unfished recruitment, ln(R0).
+Deviations around the stock-recruit relationship are penalized towards
+zero. Early deviations are estimated from the beginning of the model period until 1960 in order to fully propagate uncertainty in recruitment and allow population age-structure to represent plausible deviations from the equilibrium at the start of composition data. Main phase recruitment deviations are estimated beginning in 1960, shortly before composition data becomes available in 1968. Deviations during the "main" period are
+specified to sum to zero, such that the stock-recruit relationship can
+be interpreted as the mean of deviations during this period. The year
+1960 was selected as the year at which annual deviations became
+well-informed by compositional data.
 
-The magnitude of recruitment deviations (σR) and the distribution deviations (σD) are both tuned to approximate their treatment as random effects.  Specifically, they are tuned to ensure that they approximately equal the square-root of the sample variance of deviations plus the average squared-standard error of estimated deviations.  Previous research indicates that this is a reasonable approximation to their estimation via maximum marginal likelihood when treating recruitment deviations as a random effect (Methot and Taylor, 2011; Thorson et al., 2015a).  Tuning results in the values σR = σD = 0.5.  Given these values, we then estimate bias-adjustment for recruitment deviations using a bias-adjustment ramp estimated using the R-package r4ss (Taylor et al., 2015). 
+*Brian, I did not tune sigma R. Did you?*
 
+The magnitude of recruitment deviations ($\sigma_R$) is tuned to approximate their treatment as random
+effects. Specifically, they are tuned to ensure that they approximately
+equal the square-root of the sample variance of deviations plus the
+average squared-standard error of estimated deviations. Previous
+research indicates that this is a reasonable approximation to their
+estimation via maximum marginal likelihood when treating recruitment
+deviations as a random effect [@methot_adjusting_2011]. Tuning results in the value $\sigma_R = 0.5$. Given this values,
+we then estimate bias-adjustment for recruitment deviations using a
+bias-adjustment ramp estimated using the R-package `r4ss`.
 
 #### Key Assumptions and Structural Choices
 
-We note two critical assumptions that are implied by our use of a spatial model:
-1.	Low or no movement:  The base model assumes that there is no movement after the settlement of age-0 juveniles.  We explore the impact of low rates of adult movement in a later sensitivity analysis (Figure 117).  
+*Kiva: this does not look like it is in the TOR. I suggest deleting so we don't have to update, and reviewers don't have to read. I think there is plenty of discussion elsewhere on "key assumptions and structural choices"*
 
-2.	Accurate assignment of fishery landings among states:  The base model drives differences in population status among states by spatial variation in recruitment (estimated using deviations in the spatial distribution of recruitment) and by variation in exploitation history among states.  This exploitation history is estimated by allocating reconstructed landings by stratum.  In particular, data regarding fishery harvest is available by landed port.  We have assumed that the quantity of fish landed in a given stratum (e.g., 46-49 N) is a close approximation to the quantity caught within that stratum.  We evaluate the consequences of this assumption in a sensitivity analysis that compares performance with a nonspatial model (Figure 40).  
+We note two critical assumptions that are implied by our use of a
+spatial model: 1. Low or no movement: The base model assumes that there
+is no movement after the settlement of age-0 juveniles. We explore the
+impact of low rates of adult movement in a later sensitivity analysis
+(Figure 117).
+
+2.  Accurate assignment of fishery landings among states: The base model
+    drives differences in population status among states by spatial
+    variation in recruitment (estimated using deviations in the spatial
+    distribution of recruitment) and by variation in exploitation
+    history among states. This exploitation history is estimated by
+    allocating reconstructed landings by stratum. In particular, data
+    regarding fishery harvest is available by landed port. We have
+    assumed that the quantity of fish landed in a given stratum (e.g.,
+    46-49 N) is a close approximation to the quantity caught within that
+    stratum. We evaluate the consequences of this assumption in a
+    sensitivity analysis that compares performance with a nonspatial
+    model (Figure 40).

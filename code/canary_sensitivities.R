@@ -185,3 +185,107 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           extras = '-nohess', 
           show_in_console = FALSE, 
           skipfinished = FALSE)
+
+
+# D-M data weighting ------------------------------------------------------
+
+mod <- base_mod
+new_name <- 'dirichlet_multinomial'
+new_dir <- here('models/sensitivities', new_name)
+
+R.utils::copyDirectory(from = here('models', base_mod_name),
+                       to = new_dir, 
+                       overwrite = TRUE, 
+                       recursive = FALSE)
+SS_output(dir = new_dir) |>
+  r4ss::tune_comps(option = 'DM', 
+                   dir = new_dir, 
+                   niters_tuning = 1, 
+                   exe = here('models/ss_win.exe'), 
+                   extras = '-nohess')
+
+xx <- SS_output(dir = new_dir)
+
+xx$Dirichlet_Multinomial_pars
+# the run times alone on this are prohibitive.
+
+# This is not worth reporting. Most data weights are 1 or 0.5 (because there was no data, didn't move from init)
+
+# Bomb radiocarbon bias ---------------------------------------------------
+
+
+# Float Triennial Q -------------------------------------------------------
+
+mod <- base_mod
+
+tri.late.index <- fleet.converter$fleet[fleet.converter$fleet_no_num == 'coastwide_Tri_late']
+tri.early.index <- fleet.converter$fleet[fleet.converter$fleet_no_num == 'coastwide_Tri_early']
+mod$dat$CPUE <- dplyr::mutate(mod$dat$CPUE,
+                              index = ifelse(index == tri.late.index, tri.early.index, index))
+mod$dat$agecomp <- dplyr::mutate(mod$dat$agecomp, 
+                                 FltSvy = ifelse(FltSvy == tri.late.index, tri.early.index, FltSvy),
+                                 FltSvy = ifelse(FltSvy == -tri.late.index, -tri.early.index, FltSvy))
+mod$dat$lencomp <- dplyr::mutate(mod$dat$lencomp, 
+                                 FltSvy = ifelse(FltSvy == tri.late.index, tri.early.index, FltSvy),
+                                 FltSvy = ifelse(FltSvy == -tri.late.index, -tri.early.index, FltSvy))
+# Float early tri
+mod$ctl$Q_options['29_coastwide_Tri_early','float'] <- 1
+
+# Negative phase for early tri (float)
+mod$ctl$Q_parms[grep('Tri_early', rownames(mod$ctl$Q_parms)),'PHASE'] <- -1
+
+# Remove Q setup for late tri (no data)
+mod$ctl$Q_parms <- mod$ctl$Q_parms[-grep('Tri_late', rownames(mod$ctl$Q_parms)),]
+mod$ctl$Q_options <- mod$ctl$Q_options[-grep('Tri_late', rownames(mod$ctl$Q_options)),]
+
+new_name <- 'Float_Q'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+# Unmirror triennial -------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$size_selex_types['30_coastwide_Tri_late',] <- c(24, 0, 4, 0)
+
+tri.ind <- grep('Tri', rownames(mod$ctl$size_selex_parms))
+
+new.selex <- mod$ctl$size_selex_parms[c(1:(min(tri.ind) - 1),
+                                        tri.ind, tri.ind),]
+
+rownames(new.selex) <- rownames(new.selex) |>
+  stringr::str_replace('29_coastwide_Tri_early\\(29\\).1',
+                       '30_coastwide_Tri_late\\(30\\)')
+
+mod$ctl$size_selex_parms <- new.selex
+
+mod$ctl$Q_options$link_info <- 0
+mod$ctl$Q_options$float <- 1
+mod$ctl$Q_options$link <- 1
+
+mod$ctl$Q_parms$PHASE[grep('Tri', rownames(mod$ctl$Q_parms))] <- -1
+
+new_name <- 'Unmirror_tri'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# Sex-constant M (TOR)-----------------------------------------------------
+
+
+
+# One asymptotic fleet (TOR) ----------------------------------------------
+
+# Candidate? NTWL is best at getting into the rocky habitat? Or WCGBTS?
