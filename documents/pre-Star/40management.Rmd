@@ -6,11 +6,15 @@ Average unfished spawning biomass is estimated to be 26,610 mt. This is directly
 
 ## Unresolved Problems and Major Uncertainties
 
+To be completed following the STAR panel.
+
 ## Harvest Projections and Decision Tables
 
-We have shown a decision table forecasting spawning biomass given two alternative harvest control rules (i.e., harvest at the annual catch limit, ACL, or the rebuilding target of 88.7 spawning potential ratio), using states-of-nature involving either alternative values for steepness or natural mortality rate (Tables h.1 and h.2). In each table, we set total catch in 2015/2016 equal to the previous estimates of annual biological catch (ABC). Projecting catches for 2017-2026 using the estimated ACL given the lower state-of-nature for either natural mortality (Table h.1) or steepness (Table h.2) results in declining spawning biomass over these 10 years (i.e., a 2026 spawning biomass relative to average unfished levels of 20.8% for the lower natural mortality rate, or 32.5% for the lower steepness level). By contrast, projecting catches using a target SPR of 88.7% given the lower natural mortality or steepness values results in a small increase in spawning output over time (i.e., a 2026 relative spawning biomass of 37.4% and 47.6% respectively). Projecting catches using the estimated ACL and either the base-model values or the upper states of nature for steepness and natural mortality rate results in a steady decline in spawning output towards the target level of 40%. Finally, projecting catches using a target SPR of 88.7%, given either the base values or upper state-of-nature for steepness or natural mortality, results in a gradual increase in spawning output over ten years.
+To be completed following the STAR panel.
 
-    Given that this assessment estimates the canary stock to have rebuilt, we do not envision providing forecasts using the rebuilder software for West Coast groundfishes.  We therefore envision that the decision tables presented here would be used as the basis for informing decisions regarding future, short-term harvest levels. 
+<!-- We have shown a decision table forecasting spawning biomass given two alternative harvest control rules (i.e., harvest at the annual catch limit, ACL, or the rebuilding target of 88.7 spawning potential ratio), using states-of-nature involving either alternative values for steepness or natural mortality rate (Tables h.1 and h.2). In each table, we set total catch in 2015/2016 equal to the previous estimates of annual biological catch (ABC). Projecting catches for 2017-2026 using the estimated ACL given the lower state-of-nature for either natural mortality (Table h.1) or steepness (Table h.2) results in declining spawning biomass over these 10 years (i.e., a 2026 spawning biomass relative to average unfished levels of 20.8% for the lower natural mortality rate, or 32.5% for the lower steepness level). By contrast, projecting catches using a target SPR of 88.7% given the lower natural mortality or steepness values results in a small increase in spawning output over time (i.e., a 2026 relative spawning biomass of 37.4% and 47.6% respectively). Projecting catches using the estimated ACL and either the base-model values or the upper states of nature for steepness and natural mortality rate results in a steady decline in spawning output towards the target level of 40%. Finally, projecting catches using a target SPR of 88.7%, given either the base values or upper state-of-nature for steepness or natural mortality, results in a gradual increase in spawning output over ten years. -->
+
+<!--     Given that this assessment estimates the canary stock to have rebuilt, we do not envision providing forecasts using the rebuilder software for West Coast groundfishes.  We therefore envision that the decision tables presented here would be used as the basis for informing decisions regarding future, short-term harvest levels.  -->
 
 ## Regional management considerations
 
@@ -43,26 +47,51 @@ Using these values, we find that changes in natural mortality rate have a substa
 
 ## Research and Data Needs
 
-### Responses to previous research and data needs
+### Responses to previous assessment research and data needs
 
 Recommendations are summarized for brevity:
 
 1.  A historical catch reconstruction be initiated with the intent of estimating spatial location of catches. Such a process has been initiated in other regions (e.g., the Northwest Atlantic, M. Pinsky, pers. comm.), and will be important to validate the assumptions that are necessary when developing spatial models.
 
-**Response**:
+**Response**: This assessment includes a new reconstruction of `r spp` landings in Oregon within unspecified PacFIN categories from 1987-1999. A formal Washington reconstruction is nearing completion, but was not yet ready for use in this assessment. Some work was begun on separating canary rockfish landings in Oregon into those caught in Oregon and Washington waters while compiling data for this assessment. While logbook information may be sufficient to eventually approximate state of catch, the composition data is much more challenging to separate and could not be done within the time available. A comprehensive approach to account for trawl-caught fish across state boundaries is underway as a result of this analysis. Because this assessment model returned to a coast-wide configuration, this recommendation was given lower priority.
 
 2.  We endorse a systematic (rather than ad hoc and species-specific) exploration and analysis of Canadian data sources (length and age-composition, indices of abundance, landings, and discards) for several rockfishes.
 
-**Response:** Progress remains species-specific. However, progress for major commercial groundfish species (sablefish, petrale sole) is occurring outside of regular stock assessment cycles so that it can be completed in a more intentional and less ad hoc fashion. Canary rockfish has not been prioritized for these activities by NWFSC or DFO.
+**Response:** Progress remains species-specific. However, progress for some groundfish species (sablefish, petrale sole) is occurring outside of regular stock assessment cycles so that it can be completed in a more intentional and less ad hoc fashion. Canary rockfish has not been prioritized for these activities by NWFSC or DFO. We explored Canadian `r spp` landings and estimates of recruitment deviations from an assessment conducted one year prior to this one.
 
 3.  We therefore recommend that future research explore methods to stitch these time series back together (i.e., using covariates and a meta-analytic information regarding the ratio of catchability in the two periods).
 
-**Response:**
+**Response:** Changes in the spatial (latitudinal and depth) extent of the triennial survey should not impact `r spp`, which are generally not found in the areas the survey expanded into. Canary rockfish are also not known to undertake seasonal migrations, so the change in timing should similarly not be influential. Therefore, this assessment estimates the triennial index using a single spatial GLMM. Both composition data and catch data are truncated so as not to include areas of survey expansion. The index is entered into the assessment model as two different fleets to maintain the ability to test for sensitivity to combining the periods, but catchability and selectivity are mirrored between these two fleets. Thus, they are treated as a single time series with different age and length composition data weights. Model sensitivity to treatment of the triennial index is concerning. 
 
 4.  We suggest that basic life history research be highly prioritized for future research.
 
-**Response:** This assessment includes updated data and relationships on growth, condition (weight-length), fecundity, and maturity. A number of studies on canary rockfish life history and population structure have been published since the previous assessment [@budrick2016evolutionary; @keller2018canary; @Brooks_thesis_2021]. Unfortunately, these have not resulted in a better understanding of natural mortality and the apparent loss of older females. This remains a research priority. In absence of better understanding of canary rockfish natural mortality, we use natural mortality rates from a newly updated prior [@hamel2022development].
+**Response:** This assessment includes updated data and relationships on growth, condition (weight-length), fecundity, and maturity. A number of studies on canary rockfish life history and population structure have been published since the previous assessment [@budrick2016evolutionary; @keller2018canary; @Brooks_thesis_2021]. Unfortunately, these have not resulted in a better understanding of natural mortality and the apparent loss of older females. This remains a research priority. In absence of better understanding of canary rockfish natural mortality, we use natural mortality rates from a recently updated prior [@hamel2022development].
 
+### Response to STAR panel research recommendations {#star-recs}
+
+Recommendation: Catch and discard history for this stock in US waters is highly uncertain. While the STAT was able to construct alternative upper and lower bounds for catch using simple multipliers on certain years of historical catch, this is arbitrary. Work to assess the uncertainty related to each individual data source would allow a better investigation of the overall combined uncertainty and its effect on 10 stock assessments.
+
+Response: A more comprehensive Washington reconstruction is almost complete, but was not yet available for use in this assessment. I think we have some new reconstructions we are using from Oregon? Anything else?
+
+Recommendation: Improved documentation is required to clearly outline the process used to construct the historical catch and discard time series from the various data sources. Such documentation should also include the process for construction of alternative catch histories that are used to propagate such uncertainty into the stock assessment.
+
+Response: This assessment report has attempted to more clearly document the process used to construct the historical catch and discard time series. In addition, the use of github for this assessment (https://github.com/pfmc-assessments/canary_2023) means that the code used to construct the time series, and many of the decisions involved, is publicly available and the process is reproducible. Finally, the STAT has communicated repeatedly with state partners and the GMT to ensure that catch time series are appropriate, per the TOR. This communication did result in changes to the catch history during model development.
+
+Recommendation: Additional work on the geospatial index is required to better resolve differences in abundance trends among areas.
+
+Response: This assessment did not use a spatially stratified abundance index.
+
+Recommendation: Work towards a combined US/Canadian stock assessment would greatly aid our overall understanding of stock status.
+
+Response: Little progress has been made on a combined US/Canadian stock assessment. The STAT did obtain catches and estimated recruitment and recruitment deviations from a recent British Columbia assessment. We have conducted a sensitivity with these catches added to Washington fleets, and compare the recruitment deviations estimated within our base model and the Canadian model to look for synchrony.
+
+Recommendation: If data permit, the trawl fleet should be divided into separate components so that bycatches in the shrimp and pelagic trawls are separated from catches in the main bottom trawl fleet. In the current assessment, composition data for the trawl fleet have a major influence on the estimated stock trends, so it would be desirable to use data that are more representative of the main fleet in order to improve estimated selectivity of the fleet.
+
+Response: Due to the already extremely complex fleet structure in this model, the shrimp and pelagic trawls were maintained with the main trawl fleet. Analysis indicated Brian I remember a ? from John F. during the pre-assessment workshop about the appropriateness of including shrimp trawls with the main trawl, and you had a great answer from him, feel free to fill in here.
+
+Recommendation: Basic life history research may help to resolve assessment uncertainties regarding appropriate values for natural mortality and steepness, and how to best account for the apparent loss of older females in the population.
+
+Response: This assessment includes fecundity and maturity curves based on new data made available since the last benchmark assessment. While efforts have been undertaken to understand the apparent loss of older females, this has not resulted in any clear resolution. A research study sampling in non-trawlable habitat along the U.S. West Coast found a similar lack of old females in the data [@Brooks_thesis_2021]. Examination of data from the Oregon trawl fleet indicates that sex ratios have been more constant across ages in the last decade than they had been previously (L. Rasmuson, pers. comm.).
 ### Current research and data neds
 
-1.  The \gls{s-wcgbt} does not sample canary rockfish very effectively because it cannot access the rocky habitat canary rockfish prefer. We recommend exploration of non-trawl coast-wide fishery-independent indices. This may mean an expansion of the \gls{s-hl} into more northern waters, or taking advantage of developments in model-based index standardization to stitch together multiple overlapping fishery-independent non-trawl sampling programs that have occurred over smaller spatial and temporal scales than the \gls{s-wcgbt}.
+1.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of non-trawl coast-wide fishery-independent indices. This could mean an expansion of the \gls{s-hl} into more northern waters, or taking advantage of developments in model-based index standardization to stitch together multiple similar overlapping fishery-independent non-trawl sampling programs that have occurred over smaller spatial and temporal scales than the \gls{s-wcgbt}.

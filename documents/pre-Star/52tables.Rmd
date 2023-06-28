@@ -183,19 +183,20 @@ readr::read_csv(here('documents/tables/triennial_summary.csv')) |>
 
 
 ```{r, results = 'asis', message=FALSE}
-# readr::read_csv(here('documents/tables/parameters.csv')) |>
-#   as.data.frame() |>
-#   sa4ss::table_format(caption = "List of parameters used in the base model, including estimated values and standard deviations (SD), bounds (minimum and maximum), estimation phase (negative values not estimated), status (indicates if parameters are near bounds), and prior type information (mean and SD).",
-#                       label = "params",
-#                       align = 'l',
-#                       # col_names = col_names,
-#                       longtable = TRUE,
-#                       font_size = 9,
-#                       digits = 3,
-#                       landscape = TRUE,
-#                       custom_width = TRUE,
-#                       col_to_adjust = c(1,7),
-#                       width = c("7.5cm", "3.5cm"))
+readr::read_csv(here('documents/tables/parameters.csv')) |>
+  as.data.frame() |>
+  sa4ss::table_format(caption = "List of parameters used in the base model, including estimated values and standard deviations (SD), bounds (minimum and maximum), estimation phase (negative values not estimated), status (indicates if parameters are near bounds), and prior type information (mean and SD).",
+                      label = "params",
+                      align = 'l',
+                      # col_names = col_names,
+                      longtable = TRUE,
+                      font_size = 9,
+                      digits = 3,
+                      # landscape = TRUE,
+                      # custom_width = TRUE,
+                      col_to_adjust = c(1,7),
+                      # width = c("7.5cm", "3.5cm")
+                      )
 ```
 
 

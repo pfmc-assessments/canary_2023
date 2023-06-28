@@ -14,6 +14,7 @@ rmd_files: [
   '23enviro.Rmd',
   '24unused.Rmd',
   '30model.Rmd',
+  '31summary.Rmd',
   '32structure.Rmd',
   '33results.Rmd',
   '49bibliography.Rmd',

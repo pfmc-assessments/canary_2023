@@ -22,6 +22,7 @@ mod23 <- SS_output(here('models', base_mod))
 ##
 #Compare fecundity from previous assessment
 ##
+
 png(
   filename = here('documents','figures','compare_fecundity.png'),
   width = 6.5, height = 5.0, units = "in", res = 300, pointsize = 10
@@ -93,8 +94,35 @@ dev.off()
 ##
 #Compare Maturity relationship with previous assessment
 ##
+Can.mat<-read.csv(here("data-raw/2009_2022_Canarymaturity.csv"))
+
+fitted.mat <- bind_rows(list(mod15 = mod15$endgrowth, mod23 = mod23$endgrowth), .id = 'model') |> 
+  mutate(mat = ifelse(model == 'mod15', Len_Mat, Age_Mat)) |>
+  filter(Sex == 1) |>
+  select(model, Age_Mid, mat)
+
+Can.mat |>
+  filter(!is.na(Age)) |>
+  group_by(Age) |>
+  summarise(n.mat = sum(Functional_maturity),
+            n.samp = n(),
+            pct.mat = n.mat/n.samp) |>
+  ggplot() +
+  geom_point(aes(x = Age, y = pct.mat, size = n.samp), alpha = 0.5) +
+  scale_size_area(max_size = 12, name = 'Sample size') +
+  geom_line(data = fitted.mat, aes(x = Age_Mid, y = mat, col = model),
+            linewidth = 1) +
+  scale_color_manual(labels = c(mod15 = '2015 derived relationship',
+                                mod23 = '2023 relationship'),
+                     values = c(mod15 = '#DF536B', mod23 = 'black'),
+                     name = '') +
+  theme_classic() +
+  ylab('Percent females mature')
+ggsave(here('documents','figures','compare_maturity.png'), 
+       width = 7.5, height = 5, units = 'in', dpi = 300)
+
 png(
-  filename = here('documents','figures','compare_maturity.png'),
+  filename = 
   width = 6.5, height = 5.0, units = "in", res = 300, pointsize = 10
 )
 
