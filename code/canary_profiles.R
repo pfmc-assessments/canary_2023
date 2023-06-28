@@ -28,6 +28,29 @@ run_diagnostics(mydir = here('models'),
 tictoc::toc()
 beepr::beep()
 
+
+# Male M ------------------------------------------------------------------
+
+profile.settings <- get_settings_profile(parameters = 'NatM_uniform_Mal_GP_1',
+                                         low = -0.02, high = 0.02,
+                                         step_size = 0.005,
+                                         param_space = 'relative',
+                                         use_prior_like = 1) 
+settings <- get_settings(settings = list(base_name = '5_5_0_hessian_KLO',
+                                         run = 'profile',
+                                         profile_details = profile.settings,
+                                         exe = 'ss_win',
+                                         extras = '-nohess',
+                                         usepar = TRUE,
+                                         parstring = 'MGparm[13]',
+                                         init_values_src = 1))
+
+
+tictoc::tic()
+run_diagnostics(mydir = here('models'), 
+                model_settings = settings)
+tictoc::toc()
+beepr::beep()
 # Female Linf profile -----------------------------------------------------
 # 
 # profile.settings <- get_settings_profile(parameters = 'L_at_Amax_Fem_GP_1',

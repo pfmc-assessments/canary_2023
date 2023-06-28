@@ -1,103 +1,207 @@
+---
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
 ## Model Diagnostics
 
 ### Model Residuals
 
-We display residual fits to all data sources: (1) marginal length composition, (2) marginal age composition (for fisheries where available), (3) conditional age-at-length composition (for surveys), and (4) indices of abundance. 
+We display residual fits to all data sources: (1) marginal length composition, (2) marginal age composition (for fisheries where available), (3) conditional age-at-length composition (for surveys), and (4) indices of abundance.
 
-Marginal length compositions are summarized in Figure 45, and shown for each fleet and years in Figure 46-Figure 66.  Marginal length compositions for each fleet aggregated over all years (Figure 45) shows that fits are generally consistent with observed data, on average over time, for males and females for each fleet, and are highly erratic for unsexed fish (e.g., OR trawl) which generally have a lower sample size.  The mode of proportion at length is generally larger for females than males, reflecting the dimorphic growth in canary.  Fits are particularly good for trawl, recreational, and survey fleets, and generally poor for at-sea hake and non-trawl fleets.  Fits for individual fleets and years (Figure 46-Figure 66) confirm that length-composition fits are particularly good for sexed individuals in the trawl fisheries, although length-composition data almost never have any evidence of bimodality, and hence have little ability to inform cohorts.
+Marginal length compositions are summarized in Figure 45, and shown for each fleet and years in Figure 46-Figure 66.
+Marginal length compositions for each fleet aggregated over all years (Figure 45) shows that fits are generally consistent with observed data, on average over time, for males and females for each fleet, and are highly erratic for unsexed fish (e.g., OR trawl) which generally have a lower sample size.
+The mode of proportion at length is generally larger for females than males, reflecting the dimorphic growth in canary.
+Fits are particularly good for trawl, recreational, and survey fleets, and generally poor for at-sea hake and non-trawl fleets.
+Fits for individual fleets and years (Figure 46-Figure 66) confirm that length-composition fits are particularly good for sexed individuals in the trawl fisheries, although length-composition data almost never have any evidence of bimodality, and hence have little ability to inform cohorts.
 
-Marginal age compositions are summarized in Figure 67, and shown for each fleet and year in Figure 68-Figure 77.  Summarized age compositions show that general patterns of increasing selectivity for young individuals, and declining proportion at age for old individuals, are generally captured.  Summaries also exhibit the greater proportion of males in the plus-group (age 35+) than females, e.g., the trawl and non-trawl fisheries.  Fits in individual years show the difference in expected proportion at age for surface reads (e.g., OR trawl, Figure 69, panel 1973a4, where the expected proportion and data bin peaks for age 20, which is then treated as the plus-group for surface reads) compared with break-and-burn reads (e.g., OR trawl, panel 1980a1, where the expected proportion has a bump at the plus group, age 35 for males but not females).  Many early years show the increased abundance of older males relative to females in either surface reads (e.g., OR trawl, panel 1982a4, which shows a greater proportion of males age 20+ than females) or break-and-burn reads (e.g., OR trawl, panel 1982a1, which shows a greater proportion of males to females in age 35+).  Individual years for the non-trawl fisheries (fleets 4-6) and the WA recreational fishery (fleet 9) are particularly poor, and not expected to be informative regarding changes in average age over time.
- 
-Conditional age-at-length compositions are shown for each fleet and year in Figure 78-Figure 86.  We use a summary plot introduced by André Punt, where a well-fitting model has a predicted average age-at-length that is within the 95% predictive interval, as is the predicted standard deviation of age-at-length.  Plots for all surveys generally exhibit this behavior, which provides no evidence of poor fit to conditional age-at-length data, and furthermore suggests that a model with time-constant growth provides a satisfactory approximation to the process governing age and length.  
+Marginal age compositions are summarized in Figure 67, and shown for each fleet and year in Figure 68-Figure 77.
+Summarized age compositions show that general patterns of increasing selectivity for young individuals, and declining proportion at age for old individuals, are generally captured.
+Summaries also exhibit the greater proportion of males in the plus-group (age 35+) than females, e.g., the trawl and non-trawl fisheries.
+Fits in individual years show the difference in expected proportion at age for surface reads (e.g., OR trawl, Figure 69, panel 1973a4, where the expected proportion and data bin peaks for age 20, which is then treated as the plus-group for surface reads) compared with break-and-burn reads (e.g., OR trawl, panel 1980a1, where the expected proportion has a bump at the plus group, age 35 for males but not females).
+Many early years show the increased abundance of older males relative to females in either surface reads (e.g., OR trawl, panel 1982a4, which shows a greater proportion of males age 20+ than females) or break-and-burn reads (e.g., OR trawl, panel 1982a1, which shows a greater proportion of males to females in age 35+).
+Individual years for the non-trawl fisheries (fleets 4-6) and the WA recreational fishery (fleet 9) are particularly poor, and not expected to be informative regarding changes in average age over time.
 
-Indices of abundance are shown for each survey fleet in Figure 87-Figure 90.  These plots show that fits to the WCGBTS indices are generally within the 95% confidence interval bounds (with the exception of CA in 2003).  However, there is a residual pattern for California in particular, where predictions for all years 2006-2013 are below the index, and only predictions in years 2003-2005 and 2014 are above the index  Similarly, the index is within the 95% confidence interval for all years and strata for the early and late triennial indices.  The early triennial survey captures the general decline in population abundance during the 1980s, although the index estimate in 1980 is generally lower than the model estimate.  Similarly, the late triennial index captures the commencement of population rebuilding in all three strata.  Finally, the pre-recruit indices have variable performance across all three strata.  The indices in WA have extremely large confidence intervals (e.g., 2005), and are not expected to provide any meaningful information or diagnostic benefit.  By contrast, the index in CA generally captures trends in estimated recruitment, with relatively high recruitment in 2011 and relatively low recruitment in 2006-2007.  The pre-recruit index appears to have little predictive ability in OR, where it does estimate moderate recruitment in years that are estimated to have good recruitment (e.g., 2006) and also predicts elevated recruitment in years that are estimated to have moderate recruitment (e.g., 2009 and 2011). 
+Conditional age-at-length compositions are shown for each fleet and year in Figure 78-Figure 86.
+We use a summary plot introduced by André Punt, where a well-fitting model has a predicted average age-at-length that is within the 95% predictive interval, as is the predicted standard deviation of age-at-length.
+Plots for all surveys generally exhibit this behavior, which provides no evidence of poor fit to conditional age-at-length data, and furthermore suggests that a model with time-constant growth provides a satisfactory approximation to the process governing age and length.
 
+Indices of abundance are shown for each survey fleet in Figure 87-Figure 90.
+These plots show that fits to the WCGBTS indices are generally within the 95% confidence interval bounds (with the exception of CA in 2003).
+However, there is a residual pattern for California in particular, where predictions for all years 2006-2013 are below the index, and only predictions in years 2003-2005 and 2014 are above the index Similarly, the index is within the 95% confidence interval for all years and strata for the early and late triennial indices.
+The early triennial survey captures the general decline in population abundance during the 1980s, although the index estimate in 1980 is generally lower than the model estimate.
+Similarly, the late triennial index captures the commencement of population rebuilding in all three strata.
+Finally, the pre-recruit indices have variable performance across all three strata.
+The indices in WA have extremely large confidence intervals (e.g., 2005), and are not expected to provide any meaningful information or diagnostic benefit.
+By contrast, the index in CA generally captures trends in estimated recruitment, with relatively high recruitment in 2011 and relatively low recruitment in 2006-2007.
+The pre-recruit index appears to have little predictive ability in OR, where it does estimate moderate recruitment in years that are estimated to have good recruitment (e.g., 2006) and also predicts elevated recruitment in years that are estimated to have moderate recruitment (e.g., 2009 and 2011).
 
 ### Convergence status
 
 *Brian has updated this section*
 
-The base model has a final gradient of <0.00001 and the hessian is determinant. We therefore conclude that the parameter estimates represent a local minimum and near enough to a global minimum so as not to differ appreciably in results. No parameters are at or within 5 percent of a boundary although one parameter pair has a high correlation coefficient between 0.90 and 0.95.
-
+The base model has a final gradient of \<0.00001 and the hessian is determinant.
+We therefore conclude that the parameter estimates represent a local minimum and near enough to a global minimum so as not to differ appreciably in results.
+No parameters are at or within 5 percent of a boundary although one parameter pair has a high correlation coefficient between 0.90 and 0.95.
 
 #### Evidence of search for global convergence
 
 *Brian has updated this section*
 
-A search for global convergence was conducted multiple times. Model convergence was first determined by starting the minimization process from dispersed values of the maximum likelihood estimates to determine if the estimation routine found a smaller likelihood. Starting parameters were jittered using the jitter function built into Stock Synthesis, using a jitter fraction of 0.05. This was repeated 60 times with no runs returning to the base model likelihood and one returning to a likelihood that was 2 likelihood units lower. The run with improved likelihood had one parameter on a bound which was fixed before an additional 50 runs were conducted jittering from the initial parameter estimates from the improved likelihood model. This second jitter analysis had three runs return to the improved likelihood estimate, four runs just above, and one run that was one likelihood unit lower. A third jittering analysis was repeated 50 times, jittering from the initial parameter estimates from the twice-improved model, with five runs returning to the twice-improved likelihood value and one just above. 
+A search for global convergence was conducted multiple times.
+Model convergence was first determined by starting the minimization process from dispersed values of the maximum likelihood estimates to determine if the estimation routine found a smaller likelihood.
+Starting parameters were jittered using the jitter function built into Stock Synthesis, using a jitter fraction of 0.05.
+This was repeated 60 times with no runs returning to the base model likelihood and one returning to a likelihood that was 2 likelihood units lower.
+The run with improved likelihood had one parameter on a bound which was fixed before an additional 50 runs were conducted jittering from the initial parameter estimates from the improved likelihood model.
+This second jitter analysis had three runs return to the improved likelihood estimate, four runs just above, and one run that was one likelihood unit lower.
+A third jittering analysis was repeated 50 times, jittering from the initial parameter estimates from the twice-improved model, with five runs returning to the twice-improved likelihood value and one just above.
 
-Although the base model indicates an overall global minimum can be obtained that is lower than the base model likelihood, we keep with the original base model. The primary reason for this is that the lowest likelihood model after two jitter analyses had near perfect (> 0.99) correlation among three selectivity parameters, which was concerning. Secondarily, all three models (the current base and the two models with lower likelihood from the first and second jitter analyses) were similar in trajectory (Figure \ref{fig:jitter_compare}). Lastly, profiles of key parameters did not show evidence of instability, suggesting improvements across the likelihood surface did not greatly change model dynamics. The conclusion from the jittering analyses indicates that a lower global minimum is attainable, but that the likelihood surface of the base model (and subsequent jittered models) is flat around the maximum likelihood estimate. Models from the jitter analyses and converge to estimates with similar model behavior that do not greatly change model conclusions. We therefore proceed with the current base model. 
+Although the base model indicates an overall global minimum can be obtained that is lower than the base model likelihood, we keep with the original base model.
+The primary reason for this is that the lowest likelihood model after two jitter analyses had near perfect (\> 0.99) correlation among three selectivity parameters, which was concerning.
+Secondarily, all three models (the current base and the two models with lower likelihood from the first and second jitter analyses) were similar in trajectory (Figure \ref{fig:jitter_compare}).
+Lastly, profiles of key parameters did not show evidence of instability, suggesting improvements across the likelihood surface did not greatly change model dynamics.
+The conclusion from the jittering analyses indicates that a lower global minimum is attainable, but that the likelihood surface of the base model (and subsequent jittered models) is flat around the maximum likelihood estimate.
+Models from the jitter analyses and converge to estimates with similar model behavior that do not greatly change model conclusions.
+We therefore proceed with the current base model.
 
 ### Evaluation of model parameters
-We estimate catchability analytically for every state-specific index of abundance (i.e., fleets 16-27, see Table 20).  Estimates of catchability range from 0.234 (WA late triennial) to 1.983 (CA late triennial), except for the pre-recruit index which is not weighted by area.  We are not surprised that catchability estimates are highly variable, given that indices of abundance are highly variable due to the large variability in the spatial distribution and shoaling behavior for canary rockfish (Thorson et al., 2011).  We are also unsurprised that catchability is generally less than one for indices, given that a substantial portion of canary biomass is likely to unavailable to bottom trawl sampling gear, as is used for all indices of abundance (except the pre-recruit index).
+
+We estimate catchability analytically for every state-specific index of abundance (i.e., fleets 16-27, see Table 20).
+Estimates of catchability range from 0.234 (WA late triennial) to 1.983 (CA late triennial), except for the pre-recruit index which is not weighted by area.
+We are not surprised that catchability estimates are highly variable, given that indices of abundance are highly variable due to the large variability in the spatial distribution and shoaling behavior for canary rockfish (Thorson et al., 2011).
+We are also unsurprised that catchability is generally less than one for indices, given that a substantial portion of canary biomass is likely to unavailable to bottom trawl sampling gear, as is used for all indices of abundance (except the pre-recruit index).
 
 ### Comparison with similar stocks and species
 
-
-The recent assessments for canary rockfish in Canada have shown a decline and subsequent rebuilding of the stock in Canadian waters (COSEWIC, 2007; DFO, 2010; Stanley et al., 2005), where the magnitude of decline and the timing of the commencement of rebuilding are generally similar to the current assessment.  Canadian assessments have been based upon trends in abundance in the southern portion of the Canadian stock.  The Canadian model (COSEWIC 2007) was premised on a maximum age of 84 yr., and available age data clearly showed the decreased prevalence of old females relative to old males, thus supporting the increase in female natural mortality that is also used in our base model.  The Alaska assessment (Green et al., 2014) has historical been based upon density estimates from manned or remotely operated vehicles, and therefore contains no information regarding catchability for bottom trawl surveys, natural mortality rates, or sex-specific age structure. 
-
+The recent assessments for canary rockfish in Canada have shown a decline and subsequent rebuilding of the stock in Canadian waters (COSEWIC, 2007; DFO, 2010; Stanley et al., 2005), where the magnitude of decline and the timing of the commencement of rebuilding are generally similar to the current assessment.
+Canadian assessments have been based upon trends in abundance in the southern portion of the Canadian stock.
+The Canadian model (COSEWIC 2007) was premised on a maximum age of 84 yr., and available age data clearly showed the decreased prevalence of old females relative to old males, thus supporting the increase in female natural mortality that is also used in our base model.
+The Alaska assessment (Green et al., 2014) has historical been based upon density estimates from manned or remotely operated vehicles, and therefore contains no information regarding catchability for bottom trawl surveys, natural mortality rates, or sex-specific age structure.
 
 ### Sensitivity Analyses {#sensitivities}
 
-
 #### Sensitivity to leading parameters
-Estimates of spawning output relative to average unfished spawning output are highly variable to the estimated value of average unfished recruitment, as well as steepness and, in particular, natural mortality.  Varying the value of average unfished recruitment, ln(R0), has a large impact on estimates of relative spawning output (RSO).  Low values of ln(R0) results in low final RSO, and high values of ln(R0) result in high final RSO (Figure 110).  Varying the magnitude of recruitment compensation, steepness (h), also results in large variation in relative spawning output (RSO, Table 25, Figure 111).  Varying the natural mortality rate for juvenile female and male individuals (while continuing to freely estimate the increased rate of natural mortality for adult females) has a larger impact on RSO than did steepness (Figure 112), where low values of M result in a low value for final RSO, and vice-versa.  
+
+Estimates of spawning output relative to average unfished spawning output are highly variable to the estimated value of average unfished recruitment, as well as steepness and, in particular, natural mortality.
+Varying the value of average unfished recruitment, ln(R0), has a large impact on estimates of relative spawning output (RSO).
+Low values of ln(R0) results in low final RSO, and high values of ln(R0) result in high final RSO (Figure 110).
+Varying the magnitude of recruitment compensation, steepness (h), also results in large variation in relative spawning output (RSO, Table 25, Figure 111).
+Varying the natural mortality rate for juvenile female and male individuals (while continuing to freely estimate the increased rate of natural mortality for adult females) has a larger impact on RSO than did steepness (Figure 112), where low values of M result in a low value for final RSO, and vice-versa.
 
 #### Sensitivity to data weighting scenarios
-We explore three alternative data-weighting scenarios, in addition to the base model (Figure 113):
-1.	Tuning each data source to ensure that the harmonic mean of the effective sample size (calculated using the Ianelli-McAllister formula) matches the tuned input sample size for each fleet.
-2.	Doing no model-based weighting of data sources, and instead using the input samples sizes for all length and age samples as the weight used in the model.  This sensitivity is not intended as a realistic option, and is included instead to bracket uncertainty given the extreme (and unrealistic) decision to ignore overdispersion in available data.
-3.	Conducting Francis-based weighting of age and length composition data, but instead doing it independently for each fleet (rather than estimating a single weighting coefficient for all fleets in the same fishery or survey, as was done in the base model).
-These sensitivities indicate that conducting no weighting (sensitivity #2) results in a somewhat higher estimate of average unfished spawning output (due to a highest estimate of ln(R0)).  However, all models range tightly around the base model in their estimates of relative spawning output.
 
-We also show an additional three data-weighting scenarios, which explore the impact of removing the influence of compositional data on estimates of stock status.  In particular we show the following three models:
-1.	Base model:  The base model includes length (and where available age) compositional samples from fisheries, and abundance index, length, and conditional-at-age-length samples from surveys, and uses data to estimate growth parameters, the ramp in mature female mortality, and selectivity for all fisheries and surveys.
-2.	No compositional data:  This first sensitivity shows the impact of removing all compositional data, while fixing growth, mortality, and selectivity parameters at their estimates in the base model.  This sensitivity ensures that compositional data are only informing growth, mortality, and selectivity parameters, and that compositional data are not being used to inform trends in abundance (except insofar as information regarding growth, selectivity, and mortality inform the interpretation of other data sources).
-3.	No compositional data except from trawl fisheries:  This second sensitivity is identical to Model #2, except it adds back the compositional data for the trawl fisheries (fleets 1-3), and estimates selectivity for these fleets.  It essentially allows compositional data for the trawl fishery to inform trends in abundance, and not compositional data from any other fleets.
-This comparison (Figure 114) shows that, when all compositional data are excluded, this results in a huge increase in the estimate of average unfished spawning output, which results in an estimate of stock status near unfished biomass throughout the time series.  However, including only compositional data from the trawl fishery results in an estimate of relative spawning output that is very similar to the base model.  We therefore conclude that information regarding relative trends in stock status prior to the 1990s are highly influenced by compositional data from the trawl fishery (fleets 1-3).
+We explore three alternative data-weighting scenarios, in addition to the base model (Figure 113): 1.
+Tuning each data source to ensure that the harmonic mean of the effective sample size (calculated using the Ianelli-McAllister formula) matches the tuned input sample size for each fleet.
+2.
+Doing no model-based weighting of data sources, and instead using the input samples sizes for all length and age samples as the weight used in the model.
+This sensitivity is not intended as a realistic option, and is included instead to bracket uncertainty given the extreme (and unrealistic) decision to ignore overdispersion in available data.
+3.
+Conducting Francis-based weighting of age and length composition data, but instead doing it independently for each fleet (rather than estimating a single weighting coefficient for all fleets in the same fishery or survey, as was done in the base model).
+These sensitivities indicate that conducting no weighting (sensitivity #2) results in a somewhat higher estimate of average unfished spawning output (due to a highest estimate of ln(R0)).
+However, all models range tightly around the base model in their estimates of relative spawning output.
+
+We also show an additional three data-weighting scenarios, which explore the impact of removing the influence of compositional data on estimates of stock status.
+In particular we show the following three models: 1.
+Base model: The base model includes length (and where available age) compositional samples from fisheries, and abundance index, length, and conditional-at-age-length samples from surveys, and uses data to estimate growth parameters, the ramp in mature female mortality, and selectivity for all fisheries and surveys.
+2.
+No compositional data: This first sensitivity shows the impact of removing all compositional data, while fixing growth, mortality, and selectivity parameters at their estimates in the base model.
+This sensitivity ensures that compositional data are only informing growth, mortality, and selectivity parameters, and that compositional data are not being used to inform trends in abundance (except insofar as information regarding growth, selectivity, and mortality inform the interpretation of other data sources).
+3.
+No compositional data except from trawl fisheries: This second sensitivity is identical to Model #2, except it adds back the compositional data for the trawl fisheries (fleets 1-3), and estimates selectivity for these fleets.
+It essentially allows compositional data for the trawl fishery to inform trends in abundance, and not compositional data from any other fleets.
+This comparison (Figure 114) shows that, when all compositional data are excluded, this results in a huge increase in the estimate of average unfished spawning output, which results in an estimate of stock status near unfished biomass throughout the time series.
+However, including only compositional data from the trawl fishery results in an estimate of relative spawning output that is very similar to the base model.
+We therefore conclude that information regarding relative trends in stock status prior to the 1990s are highly influenced by compositional data from the trawl fishery (fleets 1-3).
 
 #### Model specification uncertainty
-We first demonstrate that the base model is insensitive to the choice of using either the geostatistical or stratified delta-GLMM to generate an index of abundance using WCGBTS data.  Specifically we compare:
-1.	Base model:  The base model uses the geostatistical delta-GLMM to standardize catch rate data from the WCGBTS.
-2.	Bayesian stratified index:  As sensitivity, we substitute the indices of abundance estimated by the Bayesian stratified delta-GLMM analyzing WCGBTS data.
-3.	No WCGBTS indices: As another sensitivity, we demonstrate the impact of excluding indices estimated using WCGBTS data (i.e., fleets 16-18).
-These comparisons (Figure 115) demonstrate that all three models have almost identical absolute and relative scale for estimates of spawning output.  We therefore conclude that the treatment of index standardization has little impact when using an integrated age-structured model for canary rockfish.  
 
-In section 2.4.2, we have previously shown a comparison of major changes in model structure, i.e., the base model with a nonspatial model, a model without deviations in the spatial distribution of recruitment, and a model without selectivity blocks.  This exercise (Figure 40) indicated little variation among models in relative spawning output, and similarity in particular between the base and nonspatial models.  
+We first demonstrate that the base model is insensitive to the choice of using either the geostatistical or stratified delta-GLMM to generate an index of abundance using WCGBTS data.
+Specifically we compare: 1.
+Base model: The base model uses the geostatistical delta-GLMM to standardize catch rate data from the WCGBTS.
+2.
+Bayesian stratified index: As sensitivity, we substitute the indices of abundance estimated by the Bayesian stratified delta-GLMM analyzing WCGBTS data.
+3.
+No WCGBTS indices: As another sensitivity, we demonstrate the impact of excluding indices estimated using WCGBTS data (i.e., fleets 16-18).
+These comparisons (Figure 115) demonstrate that all three models have almost identical absolute and relative scale for estimates of spawning output.
+We therefore conclude that the treatment of index standardization has little impact when using an integrated age-structured model for canary rockfish.
 
-We also compare three alternative treatments of ageing error:
-1.	Base model: We assume by default that the ODFW/CAPS ageing error pattern is on average unbiased.
-2.	WDFW unbiased:  As a sensitivity, we show estimates of spawning output and relative spawning output when assuming that the age reads from WDFW ageing lab are unbiased.  
-3.	No surface reads:  As another alternative, we show a model that assumes that the ODFW/CAPS pattern is unbiased, but which also excludes all age determinations obtained from surface reads.  This sensitivity therefore demonstrates the impact of including surface read information, and the degree of dependence upon correctly characterizing ageing error for surface reads.
-This exercise (Figure 116) illustrates that Model #2 results in somewhat elevated estimates of spawning output relative to the base model, while Model #3 is nearly identical to the base model.  Furthermore, all three models provide almost identical estimates of relative spawning output.  We therefore conclude that this assumption has little impact on estimates of stock status.
+In section 2.4.2, we have previously shown a comparison of major changes in model structure, i.e., the base model with a nonspatial model, a model without deviations in the spatial distribution of recruitment, and a model without selectivity blocks.
+This exercise (Figure 40) indicated little variation among models in relative spawning output, and similarity in particular between the base and nonspatial models.
 
-Finally, we demonstrate the impact of low movement rates among strata upon estimates of stock status.  We specifically re-estimate the base model when assuming that movement is negligible until age-3, reaches a constant rate by age 9.3 among all adjacent strata (i.e., an X% movement rate from CA to OR, from OR to CA, from OR to WA, and from WA to OR), and where movement rates are interpolated linearly between ages 3 and 9.3.  This comparison (Figure 117) shows that elevated movement rates generally lead to increased estimates of average unfished spawning output, and also an increased rate of rebuilding since the 1990s.  We therefore conclude that low movement rates are not likely to result in the stock being below the overfishing threshold.
+We also compare three alternative treatments of ageing error: 1.
+Base model: We assume by default that the ODFW/CAPS ageing error pattern is on average unbiased.
+2.
+WDFW unbiased: As a sensitivity, we show estimates of spawning output and relative spawning output when assuming that the age reads from WDFW ageing lab are unbiased.\
 
+3.
+No surface reads: As another alternative, we show a model that assumes that the ODFW/CAPS pattern is unbiased, but which also excludes all age determinations obtained from surface reads.
+This sensitivity therefore demonstrates the impact of including surface read information, and the degree of dependence upon correctly characterizing ageing error for surface reads.
+This exercise (Figure 116) illustrates that Model #2 results in somewhat elevated estimates of spawning output relative to the base model, while Model #3 is nearly identical to the base model.
+Furthermore, all three models provide almost identical estimates of relative spawning output.
+We therefore conclude that this assumption has little impact on estimates of stock status.
+
+Finally, we demonstrate the impact of low movement rates among strata upon estimates of stock status.
+We specifically re-estimate the base model when assuming that movement is negligible until age-3, reaches a constant rate by age 9.3 among all adjacent strata (i.e., an X% movement rate from CA to OR, from OR to CA, from OR to WA, and from WA to OR), and where movement rates are interpolated linearly between ages 3 and 9.3.
+This comparison (Figure 117) shows that elevated movement rates generally lead to increased estimates of average unfished spawning output, and also an increased rate of rebuilding since the 1990s.
+We therefore conclude that low movement rates are not likely to result in the stock being below the overfishing threshold.
 
 ### Retrospective Analysis
 
 <!-- Brian has updated this section -->
 
-A five-year retrospective was done by successively removing years of data to obtain models with ending years ranging from 2017 to 2021. The retrospective analysis shows a slight negative retrospective bias in that initial spawning output and recent spawning output generally decline as more years of data are removed, but changes are within the uncertainty intervals of the base model (Figure \ref{fig:retro_bio}). The magnitude of change in initial and recent spawning output differs; the removal of two years of data causes an increase in spawning output relative to unfished, with all other runs similar in pattern to the base model (Figure \ref{fig:retro_relbio}). Estimates of Mohn's $\rho$ [@mohn_rho_1999], which measure the magnitude of retrospective bias are -0.25 over all years (average of -0.05 per year) for spawning output and -0.04 over all years (average of -0.008 per year) for spawning output relative to unfished. According to [@hurtado-ferro_looking_2015], Mohn's $\rho$ values on a per-year basis of less than -0.15 are not cause for concern, but should not be taken as lack of true bias.
+A five-year retrospective was done by successively removing years of data to obtain models with ending years ranging from 2017 to 2021.
+The retrospective analysis shows a slight negative retrospective bias in that initial spawning output and recent spawning output generally decline as more years of data are removed, but changes are within the uncertainty intervals of the base model (Figure \ref{fig:retro_bio}).
+The magnitude of change in initial and recent spawning output differs; the removal of two years of data causes an increase in spawning output relative to unfished, with all other runs similar in pattern to the base model (Figure \ref{fig:retro_relbio}).
+Estimates of Mohn's $\rho$ [@mohn_rho_1999], which measure the magnitude of retrospective bias are -0.25 over all years (average of -0.05 per year) for spawning output and -0.04 over all years (average of -0.008 per year) for spawning output relative to unfished.
+According to [@hurtado-ferro_looking_2015], Mohn's $\rho$ values on a per-year basis of less than -0.15 are not cause for concern, but should not be taken as lack of true bias.
 
 ### Likelihood Profiles
 
-We use likelihood profiles to assess the consequences of varying different key parameters (steepness, average unfished recruitment, and female and male natural mortality rates).  We also separate the profile likelihood into contributions from different data sources to assess the degree to which different data sources agree or conflict.
+STILL NEED TO INSERT FIGURES AND FINISH MALE M
 
-Age composition data and recruitment deviations (i.e., deviations in the spatial distribution of recruitment) are minimized by high values of ln(R0), while length composition data and recruitment deviations are minimized by relatively lower values of ln(R0) (Table 24, Figure 42).  Survey data are relatively flat across all values of ln(R0).  We therefore acknowledge a disagreement between age and length composition data in the determination of ln(R0).  However, the total likelihood represents a weighting of data components that is consistent with the magnitude of fit to the data as well as determination of input sample sizes.  
+We use likelihood profiles to assess the support of the data for the estimation of different key parameters (steepness, average unfished recruitment, and female and male natural mortality rates).
+We separate the likelihood profile into contributions from different data sources to assess the degree to which different data sources agree or conflict.
+Across all profiles, there is a common conflict within the length composition data where composition data from trawl gears generally supports a more productive population (high ln(R0), high steepness, high natural mortality), and composition data from non-trawl gears, both commercial and recreational, generally supports a less productive population.
 
-The likelihood profile over steepness is highly informed by both recruitment penalties and length composition data (Table 25, Figure 43).   Steepness if generally minimized at high values (i.e., > 0.95) which we do not consider to be plausible for a long-lived species such as canary rockfish.  We therefore fix steepness at the mean of the predictive distribution for rockfishes (h=0.773)
+Low values of ln(R0) maximize the age composition likelihood, the recruitment penalties are minimized by slightly higher values of ln(R0) than the full model estimates, and the indices support a value of ln(R0) close to the full model estimate (Figure REF).
+The Oregon recreational fleet most strongly drives the age composition likelihood, but age composition data from many fleets support lower population scales.
+The length composition data are relatively uninformative in determining population scale because of conflicts within the length composition data between non-trawl gears (especially Oregon non-trawl and Washington recreational) which favor low values, and trawl gears (especially California trawl, Oregon trawl, and Washington at-sea hake) which favor larger values.
+The survey index likelihood is mainly informed by the early and late triennial index, which show the most contrast over their survey period.
 
-The likelihood profile over M is minimized for high values of natural mortality (Table 26, Figure 44), which considerably exceed the median of the prior distribution for natural mortality rate.  The likelihood profile is highly informed by recruitment and length data, both of which have a minimum <0.07, while the likelihood for age data and parameter deviations continues to increase for values of natural mortality >0.08.  We therefore fix natural mortality rate at the mean of the prior distribution, M=0.0521.
+The likelihood profile over steepness indicates that a value higher than that fixed in the model, around 0.85, maximizes the full likelihood (Figure REF).
+We do not consider that to be plausible for a long-lived species such as canary rockfish and therefore fix steepness at the mean of the prior distribution for rockfishes ($h=0.72$).
+The profile is most strongly informed by recruitment penalties.
+There is some conflict between length data, which favor low steepness, and age data, which favor high steepness.
+Again, length data show a conflict between trawl fleets, which in this case favor higher steepness values, and non-trawl gears that favor lower steepness values.
+The survey index favors steepness relatively close to the fixed value, around 0.7, and this is generally informed by all surveys.
+
+The likelihood profile over male natural mortality shows relatively little information from the data to support its estimation, confirming the choice to fix it to the mean of the prior distribution.
+Confusion about priors.
+Blah blah.
+Survey indices contain very little information to estimate male natural mortality.
+
+The female natural mortality likelihood profile is most strongly driven by length data, with some influence of age data and recruitment penalties.
+Similar to males, survey indices contain little information to inform female natural mortality estimation.
+The length composition data once again shows a conflict between trawl gears supporting higher natural mortality and non-trawl gears supporting lower natural mortality.
+However, notably, Oregon recreational length compositions also support higher female natural mortality.
 
 ### Comparison of base model to previous assessments
 
-**Brian has updated this section**
-*Need to add comparison figure*
+**Brian has updated this section** *Need to add comparison figure*
 
-We plot summary biomass and recruits from eight past benchmark and update assessments conducted for canary rockfish (Figure \ref{fig:hist_compare})), starting in 1994, and compare to current estimates. Summary biomass is used because fecundity relationships have changed over time between biomass and egg production. Summary biomass has most often been modeled as biomass of age 5 and above `r spp`, with the exception of the 2001 assessment, which used age 3 and above. A metric of summary biomass was not readily obtainable for the 1999 assessment, so is excluded from the figure. The plot of summary biomass indicates that the equilibrium scale of the current base model is very similar to that of the last three assessment models, and is lower than other assessment models. Summary biomass around 1990 is similar for all models from 1999 onward. The current base model indicates a slower rate of increase than either the 2007 or 2015 assessment models, and faster rate of increase than the other assessment models since 1990. Age-0 recruits are estimated to be slightly higher for the current base model compared to the 2015 assessment model and similar to the2009/2011 update assessments. Recruitment in recent years for the current base model is similar in scale and general pattern to past assessments, although the individual trajectories are variable.  
+We plot summary biomass and recruits from eight past benchmark and update assessments conducted for canary rockfish (Figure \ref{fig:hist_compare})), starting in 1994, and compare to current estimates.
+Summary biomass is used because fecundity relationships have changed over time between biomass and egg production.
+Summary biomass has most often been modeled as biomass of age 5 and above `r spp`, with the exception of the 2001 assessment, which used age 3 and above.
+A metric of summary biomass was not readily obtainable for the 1999 assessment, so is excluded from the figure.
+The plot of summary biomass indicates that the equilibrium scale of the current base model is very similar to that of the last three assessment models, and is lower than other assessment models.
+Summary biomass around 1990 is similar for all models from 1999 onward.
+The current base model indicates a slower rate of increase than either the 2007 or 2015 assessment models, and faster rate of increase than the other assessment models since 1990.
+Age-0 recruits are estimated to be slightly higher for the current base model compared to the 2015 assessment model and similar to the2009/2011 update assessments.
+Recruitment in recent years for the current base model is similar in scale and general pattern to past assessments, although the individual trajectories are variable.
 
-To explain the slower recovery in the current base model relative to the 2015 assessment, we compare the current model under alternative assumptions around natural mortality. This comparison (Figure 120) shows that the current base model, using the age-varying natural mortality estimates from past assessments more closely matches the recovery seen in the 2015 assessment. Additional differences in the amount and type of available data, primarily the increase in the amount of age data, as well as differences in other biological assumptions also contribute to the current trajectory.
-
+To explain the slower recovery in the current base model relative to the 2015 assessment, we compare the current model under alternative assumptions around natural mortality.
+This comparison (Figure 120) shows that the current base model, using the age-varying natural mortality estimates from past assessments more closely matches the recovery seen in the 2015 assessment.
+Additional differences in the amount and type of available data, primarily the increase in the amount of age data, as well as differences in other biological assumptions also contribute to the current trajectory.
 
 ### Unresolved Problems and Major Uncertainties

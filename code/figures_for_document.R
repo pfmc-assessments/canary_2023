@@ -371,7 +371,10 @@ sens_names <- c('canada_catches',
                 'M_ramp',
                 'no_sex_selectivity',
                 'prerec_data',
-                'prerec_units')
+                'no_q_extrasd',
+                'noDebWV_lengths',
+                'released_lengths_in',
+                'simpler_block')
 
 pretty_names <- c('Add WCVI catches', 
                   'Dirichlet DW',
@@ -380,7 +383,10 @@ pretty_names <- c('Add WCVI catches',
                   'Female M ramp',
                   'No sex selectivity',
                   'All prerec years',
-                  'Prerec post-DD')
+                  'No pre-rec extra SD',
+                  'No Deb W-V lengths',
+                  'Include released rec lengths',
+                  'Simpler blocks')
 
 current.year <- 2023
 CI <- 0.95
@@ -438,7 +444,7 @@ ggplot(dev.quants, aes(x = relErr, y = mod_num, col = Metric, pch = Metric)) +
   geom_segment(aes(x = CI, xend = abs(CI), col = Metric,
                    y = length(sens_names) + 1.5 + seq(-0.5, 0.5, length.out = length(metric.labs)),
                    yend = length(sens_names) + 1.5 + seq(-0.5, 0.5, length.out = length(metric.labs))), 
-               data = CI.quants, linewidth = 2, show.legend = FALSE) +
+               data = CI.quants, linewidth = 2, show.legend = FALSE, lineend = 'round') +
   theme_bw() +
   scale_shape_manual(
     values = c(15:18, 12),
@@ -451,4 +457,3 @@ ggplot(dev.quants, aes(x = relErr, y = mod_num, col = Metric, pch = Metric)) +
   xlab("Relative change") 
 ggsave(here('documents/figures/sens_summary.png'),  dpi = 300,  
        width = 6.5, height = 5.0, units = "in")
-)
