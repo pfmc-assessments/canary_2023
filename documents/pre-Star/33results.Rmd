@@ -12,8 +12,7 @@ editor_options:
 
 **For the params tables**
 
-*Ensure WL1 for male and female and eggs scalar are scientific method
-format*
+*Ensure WL1 for male and female and eggs scalar are scientific method format*
 
 *Set priors of unestimated values to -99 uniformly*
 
@@ -63,7 +62,7 @@ Oregon and Washington trawl fleet from 2000--2011, the Oregon non-trawl
 fleet prior to 2000, and the \gls{s-tri}. The amount of unavailable
 biomass for `r spp` is large in the early time period, declines during
 the period of peak exploitation, and then increases since 2000 (Figure
-\ref{fig:unavail-bio}). **Add statement about sensitvity to having a
+\ref{fig:unavail-bio}). **TO DO: Add statement about sensitvity to having a
 full asymptotic fleet to teh above depending on results**
 
 For the trawl fleets, the length at peak selectivity is greatest prior
@@ -122,12 +121,12 @@ Thus, greater selectivity for females allows them to be selectied for at
 a larger size prorportional to their occurrence in the population, which
 is less than males due to greater mortality.
 
-**Need to move elsewhere to where we describe model structure. Seems
-redundant here** We specifically estimated three parameters for each
-selectivity curve, including 1. the minimum length at which selectivity
-is one (the "peak"), 2. the width of the ascending curve for selectivity
-at lengths less than the peak, 3. the width of the descending curve for
-selectivity at lengths greater than the peak plus the width of the dome.
+**Need to move elsewhere to where we describe model structure. Seems redundant here** 
+We specifically estimated three parameters for each
+selectivity curve, including 
+ 1. the minimum length at which selectivity is one (the "peak"), 
+ 2. the width of the ascending curve for selectivity at lengths less than the peak, 
+ 3. the width of the descending curve for selectivity at lengths greater than the peak plus the width of the dome.
 We additionally estimate a change in selectivity for the trawl and
 non-trawl fisheries between 1999 and 2000 (reflecting changes in fisher
 behavior following the declaration of overfished status for canary
@@ -185,93 +184,18 @@ provided within r4ss such that it was left at the earlier values.
 
 ### Fits to the Data
 
-**Create the appendixes** Fits to the data are shown based on the
-Pearson residuals for length and marginal age compositions, annual mean
-lengths and ages, and aggregated length and marginal age composition for
-the fishery. For the surveys, fits to the data are similar; however,
-fits of ages are conditioned on length, and fits to the survey indices
-are also provided. For simplicity in writing up the fits to data we do
-not further distinguish between marginal versus conditional age
-compositions. Annual length and age composition fits for both the
-fishery and surveys are shown in the Appendix, Sections
-\ref{length-data} and \ref{age-data}.
+**TO DO: Create the appendixes - or switch to say its in the r4ss online documentation**
+Fits to the data are shown based on the Pearson residuals for length and marginal age compositions, annual mean lengths and ages, and aggregated length and marginal age composition for the fishery. For the surveys, fits to the data are similar however fits of ages are conditioned on length, and fits to the survey indices are also provided. For simplicity in writing up the fits to data we do not further distinguish between marginal versus conditional age compositions. Annual length and age composition fits for both the fishery and surveys are shown in the Appendix, Sections \ref{length-data} and \ref{age-data}.
 
-The aggregated fit to the length composition data by fleet is shown in
-Figure \ref{fig:len-agg-fit}. Fits are generally consistent with
-observed data aggregated over all years for males, females, and combined
-when sex specific data are unavailable. Fits balance the bimodal
-patterns for Oregon and Washington recreational data and Oregon
-non-trawl data, and are generally consistent for both Washington and
-Oregon trawl data, where selectivity was mirrored. The mode of
-proportion at length is generally larger for females than males in trawl
-gear, reflecting the dimorphic growth in canary, but are similar for
-other gears.
+The aggregated fit to the length composition data by fleet is shown in Figure \ref{fig:len-agg-fit}. Fits are generally consistent with observed data aggregated over all years for males, females, and combined when sex specific data are unavailble. Fits balance the bimodal patterns for Oregon and Washington recreational data and Oregon non-trawl data, and generally consistent for both Washington and Oregon trawl data, where selectivity was mirrored. The mode of proportion at length is generally larger for females than males in trawl gear, reflecting the dimorphic growth in canary, but are similar for other gears.
 
-Pearson residual plots by fleet (fishery and survey) as well as mean
-lengths by year observed from the composition data are shown in (Figures
-\ref{fig:len-pearson1}--\ref{fig:mean-len-fit30}). Yearly mean length is
-variable for `r spp`, particularly for non-trawl fleets both in terms of
-sample sizes within and across years. However, patterns are still
-discernible. Patterns in length data indicate a declining trend in mean
-length in the fishery starting in the early years (1980s) when data is
-available. The decline is best captured in the fit to the Oregon trawl
-lengths, although the fit underestimates the decline in mean length, and
-to a lesser extent the fit to California and Washington trawl lengths.
-Fits also reveal an increase in mean length in recent years, which is
-best captured by fits to the non-trawl and recreational fleets, even in
-the presence of time-varying patterns in selectivity. Patterns in mean
-length for the at-sea-hake fishery and the surveys are generally
-uninformative.
+Pearson residual plots by fleet (fishery and survey) as well as mean lengths by year observed from the composition data are shown in (Figures \ref{fig:len-pearson1}--\ref{fig:mean-len-fit30}). Yearly mean length is variable for `r spp`, particularly for non-trawl fleets both in terms of sample sizes within and across years. However, patterns are still discernible. Patterns in length data indicate a declining trend in mean length in the fishery starting in the early years (1980s) when data is available. The decline is best captured in the fit to the Oregon trawl lengths, although the fit underestimates the decline in mean length, and to a lesser extent the fit to California and Washington trawl lengths. Fits also reveal an increase in mean length in recent years, which is best captured by fits to the non-trawl and recreational fleets, even in the presence of time-varying patterns in selectivity. Patterns in mean length for the at-sea-hake fishery and the surveys are generally uninformative.
 
-The aggregated fit to the age composition data by fleet is shown in
-Figure \ref{fig:age-agg-fit}. Fits are generally consistent with
-observed data aggregated over all years for males and females despite
-selectivity being based on lengths. Fits are best for the trawl fleets,
-and poorer for Oregon and Washington non-trawl data, which are sparse
-and variable. Fits to age compositions do not capture the steeper
-decline and early long tail in the proportion of older fish in the
-recreational fleets. The mode of proportion at age is generally similar
-for females and males, in contrast to the patterns in length for
-particularly the trawl gear. The aggregated age compositions show that
-general patterns of increasing selectivity for young individuals, and
-declining proportion at age for old individuals, are generally captured.
-Summaries also exhibit a greater proportion of males in the plus-group
-(age 35+) than females for the trawl fleets.
+The aggregated fit to the age composition data by fleet is shown in Figure \ref{fig:age-agg-fit}. Fits are generally consistent with observed data aggregated over all years for males and females despite selectivity being based on lengths. Fits are best for the trawl fleets, and poorer for Oregon and Washington non-trawl data, which are sparse and variable. Fits to age compositions do not capture the steeper decline and early long tail in the propoportion of older fish in the recreational fleets. The mode of proportion at age is generally similarly for females and males, in contrast to the patterns in length for particularly the trawl gear. The aggregated age compositions show that general patterns of increasing selectivity for young individuals, and declining proportion at age for old individuals, are generally captured. Summaries also exhibit the greater proportion of males in the plus-group (age 35+) than females for the trawl fleets. 
 
-**Need to add these figures** Pearson residuals plots by fishery fleet
-as well as mean age by year observed from the composition data are show
-in (Figures \ref{fig:age-pearson1}--\ref{fig:mean-age-fit12}). The range
-of ages is larger than the range of lengths, but patterns are comparable
-to those observed from the length composition fits. Patterns in age data
-also indicate a declining trend in mean age in the fishery starting in
-the early years (1980s) when data is available. The decline is best
-captured in the fit to the Oregon trawl ages, although the fit
-underestimates the decline in mean age. Fits to California trawl ages
-are sparse and to Washington trawl ages are overestimating observed
-data, but also indicate a decline in mean age. As with lengths,
-recreational mean ages suggest an increase in mean age in recent years.
-Patterns in mean length for the non-trawl and at-sea-hake fleets are
-generally uninformative.
+Pearson residuals plots by fishery fleet as well as mean age by year observed from the composition data are show in (Figures \ref{fig:age-pearson1}--\ref{fig:mean-age-fit12}). The range of ages cover a larger range of modeled ages compared to the length samples, but patterns are comparable to those observed from the length composition fits. Patterns in age data also indicate a declining trend in mean age in the fishery starting in the early years (1980s) when data is available. The decline is best captured in the fit to the Oregon trawl ages, which although the fit underestimates the decline in mean age, declines from approximately a mean age of around 20 to a mean age of 11. Fits to California trawl ages are sparse and Washington trawl ages are overestimating observed data, but also indicate a decline in mean age, albeit from younger ages than the Oregon trawl trend. As with lengths, recreational mean ages are smaller and suggest an increase in mean age in recent years. Patterns in mean length for the non-trawl and at-sea-hake fleets are generally uninformative.
 
-**Need to add these figures** Pearson residuals of conditional
-age-at-length compositions are shown for each survey (Figures
-\ref{fig:caal-pearson28}--\ref{fig:caal-pearson30}. These show
-variability in length at age over time, suggesting use of
-conditional-age-at-lengths data better captures model uncertainty than
-external estimates of growth. Positive residuals near the lower range of
-the data exist for the early \gls{s-tri} and recent years of the
-\gls{s-wcgbt}. These suggest the data indicates older male `r spp` at
-length than is being estimated in the model for these years, which is
-consistent with our comparison of externally estimated growth parameters
-for males being near the lower uncertainty range of parameter values
-estimated internal to the model. Despite these patterns, predictive
-plots where a well-fitting model has a predicted average and state
-deviation of age-at-length that is within the 95% predictive interval
-are available within the r4ss documentation available online. Predictive
-plots for all surveys generally exhibit this behavior, which provides no
-evidence of poor fit to conditional age-at-length data, and suggests
-that a model with time-constant growth provides a satisfactory
-approximation to the process governing age and length.
+Pearson residuals of conditional age-at-length compositions are shown for each survey (Figures \ref{fig:caal-pearson28_1}--\ref{fig:caal-pearson30}. These show variability in length at age over time, suggesting use of conditional-age-at-lengths data better captures model uncertainty compared to fixed external estimates. Positive residuals near the lower range of the data exist for the early \gls{s-tri} and recent years of the \gls{s-wcgbt}. These suggest the data indicates older male `r spp` at length than is being estimated in the model for these years, which is consistent with our comparison of externally estimated growth parameters for males being near the lower uncertainty range for growth estimated internal to the model. Predictive plots, where a well-fitting model has a predicted average and standard deviation of age-at-length that is within the 95% predictive interval, are available within the r4ss documentation available online. Predictive plots for all surveys generally exhibit this behavior, indicating no evidence of poor fit to conditional age-at-length data. This suggests that a model with time-constant growth provides a satisfactory approximation to the process governing age and length.  
 
 Fits to indices of abundance are shown for each survey fleet (Figures
 \ref{fig:wcgbts-fit}-- \ref{fig:prerec-fit}). These plots show that fits
@@ -297,25 +221,4 @@ other four years (FIGURE).
 
 ### Population Trajectory
 
-Summary time series of population trajectories are provided in Table
-\ref{tab:timeseries}. The estimated spawning output (in millions of
-eggs) is shown in Figure \ref{fig:ssb}, total biomass in Figure
-\ref{fig:tot-bio}, spawning output relative to unfished in Figure
-\ref{fig:depl}, and fishing intensity measured as one minus the spawning
-potential ratio (1-SPR) in Figure \ref{fig:spr}. Spawning output
-declines from the 1940s with the increase in harvest (Figure
-\ref{fig:catches}), stabilizes in the 1970s, and then declines to its
-lowest point in 1995. Spawning output stabilizes until 2000 when levels
-increase steadily to recent years with a slowing trend. The estimated
-total biomass follows the same general trend as observed in spawning
-output but with a more pronounced decrease from 1980 to 1995 (Figure
-\ref{fig:tot-bio}). The estimated spawning output relative to the
-unfished equilibrium spawning output was at its lowest
-(`r round(100*min(model$sprseries$Deplete,na.rm=TRUE), 1)` percent) in
-1995 and has since increase to within the precautionary zone at
-`r round(100*model$current_depletion, 1)` percent in 2022 (Figure
-\ref{fig:depl}). Population trajectories track the patterns in fishing
-intensity, where fishing intensity was steadily above that which would
-produce an SPR of 0.5 starting in the 1960s (Figure \ref{fig:spr}).
-Fishing intensity has been low since 2000 but has increased to levels
-near that corresponding to an SPR of 0.5.
+Summary time series of population trajectories are provided in Table \ref{tab:timeseries}. The estimated spawning output (in millions of eggs) is shown in Figure \ref{fig:ssb}, total biomass in Figure \ref{fig:tot-bio}, spawning output relative to unfished in Figure \ref{fig:depl}, and fishing intensity measured as one minus the spawning potential ratio (1-SPR) in Figure \ref{fig:spr}. Spawning output declines from the 1940s with the increase in harvest (Figure \ref{fig:catches}), stabilizes in the 1970s, and then declines to its lowest point in 1995. Spawning output stabilizes until 2000 when levels increase steadily to recent years with a slowing trend. The estimated total biomass follows the same general trend as observed in spawning output but with a more pronounced decrease from 1980 to 1995 (Figure \ref{fig:tot-bio}). The estimated spawning output relative to the unfished equilibrium spawning output was at its lowest (`r round(100*min(model$sprseries$Deplete,na.rm=TRUE), 1)` percent) in 1995 and has since increased and iswithin the precautionary zone at `r round(100*model$current_depletion, 1)` percent for 2022 (Figure \ref{fig:depl}). Population trajectories track the patterns in fishing intensity, where fishing intensity was steadily above a fishing mortality that would produce an SPR of 0.5 starting in the 1960s (Figure \ref{fig:spr}). Fishing intensity has been low since 2000 but has increased to fishing mortality corresponding to an SPR of 0.5. 
