@@ -115,21 +115,6 @@ Thus, greater selectivity for females allows them to be selectied for at
 a larger size prorportional to their occurrence in the population, which
 is less than males due to greater mortality.
 
-**Need to move elsewhere to where we describe model structure. Seems redundant here** 
-We specifically estimated three parameters for each
-selectivity curve, including 
- 1. the minimum length at which selectivity is one (the "peak"), 
- 2. the width of the ascending curve for selectivity at lengths less than the peak, 
- 3. the width of the descending curve for selectivity at lengths greater than the peak plus the width of the dome.
-We additionally estimate a change in selectivity for the trawl and
-non-trawl fisheries between 1999 and 2000 (reflecting changes in fisher
-behavior following the declaration of overfished status for canary
-rockfish in 1999), and another change in selectivity for the trawl
-fishery between 2010 and 2011 (reflecting a change in fisher behavior
-following the implementation of individual transferable quotas starting
-in 2011). For each break-point change in selectivity, we re-estimate all
-four parameters. Hence, there is no information regarding selectivity
-that is shared among time blocks.
 
 #### Catchability
 
@@ -168,13 +153,13 @@ Years with the highest recruitment deviations were estimated to have
 occurred in the 1960s and continued through 2000. Starting around 2004
 recruitment deviations became more consistently negative and were their
 most negative in 2018. This period corresponds to a period of relatively
-sparse compositional data. Deviations have increased to average levels
+sparse composition data. Deviations have increased to average levels
 since 2018 but these deviations are more uncertain given the few years
 available to sample these age classes. The recruitment bias adjustment
 applied within the model across years is shown in Figure
 \ref{fig:bias-adjust}. This relationship was updated during early model
 exploration with the final version near to the suggested alternative
-provided within r4ss such that it was left at the earlier values.
+provided within r4ss such that it was left at the earlier values. Similarly, the value of $\sigma_R$ was tuned to match the observed variation in recruitment deviations, following [@methot_adjusting_2011], and as provided in r4ss. The tuned value was similar (0.47 for the period 1960-2022) to that already used so no further change to $\sigma_R$ was done. 
 
 ### Fits to the Data
 
