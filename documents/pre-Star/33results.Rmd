@@ -42,11 +42,7 @@ fish, results in greater variability in length at larger sizes.
 
 #### Selectivity
 
-Length-based selectivity curves were estimated using a double-normal
-pattern for every fishery and survey, and time-block, except where
-selectivity was mirrored among fleets. A double-normal selectivity
-pattern allows flexibility in the model to estimate either asymptotic or
-dome-shaped selectivity. Estimated selectivity curves are shown in
+Estimated selectivity curves are shown in
 Figure \ref{fig:comm-selex-female}--\ref{fig:noncomm-selex-female} for
 females and Figures
 \ref{fig:comm-selex-male}--\ref{fig:noncomm-selex-male} for males, with

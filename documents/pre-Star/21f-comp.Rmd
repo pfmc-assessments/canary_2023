@@ -10,7 +10,7 @@ Twenty-eight bins from 12 to 66 cm were used to summarize the length frequency d
 
 ### Fishery-Dependent Composition Data
 
-#### Commercial trawl and non-trawl fisheries
+#### Commercial trawl and non-trawl fisheries {#comm-composition-data}
 
 Length- and marginal age-frequency distributions were calculated for each commercial fleet for which observations were available. Biological length and age data were extracted from the \gls{pacfin} Biological Data System on May 8, 2023. Biological data were divided into trawl and nontrawl fleets for each state according to the fleet structure used for this assessment. Length samples were available starting in 1977 for California fleets, 1973 for Oregon fleets, and 1968 for Washington fleets. Age samples were available starting in 1980 for all states' fleets. There was a mix of biological length and age samples with and without sex information but the majority of length and nearly all age samples included information on sex, so were modelled as sex specific compositions. 
 
@@ -57,7 +57,7 @@ The at-sea hake fishery was comprised of similarly sized `r spp` relative to the
 No length or age data were available from foreign fleets. Selectivity of these fleets was assumed to be the same as the state specific trawl fisheries.
 
 
-#### Recreational fishery
+#### Recreational fishery {#rec-composition-data}
 
 Length- and marginal age-frequency distributions were calculated for each recreational fleet for which observations were available. Biological length and age composition data were extracted from various sources. For Washington, biological samples starting in 1979 (for lengths) were obtained from sport biodata as provided by \gls{wdfw} on April 27, 2023. Age samples began in 2004. For Oregon, biological samples starting in 1980 (for lengths) were obtained from \gls{odfw} via the \gls{mrfss} and \gls{orbs} sampling programs as accessed via \gls{recfin} on January 25, 2023 for lengths and April 28, 2023 for ages. Age samples began in 1999. For California, length samples 1980--2003 were obtained via the \gls{mrfss} sampling program as accessed via \gls{recfin} (accessed March 30, 2023) and provided by \gls{cdfw}. Length samples starting in 2003 were obtained via the \gls{crfs} sampling program as accessed via the \gls{recfin} website (accessed April 14, 2023). Length samples collected from the Deb Wilson-Vandenberg onboard CPFV survey for 1987--1998 were also obtained from \gls{cdfw}. California has no age samples of `r spp`.  
 
