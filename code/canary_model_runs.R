@@ -12339,8 +12339,13 @@ SSplotData(pp, print = TRUE, subplots = c(1), plotdir = here('documents/figures'
            pwidth = 5.5, pheight = 7, ptsize = 8,margins = c(5.1, 2.1, 2.1, 10.1))
 file.rename(from = file.path(here('documents/figures'), "data_plot.png"),
             to = file.path(here('documents/figures'), "data_plot_custom.png"))
-# #To make CAAL plots on fewer figures. These were copied to documents/figures
-# SS_plots(pp, maxrows2 = 4, maxcols2 = 5)
+#To make CAAL plots on fewer plots run this which copied the two CAAL WCGBTS plots to documents/figures
+SS_plots(pp, plot = 18, maxrows2 = 4, maxcols2 = 5, printfolder = "custom_plots")
+file.rename(from = file.path(here('models', new_name, 'custom_plots'), "comp_condAALfit_residsflt28mkt0_page1.png"),
+            to = file.path(here('documents/figures'), "comp_condAALfit_residsflt28mkt0_page1_custom.png"))
+file.rename(from = file.path(here('models', new_name, 'custom_plots'), "comp_condAALfit_residsflt28mkt0_page2.png"),
+            to = file.path(here('documents/figures'), "comp_condAALfit_residsflt28mkt0_page2_custom.png"))
+unlink(here('models', new_name, 'custom_plots'), recursive = TRUE)
 
 
 r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), datonly = TRUE,
