@@ -488,6 +488,45 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           skipfinished = FALSE)
 
 
+# Turn on the fourth selectivity parameter (param 6) ------------------------------------------------------
+
+mod <- base_mod
+
+# Turn on parameter 6 and setup inits
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"LO"] <- -9 
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"HI"] <- 9
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"INIT"] <- 0
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),"PHASE"] <- 6
+
+mod$ctl$size_selex_parms[grep("P_6",rownames(mod$ctl$size_selex_parms)),c("Block","Block_Fxn")] <- 
+  mod$ctl$size_selex_parms[grep("P_4",rownames(mod$ctl$size_selex_parms)),c("Block","Block_Fxn")] 
+
+selex_new = mod$ctl$size_selex_parms
+
+# Time varying selectivity table
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+new_name <- "selex_parm6"
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
 # No survey extra SD ------------------------------------------------------
 
 mod <- base_mod
@@ -664,3 +703,66 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           extras = '-nohess', 
           show_in_console = FALSE,
           skipfinished = FALSE)
+
+
+# Remove any comps with sample inputs less than 5 ------------------------------------------------------
+
+mod <- base_mod
+
+#75 length entries with total Nsamp = 186
+mod$dat$lencomp[mod$dat$lencomp$Yr>0 & mod$dat$lencomp$Nsamp <= 5,]$Yr <- -1*mod$dat$lencomp[mod$dat$lencomp$Yr>0 & mod$dat$lencomp$Nsamp <= 5,]$Yr
+#37 age entries with total Nsamp = 107
+mod$dat$agecomp[mod$dat$agecomp$Yr>0 & 
+                  mod$dat$agecomp$Nsamp <= 5 & 
+                  mod$dat$agecomp$Lbin_lo < 0 ,]$Yr <- -1*mod$dat$agecomp[mod$dat$agecomp$Yr>0 & 
+                                                                            mod$dat$agecomp$Nsamp <= 5 & 
+                                                                            mod$dat$agecomp$Lbin_lo < 0 ,]$Yr
+new_name <- 'no_sparse_comps'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# Remove recruitment deviations ------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$recdev_phase <- -5
+mod$ctl$recdev_early_phase <- -5
+
+new_name <- 'no_recdevs'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# Increase uncertainty around catch ------------------------------------------------------
+
+mod <- base_mod
+
+mod$dat$catch[mod$dat$catch$year < 1980, "catch_se"] = 0.1
+
+new_name <- 'catch_se_0.1'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+

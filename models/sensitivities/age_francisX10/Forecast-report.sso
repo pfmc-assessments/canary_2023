@@ -1,7 +1,7 @@
 #V3.30.21.00;_safe;_compile_date:_
 Feb 10 2023
 ;_Stock_Synthesis_by_Richard_Methot_(NOAA)_using_ADMB_13.1
-Wed Jun 28 09:49:15 2023
+Wed Jun 28 11:18:18 2023
 Bmark_relF(by_fleet_&seas) (excluding non-scaled bycatch fleets)
  0.153767 0.263751 0.0856749 0.0432496 0.0123132 0.000856907 0.23542 0.176596 0.0210865 0 0.00534405 0.001941 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 #
@@ -16,7 +16,7 @@ YPR_mask for including catch:
 #V3.30.21.00;_safe;_compile_date:_
 Feb 10 2023
 ;_Stock_Synthesis_by_Richard_Methot_(NOAA)_using_ADMB_13.1
-Wed Jun 28 09:49:15 2023
+Wed Jun 28 11:18:18 2023
 Bmark_relF(by_fleet_&seas) (excluding non-scaled bycatch fleets)
  0.153767 0.263751 0.0856749 0.0432496 0.0123132 0.000856907 0.23542 0.176596 0.0210865 0 0.00534405 0.001941 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 #
