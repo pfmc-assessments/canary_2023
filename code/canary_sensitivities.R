@@ -211,6 +211,33 @@ xx$Dirichlet_Multinomial_pars
 
 # This is not worth reporting. Most data weights are 1 or 0.5 (because there was no data, didn't move from init)
 
+
+# McAllister Ianelli data weighting ------------------------------------------------------
+
+mod <- base_mod
+new_name <- 'mcallister_ianelli'
+new_dir <- here('models/sensitivities', new_name)
+
+copy_SS_inputs(dir.old = here('models',base_mod_name),
+               dir.new = new_dir,
+               overwrite = TRUE)
+file.copy(from = file.path(here('models',base_mod_name),"Report.sso"),
+          to = new_dir, overwrite = TRUE)
+file.copy(from = file.path(here('models',base_mod_name),"CompReport.sso"),
+          to = new_dir, overwrite = TRUE)
+file.copy(from = file.path(here('models',base_mod_name),"warning.sso"),
+          to = new_dir, overwrite = TRUE)
+
+SS_output(dir = new_dir) |>
+  r4ss::tune_comps(option = 'MI', 
+                   dir = new_dir, 
+                   niters_tuning = 4, 
+                   exe = here('models/ss_win.exe'), 
+                   extras = '-nohess',
+                   allow_up_tuning = TRUE,
+                   write = TRUE)
+
+
 # Bomb radiocarbon bias ---------------------------------------------------
 
 
@@ -339,8 +366,6 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 
 mod <- base_mod
 
-#Update CA and OR rec length comps
-
 length.min <- min(mod$dat$lbin_vector)
 length.max <- max(mod$dat$lbin_vector)
 age.min <- min(mod$dat$agebin_vector)
@@ -424,9 +449,43 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 
 
 
+
 # One asymptotic fleet (TOR) ----------------------------------------------
 
-# Candidate? NTWL is best at getting into the rocky habitat? Or WCGBTS?
+#For WA NTWL
+mod <- base_mod
+
+mod$ctl$size_selex_parms[grep("P_4_6_WA_NTWL",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(15,-99)
+mod$ctl$size_selex_parms[grep("PFemOff_3_6_WA_NTWL",rownames(mod$ctl$size_selex_parms)),"PHASE"] <- -99
+
+new_name <- 'wa_ntwl_asymptotic'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+#For WCGBTS
+mod <- base_mod
+
+mod$ctl$size_selex_parms[grep("P_3_28_coastwide",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(15,-99)
+mod$ctl$size_selex_parms[grep("PFemOff_3_28_coastwide",rownames(mod$ctl$size_selex_parms)),"PHASE"] <- -99
+
+new_name <- 'wcgbts_asymptotic'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
 
 
 # No survey extra SD ------------------------------------------------------
@@ -460,3 +519,148 @@ SSsummarize(xx) |>
                                      'No survey extra SE'), subplots = c(1,3, 11),
                     print = TRUE, plotdir = here('models/sensitivities',new_name))
 
+
+
+# Estimate male natural mortality ------------------------------------------------------
+
+mod <- base_mod
+
+#CHANGE THE PRIOR TYPE TO LOGNORMAL
+mod$ctl$MG_parms[grep("NatM_p_1_Mal",rownames(mod$ctl$MG_parms)), c("PR_type", "PHASE")] <- c(3,2)
+
+new_name <- 'est_male_M'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# Estimate steepness ------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$SR_parms[grep("steep",rownames(mod$ctl$SR_parms)), c("PHASE")] <- 2
+
+new_name <- 'est_h'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+
+# Various down weighting of individual data sets ------------------------------------------------------
+
+#Exclude marginal and conditional ages by setting lambda to zero
+
+mod <- base_mod
+
+fleetAge <- unique(mod$dat$agecomp$FltSvy)[unique(mod$dat$agecomp$FltSvy)>0]
+mod$ctl$lambdas <- data.frame("like_comp" = 5, 
+                              "fleet" = sort(fleetAge),
+                              "phase" = 1,
+                              "value" = 1,
+                              "sizefreq_method" = 1)
+rownames(mod$ctl$lambdas) = paste0("ages_",fleet.converter[fleet.converter$fleet %in% fleetAge,"fleetname"])
+
+#Exclude spatial surveys (not used) but not coastwide survey (which are CAAL)
+mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(16:24),]
+#mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(28:30),]
+
+#Set lambdas
+mod$ctl$N_lambdas <- nrow(mod$ctl$lambdas)
+mod$ctl$lambdas$value <- 0
+
+
+new_name <- 'age_lambda0'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+#Reduce marginal lengths by setting lambda to 0.01
+
+mod <- base_mod
+
+fleetLen <- unique(mod$dat$lencomp$FltSvy)[unique(mod$dat$lencomp$FltSvy)>0]
+mod$ctl$lambdas <- data.frame("like_comp" = 4, 
+                              "fleet" = sort(fleetLen),
+                              "phase" = 1,
+                              "value" = 1,
+                              "sizefreq_method" = 1)
+rownames(mod$ctl$lambdas) = paste0("lengths_",fleet.converter[fleet.converter$fleet %in% fleetLen,"fleetname"])
+
+#Exclude spatial surveys (not used) but not coastwide surveys
+mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(16:24),]
+#mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(28:30),]
+
+#Set lambdas
+mod$ctl$N_lambdas <- nrow(mod$ctl$lambdas)
+mod$ctl$lambdas$value <- 0.01
+
+new_name <- 'len_lambda0.01'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# Various up weighting of individual data sets ------------------------------------------------------
+
+#Increase marginal and conditional ages by setting francis weights x10
+
+mod <- base_mod
+
+mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==5,"Value"] = 10 *
+  mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==5,"Value"]
+
+new_name <- 'age_francisX10'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+#Increase marginal lengths by setting francis weights x10
+
+mod <- base_mod
+
+mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==4,"Value"] = 10 *
+  mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Data_type==4,"Value"]
+
+new_name <- 'len_francisX10'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
