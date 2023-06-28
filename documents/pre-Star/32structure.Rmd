@@ -294,8 +294,7 @@ recruitment, which can be interpreted as hyperpriors (where the variance
 of the "hyperprior," $\sigma_R=0.5$, is fixed).
 
 Selectivity is allowed to be dome-shaped for all surveys and fisheries.
-The foreign fishery does not have length or age composition samples are
-not available, and is mirrored to have identical selectivity to the
+The foreign fishery does not have length or age composition samples available, and selectivity is mirrored to the
 domestic trawl fishery. We specify that commercial trawl selectivity is
 shared between Oregon and Washington due to similar composition data and
 the fact that many vessels cross the border while fishing and then

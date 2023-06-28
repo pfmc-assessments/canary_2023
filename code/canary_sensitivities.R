@@ -427,3 +427,36 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 # One asymptotic fleet (TOR) ----------------------------------------------
 
 # Candidate? NTWL is best at getting into the rocky habitat? Or WCGBTS?
+
+
+# No survey extra SD ------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$Q_options$extra_se <- 0
+mod$ctl$Q_parms <- mod$ctl$Q_parms[-grep('extraSD', rownames(mod$ctl$Q_parms)),]
+
+new_name <- 'no_q_extrasd'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models/sensitivities', new_name))
+
+SS_plots(pp, plot = c(3, 4, 11))
+
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   file.path('sensitivities', new_name)))))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'No survey extra SE'), subplots = c(1,3, 11),
+                    print = TRUE, plotdir = here('models/sensitivities',new_name))
+

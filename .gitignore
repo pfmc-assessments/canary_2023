@@ -103,6 +103,7 @@ suggested_tuning.ss
 *.upa
 *.md
 *.pdf
+_main.Rmd
 !input_accessability.tex
 !sa4ss_glossaries.tex
 

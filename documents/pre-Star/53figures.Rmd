@@ -252,3 +252,13 @@ label = 'unavail-bio')
 #### Age compositions
 
 ![Age composition aggregated across years by fleet with the model estimated fit to the data by sex (red female, and blue male \label{fig:age-agg-fit}](../figures/plots/comp_agefit__aggregated_across_time.png){width=100%, alt='Figure showing fits of modeled age composition for all fleets generally matching the distribution observed in the data'}
+
+#### Survey indices
+
+![Fit of model to \gls{s-wcgbt}. Lines represent input 95% confidence interval of survey index. \label{fig:wcgbts-fit}](../figures/plots/index2_cpuefit_28_coastwide_NWFSC.png){width=100%, height=100%, alt='Figure showing model generally fitting survey data well'}
+
+![Fit of model to early \gls{s-tri} Lines represent input 95% confidence interval of survey index. \label{fig:earlytri-fit}](../figures/plots/index2_cpuefit_29_coastwide_Tri_early.png){width=100%, height=100%, alt='Figure showing model over and then underestimating first two out of five years of generally declining survey index'}
+
+![Fit of model to late \gls{s-tri} Lines represent input 95% confidence interval of survey index. \label{fig:latetri-fit}](../figures/plots/index2_cpuefit_30_coastwide_Tri_late.png){width=100%, height=100%, alt='Figure showing model very well fitting slow increase of survey index'}
+
+![Fit of model to log of pre-recruit survey index. Log scale was selected because model fits were difficult to evaluate on absolute index scale. Thick lines represent input 95% confidence intervals. Thin lines are 95% confidence intervals including estimated added survey standard deviation.  \label{fig:prerec-fit}](../figures/plots/index5_logcpuefit_31_coastwide_prerec){width=100%, height=100%, alt='Figure showing model fits annually variable index very well with added standard error included'}
