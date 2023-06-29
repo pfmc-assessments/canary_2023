@@ -6,8 +6,6 @@ editor_options:
 
 ## Model Structure and Assumptions
 
-**This section is done apart from model changes fom the last assessment and updating sample size for surveys**
-
 ### Modeling Platform and Structure
 
 We used Stock Synthesis version 3.30.21, compiled February 10, 2023 by
@@ -37,20 +35,19 @@ where able.
 
 ### Model Changes from the Last Assessment
 
-**Need TO DO**
+**I say a lot that sensitivities were done. Need to confirm that is true once sensitivity section is done**
 
-1.  *Remove survey catches*
-2.  *Remove surface read ages*
-3.  *Simplify population structure*
-4.  *Unmirror selectivity for fleets*
-5.  *Remove fleets with limited contributions (e.g. CA rec ages, CA
-    ASHOP comps)*
-6.  *Natural mortality structure constant*
-7.  *Selectivity structure sex-dependent*
-8.  *Shrimp trawl as trawl gear*
-9.  *Reorganize FOR catches by INPFC area*
-10. \*Update life history set up (e.g. using Linf instead of Length at
-    30) but probably specify this is structure\*
+The assessment model structure has been significantly altered from the 2015 benchmark stock assessment [@thorson_status_2016]. The primary change in terms of effects on model results is with the change in modeling of natural mortality. We model natural mortality as sex-dependent and age-invariant which offers a simplified and more biologically believable approach to natural mortality than an increasing linear ramp in female natural mortality. Assumptions to this choice are tested with sensitivities and described in Section \@ref{sensitivities}. 
+
+Another substantial change is in the treatment of spatial structure in the model, both in terms of population spatial structure as well as fishery fleet structure. We simplify modeling the population structure of `r spp` along the U.S. West Coast by assuming a coastwide population, yet increase the spatial complexity of the fishery. This amounts to using an areas-as-fleets approach [@punt_spatial_2019]. Although an areas-as-fleets approach does not account for potential regional differences in depletion, because catches are assumed to act over the entire modeled area, early explorations indicated some instability in the spatial model when unmirroring and expanding selectivity. Through bridging (described below) we show that the change in population structure does not appear to have a large effect on model results, especially relative to other changes in natural mortality and the relative contribution of various data sources to model estimates.  
+
+By reducing complexity in the population structure of the model, we could increase the spatial complexity of the fishery. Spatial fleet dynamics allow the model structure to account for varying selectivity and historical management actions that may have impacted the fishery and the available data in specific ways. Fleets were assumed to have the same selectivity across states in the 2015 assessment. We allowed selectivity estimates to be informed by the dynamics in waters where they fish, although we have mirrored some fleets where we believe it is appropriate to do so. We have also increased the number of selectivity blocks for the non-trawl and recreational fisheries, which we believe is appropriate given the large changes in regulations for `r spp`. Lastly, we have elected to include sex-dependent selectivity, which both improves fits to data, but also allows dynamics between male and female natural mortality to align better with observed sex-ratios. Sensitivities to choice about fleet structure are described in Section \@ref{sensitivities}.
+
+While in general, fleet structure in the base model is more complex than in the 2015 assessment, we simplified our fleets where reasonable. We treated survey fleets as exclusively survey fleets, and did not model the small amount of catches from these surveys. It is not now standard practice to include surveys as fishing fleets in West Coast assessment. We also removed the California at-sea-hake fishery composition data, which was very sparse, and incorrectly assigned to California. 
+
+Data has also been updated for this assessment. The synthesis and treatment of data has been altered for this assessment based on updated best practices and extensive work by \gls{nwfsc} to document, reproduce, and standardize data processing steps, along with extensive work by staff at state agencies and \gls{psmfc} in providing consistent and accurate data in a more easily obtainable manner. Catch time series have been updated according to current best knowledge. States have updated their historical reconstructions, and past issues with catch time series mentioned in the last assessment review process and in subsequent catch only updates have been corrected. Catch time series for the foreign fleets was also repartitioned to state more consistently with patterns observed in the non-foreign fishery. We also assigned data from shrimp trawls as part of the trawl, where for the 2015 assessment they were included within the non-trawl fleets. Available length and age data have been provided using updated and more reproducible approaches. Significant effort was made by the \gls{nwfsc} ageing lab in providing age reads for new and past `r spp`. These allow age composition data for recreational fleets to be included as well as additional years of data for other fishery and survey fleets. Although more age data were available, we elected to remove surface age reads from the model due to known biases in addition to their removal having little effect on model results of the 2015 assessment. Sensitivities to assumptions around data choices are described in Section \@ref{sensitivities}.
+
+Lastly, a number of changes due to updating fixed parameter estimates and prior values were made for this assessment compared to the 2015 assessment. These changes include updates to the steepness prior, natural mortality prior, the fecundity relationship, and a change in maturiy from length-at-biological maturity to functional-age-at-functionl-maturity based on additional work-up of maturity samples by Melissa Head at \gls{nwfsc}. Changes to biological parameters are more completely described in Section \@ref{biology}. The effect of these changes on model results in described below in the bridging analysis.
 
 
 ### Bridging analysis from the 2015 Benchmark Assessment

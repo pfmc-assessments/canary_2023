@@ -32,6 +32,8 @@ The 2007 model was subsequently updated twice, in 2009 (Stewart, 2009) and 2011 
 
 ### 2015 Benchmark
 
+The 2015 stock assessment modeled population of `r spp` along the U.S. West Coast in three areas. These areas were similar in many ways in that they shared the same growth, and movement in adults among the areas was not modeled. The only connection between the areas was apportionment of recruits from a single shared stock-recruitment relationship to each area.   
+
 
 ### 2017 and 2019 benchmark updates
 
