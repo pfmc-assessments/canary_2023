@@ -43,7 +43,7 @@ Found error in CA catches prior to 1951. OUr catches better align with these and
 
 <!-- TOR Appendix B E.2 -->
 
-The STAR panel and SSC did not list any major deficiencies in the previous assessment. Responses to research recommendations are in [Section](#star-recs).
+The STAR panel and SSC did not list any major deficiencies in the previous assessment. Responses to research recommendations are in [Section](#star-recs). THIS REFERENCES DOES NOT WORK.
 
 ## Response to Groundfish Subcommittee Requests (not required in draft)
 

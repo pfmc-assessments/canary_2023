@@ -2,7 +2,32 @@
 
 ## Reference Points
 
-Average unfished spawning biomass is estimated to be 26,610 mt. This is directly comparable to previous assessments, despite our use of an updated maturity-at-length schedule, and is slightly lower than the estimate of 27,846 mt in the 2011 update assessment. Average unfished spawning output is estimated to be 7,491 million eggs, and this number is not directly comparable to any previous assessment due to our updated fecundity relationship which, unlike past assessments, includes a nonlinear relationship between female weight and spawning output. A comparison of the 2015 base model with historical assessments (Figure 119) shows that this rate of rebuilding is faster than previously estimated. Exploratory analyses indicate that the increased rate of rebuilding in the 2015 assessment relative to historical assessments is primarily caused by our updated prior for the strength of recruitment compensation (Figure 120). Exploratory analysis also suggests that the similarity of the base model to the 2011 update assessment prior to the mid-1990s is informed in large part by the compositional data from the trawl fishery (Figure 118). Our base model estimates a target spawning output of 3,449 million eggs using a biological reference point proxy of SB40% and 2,111 million eggs using a proxy targeting a 50% reduction in spawning potential relative to average unfished levels. Maximum sustainable yield is estimated to be 1,289 mt, and this estimate is considerably higher than the value (803 mt) estimated in the 2011 update assessment.
+Average unfished spawning output is estimated to be `r model$SBzero` million eggs (ARE THOSE UNITS RIGHT?) and unfished total summary biomass is estimated to be `r model$derived_quants['SmryBio_unfished','Value']` metric tons. A population at equilibrium at a target of $B_{40\%}$ is associated with a total dead catch of `r model$derived_quants['Dead_Catch_Btgt', 'Value']` metric tons and spawning output of `r model$derived_quants['SSB_Btgt', 'Value']` million eggs. A population at equilibrium at an SPR target of 50% is associated with a total dead catch of `r model$derived_quants['Dead_Catch_SPR', 'Value']` metric tons and spawning output of `r model$derived_quants['SSB_SPR', 'Value']` million eggs.  A population at equilibrium at model-estimated maximum sustainable yield is associated with a total dead catch of `r model$derived_quants['Dead_Catch_MSY', 'Value']` metric tons and spawning output of `r model$derived_quants['SSB_MSY', 'Value']` million eggs. The yield curve indicates current yield is below MSY estimated in the model, but above yield based on proxy targets (Figure \ref{fig:yield}). 
+
+```{r}
+# maybe use this table?
+# labels <- expand.grid(c('SSB', 'SPR', 'annF', 'Dead_Catch'), 
+#             c('Btgt', 'SPR', 'MSY')) |> 
+#   dplyr::mutate(label = paste(Var1, Var2, sep = '_'))
+# 
+# ref.tab <- dplyr::filter(model$derived_quants, Label %in% labels$label) |>
+#   dplyr::mutate(ref = sapply(stringr::str_split(Label, pattern = '_'), tail, 1),
+#                 met = stringr::str_remove(Label, paste0('_', ref))) |>
+#   dplyr::mutate(value.fmt = glue::glue('${x}\\pm {sd}$', 
+#                                        x = sapply(Value, format, scientific = FALSE, 
+#                                                   digits = 3), 
+#                                        sd = sapply(StdDev, format, scientific = FALSE,
+#                                                    digits = 2))) |>
+#   dplyr::select(value.fmt, ref, met) |>
+#   tidyr::pivot_wider(names_from = ref, values_from = value.fmt) |>
+#   dplyr::mutate(met = c('Spawning output \\n ($10^6$ eggs)', 'SPR', 'F (1/yr)', 'Dead Catch (mt)'))
+# 
+# 
+# names(ref.tab) <- c('', '$B_{40\\%}$', 'SPR$_{0.5}$', 'MSY')
+# 
+# knitr::kable(ref.tab)
+
+```
 
 ## Unresolved Problems and Major Uncertainties
 
@@ -31,6 +56,8 @@ Based upon the considerations, sensitivities, and retrospective analyses listed 
 
 ## Comparison among alternative states of nature
 
+**Suggest deleting this section, it covered above under decision tables**
+
 We chose to vary the strength of recruitment compensation to represent alternative plausible states of nature. We use steepness for the following three reasons: Recruitment compensation has been used to generate alternative states of nature in the 2007, 2009, and 2011 assessments, and represents a current topic of discussion in the Scientific and Statistical Committee of the PFMC. Values for alternative states of nature can be justified by previous meta-analytic research generating a prior distribution for steepness for Pacific rockfishes (Dorn, 2002; Punt and Dorn, 2013) The value of steepness has a large impact on the rate of stock rebuilding after the declaration of overfished status, and hence is highly influential in determining the degree to which the stock can be considered to be rebuilt (Figure 111). It also accounts for a large portion of the difference between the 2011 update and proposed base model (Figure 120).
 
 To select values of steepness to use as the upper and lower states of nature, we use a normal approximation to the prior distribution for steepness with an identical mean and standard deviation to the predictive distribution from that analysis (mean=0.773, SD=0.147). We then identify the value of a normal distribution with that mean and standard deviation that is half as likely as the mode. This value is
@@ -57,11 +84,11 @@ Recommendations are summarized for brevity:
 
 2.  We endorse a systematic (rather than ad hoc and species-specific) exploration and analysis of Canadian data sources (length and age-composition, indices of abundance, landings, and discards) for several rockfishes.
 
-**Response:** Progress remains species-specific. However, progress for some groundfish species (sablefish, petrale sole) is occurring outside of regular stock assessment cycles so that it can be completed in a more intentional and less ad hoc fashion. Canary rockfish has not been prioritized for these activities by NWFSC or DFO. We explored Canadian `r spp` landings and estimates of recruitment deviations from an assessment conducted one year prior to this one.
+**Response:** Progress remains species-specific. However, progress for some groundfish species (sablefish, petrale sole) is occurring outside of regular stock assessment cycles so that it can be completed in a more intentional and less ad hoc fashion. Canary rockfish has not been prioritized for these activities by NMFS or DFO. We explored Canadian `r spp` landings and estimates of recruitment deviations from an assessment conducted one year prior to this one.
 
 3.  We therefore recommend that future research explore methods to stitch these time series back together (i.e., using covariates and a meta-analytic information regarding the ratio of catchability in the two periods).
 
-**Response:** Changes in the spatial (latitudinal and depth) extent of the triennial survey should not impact `r spp`, which are generally not found in the areas the survey expanded into. Canary rockfish are also not known to undertake seasonal migrations, so the change in timing should similarly not be influential. Therefore, this assessment estimates the triennial index using a single spatial GLMM. Both composition data and catch data are truncated so as not to include areas of survey expansion. The index is entered into the assessment model as two different fleets to maintain the ability to test for sensitivity to combining the periods, but catchability and selectivity are mirrored between these two fleets. Thus, they are treated as a single time series with different age and length composition data weights. Model sensitivity to treatment of the triennial index is concerning. 
+**Response:** Changes in the spatial (latitudinal and depth) extent of the triennial survey should not impact `r spp`, which are generally not found in the areas the survey expanded into. Canary rockfish are also not known to undertake seasonal migrations, so the change in timing should similarly not be influential. Therefore, this assessment estimates the triennial index using a single spatial GLMM. Both composition data and catch data are truncated so as not to include areas of survey expansion. The index is entered into the assessment model as two different fleets to maintain the ability to test for sensitivity to combining the periods, but catchability and selectivity are mirrored between these two fleets. Thus, they are treated as a single time series with different age and length composition data weights. 
 
 4.  We suggest that basic life history research be highly prioritized for future research.
 
@@ -71,7 +98,7 @@ Recommendations are summarized for brevity:
 
 Recommendation: Catch and discard history for this stock in US waters is highly uncertain. While the STAT was able to construct alternative upper and lower bounds for catch using simple multipliers on certain years of historical catch, this is arbitrary. Work to assess the uncertainty related to each individual data source would allow a better investigation of the overall combined uncertainty and its effect on 10 stock assessments.
 
-Response: A more comprehensive Washington reconstruction is almost complete, but was not yet available for use in this assessment. I think we have some new reconstructions we are using from Oregon? Anything else?
+Response: This assessment includes a new reconstruction of `r spp` landings in Oregon within unspecified PacFIN categories from 1987-1999. A formal Washington reconstruction is nearing completion, but was not yet ready for use in this assessment. 
 
 Recommendation: Improved documentation is required to clearly outline the process used to construct the historical catch and discard time series from the various data sources. Such documentation should also include the process for construction of alternative catch histories that are used to propagate such uncertainty into the stock assessment.
 
@@ -83,15 +110,16 @@ Response: This assessment did not use a spatially stratified abundance index.
 
 Recommendation: Work towards a combined US/Canadian stock assessment would greatly aid our overall understanding of stock status.
 
-Response: Little progress has been made on a combined US/Canadian stock assessment. The STAT did obtain catches and estimated recruitment and recruitment deviations from a recent British Columbia assessment. We have conducted a sensitivity with these catches added to Washington fleets, and compare the recruitment deviations estimated within our base model and the Canadian model to look for synchrony.
+Response: Little progress has been made on a combined US/Canadian stock assessment. The STAT did obtain catches and estimated recruitment and recruitment deviations from a recent British Columbia assessment. We have conducted a sensitivity with these catches added to Washington fleets, and compared the recruitment deviations estimated within our base model and the Canadian model to look for synchrony.
 
 Recommendation: If data permit, the trawl fleet should be divided into separate components so that bycatches in the shrimp and pelagic trawls are separated from catches in the main bottom trawl fleet. In the current assessment, composition data for the trawl fleet have a major influence on the estimated stock trends, so it would be desirable to use data that are more representative of the main fleet in order to improve estimated selectivity of the fleet.
 
-Response: Due to the already extremely complex fleet structure in this model, the shrimp and pelagic trawls were maintained with the main trawl fleet. Analysis indicated Brian I remember a ? from John F. during the pre-assessment workshop about the appropriateness of including shrimp trawls with the main trawl, and you had a great answer from him, feel free to fill in here.
+Response: Due to the already extremely complex fleet structure in this model, the shrimp and pelagic trawls were maintained with the main trawl fleet. Analysis indicated **Brian I remember a ? from John F. during the pre-assessment workshop about the appropriateness of including shrimp trawls with the main trawl, and you had a great answer from him, feel free to fill in here.**
 
 Recommendation: Basic life history research may help to resolve assessment uncertainties regarding appropriate values for natural mortality and steepness, and how to best account for the apparent loss of older females in the population.
 
 Response: This assessment includes fecundity and maturity curves based on new data made available since the last benchmark assessment. While efforts have been undertaken to understand the apparent loss of older females, this has not resulted in any clear resolution. A research study sampling in non-trawlable habitat along the U.S. West Coast found a similar lack of old females in the data [@Brooks_thesis_2021]. Examination of data from the Oregon trawl fleet indicates that sex ratios have been more constant across ages in the last decade than they had been previously (L. Rasmuson, pers. comm.).
+
 ### Current research and data neds
 
 1.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of non-trawl coast-wide fishery-independent indices. This could mean an expansion of the \gls{s-hl} into more northern waters, or taking advantage of developments in model-based index standardization to stitch together multiple similar overlapping fishery-independent non-trawl sampling programs that have occurred over smaller spatial and temporal scales than the \gls{s-wcgbt}.
