@@ -69,31 +69,7 @@ Recommendations are summarized for brevity:
 
 **Response:** This assessment includes updated data and relationships on growth, condition (weight-length), fecundity, and maturity. A number of studies on canary rockfish life history and population structure have been published since the previous assessment [@budrick2016evolutionary; @keller2018canary; @Brooks_thesis_2021]. Unfortunately, these have not resulted in a better understanding of natural mortality and the apparent loss of older females. This remains a research priority. In absence of better understanding of canary rockfish natural mortality, we use natural mortality rates from a recently updated prior [@hamel2022development].
 
-### Response to STAR panel research recommendations {#star-recs}
 
-Recommendation: Catch and discard history for this stock in US waters is highly uncertain. While the STAT was able to construct alternative upper and lower bounds for catch using simple multipliers on certain years of historical catch, this is arbitrary. Work to assess the uncertainty related to each individual data source would allow a better investigation of the overall combined uncertainty and its effect on 10 stock assessments.
-
-Response: This assessment includes a new reconstruction of `r spp` landings in Oregon within unspecified PacFIN categories from 1987-1999. A formal Washington reconstruction is nearing completion, but was not yet ready for use in this assessment. 
-
-Recommendation: Improved documentation is required to clearly outline the process used to construct the historical catch and discard time series from the various data sources. Such documentation should also include the process for construction of alternative catch histories that are used to propagate such uncertainty into the stock assessment.
-
-Response: This assessment report has attempted to more clearly document the process used to construct the historical catch and discard time series. In addition, the use of github for this assessment (https://github.com/pfmc-assessments/canary_2023) means that the code used to construct the time series, and many of the decisions involved, is publicly available and the process is reproducible. Finally, the STAT has communicated repeatedly with state partners and the GMT to ensure that catch time series are appropriate, per the TOR. This communication did result in changes to the catch history during model development.
-
-Recommendation: Additional work on the geospatial index is required to better resolve differences in abundance trends among areas.
-
-Response: This assessment did not use a spatially stratified abundance index.
-
-Recommendation: Work towards a combined US/Canadian stock assessment would greatly aid our overall understanding of stock status.
-
-Response: Little progress has been made on a combined US/Canadian stock assessment. The STAT did obtain catches and estimated recruitment and recruitment deviations from a recent British Columbia assessment. We have conducted a sensitivity with these catches added to Washington fleets, and compared the recruitment deviations estimated within our base model and the Canadian model to look for synchrony.
-
-Recommendation: If data permit, the trawl fleet should be divided into separate components so that bycatches in the shrimp and pelagic trawls are separated from catches in the main bottom trawl fleet. In the current assessment, composition data for the trawl fleet have a major influence on the estimated stock trends, so it would be desirable to use data that are more representative of the main fleet in order to improve estimated selectivity of the fleet.
-
-Response: Due to the already extremely complex fleet structure in this model, the shrimp and pelagic trawls were maintained with the main trawl fleet. Analysis indicated **Brian I remember a ? from John F. during the pre-assessment workshop about the appropriateness of including shrimp trawls with the main trawl, and you had a great answer from him, feel free to fill in here.**
-
-Recommendation: Basic life history research may help to resolve assessment uncertainties regarding appropriate values for natural mortality and steepness, and how to best account for the apparent loss of older females in the population.
-
-Response: This assessment includes fecundity and maturity curves based on new data made available since the last benchmark assessment. While efforts have been undertaken to understand the apparent loss of older females, this has not resulted in any clear resolution. A research study sampling in non-trawlable habitat along the U.S. West Coast found a similar lack of old females in the data [@Brooks_thesis_2021]. Examination of data from the Oregon trawl fleet indicates that sex ratios have been more constant across ages in the last decade than they had been previously (L. Rasmuson, pers. comm.).
 
 ### Current research and data neds
 

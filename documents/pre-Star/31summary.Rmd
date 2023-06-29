@@ -45,11 +45,37 @@ The 2015 assessment model indicated that `r spp` was above the management target
 
 **Need to write about this**
 
-## Most recent STAR panel and SSC recommendations
+## Most recent STAR panel and SSC recommendations {#star-recs}
 
-The STAR panel and SSC did not list any major deficiencies in the previous assessment. Responses to research recommendations are in Section \ref{star-recs}. THIS REFERENCES DOES NOT WORK.
+The STAR panel and SSC did not list any major deficiencies in the previous assessment. Responses to research recommendations from the 2015 STAR panel report are below. 
 
-**I would like to move the research recommendations in 40management here. Sets the stage better early**
+**Recommendation**: The historical catch data ultimately used in the assessment differed from that which was given in the original draft assessment presented for review at the panel. The review process would be improved by ensuring that any such issues (i.e. disagreements about the best available historical catch) are resolved well in advance of the assessment review meeting. One possible approach might be to have an earlier step in the process intended to sign-off on the input data, analogous to the way that the STAR panel signs-off on the stock assessments. Ongoing efforts to reconstruct Washington catch data, in the way that has already been done for Oregon and California, should help to resolve these issues in the medium term, but until then, there will still be a need to work with agreed, interim catch estimates for inclusion in stock assessments.
+
+**Response**: Significant progress has been made to streamline the review process to reduce the number of changes to catch streams during STAR reviews. The TOR outlines the steps for finalizing catch time series by a designated data deadline, which we have done. Increased communication between the STATs, management and advisory bodies, and state agencies have resulted in changes to the catch history during model development, and as of time of writing, not during the STAR review.
+
+**Recommendation**: Catch and discard history for this stock in U.S. waters is highly uncertain. While the STAT was able to construct alternative upper and lower bounds for catch using simple multipliers on certain years of historical catch, this is arbitrary. Work to assess the uncertainty related to each individual data source would allow a better investigation of the overall combined uncertainty and its effect on 10 stock assessments.
+
+**Response**: This assessment includes a new reconstruction of `r spp` landings in Oregon within unspecified PacFIN categories from 1987-1999. A formal Washington reconstruction is nearing completion, but was not yet ready for use in this assessment. Additional explorations on catch multipliers and increased variation about catch time series were explored as sensitivities.
+
+**Recommendation**: Improved documentation is required to clearly outline the process used to construct the historical catch and discard time series from the various data sources. Such documentation should also include the process for construction of alternative catch histories that are used to propagate such uncertainty into the stock assessment.
+
+**Response**: This assessment report has attempted to more clearly document the process used to construct the historical catch and discard time series. In addition, the use of github for this assessment (https://github.com/pfmc-assessments/canary_2023) means that the code used to construct the time series, and many of the decisions involved, is publicly available and the process is reproducible. Finally, the STAT has communicated repeatedly with state partners and the GMT to ensure that catch time series are appropriate, per the TOR. This communication did result in changes to the catch history during model development.
+
+**Recommendation**: Additional work on the geospatial index is required to better resolve differences in abundance trends among areas.
+
+**Response**: This assessment did not use a spatially stratified abundance index, although during early index development separate year by area covariates were consider for use in index development.
+
+**Recommendation**: Work towards a combined US/Canadian stock assessment would greatly aid our overall understanding of stock status.
+
+**Response**: Little progress has been made on a combined US/Canadian stock assessment. The STAT did obtain catches and estimated recruitment and recruitment deviations from a recent British Columbia assessment. We have conducted a sensitivity with these catches added to Washington fleets, and compared the recruitment deviations estimated within our base model and the Canadian model to look for synchrony. Other than fisheris under a binational treaty, U.S. West coast assessments use the U.S.-Canadian boarder as the northern limit for data to use within models.
+
+**Recommendation**: If data permit, the trawl fleet should be divided into separate components so that bycatches in the shrimp and pelagic trawls are separated from catches in the main bottom trawl fleet. In the current assessment, composition data for the trawl fleet have a major influence on the estimated stock trends, so it would be desirable to use data that are more representative of the main fleet in order to improve estimated selectivity of the fleet.
+
+**Response**: Due to the already extremely complex fleet structure in this model, the shrimp and pelagic trawls were maintained with the main trawl fleet. Early analysis indicated length and composition data from the shrimp and midwater trawl fisheries within \gls{pacfin} were comparable to other trawl gears. The number of samples for the shrimp trawl gear is less than 1% of the samples compared to the trawl gear in Oregon. While the midwater trawl has more samples, removals are higher in recent years, so applying selectivity blocks would limit the effect on this samples influence selectivity estimates from other years. 
+
+**Recommendation**: Basic life history research may help to resolve assessment uncertainties regarding appropriate values for natural mortality and steepness, and how to best account for the apparent loss of older females in the population.
+
+**Response**: This assessment includes fecundity and maturity curves based on new data made available since the last benchmark assessment. While efforts have been undertaken to understand the apparent loss of older females, this has not resulted in any clear resolution. A research study sampling in non-trawlable habitat along the U.S. West Coast found a similar lack of old females in the data [@Brooks_thesis_2021]. Examination of data from the Oregon trawl fleet indicates that sex ratios have been more constant across ages in the last decade than they had been previously (L. Rasmuson, pers. comm.).
 
 ## Response to Groundfish Subcommittee Requests
 
