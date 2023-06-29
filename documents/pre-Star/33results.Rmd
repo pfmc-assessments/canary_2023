@@ -1,7 +1,5 @@
 ## Base Model Results
 
-**Brian is working on this section - just need to do fits to data**
-
 ### Parameter Estimates
 
 **For the params tables**
@@ -13,14 +11,18 @@
 *Remove the triennial late line as its mirrored*
 
 The base model parameter estimates along with approximate asymptotic
-standard errors (SD column) are shown in Table \@ref{tab:params}. This
+standard errors (SD column) are shown in Table \ref{tab:params}. This
 table enumerates a total of 241 estimated parameters. These include one
 parameter for $R_0$, one parameter for female natural mortality, nine
 parameters describing growth, one parameter for survey catchability in
 the \gls{s-tri}, one parameter for extra variability for the pre-recruit
 survey, 75 parameters for length-based selectivity and blocks along with
 22 parameters for sex-dependent selectivity and blocks, and 131
-recruitment deviations.
+recruitment deviations. The likelihood components from fitting the base model to data are shown in Table \ref{tab:like}. The estimated data weights by the Francis method are shown in Table \ref{tab:data-weights}.
+**TO DO: create likelihood table**
+
+The full r4ss plotting output is available in the supplementary material on the [Pacific Fishery Management Council website](pcouncil.org) (these figures will not be available until the assessment is finalized).
+
 
 #### Biology parameters
 
