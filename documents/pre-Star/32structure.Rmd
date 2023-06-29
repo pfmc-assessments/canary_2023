@@ -28,7 +28,7 @@ sources of data to estimate reality. A series of investigative model
 runs were done to achieve the final base model, some of which are
 described as sensitivities (Section \@ref{sensitivities}) and some of
 which are included in the bridging steps described below. Notably, we
-simplify the population structure of the model by assuming a single
+simplify the population structure of the last benchmark assessment model by assuming a single
 coastwide stock, yet increase spatial fleet structure by unmirroring
 fleet selectivities between states. We balance the increased complexity
 in spatial fleet structure by simplifying the selectivity
@@ -180,6 +180,12 @@ We start the model in the first year of reconstructed catch data, i.e.,
 to this year, and to start in a stable age-distribution. Early recruitment
 deviations are estimated starting in the first model year (1892), and
 main period recruitment deviations begin in 1960 and end in 2022.
+
+#### Conditional age at length data
+
+Age-frequency data from the \gls{s-wcgbt} and \gls{s-tri} were compiled as conditional age-at-length distributions by sex and year. The approach consists of tabulating the sums within rows as the standard length-frequency distribution and, instead of also tabulating the sums to the age margin, instead the distribution of ages in each row of the age-length key is treated as a separate observation, conditioned on the row (length) from which it came. 
+
+This approach has several benefits for analysis above the standard use of marginal age compositions. First, age structures are generally collected as a subset of the fish that have been measured. If the ages are to be used to create an external age-length key to transform the lengths to ages, then the uncertainty due to sampling and missing data in the key are not included in the resulting age-compositions used in the stock assessment. The second major benefit to using conditional age-composition observations is that in addition to being able to estimate the basic growth parameters inside the assessment model, the distribution of lengths at a given age that is usually controlled by the CV of length at some young age and the CV at a much older age, are also more reliably estimated. This information could only be derived from marginal age-composition observations where very strong and well-separated cohorts existed, and that arre quite accurately aged and measured; rare conditions at best. By fully estimating the growth specifications within the stock assessment model, bias due to size-based selectivity is avoided, and known sources of variation are included when estimating growth parameters.
 
 ### Model Parameters
 
