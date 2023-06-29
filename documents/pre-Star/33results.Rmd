@@ -176,7 +176,7 @@ Pearson residuals of conditional age-at-length compositions are shown for each s
 
 Fits to indices of abundance are shown for each survey fleet (Figures
 \ref{fig:wcgbts-fit}-- \ref{fig:prerec-fit}). These plots show that fits
-to the WCGBTS indices are generally within the 95% confidence interval
+to the \gls{s-wcgbt} indices are generally within the 95% confidence interval
 bounds with the exception of 2009 and 2019. With 19 years of survey
 data, approximately one year is expected to fall outside of the 95%
 confidence interval. The residuals appear randomly distributed, with no

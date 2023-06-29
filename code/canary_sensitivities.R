@@ -447,8 +447,19 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 
 # Sex-constant M (TOR)-----------------------------------------------------
 
+mod <- base_mod
 
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', 'PHASE'] <- -50
 
+new_name <- 'single_M'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
 
 # One asymptotic fleet (TOR) ----------------------------------------------
 
@@ -728,6 +739,11 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE,
           skipfinished = FALSE)
 
+SS_output(here('models/sensitivities', new_name)) |>
+  tune_comps(dir = here('models/sensitivities', new_name), 
+             niters_tuning = 1, 
+             exe = here('models/ss_win.exe'), 
+             extras = '-nohess')
 
 # Remove recruitment deviations ------------------------------------------------------
 
@@ -765,4 +781,103 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE,
           skipfinished = FALSE)
 
+
+# Summaries ---------------------------------------------------------------
+
+make_detailed_sensitivites <- function(biglist, mods_to_include, pretty_names = mods_to_include, 
+                                       outdir, grp_name) {
+  
+  shortlist <-   big_sensitivity_output[c('base', mods_to_include)] |>
+    r4ss::SSsummarize() 
+
+  r4ss::SSplotComparisons(shortlist,
+                          subplots = c(2,4), 
+                          print = TRUE,  
+                          plot = FALSE,
+                          plotdir = outdir, 
+                          filenameprefix = grp_name,
+                          legendlabels = c('Base', pretty_names))
+  
+    SStableComparisons(shortlist, 
+                       modelnames = c('base', pretty_names),
+                       c("Recr_Virgin", "R0", "steep", "NatM", "L_at_Amax", "VonBert_K", "SSB_Virg",
+                         "Bratio_2023", "SPRratio_2023")) |>
+    dplyr::filter(!(Label %in% c('SR_BH_steep', 'NatM_uniform_Mal_GP_1'))) |>
+    dplyr::rename(` ` = 'Label') |>
+    write.csv(file.path(outdir, paste0(grp_name, '_table.csv')), 
+              row.names = FALSE)
+  
+}
+
+selectivity <- c('no_sex_selectivity', 
+                 # 'selex_parm6', does not converge
+                 'simpler_block', 
+                 'wa_ntwl_asymptotic',
+                 # 'wcgbts_asymptotic' does not converge
+                 'float_q',
+                 'unmirror_tri')
+
+weighting <- c(
+#  'dirichlet_multinomial', does not converge
+  'mcallister_ianelli',
+  'no_q_extrasd',
+  'age_francisX10',
+  'age_lambda0',
+  'len_francisX10',
+  'len_lambda0.01')
+
+data_choices <- c('no_sparse_comps',
+                  #                  'noDebWV_lengths', minor
+                  'prerec_data',
+                  'released_lengths_in',
+                  'canada_catches', 
+                  'catch_se_0.1')
+productivity <- c('est_h',
+                  'est_male_M',
+                  'M_ramp',
+                  'single_M')
+
+sens_names <- c(selectivity,
+                weighting,
+                data_choices,
+                productivity)
+
+pretty_names <- sens_names
+
+big_sensitivity_output <- SSgetoutput(dirvec = c(here('models', base_mod_name),
+                                                 glue::glue("{models}/{subdir}", 
+                                                            models = here('models/sensitivities'),
+                                                            subdir = sens_names))) 
+
+
+
+tmp <- SS_output(here('models/sensitivities', 'len_lambda0.01'))
+big_sensitivity_output[[15]] <- tmp
+
+names(big_sensitivity_output) <- c('base', sens_names)
+
+make_detailed_sensitivites(big_sensitivity_output, 
+                           mods_to_include = selectivity,
+                           outdir = here('models/sensitivities/00_comparison_plots'),
+                           grp_name = 'selectivity')
+
+
+make_detailed_sensitivites(big_sensitivity_output, 
+                           mods_to_include = weighting,
+                           outdir = here('models/sensitivities/00_comparison_plots'),
+                           grp_name = 'weighting')
+
+make_detailed_sensitivites(big_sensitivity_output, 
+                           mods_to_include = data_choices,
+                           outdir = here('models/sensitivities/00_comparison_plots'),
+                           grp_name = 'data')
+
+make_detailed_sensitivites(big_sensitivity_output, 
+                           mods_to_include = productivity,
+                           outdir = here('models/sensitivities/00_comparison_plots'),
+                           grp_name = 'productivity')
+
+sensitivity_output <- SSsummarize(big_sensitivity_output) 
+lapply(big_sensitivity_output, function(.)
+  .$warnings[grep('gradient', .$warnings)])
 

@@ -192,10 +192,10 @@ readr::read_csv(here('documents/tables/parameters.csv')) |>
                       longtable = TRUE,
                       font_size = 9,
                       digits = 3,
-                      # landscape = TRUE,
-                      # custom_width = TRUE,
+                      landscape = TRUE,
+                      custom_width = TRUE,
                       col_to_adjust = c(1,7),
-                      # width = c("7.5cm", "3.5cm")
+                      width = c("7.5cm", "3.5cm")
                       )
 ```
 

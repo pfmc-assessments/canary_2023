@@ -22,6 +22,9 @@ if(Sys.getenv("USERNAME") == "Brian.Langseth") {
 }
 if(Sys.getenv("USERNAME") == "Kiva.Oken") {
   dir <- "C:/Users/Kiva.Oken/Desktop/canary_2023"
+  # Sys.getenv("PATH")
+  old <- Sys.getenv("PATH")
+  Sys.setenv(PATH = paste("C:\\texlive\\2023\\bin\\windows;", old))
 }
 #Create directory
 doc_dir <- file.path(dir, "documents","pre-Star")

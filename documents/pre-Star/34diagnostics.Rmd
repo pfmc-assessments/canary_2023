@@ -1,36 +1,5 @@
 ## Model Diagnostics
 
-### Model Residuals
-
-We display residual fits to all data sources: (1) marginal length composition, (2) marginal age composition (for fisheries where available), (3) conditional age-at-length composition (for surveys), and (4) indices of abundance.
-
-Marginal length compositions are summarized in Figure 45, and shown for each fleet and years in Figure 46-Figure 66.
-Marginal length compositions for each fleet aggregated over all years (Figure 45) shows that fits are generally consistent with observed data, on average over time, for males and females for each fleet, and are highly erratic for unsexed fish (e.g., OR trawl) which generally have a lower sample size.
-The mode of proportion at length is generally larger for females than males, reflecting the dimorphic growth in canary.
-Fits are particularly good for trawl, recreational, and survey fleets, and generally poor for at-sea hake and non-trawl fleets.
-Fits for individual fleets and years (Figure 46-Figure 66) confirm that length-composition fits are particularly good for sexed individuals in the trawl fisheries, although length-composition data almost never have any evidence of bimodality, and hence have little ability to inform cohorts.
-
-Marginal age compositions are summarized in Figure 67, and shown for each fleet and year in Figure 68-Figure 77.
-Summarized age compositions show that general patterns of increasing selectivity for young individuals, and declining proportion at age for old individuals, are generally captured.
-Summaries also exhibit the greater proportion of males in the plus-group (age 35+) than females, e.g., the trawl and non-trawl fisheries.
-Fits in individual years show the difference in expected proportion at age for surface reads (e.g., OR trawl, Figure 69, panel 1973a4, where the expected proportion and data bin peaks for age 20, which is then treated as the plus-group for surface reads) compared with break-and-burn reads (e.g., OR trawl, panel 1980a1, where the expected proportion has a bump at the plus group, age 35 for males but not females).
-Many early years show the increased abundance of older males relative to females in either surface reads (e.g., OR trawl, panel 1982a4, which shows a greater proportion of males age 20+ than females) or break-and-burn reads (e.g., OR trawl, panel 1982a1, which shows a greater proportion of males to females in age 35+).
-Individual years for the non-trawl fisheries (fleets 4-6) and the WA recreational fishery (fleet 9) are particularly poor, and not expected to be informative regarding changes in average age over time.
-
-Conditional age-at-length compositions are shown for each fleet and year in Figure 78-Figure 86.
-We use a summary plot introduced by André Punt, where a well-fitting model has a predicted average age-at-length that is within the 95% predictive interval, as is the predicted standard deviation of age-at-length.
-Plots for all surveys generally exhibit this behavior, which provides no evidence of poor fit to conditional age-at-length data, and furthermore suggests that a model with time-constant growth provides a satisfactory approximation to the process governing age and length.
-
-Indices of abundance are shown for each survey fleet in Figure 87-Figure 90.
-These plots show that fits to the WCGBTS indices are generally within the 95% confidence interval bounds (with the exception of CA in 2003).
-However, there is a residual pattern for California in particular, where predictions for all years 2006-2013 are below the index, and only predictions in years 2003-2005 and 2014 are above the index Similarly, the index is within the 95% confidence interval for all years and strata for the early and late triennial indices.
-The early triennial survey captures the general decline in population abundance during the 1980s, although the index estimate in 1980 is generally lower than the model estimate.
-Similarly, the late triennial index captures the commencement of population rebuilding in all three strata.
-Finally, the pre-recruit indices have variable performance across all three strata.
-The indices in WA have extremely large confidence intervals (e.g., 2005), and are not expected to provide any meaningful information or diagnostic benefit.
-By contrast, the index in CA generally captures trends in estimated recruitment, with relatively high recruitment in 2011 and relatively low recruitment in 2006-2007.
-The pre-recruit index appears to have little predictive ability in OR, where it does estimate moderate recruitment in years that are estimated to have good recruitment (e.g., 2006) and also predicts elevated recruitment in years that are estimated to have moderate recruitment (e.g., 2009 and 2011).
-
 ### Convergence status
 
 *Brian has updated this section*
@@ -74,6 +43,50 @@ The Canadian model (COSEWIC 2007) was premised on a maximum age of 84 yr., and a
 The Alaska assessment (Green et al., 2014) has historical been based upon density estimates from manned or remotely operated vehicles, and therefore contains no information regarding catchability for bottom trawl surveys, natural mortality rates, or sex-specific age structure.
 
 ### Sensitivity Analyses {#sensitivities}
+
+#### Data choices
+
+Compiling data for the assessment model required a number of choices and assumptions. The following sensitivity models fall under data choices:
+
+- No sparse comps: exclude all year-fleet combination of length and age composition data with input sample sizes less than five
+
+- Pre-recruit data: include pre-recruit survey index from 2010, 2012, and 2022 which had  more limited sampling.
+
+- Released lengths in: include lengths of released fish in California and Oregon recreational composition data
+
+- Canada catch: add catches from the West Coast of Vancouver Island to Washington trawl and non-trawl fleets
+
+- Catch SE 0.1: Increase the uncertainty in input catches from 0.05 to 0.1. This is done in lieu of manually changing catch streams to "low" and "high" scenarios.
+
+Sensitivities to data selection generally led to similar current biomass levels, but varying estimates of unfished biomass, leading to different depletion estimates. Still, in all cases depletion in 2023 was within the 95% confidence interval of the base model. Estimates of biological parameters (mortality, growth) are generally similar across all models. Including Canadian catches predictably increased the population scale substantially, outside of the 95% confidence interval. However, because Canadian fishing continued during the period `r spp` was declared overfished in the U.S., including Canadian catches also resulted in a more muted recovery and lower depletion in 2023.  FINISH THIS AFTER RE-WEIGHTING NO SPARSE COMPS
+
+#### Data weighting
+
+The assessment model contains data from a variety of sources, some of which are expected to be more informative than others. Sampling units from these different data sources are not necessarily comparable (e.g., an observation from a survey index versus an observation of a fish length). Data weighting procedures are objective algorithms that can be used to assign weights to different data sources to optimize the fit of the model to the data. The following sensitivity models fall under data weighting:
+
+- McAllister-Ianelli data weighting: Use the algorithm suggested by McAllister and Ianelli [-@mcallister_bayesian_1997] IS THIS CITATION RIGHT? instead of Francis and Hilborn [-@francis_data_2011]
+
+- No extra SD: Do not estimate an extra standard deviation for the pre-recruit survey index. This means the pre-recruit survey cannot be downweighted to allow for better fitting of other data sources.
+
+- Age Francis X10: Upweight all age composition samples 10x relative to the weight assumed in the base model
+
+- Age Lambda 0: Multiply the age composition likelihood by zero, effectively removing all age data from the assessment model
+
+The data weighting algorithm choice and the extra standard deviation on the survey index were not influential. Increasing the weight of the age data leads to a lower population scale, lower depletion in 2023, and estimates that the population began declining after fishing intensified following the lifting of the overfished designation, whereas most models find the population to still be increasing. Eliminating age data results in the opposite.
+
+#### Selectivity
+
+#### Population productivity
+
+#### Catches
+
+#### Treatment of triennial survey
+
+#### Sensitivities not included in document
+
+Excluding all length composition samples from the Deb Wilson-Vandenberg data and assuming the pre-recruit survey occurs after density-dependence instead of before had minimal impacts on model outputs. Dirichlet-multinomial data weighting, assuming \gls{s-wcgbt} has asymptotic selectivity, and estimating a fourth parameter of the double-normal selectivity curve for all fleets led to models that did not converge (final gradient >0.01). 
+
+
 
 #### Sensitivity to leading parameters
 
@@ -193,9 +206,5 @@ Summary biomass around 1990 is similar for all models from 1999 onward.
 The current base model indicates a slower rate of increase than either the 2007 or 2015 assessment models, and faster rate of increase than the other assessment models since 1990.
 Age-0 recruits are estimated to be slightly higher for the current base model compared to the 2015 assessment model and similar to the2009/2011 update assessments.
 Recruitment in recent years for the current base model is similar in scale and general pattern to past assessments, although the individual trajectories are variable.
-
-To explain the slower recovery in the current base model relative to the 2015 assessment, we compare the current model under alternative assumptions around natural mortality.
-This comparison (Figure 120) shows that the current base model, using the age-varying natural mortality estimates from past assessments more closely matches the recovery seen in the 2015 assessment.
-Additional differences in the amount and type of available data, primarily the increase in the amount of age data, as well as differences in other biological assumptions also contribute to the current trajectory.
 
 ### Unresolved Problems and Major Uncertainties
