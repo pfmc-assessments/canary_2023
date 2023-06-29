@@ -170,12 +170,13 @@ relationship used in the 2015 assessment (Figure
 
 ### Steepness
 
+**Update citations here**
 Steepness is defined as the proportion of average recruitment for an
 unfished population that is expected for a population with 20% of
 unfished spawning output. It represents a measure of compensation in the
 spawner-recruit relationship. It is typically difficult to estimate
 using data for a single population (Conn et al., 2010), which has led to
-a series of meta-analyses to estimate its likely value (Dorn, 2002;
+a series of meta-analyses to estimate its likely value ([@dorn_advice_2002];
 Myers et al., 1995).
 
 Steepness in this assessment was fixed at the prior mean value. The
