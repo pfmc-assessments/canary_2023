@@ -1,6 +1,6 @@
 ## History of Modeling Approaches
 
-<!-- TOR Appendix B E.1 -->
+### Early history
 
 **Probably good to pare down and highlight key points**
 
@@ -20,7 +20,7 @@ The 2002 assessment unified the previous northern and southern assessments into 
 
 The 2005 assessment converted and updated the 2002 effort using Stock Synthesis 2 [@methot2005canary]. The largest changes were:
 
-• Re-configure the spatial separation of fisheries to separate northern and southern California due to the north-south difference in occurrence of larger fish and the varying north-south distribution of fishery sampling. Fishery removals were divided among 10 fleets: 1) Southern California trawl, 2) Northern California trawl, 3) Oregon trawl, 4) Washington trawl, 5) Southern California non-trawl, 6) Northern California non-trawl, 7) Oregon and Washington non-trawl, 8) Southern California recreational, 9) Northern California recreational, 10) Oregon and Washington recreational. Oregon and Washington non-trawl and recreational landings were combined due to the relatively small total removals by those fisheries and their low level of consistent biological sampling. • Recalculate all the fishery catch, size and age composition data. • Introduce the mean size-at-age data from the survey and fishery to provide additional information on growth and to attempt to better differentiate age selectivity from size-selectivity. • Extend the modeled period back to 1916 when first significant catches occurred. • Extend maximum age in the data file to 35+ per request from previous review. • Switch from age-based selectivity to length-based selectivity. That pattern assumed asymptotic selectivity for males and allowed dome-shaped selectivity for females.
+Re-configure the spatial separation of fisheries to separate northern and southern California due to the north-south difference in occurrence of larger fish and the varying north-south distribution of fishery sampling. Fishery removals were divided among 10 fleets: 1) Southern California trawl, 2) Northern California trawl, 3) Oregon trawl, 4) Washington trawl, 5) Southern California non-trawl, 6) Northern California non-trawl, 7) Oregon and Washington non-trawl, 8) Southern California recreational, 9) Northern California recreational, 10) Oregon and Washington recreational. Oregon and Washington non-trawl and recreational landings were combined due to the relatively small total removals by those fisheries and their low level of consistent biological sampling. Recalculate all the fishery catch, size and age composition data. • Introduce the mean size-at-age data from the survey and fishery to provide additional information on growth and to attempt to better differentiate age selectivity from size-selectivity. Extend the modeled period back to 1916 when first significant catches occurred. Extend maximum age in the data file to 35+ per request from previous review. • Switch from age-based selectivity to length-based selectivity. That pattern assumed asymptotic selectivity for males and allowed dome-shaped selectivity for females.
 
 Selectivity was the subject of much exploration, ultimately leading to the choice of a length-based parameterization. Information from radiocarbon studies of canary ageing techniques was included to guide the degree of bias likely occurring in production ageing, and the degree of ageing precision was re-estimated from double-read projects. Differential male-female selectivity was allowed for the data sources with suitable data (northern California trawl, Oregon trawl, Washington trawl, shelf trawl survey). Iterative re-weighting was used to adjust all input sample sizes and survey standard error, in some cases resulting in large increases (or decreases) in input sample size relative to the number of trips/hauls actually sampled. Trawl and recreational fishery CPUE were dropped from the model because there had been insufficient work to validate the potential degree of non-linearity in the abundance to CPUE relationship. The parameters defining the variability in size-at-age were fixed at values estimated outside the model from the trawl survey size-age data, rather than allow the model to update these values. At the SSC review of the canary rockfish assessment (Sept. 27-30, 2005; Seattle, WA) it was concluded that the parametric variance around a single base model underestimated the overall uncertainty in the canary rockfish assessment. After considerable deliberation, the SSC and STAT concluded that the Base and Alternate models were equally likely and supported a statistically based blend of the two models as the basis for the rebuilding analysis. The level of relative depletion for the 2005 base case was estimated to be 0.038 when the stock reached its minimum level in 2000, then increasing to 0.057 in 2005. In the alternate 2005 model, the minimum was 0.065 in 1999 and the value in 2005 was estimated to be 0.113.
 
@@ -37,18 +37,16 @@ The 2015 stock assessment modeled population of `r spp` along the U.S. West Coas
 
 ### 2017 and 2019 benchmark updates
 
-Found error in CA catches prior to 1951. OUr catches better align with these and were approved by the state. 
+Found error in CA catches prior to 1951. Our catches better align with these and were approved by the state. 
 
 **Need to write about this**
 
-## Most recent STAR panel and SSC recommendations to remedy deficiencies
-
-<!-- TOR Appendix B E.2 -->
+## Most recent STAR panel and SSC recommendations
 
 The STAR panel and SSC did not list any major deficiencies in the previous assessment. Responses to research recommendations are in [Section](#star-recs). THIS REFERENCES DOES NOT WORK.
 
-## Response to Groundfish Subcommittee Requests (not required in draft)
+**I would like to move the research recommendations in 40management here. Sets the stage better early**
 
-<!-- TOR Appendix B E.3 -->
+## Response to Groundfish Subcommittee Requests
 
-To be completed after the STAR panel, though unsure if needed given this is not an update assessment.
+To be completed after the STAR panel.
