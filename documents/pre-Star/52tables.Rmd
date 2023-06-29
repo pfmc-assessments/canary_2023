@@ -23,11 +23,13 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                booktabs = TRUE,
                longtable = TRUE,
                linesep = "",
-               digits = 1) #|>
-  # kableExtra::kable_styling( 
-  #     latex_options = c("repeat_header"),
-  #     font_size = 8)
+               digits = 1) |>
+  kableExtra::kable_styling(
+      latex_options = c("repeat_header"),
+      font_size = 8)
 ```
+
+\newpage
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('data/canary_total_removals.csv')) |> 
@@ -46,6 +48,8 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                digits = 1)
 ```
 
+\newpage
+
 <!-- ======================================================= -->
 <!-- ********  ACL tables *************** --> 
 <!-- ======================================================= -->
@@ -57,6 +61,8 @@ readr::read_csv(here('documents/tables/ACL_history.csv')) |>
                format = 'latex',
                booktabs = TRUE)
 ```
+
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Commercial sample size tables *************** --> 
@@ -77,10 +83,12 @@ readr::read_csv(here('documents/tables/pacfin_lengths.csv')) |>
                             "Trips - WA TWL", "Lengths - WA TWL", "Trips - WA NTWL", "Lengths - WA TWL"),
                booktabs = TRUE,
                longtable = TRUE,
+               landscape = TRUE,
                escape = TRUE) #%>%
   #kable_styling(font_size = 7) Need to install this package though to have this work
 ```
 
+\newpage
 
 ```{r, results='asis', message=FALSE}
 
@@ -97,9 +105,12 @@ readr::read_csv(here('documents/tables/pacfin_ages.csv')) |>
                             "Trips - OR TWL", "Ages - OR TWL", "Trips - OR NTWL", "Ages - OR TWL", 
                             "Trips - WA TWL", "Ages - WA TWL", "Trips - WA NTWL", "Ages - WA TWL"),
                booktabs = TRUE,
-               longtable = TRUE)  #%>%
+               longtable = TRUE,
+               landscale = TRUE)  #%>%
   #kable_styling(font_size = 7) Need to install this package though to have this work
 ```
+
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  ASHOP sample size tables *************** --> 
@@ -115,6 +126,8 @@ readr::read_csv(here('data/Canary_ashop_LengthComps_hauls_and_samples.csv')) |>
                booktabs = TRUE)
 ```
 
+\newpage
+
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')) |>
   dplyr::select(Year, OR_nhaul, OR_N, WA_nhaul, WA_N) |>
@@ -124,6 +137,8 @@ readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')) |>
                col.names = c("Year", "Hauls OR", "Ages OR", "Hauls WA", "Ages WA"),
                booktabs = TRUE)
 ```
+
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Recreational sample size tables *************** --> 
@@ -142,6 +157,7 @@ readr::read_csv(here('documents/tables/rec_lengths.csv')) |>
   #kable_styling(font_size = 7) Need to install this package though to have this work
 ```
 
+\newpage
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/rec_ages.csv')) |>
@@ -155,6 +171,7 @@ readr::read_csv(here('documents/tables/rec_ages.csv')) |>
   #kable_styling(font_size = 7) Need to install this package though to have this work
 ```
 
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Survey sample size tables *************** --> 
@@ -162,20 +179,23 @@ readr::read_csv(here('documents/tables/rec_ages.csv')) |>
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/wcgbts_summary.csv')) |>
-  knitr::kable(caption = 'Summary of canary rockfish samples in the West Coast Groundfish Bottomtrawl Survey (WCGBTS), extracted February 13, 2023',
+  knitr::kable(caption = 'Summary of canary rockfish samples in the West Coast Groundfish Bottomtrawl Survey (WCGBTS)',
                label = 'wcgbts', 
                format = 'latex',
                booktabs = TRUE)
 ```
 
+\newpage
+
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/triennial_summary.csv')) |>
-  knitr::kable(caption = 'Summary of canary rockfish samples in the AFSC/NWFSC West Coast Triennial Shelf Survey (Triennial), extracted May 1, 2023',
+  knitr::kable(caption = 'Summary of canary rockfish samples in the AFSC/NWFSC West Coast Triennial Shelf Survey (Triennial)',
                label = 'triennial', 
                format = 'latex',
                booktabs = TRUE)
 ```
 
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Model results *************** --> 
@@ -199,6 +219,7 @@ readr::read_csv(here('documents/tables/parameters.csv')) |>
                       )
 ```
 
+\newpage
 
 ```{r like, results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, "tables", "likelihoods.csv")) |>
@@ -212,6 +233,7 @@ readr::read_csv(file.path(model_dir, "tables", "likelihoods.csv")) |>
   #kable_styling(font_size = 7) Need to install this package though to have this work
 ```
 
+\newpage
 
 ```{r tables-weights, results = "asis"}
 source(here('code/table_compweight.R'))
@@ -222,6 +244,7 @@ table_compweight(model,
   kable_styling(font_size = 10)
 ```
 
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Timeseries *************** --> 
@@ -239,6 +262,8 @@ table_format(x = round(timeseries,2),
                  row.names = FALSE)
 ```
 
+\newpage
+
 <!-- ======================================================= -->
 <!-- ********  Reference points *************** --> 
 <!-- ======================================================= -->
@@ -251,3 +276,4 @@ readr::read_csv(here('documents/tables/ref_points.csv')) |>
                booktabs = TRUE)
 ```
 
+\newpage
