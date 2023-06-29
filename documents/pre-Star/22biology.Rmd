@@ -4,9 +4,9 @@ editor_options:
     wrap: 72
 ---
 
-## Biological Data
+## Biological Data {#biology}
 
-\gls{nwfsc}
+\gls{nwfsc} **This this here for a reason??**
 
 The stock assessment model requires specifying several life history
 parameters from analyses external to the model. These parameters include

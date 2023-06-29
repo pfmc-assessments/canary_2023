@@ -42,11 +42,7 @@ fish, results in greater variability in length at larger sizes.
 
 #### Selectivity
 
-Length-based selectivity curves were estimated using a double-normal
-pattern for every fishery and survey, and time-block, except where
-selectivity was mirrored among fleets. A double-normal selectivity
-pattern allows flexibility in the model to estimate either asymptotic or
-dome-shaped selectivity. Estimated selectivity curves are shown in
+Estimated selectivity curves are shown in
 Figure \ref{fig:comm-selex-female}--\ref{fig:noncomm-selex-female} for
 females and Figures
 \ref{fig:comm-selex-male}--\ref{fig:noncomm-selex-male} for males, with
@@ -164,7 +160,7 @@ provided within r4ss such that it was left at the earlier values. Similarly, the
 ### Fits to the Data
 
 **TO DO: Create the appendixes - or switch to say its in the r4ss online documentation**
-Fits to the data are shown based on the Pearson residuals for length and marginal age compositions, annual mean lengths and ages, and aggregated length and marginal age composition for the fishery. For the surveys, fits to the data are similar however fits of ages are conditioned on length, and fits to the survey indices are also provided. For simplicity in writing up the fits to data we do not further distinguish between marginal versus conditional age compositions. Annual length and age composition fits for both the fishery and surveys are shown in the Appendix, Sections \ref{length-data} and \ref{age-data}.
+Fits to the data are shown based on the Pearson residuals for length and marginal age compositions, annual mean lengths and ages, and aggregated length and marginal age composition for the fishery. For the surveys, fits to the data are similar however fits of ages are conditioned on length, and fits to the survey indices are also provided. For simplicity in writing up the fits to data we do not further distinguish between marginal versus conditional age compositions. Annual length and age composition fits for both the fishery and surveys are shown in the Appendix, Sections \@ref{length-data} and \@ref{age-data}.
 
 The aggregated fit to the length composition data by fleet is shown in Figure \ref{fig:len-agg-fit}. Fits are generally consistent with observed data aggregated over all years for males, females, and combined when sex specific data are unavailble. Fits balance the bimodal patterns for Oregon and Washington recreational data and Oregon non-trawl data, and generally consistent for both Washington and Oregon trawl data, where selectivity was mirrored. The mode of proportion at length is generally larger for females than males in trawl gear, reflecting the dimorphic growth in canary, but are similar for other gears.
 
