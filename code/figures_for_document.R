@@ -485,3 +485,30 @@ ggplot(dev.quants, aes(x = relErr, y = mod_num, col = Metric, pch = Metric)) +
   xlab("Relative change") 
 ggsave(here('documents/figures/sens_summary.png'),  dpi = 300,  
        width = 6.5, height = 5.0, units = "in")
+
+
+# Reference point table ---------------------------------------------------
+
+labels <- expand.grid(c('SSB', 'SPR', 'annF', 'Dead_Catch'),
+                      c('Btgt', 'SPR', 'MSY')) |>
+  dplyr::mutate(label = paste(Var1, Var2, sep = '_'))
+
+ref.tab <- dplyr::filter(model$derived_quants, Label %in% labels$label) |>
+  dplyr::mutate(ref = sapply(stringr::str_split(Label, pattern = '_'), tail, 1),
+                met = stringr::str_remove(Label, paste0('_', ref))) |>
+  dplyr::mutate(value.fmt = glue::glue('${x}\\pm {sd}$',
+                                       x = sapply(Value, format, scientific = FALSE,
+                                                  digits = 3),
+                                       sd = sapply(StdDev, format, scientific = FALSE,
+                                                   digits = 2))) |>
+  dplyr::select(value.fmt, ref, met) |>
+  tidyr::pivot_wider(names_from = met, values_from = value.fmt) |>
+  dplyr::mutate(ref = c('$B_{40\\%}$', 'SPR$_{0.5}$', 'MSY'))
+
+
+names(ref.tab) <- c('Mgmt target', 'Spawning output ($10^6$ eggs)', 'SPR', 'F (1/yr)', 'Dead Catch (mt)')
+
+ref.tab$SPR[1] <- stringr::str_remove(string = ref.tab$SPR[1], pattern = '\\\\pm 0.[:digit:]+')
+ref.tab$SPR[2] <- '0.5'
+
+write.csv(ref.tab, here('documents/tables/ref_points.csv'), row.names = FALSE)

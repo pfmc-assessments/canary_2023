@@ -2,32 +2,7 @@
 
 ## Reference Points
 
-Average unfished spawning output is estimated to be `r model$SBzero` million eggs (ARE THOSE UNITS RIGHT?) and unfished total summary biomass is estimated to be `r model$derived_quants['SmryBio_unfished','Value']` metric tons. A population at equilibrium at a target of $B_{40\%}$ is associated with a total dead catch of `r model$derived_quants['Dead_Catch_Btgt', 'Value']` metric tons and spawning output of `r model$derived_quants['SSB_Btgt', 'Value']` million eggs. A population at equilibrium at an SPR target of 50% is associated with a total dead catch of `r model$derived_quants['Dead_Catch_SPR', 'Value']` metric tons and spawning output of `r model$derived_quants['SSB_SPR', 'Value']` million eggs.  A population at equilibrium at model-estimated maximum sustainable yield is associated with a total dead catch of `r model$derived_quants['Dead_Catch_MSY', 'Value']` metric tons and spawning output of `r model$derived_quants['SSB_MSY', 'Value']` million eggs. The yield curve indicates current yield is below MSY estimated in the model, but above yield based on proxy targets (Figure \ref{fig:yield}). 
-
-```{r}
-# maybe use this table?
-# labels <- expand.grid(c('SSB', 'SPR', 'annF', 'Dead_Catch'), 
-#             c('Btgt', 'SPR', 'MSY')) |> 
-#   dplyr::mutate(label = paste(Var1, Var2, sep = '_'))
-# 
-# ref.tab <- dplyr::filter(model$derived_quants, Label %in% labels$label) |>
-#   dplyr::mutate(ref = sapply(stringr::str_split(Label, pattern = '_'), tail, 1),
-#                 met = stringr::str_remove(Label, paste0('_', ref))) |>
-#   dplyr::mutate(value.fmt = glue::glue('${x}\\pm {sd}$', 
-#                                        x = sapply(Value, format, scientific = FALSE, 
-#                                                   digits = 3), 
-#                                        sd = sapply(StdDev, format, scientific = FALSE,
-#                                                    digits = 2))) |>
-#   dplyr::select(value.fmt, ref, met) |>
-#   tidyr::pivot_wider(names_from = ref, values_from = value.fmt) |>
-#   dplyr::mutate(met = c('Spawning output \\n ($10^6$ eggs)', 'SPR', 'F (1/yr)', 'Dead Catch (mt)'))
-# 
-# 
-# names(ref.tab) <- c('', '$B_{40\\%}$', 'SPR$_{0.5}$', 'MSY')
-# 
-# knitr::kable(ref.tab)
-
-```
+Average unfished spawning output is estimated to be `r model$SBzero` million eggs and unfished total summary biomass is estimated to be `r model$derived_quants['SmryBio_unfished','Value']` metric tons. A population at equilibrium at a target of $B_{40\%}$ is associated with a total dead catch of `r model$derived_quants['Dead_Catch_Btgt', 'Value']` metric tons and spawning output of `r model$derived_quants['SSB_Btgt', 'Value']` million eggs. A population at equilibrium at an SPR target of 50% is associated with a total dead catch of `r model$derived_quants['Dead_Catch_SPR', 'Value']` metric tons and spawning output of `r model$derived_quants['SSB_SPR', 'Value']` million eggs.  A population at equilibrium at model-estimated maximum sustainable yield is associated with a total dead catch of `r model$derived_quants['Dead_Catch_MSY', 'Value']` metric tons and spawning output of `r model$derived_quants['SSB_MSY', 'Value']` million eggs. For a full list of reference points at the three different management targets, see Table \ref{tab:ref-pts}. The yield curve indicates current yield is below MSY estimated in the model, but above an optimum yield based on both proxy targets (Figure \ref{fig:yield}). 
 
 ## Unresolved Problems and Major Uncertainties
 

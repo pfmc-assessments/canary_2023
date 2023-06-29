@@ -43,7 +43,7 @@ Found error in CA catches prior to 1951. Our catches better align with these and
 
 ## Most recent STAR panel and SSC recommendations
 
-The STAR panel and SSC did not list any major deficiencies in the previous assessment. Responses to research recommendations are in [Section](#star-recs). THIS REFERENCES DOES NOT WORK.
+The STAR panel and SSC did not list any major deficiencies in the previous assessment. Responses to research recommendations are in Section \ref{star-recs}. THIS REFERENCES DOES NOT WORK.
 
 **I would like to move the research recommendations in 40management here. Sets the stage better early**
 
