@@ -300,7 +300,7 @@ label = 'noncomm-selex-male')
 
 ![Comparison of spawning depletion for data sensitivities. Scenarios are described in section \@ref(data-choices). Blue band represents 95% confidence interval from the base model. \label{fig:data-bratio-compare}](../figures/sensitivities/datacompare4_Bratio_uncertainty.png){width="100%," alt="Figure showing spawning output for all data sensitivities is similar to the base model"}
 
-![Comparison of spawning output for data weighting sensitivities. Scenarios are described in section @(data-weighting). Blue band represents 95% confidence interval from the base model. \label{fig:weight-ssb-compare}](../figures/sensitivities/weightingcompare2_spawnbio_uncertainty.png){width="100%," alt="Figure showing major differences in spawning output when increasing length or age weights relative to the base model"}
+![Comparison of spawning output for data weighting sensitivities. Scenarios are described in section \@ref(data-weighting). Blue band represents 95% confidence interval from the base model. \label{fig:weight-ssb-compare}](../figures/sensitivities/weightingcompare2_spawnbio_uncertainty.png){width="100%," alt="Figure showing major differences in spawning output when increasing length or age weights relative to the base model"}
 
 ![Comparison of spawning depletion for data weighting sensitivities. Scenarios are described in section \@ref(data-weighting). Blue band represents 95% confidence interval from the base model. \label{fig:weight-bratio-compare}](../figures/sensitivities/weightingcompare4_Bratio_uncertainty.png){width="100%," alt="Figure showing spawning output for all data sensitivities is similar to the base model except for adding Canadian catches, which results in a higher overall population scale"}
 
