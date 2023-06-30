@@ -7,6 +7,7 @@
 #' at the end of the caption
 #' @param label A character string with the label for the table.
 #' No underscores allowed.
+#' @param dataframe Instead of a tex table create a dataframe
 #' @author Kelli F. Johnson, Ian G. Taylor
 #'
 table_compweight <- function(output,
@@ -19,13 +20,14 @@ table_compweight <- function(output,
                              ),
                              caption_CAAL = "`CAAL' is conditional age-at-length data.",
                              caption_extra = "",
-                             label = "table-compweight-base") {
+                             label = "table-compweight-base",
+                             dataframe = FALSE) {
   # figure out which fleets have conditional age at length data
   CAAL_fleets <- output[["condbase"]][["Fleet"]] %>% unique()
   Age_fleets <- output[["agedbase"]][["Fleet"]] %>% unique()
   CAAL_fleets <- setdiff(CAAL_fleets, Age_fleets)
   
-  dplyr::bind_rows(
+  df = dplyr::bind_rows(
     .id = "Type",
     Length = output[["Length_Comp_Fit_Summary"]],
     Age = output[["Age_Comp_Fit_Summary"]] %>% dplyr::filter(Fleet %in% Age_fleets),
@@ -44,17 +46,22 @@ table_compweight <- function(output,
       "Sum N adj."
     ) %>%
     dplyr::mutate(Francis = sprintf("%.3f", Francis)) %>% # round to 2 places
-    dplyr::mutate_at(5:7, ~ sprintf("%.1f", .x)) %>% # round to 1 places
-    kableExtra::kbl(
-      row.names = FALSE,
-      longtable = FALSE, booktabs = TRUE,
-      label = label,
-      caption = paste(
-        caption,
-        ifelse(length(CAAL_fleets) > 0, caption_CAAL, ""),
-        caption_extra
-      ),
-      format = "latex",
-      linesep = ""
-    )
+    dplyr::mutate_at(5:7, ~ sprintf("%.1f", .x)) # round to 1 places
+    
+  if(dataframe == FALSE){
+      kableExtra::kbl(df,
+        row.names = FALSE,
+        longtable = FALSE, booktabs = TRUE,
+        label = label,
+        caption = paste(
+          caption,
+          ifelse(length(CAAL_fleets) > 0, caption_CAAL, ""),
+          caption_extra
+        ),
+        format = "latex",
+        linesep = ""
+        )
+  }else{
+    return(df)
+  }
 }

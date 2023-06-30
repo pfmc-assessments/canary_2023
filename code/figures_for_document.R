@@ -415,3 +415,23 @@ ref.tab$SPR[1] <- stringr::str_remove(string = ref.tab$SPR[1], pattern = '\\\\pm
 ref.tab$SPR[2] <- '0.5'
 
 write.csv(ref.tab, here('documents/tables/ref_points.csv'), row.names = FALSE)
+
+# Data weight (Francis versus MI) table ---------------------------------------------------
+
+source(here('code/table_compweight.R'))
+mod23_mi <- SS_output(here('models', 'sensitivities', 'mcallister_ianelli'))
+
+fran <- table_compweight(mod23,
+                 caption_extra = paste("The WCGBTS age comps are conditioned on length,",
+                                       "so there are more observations with fewer samples per observation."),
+                 label = "data-weights", dataframe = TRUE) 
+
+mi <- table_compweight(mod23_mi,
+                 caption_extra = paste("The WCGBTS age comps are conditioned on length,",
+                                       "so there are more observations with fewer samples per observation."),
+                 label = "data-weights", dataframe = TRUE) 
+
+both <- cbind(fran[,c("Type","Fleet","Francis")], mi[,c("Francis")])
+colnames(both)[4] <- "MI"
+
+write.csv(both, here('documents','tables','data-weight-compare.csv'), row.names = FALSE)
