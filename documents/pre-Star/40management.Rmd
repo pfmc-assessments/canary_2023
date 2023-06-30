@@ -12,11 +12,17 @@ To be completed following the STAR panel.
 
 To be completed following the STAR panel.
 
-<!-- We have shown a decision table forecasting spawning biomass given two alternative harvest control rules (i.e., harvest at the annual catch limit, ACL, or the rebuilding target of 88.7 spawning potential ratio), using states-of-nature involving either alternative values for steepness or natural mortality rate (Tables h.1 and h.2). In each table, we set total catch in 2015/2016 equal to the previous estimates of annual biological catch (ABC). Projecting catches for 2017-2026 using the estimated ACL given the lower state-of-nature for either natural mortality (Table h.1) or steepness (Table h.2) results in declining spawning biomass over these 10 years (i.e., a 2026 spawning biomass relative to average unfished levels of 20.8% for the lower natural mortality rate, or 32.5% for the lower steepness level). By contrast, projecting catches using a target SPR of 88.7% given the lower natural mortality or steepness values results in a small increase in spawning output over time (i.e., a 2026 relative spawning biomass of 37.4% and 47.6% respectively). Projecting catches using the estimated ACL and either the base-model values or the upper states of nature for steepness and natural mortality rate results in a steady decline in spawning output towards the target level of 40%. Finally, projecting catches using a target SPR of 88.7%, given either the base values or upper state-of-nature for steepness or natural mortality, results in a gradual increase in spawning output over ten years. -->
+## Evaluation of Scientific Uncertainty
 
-<!--     Given that this assessment estimates the canary stock to have rebuilt, we do not envision providing forecasts using the rebuilder software for West Coast groundfishes.  We therefore envision that the decision tables presented here would be used as the basis for informing decisions regarding future, short-term harvest levels.  -->
+**TO DO: NEed to include estimate of sigma and how it is calculated**
+
+<!-- Brian updated the paragraph a bit below -->
+
+Based upon the considerations, sensitivities, and retrospective analyses listed previously, we conclude that different treatments and assumptions regarding selectivity blocks and mirroring, spatial structure, and various data treatments have little impact on estimates of stock status for canary rockfish. However, we note that estimates of stock status are highly sensitive to assumptions regarding biological parameters that govern productivity and the yield curve, especially base natural mortality rate and the assumption that female natural mortality is estimated separate from males, is age-invariant, and indirectly that male and female selectivity differs with respect the rate of decline at larger lengths. We therefore recommend that natural mortality formulations form the basis for a decision table, and further understanding on the apporpriate forms and values are prioritized as a subject for future research.
 
 ## Regional management considerations
+
+**TO DO**
 
 We have chosen to adopt a spatially stratified assessment model for the following reasons: • In cases where there are large differences in exploitation rate in different spatial areas, the proportion of the stock in different areas will change as a function of age. This will result in a highly irregular, and potentially time-varying form for selectivity for the fishery when analyzed using a nonspatial model (Sampson and Scott, 2012, 2011).\
 • Given spatial variation in exploitation history, compositional data may exhibit systematic differences among spatial areas, e.g., by reflecting spatial differences in average age. A spatially stratified model may be able to explain these differences without otherwise attributing them to overdispersion (which would otherwise require extensive downweighting of available compositional data), and will generally provide information to diagnose model misspecification that is attributable to spatial variation in population dynamics, growth, or exploitation history (Punt et al., 2015).\
@@ -25,13 +31,15 @@ We have chosen to adopt a spatially stratified assessment model for the followin
 
 This spatial base model estimates substantial variation among spatial strata in spawning output relative to average unfished levels. However, determination of whether canary has completed its rebuilding is appropriately evaluated at a coast-wide level, and we interpret spatial variation as a tool to visualize and explore model residuals (Punt et al., 2015) and a method to identify time-varying selectivity at the stock-wide level (Sampson and Scott, 2011), rather than as a basis for spatially varying fisheries management.
 
-## Evaluation of Scientific Uncertainty
+**Notes to myself (Brian) to potentially include**
+[@bosley_spatialBRP_2019] found that using total survey biomass for apportioning quota to regions maximized system yield.
 
-Based upon the considerations, sensitivities, and retrospective analyses listed previously, we conclude that different treatments and assumptions regarding selectivity, spatial structure, ageing error estimates, and the inclusion of surface reads for otoliths have little impact on estimates of stock status for canary rockfish. However, we note that estimates of stock status are highly sensitive to assumptions regarding biological parameters that govern productivity and the yield curve, i.e., steepness, base natural mortality rate, and the assumption that female natural mortality is allowed to change for sexually mature individuals relative to immature females or males of any age. We therefore recommend that biological parameters form the basis for a decision table, and are prioritized as a subject for future research.
+[@bosley_mismatch_2022] found that overall area, parameter estimates were generally unbiased, but were biased for individual areas
 
 ## Comparison among alternative states of nature
 
 **Suggest deleting this section, it covered above under decision tables**
+**Brian: Im for that but am confused where it is covered and whether we even need it for review. Can we say "To be completed following the STAR panel?"**
 
 We chose to vary the strength of recruitment compensation to represent alternative plausible states of nature. We use steepness for the following three reasons: Recruitment compensation has been used to generate alternative states of nature in the 2007, 2009, and 2011 assessments, and represents a current topic of discussion in the Scientific and Statistical Committee of the PFMC. Values for alternative states of nature can be justified by previous meta-analytic research generating a prior distribution for steepness for Pacific rockfishes (Dorn, 2002; Punt and Dorn, 2013) The value of steepness has a large impact on the rate of stock rebuilding after the declaration of overfished status, and hence is highly influential in determining the degree to which the stock can be considered to be rebuilt (Figure 111). It also accounts for a large portion of the difference between the 2011 update and proposed base model (Figure 120).
 
@@ -67,10 +75,17 @@ Recommendations are summarized for brevity:
 
 4.  We suggest that basic life history research be highly prioritized for future research.
 
-**Response:** This assessment includes updated data and relationships on growth, condition (weight-length), fecundity, and maturity. A number of studies on canary rockfish life history and population structure have been published since the previous assessment [@budrick2016evolutionary; @keller2018canary; @Brooks_thesis_2021]. Unfortunately, these have not resulted in a better understanding of natural mortality and the apparent loss of older females. This remains a research priority. In absence of better understanding of canary rockfish natural mortality, we use natural mortality rates from a recently updated prior [@hamel2022development].
-
-
+**Response:** This assessment includes updated data and relationships on growth, condition (weight-length), fecundity, and maturity. A number of studies on canary rockfish life history and population structure have been published since the previous assessment [@budrick2016evolutionary; @keller2018canary; @Brooks_thesis_2021]. Unfortunately, these have not resulted in a better understanding of natural mortality and the apparent loss of older females. This remains a research priority. In absence of better understanding of canary rockfish natural mortality, we use natural mortality rates from a recently updated prior [@hamel2022development]. These have also not clearly identified consistent patterns in latitudinal differences in growth. We also recommend efforts towards this work for continued research. 
+**I added this last sentence in**
 
 ### Current research and data neds
 
+1. Continued research into the rationale for skewed sex ratios and empirical studies to estimate naturalm mortality rates. 
+
 1.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of non-trawl coast-wide fishery-independent indices. This could mean an expansion of the \gls{s-hkl} into more northern waters, or taking advantage of developments in model-based index standardization to stitch together multiple similar overlapping fishery-independent non-trawl sampling programs that have occurred over smaller spatial and temporal scales than the \gls{s-wcgbt}.
+
+2. Growth parameters to ascertain whether biological relationship differ along the coast
+
+3. Fecundity from canary
+
+4. Further exploration of differences in saptial and non-spatial models.

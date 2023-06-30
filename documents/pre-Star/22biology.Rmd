@@ -32,7 +32,7 @@ the fishery age data well, and was a better biological explanation for
 the disappearance of older age females than the alternative hypothesis
 that the older females were not vulnerable to the fishery. The pattern
 of male-skewed sex ratio at older ages has been observed along the U.S.
-West Coast in fishery data off Oregon (Rasmussen pers. comm. ODFW) and
+West Coast in fishery data off Oregon (Rasmussen pers. comm. \gls{odfw}), Canada (Heppel pers. comm. Oregon State University), and
 Alaska and in black rockfish in addition to canary and yellowtail
 rockfishes. Although it has been found in these three semi-pelagic
 species, the pattern has not been observed for bocaccio *Sebastes paucispinis*, chilipepper
@@ -41,22 +41,6 @@ are also semi-pelagic. However, starting in the 2010's the male-skewed
 sex ratio has evened out in fishery data off Oregon (Rasmussen pers.
 comm. ODFW). The pattern has remained within the \gls{s-wcgbt} and has
 not evened off in recent years.
-
-<!-- IF USE A BREAKPOINT: In this assessment, we updated the longevity-based -->
-<!-- prior for the natural mortality rate for males and young females based -->
-<!-- on @hamel2022development, using a maximum age of 84 yrs as was done in -->
-<!-- the previous assessment [@thorson_status_2015; @love2002rockfishes]. -->
-<!-- This results in a lognormal prior with a log-mean of -2.74, a -->
-<!-- log-standard deviation of 0.31, and a median natural mortality of 0.0643 -->
-<!-- yr$^{-1}$ (used as the fixed value). Instead of a ramp, which requires -->
-<!-- the analyst to select two ages, we used a breakpoint, which only -->
-<!-- requires selecting a single age and is thus more parsimonious, as suggested in [@pfmc_accepted_2023]. Rather -->
-<!-- than placing the breakpoint around the point of 50 percent maturity, at -->
-<!-- which point there is little evidence in the data of sex ratios deviating -->
-<!-- from 50:50, we placed the breakpoint between ages 20 and 21. This means -->
-<!-- female mortality stayed at the low value for more years than in recent -->
-<!-- assessments, and is more aligned with where the ratio of females begins -->
-<!-- to decline in survey data. -->
 
 In this assessment, we elect to model natural
 mortality for males and females separately as has been done in past assessments. After consultation with state biologists, we also elect to model natural mortality as age-invariant. This provides a more parsimonious approach to modeling natural mortality than using a linear ramp (as mentioned in [@pfmc_accepted_2023]) which has been done for past assessments. Secondly, both a linear ramp and breakpoint with increasing female natural mortality at age does not align with the general life history belief that natural mortality declines with age [@lorenzen1996relationship]. We updated the
