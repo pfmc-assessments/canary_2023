@@ -64,30 +64,6 @@ SSsummarize(xx) |>
                                      'Add WCVI catches to WA'),
                     print = TRUE, plotdir = here('models/sensitivities',new_name))
 
-# compare rec devs
-bc_recdevs <- readxl::read_excel(here('data-raw/CAR-data-for.BL.KO.xlsx'),
-                                 sheet = 'Rdevs') |>
-  dplyr::select(-1) |>
-  tidyr::pivot_longer(cols = dplyr::everything(), names_to = 'Yr', values_to = 'recdev') |>
-  dplyr::group_by(Yr) |>
-  dplyr::summarise(dev = median(recdev)) |>
-  dplyr::mutate(Yr = as.numeric(Yr),
-                model = 'bc')
-
-purrr::map(xx, ~ select(.$recruit, Yr, dev)) |> 
-  `names<-`(c('Base', 'bc_catches')) |> 
-  append(list(BC = bc_recdevs)) |> 
-  dplyr::bind_rows(.id = 'Model') |> 
-  filter(Model != 'bc_catches', Yr >= 1955) |>
-  ggplot(aes(x = Yr, y = dev, col = Model)) +
-  geom_line() + geom_point() +
-  labs(x = 'Year', y = 'Rec Dev')
-
-# These look nothing like each other. 
-# BC also sees slow steady increase.
-# WC sees slow steady decrease
-
-
 # Prerecruit survey add 3 years -------------------------------------------
 
 mod <- base_mod

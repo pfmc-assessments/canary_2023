@@ -435,3 +435,40 @@ both <- cbind(fran[,c("Type","Fleet","Francis")], mi[,c("Francis")])
 colnames(both)[4] <- "MI"
 
 write.csv(both, here('documents','tables','data-weight-compare.csv'), row.names = FALSE)
+
+
+# Canadian recruitment ----------------------------------------------------
+
+# compare rec devs
+bc_recdevs <- readxl::read_excel(here('data-raw/CAR-data-for.BL.KO.xlsx'),
+                                 sheet = 'Rdevs') |>
+  dplyr::select(-1) |>
+  tidyr::pivot_longer(cols = dplyr::everything(), names_to = 'Yr', values_to = 'recdev') |>
+  dplyr::group_by(Yr) |>
+  dplyr::summarise(dev = median(recdev)) |>
+  dplyr::mutate(Yr = as.numeric(Yr)) |>
+  dplyr::filter(Yr < 2022)
+
+dplyr::select(mod23$recruit, Yr, dev) |>
+  list(bc_recdevs) |>
+  `names<-`(c('Base', 'BC')) |>
+  dplyr::bind_rows(.id = 'Model') |> 
+  dplyr::filter(Yr >= 1955) |>
+  tidyr::nest(data = -Model) |>
+  dplyr::mutate(fit = purrr::map(data, ~lm(dev ~ Yr, data = .)),
+                detrended = purrr::map(fit, resid)) |>
+  dplyr::select(-fit) |>
+  tidyr::unnest(cols = c(data, detrended)) |>
+  dplyr::select(-dev) |> 
+  tidyr::pivot_wider(names_from = Model, values_from = detrended) |> #with(cor.test(Base, BC, use = 'pairwise.complete.obs'))
+  ggplot(aes(x = Base, y = BC, col = Yr)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = 'dotted') +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  labs(x = 'Detrended base model recruitment deviation', y = 'Detrended BC model recruitment deviation', col = 'Year') +
+  theme_classic()
+
+ggsave(here('documents/figures/canada_rec.png'), device = 'png', width = 6.5,
+       height = 5, units = 'in', dpi = 300)
+
+
