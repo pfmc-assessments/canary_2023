@@ -860,15 +860,16 @@ make_detailed_sensitivites <- function(biglist, mods_to_include, pretty_names = 
                           legendlabels = c('Base', pretty_names))
   
   SStableComparisons(shortlist, 
-                     modelnames = c('base', pretty_names),
+                     modelnames = c('Base', pretty_names),
                      names =c("Recr_Virgin", "R0", "steep", "NatM", "L_at_Amax", "VonBert_K", "SSB_Virg",
                               "Bratio_2023", "SPRratio_2022")) |>
-    dplyr::filter(!(Label %in% c('SR_BH_steep', 'NatM_break_1_Fem_GP_1',
+    dplyr::filter(!(Label %in% c('NatM_break_1_Fem_GP_1',
                                  'NatM_break_1_Mal_GP_1', 'NatM_break_2_Mal_GP_1')),
-                  Label != 'NatM_uniform_Mal_GP_1' | any(grep('break', Label))) |>
+                  Label != 'NatM_uniform_Mal_GP_1' | any(grep('break', Label)),
+                  Label != 'SR_BH_steep' | any(grep('break', Label))) |>
     dplyr::mutate(dplyr::across(-Label, ~ sapply(., format, digits = 3, scientific = FALSE) |>
                                   stringr::str_replace('NA', ''))) |>
-    dplyr::rename(` ` = 'Label') |>
+    `names<-`(c(' ', 'Base', pretty_names)) |>
     write.csv(file.path(outdir, paste0(grp_name, '_table.csv')), 
               row.names = FALSE)
   
@@ -876,7 +877,7 @@ make_detailed_sensitivites <- function(biglist, mods_to_include, pretty_names = 
 
 selectivity <- c('no_sex_selectivity', 
                  # 'selex_parm6', does not converge
-                 'simpler_block', 
+                 'simpler_block_OR_NTWL', 
                  'wa_ntwl_asymptotic',
                  # 'wcgbts_asymptotic' does not converge
                  'float_q',
@@ -898,8 +899,8 @@ weighting <- c(
 
 weighting_pretty <- c('McAllister-Ianelli',
                       'No extra SD',
-                      'Francis ages X10',
-                      'Francis lengths X10')
+                      'Francis ages x10',
+                      'Francis lengths x10')
 
 data_choices <- c('no_sparse_comps',
                   #                  'noDebWV_lengths', minor
@@ -909,6 +910,7 @@ data_choices <- c('no_sparse_comps',
                   'catch_se_0.1')
 data_pretty <- c('No sparse comps',
                  'Pre-recruit data',
+                 'Released lengths in',
                  'Canada catches',
                  'Catch SE 0.1')
 
@@ -919,54 +921,123 @@ productivity <- c('est_h',
 prod_pretty <- c('Estimate h',
                  'Estimate male M',
                  'M ramp',
-                 'single M')
+                 'Single M')
 
 sens_names <- c(selectivity,
                 weighting,
                 data_choices,
                 productivity)
 
-pretty_names <- sens_names
+pretty_names <- c(selec_pretty,
+                  weighting_pretty,
+                  data_pretty,
+                  prod_pretty)
 
 big_sensitivity_output <- SSgetoutput(dirvec = c(here('models', base_mod_name),
                                                  glue::glue("{models}/{subdir}", 
                                                             models = here('models/sensitivities'),
-                                                            subdir = sens_names))) 
+                                                            subdir = sens_names))) |>
+  `names<-`(c('base', sens_names))
 
 
 
 #tmp <- SS_output(here('models/sensitivities', 'len_lambda0.01'))
 #big_sensitivity_output[[15]] <- tmp
 
-names(big_sensitivity_output) <- c('base', sens_names)
-
 # test to make sure they all read correctly:
-sapply(big_sensitivity_output, length)
+sapply(big_sensitivity_output, length) # all lengths should be >180
 
+outdir <- here('documents/figures/sensitivities')
 make_detailed_sensitivites(big_sensitivity_output, 
                            mods_to_include = selectivity,
-                           outdir = here('models/sensitivities/00_comparison_plots'),
+                           outdir = outdir,
                            grp_name = 'selectivity', 
                            pretty_names = selec_pretty)
 
 
 make_detailed_sensitivites(big_sensitivity_output, 
                            mods_to_include = weighting,
-                           outdir = here('models/sensitivities/00_comparison_plots'),
+                           outdir = outdir,
                            grp_name = 'weighting',
                            pretty_names = weighting_pretty)
 
 make_detailed_sensitivites(big_sensitivity_output, 
                            mods_to_include = data_choices,
-                           outdir = here('models/sensitivities/00_comparison_plots'),
-                           grp_name = 'data')
+                           outdir = outdir,
+                           grp_name = 'data',
+                           pretty_names = data_pretty)
 
 make_detailed_sensitivites(big_sensitivity_output, 
                            mods_to_include = productivity,
-                           outdir = here('models/sensitivities/00_comparison_plots'),
-                           grp_name = 'productivity')
+                           outdir = outdir,
+                           grp_name = 'productivity',
+                           pretty_names = prod_pretty)
+
+current.year <- 2023
+CI <- 0.95
+
+sensitivity_output <- SSsummarize(big_sensitivity_output) 
 
 sensitivity_output <- SSsummarize(big_sensitivity_output) 
 lapply(big_sensitivity_output, function(.)
-  .$warnings[grep('gradient', .$warnings)])
+  .$warnings[grep('gradient', .$warnings)]) # check gradients
 
+dev.quants.SD <- c(
+  sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == "SSB_Initial", 1],
+  (sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == paste0("SSB_", current.year), 1]),
+  sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == paste0("Bratio_", current.year), 1],
+  sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == "Dead_Catch_SPR", 1],
+  sensitivity_output$quantsSD[sensitivity_output$quantsSD$Label == "annF_SPR", 1]
+)
+
+dev.quants <- rbind(
+  sensitivity_output$quants[sensitivity_output$quants$Label == "SSB_Initial", 
+                            1:(dim(sensitivity_output$quants)[2] - 2)],
+  sensitivity_output$quants[sensitivity_output$quants$Label == paste0("SSB_", current.year), 
+                            1:(dim(sensitivity_output$quants)[2] - 2)],
+  sensitivity_output$quants[sensitivity_output$quants$Label == paste0("Bratio_", current.year), 
+                            1:(dim(sensitivity_output$quants)[2] - 2)],
+  sensitivity_output$quants[sensitivity_output$quants$Label == "Dead_Catch_SPR", 
+                            1:(dim(sensitivity_output$quants)[2] - 2)],
+  sensitivity_output$quants[sensitivity_output$quants$Label == "annF_SPR", 
+                            1:(dim(sensitivity_output$quants)[2] - 2)]
+) |>
+  cbind(baseSD = dev.quants.SD) |>
+  dplyr::mutate(Metric = c("SB0", paste0("SSB_", current.year), paste0("Bratio_", current.year), "MSY_SPR", "F_SPR")) |>
+  tidyr::pivot_longer(-c(base, Metric, baseSD), names_to = 'Model', values_to = 'Est') |>
+  dplyr::mutate(relErr = (Est - base)/base,
+                logRelErr = log(Est/base),
+                mod_num = rep(1:length(sens_names), 5))
+
+metric.labs <- c(
+  SB0 = expression(SB[0]),
+  SSB_2023 = as.expression(bquote("SB"[.(current.year)])),
+  Bratio_2023 = bquote(frac(SB[.(current.year)], SB[0])),
+  MSY_SPR = expression(Yield['SPR=0.50']),
+  F_SPR = expression(F['SPR=0.50'])
+)
+
+CI.quants <- dev.quants |>
+  dplyr::filter(Model == 'canada_catches') |>
+  dplyr::select(base, baseSD, Metric) |>
+  dplyr::mutate(CI = qnorm((1-CI)/2, 0, baseSD)/base)
+
+ggplot(dev.quants, aes(x = relErr, y = mod_num, col = Metric, pch = Metric)) +
+  geom_vline(xintercept = 0, linetype = 'dotted') +
+  geom_point() +
+  geom_segment(aes(x = CI, xend = abs(CI), col = Metric,
+                   y = length(sens_names) + 1.5 + seq(-0.5, 0.5, length.out = length(metric.labs)),
+                   yend = length(sens_names) + 1.5 + seq(-0.5, 0.5, length.out = length(metric.labs))), 
+               data = CI.quants, linewidth = 2, show.legend = FALSE, lineend = 'round') +
+  theme_bw() +
+  scale_shape_manual(
+    values = c(15:18, 12),
+    # name = "",
+    labels = metric.labs
+  ) +
+  scale_color_discrete(labels = metric.labs) +
+  scale_y_continuous(breaks = 1:length(sens_names), name = '', labels = pretty_names, 
+                     limits = c(1, length(pretty_names) + 2), minor_breaks = NULL) +
+  xlab("Relative change") 
+ggsave(file.path(outdir, 'sens_summary.png'),  dpi = 300,  
+       width = 6, height = 7, units = "in")
