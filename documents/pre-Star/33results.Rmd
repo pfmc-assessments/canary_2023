@@ -49,13 +49,10 @@ Figure \ref{fig:comm-selex-female}--\ref{fig:noncomm-selex-female} for
 females and Figures
 \ref{fig:comm-selex-male}--\ref{fig:noncomm-selex-male} for males, with
 selectivity parameters provided in Table \ref{tab:params}. Nearly all
-fleets show a strong dome-shaped pattern with the execption of the
+fleets show a strong dome-shaped pattern with the exception of the
 Oregon and Washington trawl fleet from 2000--2011, the Oregon non-trawl
-fleet prior to 2000, and the \gls{s-tri}. The amount of unavailable
-biomass for `r spp` is large in the early time period, declines during
-the period of peak exploitation, and then increases since 2000 (Figure
-\ref{fig:unavail-bio}). **TO DO: Add statement about sensitvity to having a
-full asymptotic fleet to teh above depending on results**
+fleet prior to 2000, and the \gls{s-tri}. **TO DO: Add statement about sensitivity to having a
+full asymptotic fleet to the above depending on results**
 
 For the trawl fleets, the length at peak selectivity is greatest prior
 to 2000, with the California peak at 46 cm and the mirrored Oregon and
