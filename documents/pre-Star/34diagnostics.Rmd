@@ -20,8 +20,6 @@ The base model contains substantial uncertainty in both how data were processed,
 
 #### Data choices
 
-<!--# Just needs figures and tables -->
-
 Compiling data for the assessment model required a number of choices and assumptions. The following sensitivity models fall under data choices:
 
 -   No sparse comps: exclude all year-fleet combination of length and age composition data with input sample sizes less than five. Complete one iteration of Francis data weighting.
@@ -32,17 +30,15 @@ Compiling data for the assessment model required a number of choices and assumpt
 
 -   Canada catch: add catches from the West Coast of Vancouver Island to Washington trawl and non-trawl fleets
 
--   Catch SE 0.1: Increase the uncertainty in input catches from 0.05 to 0.1. This is done in lieu of manually changing catch streams to "low" and "high" scenarios. **could add this to data weighting. I had it here because I wanted the two catch sensitivities together.**
+-   Catch SE 0.1: Increase the uncertainty in input catches from 0.05 to 0.1 for years before 1980. Years before 1980 approximate the period with less extensive sampling, and where historical reconstrcutions are used to estimate catch. Adjusting catch standard error was is done in lieu of manually changing catch streams to "low" and "high" scenarios.
 
 Overall, decisions with respect to input data had a low impact on model outcomes (Table \@ref(tab:data-sens), Figures \@ref(fig:data-ssb-compare), \@ref(fig:data-bratio-compare)). Sensitivities generally led to similar current biomass levels, but varying estimates of unfished biomass, leading to somewhat different depletion estimates. Still, in all cases depletion in 2023 was within the 95% confidence interval of the base model. All models generally produced similar estimates of female natural mortality. Including Canadian catches predictably increased the population scale substantially, outside of the 95% confidence interval. Because Canadian fishing continued during the period `r spp` was declared overfished in the U.S., including Canadian catches also resulted in a more muted recovery and lower depletion in 2023.
 
 #### Data weighting
 
-<!--# Just needs figures and tables -->
-
 The assessment model contains data from a variety of sources, some of which are expected to be more informative than others. Sampling units from these different data sources are not necessarily comparable (e.g., an observation from a survey index versus an observation of a fish length). Data weighting procedures are objective algorithms that can be used to assign weights to different data sources to optimize the fit of the model to the data. The following sensitivity models fall under data weighting:
 
--   McAllister-Ianelli data weighting: Use the algorithm suggested by McAllister and Ianelli [-@mcallister_bayesian_1997] instead of Francis and Hilborn [-@francis_data_2011]
+-   McAllister-Ianelli data weighting: Use the algorithm suggested by McAllister and Ianelli [-@mcallister_bayesian_1997] instead of [@francis_data_2011]
 
 -   No extra SD: Do not estimate an extra standard deviation for the pre-recruit survey index. This means the pre-recruit survey cannot be down-weighted to allow for better fitting of other data sources.
 
@@ -54,15 +50,13 @@ The choice of data weighting algorithm and the extra standard deviation on the s
 
 #### Selectivity and catchability
 
-<!--# Just needs figures and tables -->
-
 There are numerous possible ways to parameterize selectivity in a stock assessment model, and its correct parameterization is generally a major source of structural uncertainty. Selectivity is of particular importance for `r spp` because it is unknown whether the absence of old females in composition data is due to a lack of availability, old females are available but experience higher natural mortality rates than their male counterparts, or some combination of the two. Catchability represents the fraction of the population that is available to a survey. It can either be estimated as a model parameter with uncertainty, or analytically calculated within the model. Because the base model mirrors catchability between the early and late triennial periods, catchability for the triennial survey had to be estimated. The following sensitivity models fall under selectivity and catchability:
 
 -   No sex selectivity: Assume males and females have the same three-parameter double-normal selectivity curve (applies to all fleets)
 
--   Simpler blocks: Remove all selectivity blocks for California trawl, California non-trawl, California recreational, and Oregon recreational. Retain only one block for Oregon non-trawl (2000-2019) and one block for Washington recreational (2021-2022). MORE RATIONALE?
+-   Simpler blocks: Remove all selectivity blocks for California trawl, California non-trawl, California recreational, and Oregon recreational because each had relatively similar selectivity curves over time. Retain only one block for Oregon non-trawl (2000-2019) and one block for Washington recreational (2021-2022) because each had two relatively similar periods.
 
--   WA NTWL asymptotic: Assume the Washington non-trawl fleet has asymptotic selectivity. The base model assumes all fleets have dome-shaped selectivity, which allows for a significant amount of cryptic biomass. The Washington non-trawl fleet was deemed most likely to have asymptotic selectivity because 1) it fishes in untrawlable habitat where larger fish likely reside, and 2) the average size of canary rockfish tends to increase northward along the coast
+-   WA NTWL asymptotic: Assume the Washington non-trawl fleet has asymptotic selectivity. The base model assumes all fleets can have dome-shaped selectivity, and many do, which could lead to the presence of cryptic biomass. The Washington non-trawl fleet was deemed most likely to have asymptotic selectivity because 1) it fishes in untrawlable habitat where larger fish likely reside, and 2) the average size of canary rockfish tends to increase northward along the coast, and 3) there is no nearshore component so harvest would presumably be at depths where larger individuals would be found. 
 
 -   Float Q: Move all triennial data into the early triennial period and float Q (i.e., calculate it analytically). Complete one iteration of Francis data weighting.
 
@@ -97,8 +91,6 @@ Finally, fixing female natural mortality at the median of the prior used for mal
 Excluding all length composition samples from the Deb Wilson-Vandenberg data and assuming the pre-recruit survey occurs after density-dependence instead of before had minimal impacts on model outputs. Dirichlet-multinomial data weighting, assuming \gls{s-wcgbt} has asymptotic selectivity, and estimating a fourth parameter of the double-normal selectivity curve for all fleets led to models that did not converge (final gradient \>0.01 for Dirichlet-multinomial, gradient \>100 for remainder).
 
 ### Retrospective Analysis
-
-<!-- Brian has updated this section -->
 
 A five-year retrospective was done by successively removing years of data to obtain models with ending years ranging from 2017 to 2021. The retrospective analysis shows a slight negative retrospective bias in that initial spawning output and recent spawning output generally decline as more years of data are removed, but changes are within the uncertainty intervals of the base model (Figure \ref{fig:retro_bio}). The magnitude of change in initial and recent spawning output differs; the removal of two years of data causes an increase in spawning output relative to unfished, with all other runs similar in pattern to the base model (Figure \ref{fig:retro_relbio}). Estimates of Mohn's $\rho$ [@mohn_rho_1999], which measure the magnitude of retrospective bias are -0.25 over all years (average of -0.05 per year) for spawning output and -0.04 over all years (average of -0.008 per year) for spawning output relative to unfished. According to [@hurtado-ferro_looking_2015], Mohn's $\rho$ values on a per-year basis of less than -0.15 are not cause for concern, but should not be taken as lack of true bias.
 
