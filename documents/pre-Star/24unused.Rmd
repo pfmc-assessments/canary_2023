@@ -37,17 +37,15 @@ Fishery-independent data available for this assessment came from two distinct WD
 
 ### WA olympic coast YOY survey (NOAA)
 
-Dive surveys represent a promising data source for `r spp` as their habitat preferences for rocky untrawlable habitat means they are poorly sampled by NMFS trawl surveys. However, this seven-year dataset covering juvenile rockfish habitat (2015-2022, missing 2020) contained three years without any canary observations, and only covers the northern Washington coast. Due to limited sample sizes and coverage of only a small fraction of the assessed area, this dataset was deemed insufficient for inclusion in the assessment. Future research could synthesize dive surveys from throughout the range of canary to build a more robust recruitment index post-density dependence that may be more appropriate for inclusion in an assessment. 
+Dive surveys represent a promising data source for `r spp` as their habitat preferences for rocky untrawlable habitat means they have relatively low encounter rates by NMFS trawl surveys. However, this seven-year dataset covering juvenile rockfish habitat (2015-2022, missing 2020) contained three years without any canary observations, and only covers the northern Washington coast. Due to limited sample sizes and coverage of only a small fraction of the assessed area, this dataset was deemed insufficient for inclusion in the assessment. Future research could synthesize dive surveys from throughout the range of canary to build a more robust recruitment index post-density dependence that may be more appropriate for inclusion in an assessment. 
 
 ### Oregon indices
 
-*Kiva: I updated this text a little to clarify the two indices are those we mention. Can you confirm this is still accurate?*
-
-Two indices of relative abundance were developed for canary rockfish in Oregon using the \gls{sdmtmb} package, one fishery-dependent and the other fishery independent, but ultimately not included in the base model due to their limited representation of coastwide `r spp` dynamics. Given the period of non-retention for canary rockfish, the only viable fishery-dependent index was based on onboard sampling of charter vessels that includes both retained and released fish. Additionally, a second index from Oregon’s marine reserve hook and line survey was also developed.
+Two indices of relative abundance were developed for canary rockfish in Oregon using the \gls{sdmtmb} package, one fishery-dependent and the other fishery independent, but ultimately not included in the base model due to their limited representation of coastwide `r spp` dynamics. Given the period of non-retention for canary rockfish, the only viable fishery-dependent index was based on onboard sampling of charter vessels that includes both retained and released fish. A second index from Oregon’s marine reserve hook and line survey was also developed, but not used because of its spatial coverage limited to the state of Oregon.
 
 ### \gls{s-hkl}
 
-This survey operates south of Point Conception, whereas `r spp` density decreases substantially after that major biogeographic barrier. CITE MAP OF WCGBTS TOWS. Thus, this survey does not cover the main spatial range of the stock and was not considered representative.
+This survey operates south of Point Conception, whereas `r spp` density decreases substantially after that major biogeographic barrier. Thus, this survey does not cover the main spatial range of the stock and was not considered representative.
 
 ### \gls{iphc} longline survey
 

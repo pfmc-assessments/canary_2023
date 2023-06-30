@@ -88,7 +88,7 @@ Finally, fixing female natural mortality at the median of the prior used for mal
 
 #### Sensitivities not included in document
 
-Excluding all length composition samples from the Deb Wilson-Vandenberg data and assuming the pre-recruit survey occurs after density-dependence instead of before had minimal impacts on model outputs. Dirichlet-multinomial data weighting, assuming \gls{s-wcgbt} has asymptotic selectivity, and estimating a fourth parameter of the double-normal selectivity curve for all fleets led to models that did not converge (final gradient \>0.01 for Dirichlet-multinomial, gradient \>100 for remainder).
+Using \gls{mrfss} length samples instead of those from the Deb Wilson-Vandenberg data and assuming the pre-recruit survey occurs after density-dependence instead of before both had minimal impacts on model outputs. Dirichlet-multinomial data weighting, assuming \gls{s-wcgbt} has asymptotic selectivity, and estimating a fourth parameter of the double-normal selectivity curve for all fleets led to models that did not converge (final gradient \>0.01 for Dirichlet-multinomial, gradient \>100 for remainder).
 
 ### Retrospective Analysis
 
