@@ -101,6 +101,7 @@ suggested_tuning.ss
 *.out
 *.tex
 *.upa
+*.upb
 *.md
 *.pdf
 _main.Rmd
