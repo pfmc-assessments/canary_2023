@@ -275,6 +275,14 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE, 
           skipfinished = FALSE)
 
+xx <- SS_output(here('models/sensitivities', new_name)) 
+
+tune_comps(xx, option = 'Francis', 
+           niters_tuning = 1, 
+           dir = here('models/sensitivities', new_name), 
+           exe = here('models/ss_win.exe'), 
+           extras = '-nohess')
+
 # Unmirror triennial -------------------------------------------------------
 
 mod <- base_mod
@@ -789,7 +797,7 @@ make_detailed_sensitivites <- function(biglist, mods_to_include, pretty_names = 
   
   shortlist <-   big_sensitivity_output[c('base', mods_to_include)] |>
     r4ss::SSsummarize() 
-
+  
   r4ss::SSplotComparisons(shortlist,
                           subplots = c(2,4), 
                           print = TRUE,  
@@ -798,11 +806,15 @@ make_detailed_sensitivites <- function(biglist, mods_to_include, pretty_names = 
                           filenameprefix = grp_name,
                           legendlabels = c('Base', pretty_names))
   
-    SStableComparisons(shortlist, 
-                       modelnames = c('base', pretty_names),
-                       c("Recr_Virgin", "R0", "steep", "NatM", "L_at_Amax", "VonBert_K", "SSB_Virg",
-                         "Bratio_2023", "SPRratio_2023")) |>
-    dplyr::filter(!(Label %in% c('SR_BH_steep', 'NatM_uniform_Mal_GP_1'))) |>
+  SStableComparisons(shortlist, 
+                     modelnames = c('base', pretty_names),
+                     names =c("Recr_Virgin", "R0", "steep", "NatM", "L_at_Amax", "VonBert_K", "SSB_Virg",
+                              "Bratio_2023", "SPRratio_2022")) |>
+    dplyr::filter(!(Label %in% c('SR_BH_steep', 'NatM_break_1_Fem_GP_1',
+                                 'NatM_break_1_Mal_GP_1', 'NatM_break_2_Mal_GP_1')),
+                  Label != 'NatM_uniform_Mal_GP_1' | any(grep('break', Label))) |>
+    dplyr::mutate(dplyr::across(-Label, ~ sapply(., format, digits = 3, scientific = FALSE) |>
+                                  stringr::str_replace('NA', ''))) |>
     dplyr::rename(` ` = 'Label') |>
     write.csv(file.path(outdir, paste0(grp_name, '_table.csv')), 
               row.names = FALSE)
@@ -816,15 +828,25 @@ selectivity <- c('no_sex_selectivity',
                  # 'wcgbts_asymptotic' does not converge
                  'float_q',
                  'unmirror_tri')
+selec_pretty <- c('No sex selectivity',
+                  'Simpler blocks',
+                  'WA NTWL asymptotic',
+                  'Float Q',
+                  'Unmirror Tri')
 
 weighting <- c(
 #  'dirichlet_multinomial', does not converge
   'mcallister_ianelli',
   'no_q_extrasd',
   'age_francisX10',
-  'age_lambda0',
-  'len_francisX10',
-  'len_lambda0.01')
+  # 'age_lambda0',
+  'len_francisX10')
+  # 'len_lambda0.01')
+
+weighting_pretty <- c('McAllister-Ianelli',
+                      'No extra SD',
+                      'Francis ages X10',
+                      'Francis lengths X10')
 
 data_choices <- c('no_sparse_comps',
                   #                  'noDebWV_lengths', minor
@@ -832,10 +854,19 @@ data_choices <- c('no_sparse_comps',
                   'released_lengths_in',
                   'canada_catches', 
                   'catch_se_0.1')
+data_pretty <- c('No sparse comps',
+                 'Pre-recruit data',
+                 'Canada catches',
+                 'Catch SE 0.1')
+
 productivity <- c('est_h',
                   'est_male_M',
                   'M_ramp',
                   'single_M')
+prod_pretty <- c('Estimate h',
+                 'Estimate male M',
+                 'M ramp',
+                 'single M')
 
 sens_names <- c(selectivity,
                 weighting,
@@ -851,21 +882,26 @@ big_sensitivity_output <- SSgetoutput(dirvec = c(here('models', base_mod_name),
 
 
 
-tmp <- SS_output(here('models/sensitivities', 'len_lambda0.01'))
-big_sensitivity_output[[15]] <- tmp
+#tmp <- SS_output(here('models/sensitivities', 'len_lambda0.01'))
+#big_sensitivity_output[[15]] <- tmp
 
 names(big_sensitivity_output) <- c('base', sens_names)
+
+# test to make sure they all read correctly:
+sapply(big_sensitivity_output, length)
 
 make_detailed_sensitivites(big_sensitivity_output, 
                            mods_to_include = selectivity,
                            outdir = here('models/sensitivities/00_comparison_plots'),
-                           grp_name = 'selectivity')
+                           grp_name = 'selectivity', 
+                           pretty_names = selec_pretty)
 
 
 make_detailed_sensitivites(big_sensitivity_output, 
                            mods_to_include = weighting,
                            outdir = here('models/sensitivities/00_comparison_plots'),
-                           grp_name = 'weighting')
+                           grp_name = 'weighting',
+                           pretty_names = weighting_pretty)
 
 make_detailed_sensitivites(big_sensitivity_output, 
                            mods_to_include = data_choices,
