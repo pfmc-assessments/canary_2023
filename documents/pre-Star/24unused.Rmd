@@ -1,14 +1,5 @@
 ## Data sources considered but not used
 
-
-*We should specify what sources of data (catch, lengths, ages, indices) these refer to*
-
-*Need to add debWV index and other california index from Melissa that were not done*
-
-### \gls{s-ccfrp}
-
-The \gls{s-ccfrp} has conducted fishery-independent data collection efforts onboard commercial passenger fishing vessels both inside and outside of MPAs between 2007 and present. Aspects of canary rockfish life history make the data set less than ideal. One important consideration is the limitation of sampling to less than 150 ft to minimize barotrauma for fish released by this hook and line survey, which limits access to the primary depth distribution of adult canary rockfish. In addition, until 2017 the sampling was focused on central California at the southern edge of the species range in California. While additional data has been collected subsequently to better represent the statewide abundance of groundfish stocks, the limited depths sampled and spatial limitations early in the survey further the utility and representativeness of the survey for this northernly distributed stock. Lastly, the high degree of vagility of canary rockfish makes accounting for MPA effects of lesser importance reducing the impetus to account for trends in closed areas for this species.
-
 ### Commercial Collection Report System
 
 From 1977-1985 Commercial Collection Report System (CCRS) provided data on commercial passenger fishing vessels sampled at dockside. This study was very limited in spatial scale, focusing efforts on a limited portion of the species range in the Monterey Bay area representing only the southern end of the distribution of canary rockfish. In addition, this region is unique in providing access to deeper depths a short distance from shore along the sub-marine canyons of Monterey and Carmel Bays potentially biasing representation relative to the entire coast north of Point Conception within California where they are commonly found. Though 488 canary rockfish were sampled during the duration of the survey limited geographic representation at the southern edge of the species range and lack of representation from other ports with more distant grounds on the shelf/slope limits the utility of this data and comparability to other data sets.
@@ -17,11 +8,22 @@ From 1977-1985 Commercial Collection Report System (CCRS) provided data on comme
 
 A dockside sampling effort was undertaken by CDFW during the 1950s-1970s to collect data from the private and rental boat and party charter fleets. Data collected from 1958 to 1972 from Miller and Gotshall 1965. Miller and Geibel 1973 and efforts were made to digitize data from sample sites in the Monterey Bay Area from Ano Nuevo to Point Sur. Over the course of the survey, 1032 canary rockfish lengths were collected from party boats and 461 from private boats. The limited geographic representation at the southern edge of the species range and lack of representation from other ports with more distant grounds on the shelf/slope limits the utility of this data and comparability to other data sets.
 
-### Deb Wilson-Vandenberg CPFV Index
+### California Recreational Indices
 
-### CRFS Recreational Index
+#### \gls{s-ccfrp}
 
-### California Remotely Operated Vehicle Survey
+The \gls{s-ccfrp} has conducted fishery-independent data collection efforts onboard commercial passenger fishing vessels both inside and outside of MPAs between 2007 and present. Aspects of canary rockfish life history make the data set less than ideal. One important consideration is the limitation of sampling to less than 150 ft to minimize barotrauma for fish released by this hook and line survey, which limits access to the primary depth distribution of adult canary rockfish. In addition, until 2017 the sampling was focused on central California at the southern edge of the species range in California. While additional data has been collected subsequently to better represent the statewide abundance of groundfish stocks, the limited depths sampled and spatial limitations early in the survey further the utility and representativeness of the survey for this northernly distributed stock. Lastly, the high degree of vagility of canary rockfish makes accounting for MPA effects of lesser importance reducing the impetus to account for trends in closed areas for this species.
+
+####Deb Wilson-Vandenberg Index for CPFV/PC Mode (1988-1998)
+
+The Deb Wilson-Vandenberg data set originated from an onboard observer survey conducted by \gls{cdfw} in central California from 1988-1998 and is referred to as the Deb Wilson-Vandenberg onboard observer survey [@reilly_onboard_1998]. The fine-scale catch and effort data allow better filtering of the data for indices to fishing stops within suitable habitat for the target species. Length data from this dataset was applied in the assessment but we question its representativeness as a fishery-dependent index to inform coastwide dynamics. As such, we did not pursue development of an index from this dataset.  
+
+
+#### CRFS Onboard Drift Index
+
+ 
+
+### California Remotely Operated Vehicle Survey (2015 and 2020)
 
 \Gls{cdfw} in collaboration with Marine Applied Research and Exploration (MARE) have been conducting remotely operated vehicle (ROV) surveys along the California coast in Marine Protected Areas (MPAs) and reference sites adjacent to them since 2007 for the purposed of long-term monitoring of changes in size, density (fish/sq meter) and length of fish and invertebrate species along the California coast. Surveys of the entire coast have been undertaken twice, taking three years to complete each resulting in super years of 2015 (2014-2016) and 2020 (2019-2021) available for analysis. The use of this data in stock assessments was approved by the \gls{ssc} for use in stock assessments after a methodology review conducted in 2019 for use as an index of abundance or absolute abundance estimate using seafloor mapping as the basis for expansion to rocky reef habitat. Ultimately, this survey was not used for this assessment due to limited temporal coverage (two three-year periods) and highly variable estimates, as well as limited representation to coastwide dynamics.
 
