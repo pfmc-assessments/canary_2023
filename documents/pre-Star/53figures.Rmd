@@ -136,13 +136,13 @@ alt_caption = "Figure showing logistic curves of length-based selectivty that te
 label = 'noncomm-selex-male')
 ```
 
-```{r, results = 'asis'}
-sa4ss::add_figure(
-filein = file.path(dir, "models", paste0(model_name), "UnavailableSpawningOutput.png"), 
-caption = "Proportion of spawning output unavailable due to selectivity for small and large fish. Panels are the amount (a: top left) and proportion (b: top right) of spawning output that is unavailable; c) mean age over time (bottom left); and d) mean selectivity of all fleets over time (bottom right)",
-alt_caption = "Four panel figure showing high proportion of unavailable biomass before 1940s, a lower proportion from 1940 to 2000, and an increasing proportin since 2000",
-label = 'unavail-bio')
-```
+<!-- ```{r, results = 'asis'} -->
+<!-- sa4ss::add_figure( -->
+<!-- filein = file.path(dir, "models", paste0(model_name), "UnavailableSpawningOutput.png"),  -->
+<!-- caption = "Proportion of spawning output unavailable due to selectivity for small and large fish. Panels are the amount (a: top left) and proportion (b: top right) of spawning output that is unavailable; c) mean age over time (bottom left); and d) mean selectivity of all fleets over time (bottom right)", -->
+<!-- alt_caption = "Four panel figure showing high proportion of unavailable biomass before 1940s, a lower proportion from 1940 to 2000, and an increasing proportin since 2000", -->
+<!-- label = 'unavail-bio') -->
+<!-- ``` -->
 
 ### Recruitment
 
@@ -274,19 +274,21 @@ label = 'unavail-bio')
 
 ![Pearson residuals for conditional age-at-length in the West Coast Groundfish Bottomtrawl Survey (plot 1 of 2). Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male) \label{fig:caal-pearson28_1}](../figures/comp_condAALfit_residsflt28mkt0_page1_custom.png){width="100%," alt="Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 2003-2012"}
 
-![Pearson residuals for conditional age-at-length in the West Coast Groundfish Bottomtrawl Survey (plot 2 of 2). Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male) ](../figures/comp_condAALfit_residsflt28mkt0_page2_custom.png){width="100%," alt="Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 2013-2022"} ![Pearson residuals for conditional age-at-length in the early Triennial survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male) ](../figures/plots/comp_condAALfit_residsflt29mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 1980-1992"}
+![Pearson residuals for conditional age-at-length in the West Coast Groundfish Bottomtrawl Survey (plot 2 of 2). Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male) \label{fig:caal-pearson28_2}](../figures/comp_condAALfit_residsflt28mkt0_page2_custom.png){width="100%," alt="Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 2013-2022"}
+
+![Pearson residuals for conditional age-at-length in the early Triennial survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male) \label{fig:caal-pearson29}](../figures/plots/comp_condAALfit_residsflt29mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 1980-1992"}
 
 ![Pearson residuals for conditional age-at-length in the late Triennial survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male) \label{fig:caal-pearson30}](../figures/plots/comp_condAALfit_residsflt30mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 1996-2004"}
 
 #### Survey indices
 
-![Fit of model to \gls{s-wcgbt}. Lines represent input 95% confidence interval of survey index. \label{fig:wcgbts-fit}](../figures/plots/index2_cpuefit_28_coastwide_NWFSC.png){width="100%," height="100%," alt="Figure showing model generally fitting survey data well"}
+![Fit of model to \gls{s-wcgbt}. Lines represent input 95 percent confidence interval of survey index \label{fig:wcgbts-fit}](../figures/plots/index2_cpuefit_28_coastwide_NWFSC.png){width="100%," height="100%," alt="Figure showing model generally fitting survey data well"}
 
-![Fit of model to early \gls{s-tri}. Lines represent input 95% confidence interval of survey index. \label{fig:earlytri-fit}](../figures/plots/index2_cpuefit_29_coastwide_Tri_early.png){width="100%," height="100%," alt="Figure showing model over and then underestimating first two out of five years of generally declining survey index"}
+![Fit of model to early \gls{s-tri}. Lines represent input 95 percent confidence interval of survey index \label{fig:earlytri-fit}](../figures/plots/index2_cpuefit_29_coastwide_Tri_early.png){width="100%," height="100%," alt="Figure showing model over and then underestimating first two out of five years of generally declining survey index"}
 
-![Fit of model to late \gls{s-tri}. Lines represent input 95% confidence interval of survey index. \label{fig:latetri-fit}](../figures/plots/index2_cpuefit_30_coastwide_Tri_late.png){width="100%," height="100%," alt="Figure showing model very well fitting slow increase of survey index"}
+![Fit of model to late \gls{s-tri}. Lines represent input 95 percent confidence interval of survey index \label{fig:latetri-fit}](../figures/plots/index2_cpuefit_30_coastwide_Tri_late.png){width="100%," height="100%," alt="Figure showing model very well fitting slow increase of survey index"}
 
-![Fit of model to log of pre-recruit survey index. Log scale is shown because model fits were difficult to evaluate on absolute index scale. Thick lines represent input 95% confidence intervals. Thin lines are 95% confidence intervals including estimated added survey standard deviation. \label{fig:prerec-fit}](../figures/plots/index5_logcpuefit_31_coastwide_prerec){width="100%," height="100%," alt="Figure showing model fits annually variable index very well with added standard error included"}
+![Fit of model to log of pre-recruit survey index. Log scale is shown because model fits were difficult to evaluate on absolute index scale. Thick lines represent input 95 percent confidence intervals. Thin lines are 95% confidence intervals including estimated added survey standard deviation. \label{fig:prerec-fit}](../figures/plots/index5_logcpuefit_31_coastwide_prerec){width="100%," height="100%," alt="Figure showing model fits annually variable index very well with added standard error included"}
 
 ## Diagnostics
 
