@@ -23,11 +23,13 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                booktabs = TRUE,
                longtable = TRUE,
                linesep = "",
-               digits = 1) #|>
-  # kableExtra::kable_styling( 
-  #     latex_options = c("repeat_header"),
-  #     font_size = 8)
+               digits = 1) |>
+  kableExtra::kable_styling(
+      latex_options = c("repeat_header"),
+      font_size = 8)
 ```
+
+\newpage
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('data/canary_total_removals.csv')) |> 
@@ -46,6 +48,8 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                digits = 1)
 ```
 
+\newpage
+
 <!-- ======================================================= -->
 <!-- ********  ACL tables *************** --> 
 <!-- ======================================================= -->
@@ -58,48 +62,51 @@ readr::read_csv(here('documents/tables/ACL_history.csv')) |>
                booktabs = TRUE)
 ```
 
+\newpage
+
 <!-- ======================================================= -->
 <!-- ********  Commercial sample size tables *************** --> 
 <!-- ======================================================= -->
 
-```{r, results='asis', message=FALSE}
+```{r, results = 'asis', message=FALSE}
 readr::read_csv(here('documents/tables/pacfin_lengths.csv')) |>
   dplyr::select(Year, 
          Trips_TWL.C, Lengths_TWL.C, Trips_NTWL.C, Lengths_NTWL.C,
          Trips_TWL.O, Lengths_TWL.O, Trips_NTWL.O, Lengths_NTWL.O,
          Trips_TWL.W, Lengths_TWL.W, Trips_NTWL.W, Lengths_NTWL.W) |>
-  knitr::kable(caption = 'Summary of the number of trips and length samples for commercial trawl (TWL) and non-trawl (NTWL) fleets',
-               label = 'comm-sample-lengths', 
-               format = 'latex',
-               col.names = c("Year",
-                            "Trips - CA TWL", "Lengths - CA TWL", "Trips - CA NTWL", "Lengths - NCA TWL", 
-                            "Trips - OR TWL", "Lengths - OR TWL", "Trips - OR NTWL", "Lengths - OR TWL", 
-                            "Trips - WA TWL", "Lengths - WA TWL", "Trips - WA NTWL", "Lengths - WA TWL"),
-               booktabs = TRUE,
-               longtable = TRUE,
-               escape = TRUE) #%>%
-  #kable_styling(font_size = 7) Need to install this package though to have this work
+  as.data.frame() |>
+  sa4ss::table_format(caption = "Summary of the number of trips and length samples for commercial trawl (TWL) and non-trawl (NTWL) fleets",
+                      label = "comm-sample-lengths",
+                      align = 'l',
+                      col.names = c("Year",
+                            "Trips CA TWL", "Lengths CA TWL", "Trips CA NTWL", "Lengths CA NTWL", 
+                            "Trips OR TWL", "Lengths OR TWL", "Trips OR NTWL", "Lengths OR TWL", 
+                            "Trips WA TWL", "Lengths WA TWL", "Trips WA NTWL", "Lengths WA TWL"),
+                      longtable = TRUE,
+                      landscape = TRUE)
 ```
 
+\newpage
 
-```{r, results='asis', message=FALSE}
-
+```{r, results = 'asis', message=FALSE}
 readr::read_csv(here('documents/tables/pacfin_ages.csv')) |>
   dplyr::select(Year, 
          Trips_TWL.C, Ages_TWL.C, Trips_NTWL.C, Ages_NTWL.C,
          Trips_TWL.O, Ages_TWL.O, Trips_NTWL.O, Ages_NTWL.O,
          Trips_TWL.W, Ages_TWL.W, Trips_NTWL.W, Ages_NTWL.W) |>
-  knitr::kable(caption = 'Summary of the number of trips and aged samples for commercial trawl (TWL) and non-trawl (NTWL) fleets',
-               label = 'comm-sample-age', 
-               format = 'latex',
-               col.names = c("Year",
-                            "Trips \\\n CA TWL", "Ages - CA TWL", "Trips - CA NTWL", "Ages - NCA TWL", 
-                            "Trips - OR TWL", "Ages - OR TWL", "Trips - OR NTWL", "Ages - OR TWL", 
-                            "Trips - WA TWL", "Ages - WA TWL", "Trips - WA NTWL", "Ages - WA TWL"),
-               booktabs = TRUE,
-               longtable = TRUE)  #%>%
-  #kable_styling(font_size = 7) Need to install this package though to have this work
+  as.data.frame() |>
+  sa4ss::table_format(caption = "Summary of the number of trips and aged samples for commercial trawl (TWL) and non-trawl (NTWL) fleets",
+                      label = "comm-sample-age",
+                      align = 'l',
+                      col.names = c("Year",
+                            "Trips CA TWL", "Ages CA TWL", "Trips CA NTWL", "Ages CA NTWL", 
+                            "Trips OR TWL", "Ages OR TWL", "Trips OR NTWL", "Ages OR TWL", 
+                            "Trips WA TWL", "Ages WA TWL", "Trips WA NTWL", "Ages WA TWL"),
+                      longtable = TRUE,
+                      landscape = TRUE)
 ```
+
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  ASHOP sample size tables *************** --> 
@@ -115,6 +122,8 @@ readr::read_csv(here('data/Canary_ashop_LengthComps_hauls_and_samples.csv')) |>
                booktabs = TRUE)
 ```
 
+\newpage
+
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')) |>
   dplyr::select(Year, OR_nhaul, OR_N, WA_nhaul, WA_N) |>
@@ -124,6 +133,8 @@ readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')) |>
                col.names = c("Year", "Hauls OR", "Ages OR", "Hauls WA", "Ages WA"),
                booktabs = TRUE)
 ```
+
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Recreational sample size tables *************** --> 
@@ -142,6 +153,7 @@ readr::read_csv(here('documents/tables/rec_lengths.csv')) |>
   #kable_styling(font_size = 7) Need to install this package though to have this work
 ```
 
+\newpage
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/rec_ages.csv')) |>
@@ -155,6 +167,7 @@ readr::read_csv(here('documents/tables/rec_ages.csv')) |>
   #kable_styling(font_size = 7) Need to install this package though to have this work
 ```
 
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Survey sample size tables *************** --> 
@@ -162,20 +175,23 @@ readr::read_csv(here('documents/tables/rec_ages.csv')) |>
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/wcgbts_summary.csv')) |>
-  knitr::kable(caption = 'Summary of canary rockfish samples in the West Coast Groundfish Bottomtrawl Survey (WCGBTS), extracted February 13, 2023',
+  knitr::kable(caption = 'Summary of canary rockfish samples in the West Coast Groundfish Bottomtrawl Survey (WCGBTS)',
                label = 'wcgbts', 
                format = 'latex',
                booktabs = TRUE)
 ```
 
+\newpage
+
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/triennial_summary.csv')) |>
-  knitr::kable(caption = 'Summary of canary rockfish samples in the AFSC/NWFSC West Coast Triennial Shelf Survey (Triennial), extracted May 1, 2023',
+  knitr::kable(caption = 'Summary of canary rockfish samples in the AFSC/NWFSC West Coast Triennial Shelf Survey (Triennial)',
                label = 'triennial', 
                format = 'latex',
                booktabs = TRUE)
 ```
 
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Model results *************** --> 
@@ -200,6 +216,8 @@ readr::read_csv(here('documents/tables/parameters.csv')) |>
 ```
 
 
+\newpage
+
 ```{r like, results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, "tables", "likelihoods.csv")) |>
   knitr::kable(caption = 'Likelihood components by source',
@@ -212,6 +230,7 @@ readr::read_csv(file.path(model_dir, "tables", "likelihoods.csv")) |>
   #kable_styling(font_size = 7) Need to install this package though to have this work
 ```
 
+\newpage
 
 ```{r tables-weights, results = "asis"}
 source(here('code/table_compweight.R'))
@@ -222,6 +241,7 @@ table_compweight(model,
   kable_styling(font_size = 10)
 ```
 
+\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Timeseries *************** --> 
@@ -239,6 +259,8 @@ table_format(x = round(timeseries,2),
                  row.names = FALSE)
 ```
 
+\newpage
+
 <!-- ======================================================= -->
 <!-- ********  Reference points *************** --> 
 <!-- ======================================================= -->
@@ -251,3 +273,4 @@ readr::read_csv(here('documents/tables/ref_points.csv')) |>
                booktabs = TRUE)
 ```
 
+\newpage

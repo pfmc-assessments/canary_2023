@@ -1,14 +1,11 @@
-## Composition data
+### Composition data
 
 Commercial landings of rockfish and the biological characteristics of these landings were not consistently sampled for scientific purposes until the early 1960s (Niska, 1976). Statewide sampling programs to determine species compositions of the landed catches began in the late 1960s. The first rigorous monitoring programs that included routine collection of biological data (e.g., sex, age, size, maturity states, etc.) were begun in 1980. Currently, port biologists employed by each state fishery agency (\gls{odfw}, \gls{wdfw}) or \gls{psmfc} with the California Cooperative Groundfish Survey (CCGS) collect species-composition information and biological data from the landed catches of commercial vessels that have completed their fishing trips. The sampling sites are commonly processing facilities located at ports along the coasts of California, Oregon and Washington. The monitoring programs currently in place are generally based on stratified, multistage sampling designs.
 
 Recreational landings of rockfish and the biological characteristics of these landings were not consistently sampled for scientific purposes until the late 1970s. The first rigorous monitoring programs that included routine collection of biological data (e.g., sex, age, size, maturity states, etc.) were begun in 1980 by the national \gls{mrfss} program under the \gls{psmfc} and by state sampling programs. State sampling programs replaced \gls{mrfss} in the 2003--2004 period to better support in season management. Currently, port biologists employed by each state fishery management agency (\gls{cdfw}, \gls{odfw}, \gls{wdfw}) collect catch, effort, and biological data from the landed catches of recreational vessels that have completed their fishing trips. Onboard sampling also occurs on party/charter vessels in Oregon and California. 
 
-Twenty-eight bins from 12 to 66 cm were used to summarize the length frequency distributions of fishery-dependent and fishery-independent sources of catch. The first bin includes all observations less than 12 cm and the last bin includes all fish larger than 66 cm. Thirty-five bins from age 1 to age 35 were used to summarize the age frequency distributions of fishery-dependent sources of catch, with the last bin including all fish aged greater than 35 years. Conditional age at length data was used to summarize fishery-independent sources of age data, and is described in more detailed in Section \@ref(TO DO: add section here).
-**Fix reference to section above**
+Twenty-eight bins from 12 to 66 cm were used to summarize the length frequency distributions of fishery-dependent and fishery-independent sources of catch. The first bin includes all observations less than 12 cm and the last bin includes all fish larger than 66 cm. Thirty-five bins from age 1 to age 35 were used to summarize the age frequency distributions of fishery-dependent sources of catch, with the last bin including all fish aged greater than 35 years. Conditional age at length data was used to summarize fishery-independent sources of age data, and is described in more detailed in Section \@ref(caal).
 
-
-### Fishery-Dependent Composition Data
 
 #### Commercial trawl and non-trawl fisheries {#comm-composition-data}
 

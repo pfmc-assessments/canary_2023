@@ -330,7 +330,6 @@ mod$ctl$blocks_per_pattern <- c(2,2,1)
 names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
 
 #Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
-#Keeping 2000 block instead of 2001 since the data seems to suggest change there (also same as last assessment)
 mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2022), #OR/WA TWL fleets
                              c(2000, 2019, 2020, 2022), #OR ntwl
                              c(2021, 2022)) #WA rec
@@ -360,6 +359,60 @@ mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
 
 new_name <- 'simpler_block'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# More Simplified blocks -----------------------------------------------------
+
+#Because the OR NTWL was not changed in the above
+
+#Based on looking at the selectivity patterns:
+#No blocks for CA trawl, CA non-trawl, and one block for OR non-trawl (block 2000-2019 and keep before and after together)
+#No blocks for CA rec, OR rec, and only one block for WA rec (recent)
+
+mod <- base_mod
+
+mod$ctl$N_Block_Designs <- 3
+mod$ctl$blocks_per_pattern <- c(2,1,1)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+
+#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2022), #OR/WA TWL fleets
+                             c(2000, 2019), #OR ntwl
+                             c(2021, 2022)) #WA rec
+
+# Use new block set up
+selex_new <- mod$ctl$size_selex_parms
+selex_new[grepl('CA_TWL|CA_NTWL|CA_REC|OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 0
+selex_new[intersect(
+  grep('CA_REC', rownames(selex_new)),
+  grep('PFemOff', rownames(selex_new))), c('Block', 'Block_Fxn')] <- 0
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+
+mod$ctl$size_selex_parms <- selex_new
+
+
+#Time varying selectivity table
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+new_name <- 'simpler_block_OR_NTWL'
 SS_write(mod, here('models/sensitivities', new_name),
          overwrite = TRUE)
 
