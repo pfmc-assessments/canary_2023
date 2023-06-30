@@ -38,7 +38,7 @@ Overall, decisions with respect to input data had a low impact on model outcomes
 
 The assessment model contains data from a variety of sources, some of which are expected to be more informative than others. Sampling units from these different data sources are not necessarily comparable (e.g., an observation from a survey index versus an observation of a fish length). Data weighting procedures are objective algorithms that can be used to assign weights to different data sources to optimize the fit of the model to the data. The following sensitivity models fall under data weighting:
 
--   McAllister-Ianelli data weighting: Use the algorithm suggested by McAllister and Ianelli [-@mcallister_bayesian_1997] instead of Francis and Hilborn [-@francis_data_2011]
+-   McAllister-Ianelli data weighting: Use the algorithm suggested by McAllister and Ianelli [-@mcallister_bayesian_1997] instead of [@francis_data_2011]
 
 -   No extra SD: Do not estimate an extra standard deviation for the pre-recruit survey index. This means the pre-recruit survey cannot be down-weighted to allow for better fitting of other data sources.
 
