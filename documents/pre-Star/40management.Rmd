@@ -73,4 +73,4 @@ Recommendations are summarized for brevity:
 
 ### Current research and data neds
 
-1.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of non-trawl coast-wide fishery-independent indices. This could mean an expansion of the \gls{s-hl} into more northern waters, or taking advantage of developments in model-based index standardization to stitch together multiple similar overlapping fishery-independent non-trawl sampling programs that have occurred over smaller spatial and temporal scales than the \gls{s-wcgbt}.
+1.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of non-trawl coast-wide fishery-independent indices. This could mean an expansion of the \gls{s-hkl} into more northern waters, or taking advantage of developments in model-based index standardization to stitch together multiple similar overlapping fishery-independent non-trawl sampling programs that have occurred over smaller spatial and temporal scales than the \gls{s-wcgbt}.

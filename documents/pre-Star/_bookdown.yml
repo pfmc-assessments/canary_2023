@@ -17,6 +17,9 @@ rmd_files: [
   '31summary.Rmd',
   '32structure.Rmd',
   '33results.Rmd',
+  '34diagnostics.Rmd',
+  '40management.Rmd',
+  '41acknowledgments.Rmd',
   '49bibliography.Rmd',
   '52tables.Rmd', 
   '53figures.Rmd'

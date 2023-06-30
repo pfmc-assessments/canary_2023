@@ -167,7 +167,7 @@ to this year, and to start in a stable age-distribution. Early recruitment
 deviations are estimated starting in the first model year (1892), and
 main period recruitment deviations begin in 1960 and end in 2022.
 
-#### Conditional age at length data
+#### Conditional age at length data {#caal}
 
 Age-frequency data from the \gls{s-wcgbt} and \gls{s-tri} were compiled as conditional age-at-length distributions by sex and year. The approach consists of tabulating the sums within rows as the standard length-frequency distribution and, instead of also tabulating the sums to the age margin, instead the distribution of ages in each row of the age-length key is treated as a separate observation, conditioned on the row (length) from which it came. 
 
