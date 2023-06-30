@@ -28,10 +28,10 @@ described as sensitivities (Section \@ref{sensitivities}) and some of
 which are included in the bridging steps described below. Notably, we
 simplify the population structure of the last benchmark assessment model by assuming a single
 coastwide stock, yet increase spatial fleet structure by unmirroring
-fleet selectivities between states. We balance the increased complexity
+fleet selectivities between states and allowing sex-dependent selectivity at larger sizes. We balance the increased complexity
 in spatial fleet structure by simplifying the selectivity
 parameterization and combining fleets and minimizing the use of blocks
-where able.
+where able, and assuming natural mortality to be age-invariant, as opposed to increasing at age. 
 
 ### Model Changes from the Last Assessment
 
@@ -43,9 +43,11 @@ Another substantial change is in the treatment of spatial structure in the model
 
 By reducing complexity in the population structure of the model, we could increase the spatial complexity of the fishery. Spatial fleet dynamics allow the model structure to account for varying selectivity and historical management actions that may have impacted the fishery and the available data in specific ways. Fleets were assumed to have the same selectivity across states in the 2015 assessment. We allowed selectivity estimates to be informed by the dynamics in waters where they fish, although we have mirrored some fleets where we believe it is appropriate to do so. We have also increased the number of selectivity blocks for the non-trawl and recreational fisheries, which we believe is appropriate given the large changes in regulations for `r spp`. Lastly, we have elected to include sex-dependent selectivity, which both improves fits to data, but also allows dynamics between male and female natural mortality to align better with observed sex-ratios. Sensitivities to choice about fleet structure are described in Section \@ref{sensitivities}.
 
-While in general, fleet structure in the base model is more complex than in the 2015 assessment, we simplified our fleets where reasonable. We treated survey fleets as exclusively survey fleets, and did not model the small amount of catches from these surveys. It is not now standard practice to include surveys as fishing fleets in West Coast assessment. We also removed the California at-sea-hake fishery composition data, which was very sparse, and incorrectly assigned to California. 
+While in general, fleet structure in the base model is more complex than in the 2015 assessment, we simplified our fleets where reasonable. We treated survey fleets as exclusively survey fleets, and did not model the small amount of catches from these surveys. It is not now standard practice to include surveys as fishing fleets in West Coast assessment. We also removed the California at-sea-hake fishery composition data, which was very sparse, and incorrectly assigned to California, and combined selectivity for the Washington and Oregon fleets, which have similar dynamics and fish across state boundaries.
 
 Data has also been updated for this assessment. The synthesis and treatment of data has been altered for this assessment based on updated best practices and extensive work by \gls{nwfsc} to document, reproduce, and standardize data processing steps, along with extensive work by staff at state agencies and \gls{psmfc} in providing consistent and accurate data in a more easily obtainable manner. Catch time series have been updated according to current best knowledge. States have updated their historical reconstructions, and past issues with catch time series mentioned in the last assessment review process and in subsequent catch only updates have been corrected. Catch time series for the foreign fleets was also repartitioned to state more consistently with patterns observed in the non-foreign fishery. We also assigned data from shrimp trawls as part of the trawl, where for the 2015 assessment they were included within the non-trawl fleets. Available length and age data have been provided using updated and more reproducible approaches. Significant effort was made by the \gls{nwfsc} ageing lab in providing age reads for new and past `r spp`. These allow age composition data for recreational fleets to be included as well as additional years of data for other fishery and survey fleets. Although more age data were available, we elected to remove surface age reads from the model due to known biases in addition to their removal having little effect on model results of the 2015 assessment. Sensitivities to assumptions around data choices are described in Section \@ref{sensitivities}.
+
+In addition to updated data, the process in which data contributes to the likelihood was updated. The previous assessment applied equal data weights to each fleet type across areas, and preferentially downweighted age data based on the relative sample size compared to the number of length samples by applying impact factors (i.e. lambdas) to composition data less than one. Furthermore, the previous assessment did not apply data weighting to conditional-age-at-length data data from the surveys. In whole, these steps are not now standard practice. For this assessment we do not adjust lambda values. Rather we allow the data weighting procedure to offset the contributions of age and length data, including conditional-age-at-length data while confirming the sample sizes of composition data do not exceed the number of fish actually sampled.   
 
 Lastly, a number of changes due to updating fixed parameter estimates and prior values were made for this assessment compared to the 2015 assessment. These changes include updates to the steepness prior, natural mortality prior, the fecundity relationship, and a change in maturiy from length-at-biological maturity to functional-age-at-functionl-maturity based on additional work-up of maturity samples by Melissa Head at \gls{nwfsc}. Changes to biological parameters are more completely described in Section \@ref{biology}. The effect of these changes on model results in described below in the bridging analysis.
 
@@ -150,14 +152,14 @@ to that of trawl fleet.
 30. \gls{s-tri} late
 31. Pre-recruit survey
 
-The following state-stratified survey fleets were retained from 2015 in the model files and had
-data updated to 2022 for comparison between the base model and a current
-spatial model, but do not appear in the likelihood in the base model nor elsewhere in this report:
+<!-- The following state-stratified survey fleets were retained from 2015 in the model files and had -->
+<!-- data updated to 2022 for comparison between the base model and a current -->
+<!-- spatial model, but do not appear in the likelihood in the base model nor elsewhere in this report: -->
 
-16-18. State-stratified WCGBTS
-19-21. State-stratified triennial early
-22-24. State-stratified triennial late
-25-27. State-stratified pre-recruit
+<!-- 16-18. State-stratified WCGBTS -->
+<!-- 19-21. State-stratified triennial early -->
+<!-- 22-24. State-stratified triennial late -->
+<!-- 25-27. State-stratified pre-recruit -->
 
 #### Initialization of the model
 

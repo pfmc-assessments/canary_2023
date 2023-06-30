@@ -169,7 +169,7 @@ relationships (Figure \ref{fig:compare_WL}).
 `r Spp` display sexually dimorphic growth. Females grow slower and
 obtain larger sizes than males. Recent research also indicates that
 `r spp` growth varies latitudinally [@keller2018canary;
-@Brooks_thesis_2021]. Using \gls{s-wcgbt} and \gls{s-hkl} data and
+@Brooks_thesis_2021; @gertseva_growth_2017]. Using \gls{s-wcgbt} and \gls{s-hkl} data and
 considering breakpoints at the biogeographic boundaries of Point
 Conception and Cape Mendocino, Keller et al. [-@keller2018canary] found
 growth differences that were statistically significant but inconsistent
