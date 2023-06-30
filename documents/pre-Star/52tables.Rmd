@@ -266,6 +266,8 @@ table_format(x = round(timeseries,2),
 <!-- ======================================================= -->
 ```{r, results = 'asis'}
 readr::read_csv(here('documents/figures/sensitivities/data_table.csv')) |>
+  dplyr::mutate(dplyr::across(-...1, ~ sapply(., format, digits = 3, scientific = FALSE))) |>
+  dplyr::rename(` ` = '...1') |>
   knitr::kable(caption = 'Estimates of likelihood components and major model parameters for data sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, not all likelihoods are comparable.',
                label = 'data-sens',
                format = 'latex',
@@ -274,6 +276,8 @@ readr::read_csv(here('documents/figures/sensitivities/data_table.csv')) |>
 
 ```{r, results = 'asis'}
 readr::read_csv(here('documents/figures/sensitivities/weighting_table.csv')) |>
+  dplyr::mutate(dplyr::across(-...1, ~ sapply(., format, digits = 3, scientific = FALSE))) |>
+  dplyr::rename(` ` = '...1') |>
   knitr::kable(caption = 'Estimates of likelihood components and major model parameters for data weighting sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, not all likelihoods are comparable.',
                label = 'weight-sens',
                format = 'latex',
@@ -282,6 +286,8 @@ readr::read_csv(here('documents/figures/sensitivities/weighting_table.csv')) |>
 
 ```{r, results = 'asis'}
 readr::read_csv(here('documents/figures/sensitivities/selectivity_table.csv')) |>
+  dplyr::mutate(dplyr::across(-...1, ~ sapply(., format, digits = 3, scientific = FALSE))) |>
+  dplyr::rename(` ` = '...1') |>
   knitr::kable(caption = 'Estimates of likelihood components and major model parameters for selectivity sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, not all likelihoods are comparable.',
                label = 'selec-sens',
                format = 'latex',
@@ -290,7 +296,9 @@ readr::read_csv(here('documents/figures/sensitivities/selectivity_table.csv')) |
 
 ```{r, results = 'asis'}
 readr::read_csv(here('documents/figures/sensitivities/productivity_table.csv')) |>
-  knitr::kable(caption = 'Estimates of likelihood components and major model parameters for productivity sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, not all likelihoods are comparable.',
+  dplyr::mutate(dplyr::across(-...1, ~ sapply(., format, digits = 3, scientific = FALSE))) |>
+  dplyr::rename(` ` = '...1') |>
+  knitr::kable(caption = 'Estimates of likelihood components and major model parameters for productivity sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data.',
                label = 'prod-sens',
                format = 'latex',
                booktabs = TRUE)
@@ -305,7 +313,8 @@ readr::read_csv(here('documents/tables/ref_points.csv')) |>
   knitr::kable(caption = 'Various reference points for three different management targets', 
                label = 'ref-pts', 
                format = 'latex', 
-               booktabs = TRUE)
+               booktabs = TRUE,
+               escape = FALSE)
 ```
 
 \newpage
