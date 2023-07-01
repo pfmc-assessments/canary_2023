@@ -6,7 +6,7 @@ From 1977-1985 Commercial Collection Report System (CCRS) provided data on comme
 
 ### Historical CDFW Dockside Sampling
 
-A dockside sampling effort was undertaken by CDFW during the 1950s-1970s to collect data from the private and rental boat and party charter fleets. Data collected from 1958 to 1972 from Miller and Gotshall 1965. Miller and Geibel 1973 and efforts were made to digitize data from sample sites in the Monterey Bay Area from Ano Nuevo to Point Sur. Over the course of the survey, 1032 canary rockfish lengths were collected from party boats and 461 from private boats. The limited geographic representation at the southern edge of the species range and lack of representation from other ports with more distant grounds on the shelf/slope limits the utility of this data and comparability to other data sets.
+A dockside sampling effort was undertaken by CDFW during the 1950s-1970s to collect data from the private and rental boat and party charter fleets. Data collected from 1958 to 1972 was from [@miller_ocean_1965] and [@miller1973fish] and efforts were made to digitize data from sample sites in the Monterey Bay Area from Ano Nuevo to Point Sur. Over the course of the survey, 1032 canary rockfish lengths were collected from party boats and 461 from private boats. The limited geographic representation at the southern edge of the species range and lack of representation from other ports with more distant grounds on the shelf/slope limits the utility of this data and comparability to other data sets.
 
 ### California Recreational Indices
 
