@@ -237,7 +237,7 @@ source(here('code/table_compweight.R'))
 table_compweight(model,
   caption_extra = paste("The WCGBTS age comps are conditioned on length,",
    "so there are more observations with fewer samples per observation."),
-   label = "data-weights") %>%
+   label = "data-weights") |>
   kableExtra::kable_styling(font_size = 10)
 ```
 
