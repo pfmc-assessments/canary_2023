@@ -52,6 +52,7 @@ literature/
 !documents/figures/*.png
 !models/5_5_0_hessian_retro/*.png
 !models/5_5_0_profile_profile*/*.png
+!models/5_5_0_hessian_KLO_profile*/*.png 
 *.jpg
 *.jpeg
 data_workshop_figs/
