@@ -14,6 +14,8 @@
 #remotes::install_github("pfmc-assessments/sa4ss")
 library(sa4ss)
 library(here)
+library(dplyr)
+library(kableExtra)
 
 # Specify the directory for the document
 #User directories
