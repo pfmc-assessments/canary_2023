@@ -160,16 +160,6 @@ label = 'noncomm-selex-male')
 
 ![Points are transformed variances. Red line shows current settings for bias adjustment specified in control file. Blue line shows least squares estimate of alternative bias adjustment relationship for recruitment deviations \label{fig:bias-adjust}](../figures/plots/recruit_fit_bias_adjust.png){width="100%," alt="Figure showing lowering of spawning output with recruits in early years generally falling above the curve and recruits in recent years falling below the time series"}
 
-### Time series
-
-![Estimated time series of spawning output in billion of eggs with 95% confidence interval \label{fig:ssb}](../figures/plots/ts7_Spawning_output_with_95_asymptotic_intervals_intervals.png){width="100%," alt="Figure showing lowering of spawning output into 1990s and slow increase since"}
-
-![Estimated time series of total biomass in mt \label{fig:tot-bio}](../figures/plots/ts1_Total_biomass_(mt).png){width="100%," alt="Figure showing total biomass similar in pattern to spawning output"}
-
-![Estimated time series of spawning output relative to unfished with 95% confidence interval \label{fig:depl}](../figures/plots/ts9_Relative_spawning_output_intervals.png){width="100%," alt="Figure showing similar trends to spawning output surpassing the 0.4 target around 1980, going below the 0.25 threshold shortly thereafter, and then recovering to between the threshold and target starting in around 2015"}
-
-![Estimated time series of fishing intensity (1-SPR) \label{fig:spr}](../figures/plots/SPR2_minusSPRseries.png){width="100%," alt="Figure showing fishing intensity increasing in the 1940, surpassing 0.5 consistently in the 1960s, declining greatly in 2000 and reching near 0.4 in 2022"}
-
 ### Fits to data
 
 <!-- #### Length compositions -->
@@ -295,6 +285,16 @@ label = 'noncomm-selex-male')
 ![Fit of model to late \gls{s-tri}. Lines represent input 95 percent confidence interval of survey index \label{fig:latetri-fit}](../figures/plots/index2_cpuefit_30_coastwide_Tri_late.png){width="100%," height="100%," alt="Figure showing model very well fitting slow increase of survey index"}
 
 ![Fit of model to log of pre-recruit survey index. Log scale is shown because model fits were difficult to evaluate on absolute index scale. Thick lines represent input 95 percent confidence intervals. Thin lines are 95% confidence intervals including estimated added survey standard deviation. \label{fig:prerec-fit}](../figures/plots/index5_logcpuefit_31_coastwide_prerec){width="100%," height="100%," alt="Figure showing model fits annually variable index very well with added standard error included"}
+
+### Time series
+
+![Estimated time series of spawning output in billion of eggs with 95% confidence interval \label{fig:ssb}](../figures/plots/ts7_Spawning_output_with_95_asymptotic_intervals_intervals.png){width="100%," alt="Figure showing lowering of spawning output into 1990s and slow increase since"}
+
+![Estimated time series of total biomass in mt \label{fig:tot-bio}](../figures/plots/ts1_Total_biomass_(mt).png){width="100%," alt="Figure showing total biomass similar in pattern to spawning output"}
+
+![Estimated time series of spawning output relative to unfished with 95% confidence interval \label{fig:depl}](../figures/plots/ts9_Relative_spawning_output_intervals.png){width="100%," alt="Figure showing similar trends to spawning output surpassing the 0.4 target around 1980, going below the 0.25 threshold shortly thereafter, and then recovering to between the threshold and target starting in around 2015"}
+
+![Estimated time series of fishing intensity (1-SPR) \label{fig:spr}](../figures/plots/SPR2_minusSPRseries.png){width="100%," alt="Figure showing fishing intensity increasing in the 1940, surpassing 0.5 consistently in the 1960s, declining greatly in 2000 and reching near 0.4 in 2022"}
 
 ## Diagnostics
 

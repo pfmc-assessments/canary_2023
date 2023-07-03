@@ -56,7 +56,7 @@ belief that natural mortality declines with age
 [@lorenzen1996relationship]. We updated the longevity-based prior for
 the natural mortality rate for males and females based on
 @hamel2022development, using a maximum age of 84 yrs, the same age used in the
-previous assessment [@thorson_status_2015; @love2002rockfishes]. This
+previous assessment [@thorson_status_2016; @love2002rockfishes]. This
 results in a lognormal prior with a log-mean of -2.74, a log-standard
 deviation of 0.31, and a median natural mortality of 0.0643 yr$^{-1}$
 for both sexes. As was done in the previous assessments, we fixed the
@@ -229,10 +229,10 @@ The ageing error matrices used in the 2015 benchmark assessment for
 break and burn samples were retained for this analysis. Ageing error was
 explored in the 2015 assessment including extensive model selection and
 exploration on the ageing methods to include and the appropriate ageing
-lab to treat as unbiased [@thorson_status_2015]. An extensive
+lab to treat as unbiased [@thorson_status_2016]. An extensive
 description on the history of including ageing error and bias into past
 canary assessments was also provided in the 2015 assessment
-[@thorson_status_2015]. Surface read ages were not included in this
+[@thorson_status_2016]. Surface read ages were not included in this
 assessment and therefore surface read ageing error matrices from the
 2015 assessment were not retained in the model.
 
@@ -245,7 +245,7 @@ estimated pattern for bias and imprecision from the 2015 assessment
 indicates that ODFW break-and-burn reads are almost unbiased relative to
 CAPS break-and-burn reads, and the \gls{wdfw} break-and-burn reads have
 a positive bias relative to CAPS break-and-burn reads [+3.76 yrs. at age
-30, Figure 38 in @thorson_status_2016].
+30, their Figure 38 in @thorson_status_2016].
 
 A qualitative examination of the new break and burn double reads showed
 no evidence that the ageing estimation had changed over time relative to

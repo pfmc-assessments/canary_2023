@@ -483,7 +483,7 @@ selectivity is described in Section \@ref(sensitivities).
 
 #### Stock Recruitment Function
 
-In this assessment the logarithm of $R_0$ (unfished recruitment) was estimated, while steepness
+In this assessment ln(R~0~) (the natural logarithm of unfished recruitment) was estimated, while steepness
 was fixed at its prior mean of 0.72. Lognormal deviations from the
 standard Beverton-Holt stock-recruit relationship were estimated from
 1892--2022 with a fixed $\sigma_R$ value of 0.5. There is limited
