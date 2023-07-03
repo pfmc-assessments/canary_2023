@@ -1,57 +1,42 @@
 # Data
 
-Data comprise the foundational components of stock assessment models. The decision to include or exclude particular data sources in an assessment model depends on many factors. These factors often include, but are not limited to, the way in which data were collected (e.g., measurement method and consistency); the spatial and temporal coverage of the data; the quantity of data available per desired sampling unit; the representativeness of the data to inform the modeled processes of importance; limitations imposed by the Pacific Fishery Management Council Groundfish Terms of Reference; and the presence of an avenue for the inclusion of the data in the assessment model. Attributes associated with a data source can change through time, as can the applicability of the data source when different modeling approaches are explored (e.g., stock structure or time-varying processes). Therefore, the specific data sources included or excluded from this assessment should not necessarily constrain the selection of data sources applicable to future stock assessments for `r spp`. Even if a data source is not directly used in the stock assessment, it can provide valuable insights into biology, fishery behavior, or localized dynamics.
+Data comprise the foundational components of stock assessment models. The decision to include or exclude particular data sources in an assessment model depends on many factors. These factors often include, but are not limited to, the way in which data were collected (e.g., measurement method and consistency); the spatial and temporal coverage of the data; the quantity of data available per desired sampling unit; the representativeness of the data to inform the modeled processes of importance; limitations imposed by the \gls{pfmc} Groundfish Terms of Reference; and the presence of an avenue for the inclusion of the data in the assessment model. Attributes associated with a data source can change through time, as can the applicability of the data source when different modeling approaches are explored (e.g., stock structure or time-varying processes). Therefore, the specific data sources included or excluded from this assessment should not necessarily constrain the selection of data sources applicable to future stock assessments for `r spp`. Even if a data source is not directly used in the stock assessment, it can provide valuable insights into biology, fishery behavior, or localized dynamics.
 
 Data from a wide range of programs were available for possible inclusion in the current assessment model. Descriptions of each data source included in the model and sources that were explored but not included in the base model are provided below. In some cases, the inclusion of excluded data sources were explored through sensitivity analyses (see Section \@ref(sensitivities)).
 
-## Data sources used in this assessment
+## Data Sources Used in this Assessment
 
 This assessment updates the data that were used in the 2015 benchmark assessment and the corrections to catch applied for the 2017 catch only update, as well as utilizes additional data that were collected since the last benchmark. Fishery data sources (including length composition, age composition, and catch time series) are split among three strata to make comparisons to and explorations from the 2015 benchmark assessment more direct, whereas abundance indices and corresponding length and age compositions from the fishery-independent surveys are combined across these strata to match the population scale reflected in the model. Each data source is summarized here, and then discussed in more detail below:
 
 1.  Data regarding total removals of canary rockfish are compiled for years 1892-2022. These data are obtained from several sources:
 
-```{=html}
-<!-- -->
-```
-a.  In California, landed recreational (1928--2022) and commercial (1916--2022) catches along with estimates of recreational dead discards come from multiple data sources including state reconstructions, \gls{calcom}, \gls{recfin}, and \gls{pacfin}. Historical recreational landings up to 1980 are based on those used in the previous benchmark assessment.
-b.  In Oregon, landed recreational and commercial (1892--2022) catches along with estimates of recreational dead discards were provided directly by \gls{odfw} and come from multiple data sources including state reconstructions, \gls{pacfin}, and \gls{recfin}.
-c.  In Washington, landed recreational catches (1967--2022) along with estimates of recreational releases were provided directly by \gls{wdfw}. Historical commercial landed catches (1935--1980) are based on those used in the previous assessment. Commercial landed catches from 1981--2022 are from \gls{pacfin}.
-d.  Foreign trawl fleet catches from 1966--1976 are based on Rogers [-@rogers_species_2003].
-e.  Total removals of canary in the at-sea hake fishery (1973--2022) were provided by the \gls{nwfsc} \gls{ashop}.
-f.  Total commercial discards for recent years (2003--2021) are estimated in the annual mortality report using data from a variety of sources including the West Coast Groundfish Observer Program, and are [publicly available](https://www.pcouncil.org/documents/2022/08/g-1-b-nwfsc-report-1-estimated-discard-and-catch-of-groundfish-species-in-the-2021-west-coast-fisheries.pdf/).
-g.  Discard rates for 1981-1994 are obtained from the Pikitch study [@pikitch_evaluation_1988] as analyzed by J. Wallace.
-
-<!-- -->
+    a.  In California, landed recreational (1928--2022) and commercial (1916--2022) catches along with estimates of recreational dead discards come from multiple data sources including state reconstructions, \gls{calcom}, \gls{recfin}, and \gls{pacfin}. Historical recreational landings up to 1980 are based on those used in the previous benchmark assessment.
+    b.  In Oregon, landed recreational and commercial (1892--2022) catches along with estimates of recreational dead discards were provided directly by \gls{odfw} and come from multiple data sources including state reconstructions, \gls{pacfin}, and \gls{recfin}.
+    c.  In Washington, landed recreational catches (1967--2022) along with estimates of recreational releases were provided directly by \gls{wdfw}. Historical commercial landed catches (1935--1980) are based on those used in the previous assessment. Commercial landed catches from 1981--2022 are from \gls{pacfin}.
+    d.  Foreign trawl fleet catches from 1966--1976 are based on Rogers [-@rogers_species_2003].
+    e.  Total removals of canary in the at-sea hake fishery (1973--2022) were provided by the \gls{nwfsc} \gls{ashop}.
+    f.  Total commercial discards for recent years (2003--2021) are estimated in the annual mortality report using data from a variety of sources including the West Coast Groundfish Observer Program, and are [publicly available](https://www.pcouncil.org/documents/2022/08/g-1-b-nwfsc-report-1-estimated-discard-and-catch-of-groundfish-species-in-the-2021-west-coast-fisheries.pdf/).
+    g.  Discard rates for 1981-1994 are obtained from the Pikitch study [@pikitch_evaluation_1988] as analyzed by J. Wallace.
 
 2.  Fishery-independent data are included from three different surveys:
 
-<!-- -->
-
-a.  The \gls{s-tri} conducted by the Alaska Fisheries Science Center provides abundance index, length composition, and age-composition samples and was included for years 1980-2004.
-b.  The \gls{s-wcgbt} conducted by the \gls{nwfsc} provides abundance index, length composition, and age-composition samples, and was available for years 2003-2022, with the exception of 2020 due to the COVID-19 pandemic.
-c.  The pre-recruit survey, which combines data collected by the \gls{swfsc}, \gls{nwfsc}, and Pacific Whiting Conservation Cooperative provides a relative index of density for pre-recruit fish, and was included for most years from 2001-2022. Composition data are not used for this survey.
-
-<!-- -->
+    a.  The \gls{s-tri} conducted by the Alaska Fisheries Science Center provides abundance index, length composition, and age-composition samples and was included for years 1980-2004.
+    b.  The \gls{s-wcgbt} conducted by the \gls{nwfsc} provides abundance index, length composition, and age-composition samples, and was available for years 2003-2022, with the exception of 2020 due to the COVID-19 pandemic.
+    c.  The pre-recruit survey, which combines data collected by the \gls{swfsc}, \gls{nwfsc}, and Pacific Whiting Conservation Cooperative provides a relative index of density for pre-recruit fish, and was included for most years from 2001-2022. Composition data are not used for this survey.
 
 3.  Fishery-dependent composition data are included from the following sources:
 
-<!-- -->
-
-a.  Commercial length and age composition data were obtained from \gls{pacfin}.
-b.  Recreational length and age composition data from state sampling programs or historical sampling efforts were either provided by the state agencies or were obtained from \gls{recfin}.
-c.  Length and age data for canary rockfish from the at-sea hake fishery were obtained from the \gls{nwfsc} \gls{ashop}.
-
-<!-- -->
+    a.  Commercial length and age composition data were obtained from \gls{pacfin}.
+    b.  Recreational length and age composition data from state sampling programs or historical sampling efforts were either provided by the state agencies or were obtained from \gls{recfin}.
+    c.  Length and age data for canary rockfish from the at-sea hake fishery were obtained from the \gls{nwfsc} \gls{ashop}.
 
 4.  Estimates of life history parameters are generated from various sources, and include:
 
-<!-- -->
-
-a.  Updated maturity schedule from analyses based on functional age-at-maturity, which accounts for abortive maturation, wherein young spawners may have yolk present but are not yet spawning capable, and skip spawning, wherein mature individuals do not spawn in every year.
-b.  Updated fecundity relationship based on a meta-analysis assuming fecundity is a power function of length.
-c.  Updated prior for natural mortality rate along with updated treatment of mortality as age-invariant but sex dependent.
-d.  Updated prior on steepness according to best practices.
-e.  Updated weight-at-length relationship as estimated from the \gls{s-wcgbt}.
-f.  Estimates of ageing error for break-and-burn ages were maintained from the previous benchmark assessment.
+    a.  Updated maturity schedule from analyses based on functional age-at-maturity, which accounts for abortive maturation, wherein young spawners may have yolk present but are not yet spawning capable, and skip spawning, wherein mature individuals do not spawn in every year.
+    b.  Updated fecundity relationship based on a meta-analysis assuming fecundity is a power function of length.
+    c.  Updated prior for natural mortality rate along with updated treatment of mortality as age-invariant but sex dependent.
+    d.  Updated prior on steepness according to best practices.
+    e.  Updated weight-at-length relationship as estimated from the \gls{s-wcgbt}.
+    f.  Estimates of ageing error for break-and-burn ages were maintained from the previous benchmark assessment.
 
 These data sources are illustrated in Figure \ref{fig:data-plot}.

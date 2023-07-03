@@ -2,14 +2,6 @@
 
 ### Parameter Estimates
 
-<!-- **For the params tables** -->
-
-<!-- *Ensure WL1 for male and female and eggs scalar are scientific method format* -->
-
-<!-- *Set priors of unestimated values to -99 uniformly* -->
-
-<!-- *Remove the triennial late line as its mirrored* -->
-
 The base model parameter estimates along with approximate asymptotic normal
 standard errors (SD column) are shown in Table \ref{tab:params}. This
 table enumerates a total of 241 estimated parameters. These include one
@@ -23,7 +15,7 @@ recruitment deviations. The likelihood components from fitting the base model to
 The full r4ss plotting output is available in the supplementary material on the [Pacific Fishery Management Council website](pcouncil.org) (these figures will not be available until the assessment is finalized).
 
 
-#### Biology parameters
+#### Biology Parameters
 
 The estimates of growth parameters by sex varied relative to the
 externally estimated starting values (Table \ref{tab:params}). The
@@ -127,7 +119,7 @@ deviation for the pre-recruit survey, was estimated within the model at
 the estimates of the survey that down-weighting the survey data by
 estimating additional variability was not warranted.
 
-#### Stock-recruit parameters
+#### Stock-recruit Parameters
 
 In this assessment the logarithm of $R_0$ was estimated, while steepness
 was fixed at its prior mean of 0.72. Lognormal deviations from the
@@ -155,9 +147,7 @@ provided within r4ss such that it was left at the earlier values. Similarly, the
 
 ### Fits to the Data
 
-Fits to the data are shown based on the Pearson residuals for length and marginal age compositions, annual mean lengths and ages, and aggregated length and marginal age composition for the fishery. For the surveys, fits to the data are similar; however, fits of ages are conditioned on length, and fits to the survey indices are also provided. For simplicity in writing up the fits to data we do not further distinguish between marginal versus conditional age compositions. 
-
-<!-- Annual length and age composition fits for both the fishery and surveys are shown in the Appendix, Sections \@ref{length-data} and \@ref{age-data}. -->
+Fits to the data are shown based on the Pearson residuals for length and marginal age compositions, annual mean lengths and ages, and aggregated length and marginal age composition for the fishery. For the surveys, fits to the data are similar; however, fits of ages are conditioned on length, and fits to the survey indices are also provided. For simplicity in writing up the fits to data within this section, we refer to marginal age compositions as simply age compositions. 
 
 The aggregated fit to the length composition data by fleet is shown in Figure \ref{fig:len-agg-fit}. Fits are generally consistent with observed data aggregated over all years for males, females, and combined when sex-specific data are unavailable. Fits balance the bimodal patterns for Oregon and Washington recreational data and Oregon non-trawl data, and are generally consistent for both Washington and Oregon trawl data, where selectivity was mirrored. The mode of proportion at length is generally larger for females than males in trawl gear, reflecting the dimorphic growth in canary, but are similar for other gears.
 

@@ -6,69 +6,75 @@
 
 ![Map of management and the 2023 assessment area along with fleet spatial structure and survey ranges for `r spp` off the U.S. West Coast \label{fig:map}](../figures/assessment_map.png){width="100%," height="100%," alt="Map of U.S. West Coast showing indicating coastwide management, assessment, and survey structure, and state-specific fleet structure"}
 
+![Historical catch reconstruction for `r spp` off the U.S. West Coast from 1892-2022 by fleet \label{fig:catches}](../figures/plots/catch2 landings stacked.png){width="100%," height="100%," alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
+
 ![Illustration of types of data used for each fleet within the assessment for `r spp` off the U.S. West Coast \label{fig:data-plot}](../figures/data_plot_custom.png){width="100%," height="100%," alt="Horizontal bar plot showing data types available by year for each fleet. Commerical catches started in the early 1900s, and recreational in the 1920s for California and around 1970 for other states. Commercial and recreational composition data started in the 1970s and 1980s, with fewer years of age data compared to lengths. Fishery independent indices and composition data started in the 1980s"}
 
-![Historical catch reconstruction for `r spp` off the U.S. West Coast from 1892-2022 by fleet \label{fig:catches}](../figures/plots/catch2%20landings%20stacked.png){width="100%," height="100%," alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
+![Length composition data for the California trawl fishery for females (red), males (blue), and unsexed (black) \label{fig:CA_twl_lencomp}](../figures/plots/comp_lendat_bubflt1mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of California trawl length compositions for males, females, and unsexed fish"}
 
-![Length composition data for the California trawl fishery \label{fig:CA_twl_lencomp}](../figures/plots/comp_lendat_bubflt1mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of California trawl length compositions for males, females, and unsexed fish"}
+![Length composition data for the Oregon trawl fishery for females (red) and males (blue) \label{fig:OR_twl_lencomp}](../figures/plots/comp_lendat_bubflt2mkt0_page3.png){width="100%" height="100%" alt="Bubble plot of Oregon trawl length compositions for males and females"}
 
-![Length composition data for the Oregon trawl fishery \label{fig:OR_twl_lencomp}](../figures/plots/comp_lendat_bubflt2mkt0_page3.png){width="100%" height="100%" alt="Bubble plot of Oregon trawl length compositions for males and females"}
+![Length composition data for the Washington trawl fishery for females (red), males (blue), and unsexed (black) \label{fig:WA_twl_lencomp}](../figures/plots/comp_lendat_bubflt3mkt0_page3.png){width="100%" height="100%" alt="Bubble plot of Washington trawl length compositions for males, females, and unsexed fish"}
 
-![Length composition data for the Washington trawl fishery \label{fig:WA_twl_lencomp}](../figures/plots/comp_lendat_bubflt3mkt0_page3.png){width="100%" height="100%" alt="Bubble plot of Washington trawl length compositions for males, females, and unsexed fish"}
+![Length composition data for the California non-trawl fishery for females (red), males (blue), and unsexed (black) \label{fig:CA_ntwl_lencomp}](../figures/plots/comp_lendat_bubflt4mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of California non-trawl length compositions for males, females, and unsexed fish"}
 
-![Length composition data for the California non-trawl fishery \label{fig:CA_ntwl_lencomp}](../figures/plots/comp_lendat_bubflt4mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of California non-trawl length compositions for males, females, and unsexed fish"}
+![Length composition data for the Oregon non-trawl fishery for females (red) and males (blue) \label{fig:OR_ntwl_lencomp}](../figures/plots/comp_lendat_bubflt5mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon non-trawl length compositions for males and females"}
+ 
+![Length composition data for the Washington non-trawl fishery for females (red) and males (blue) \label{fig:WA_ntwl_lencomp}](../figures/plots/comp_lendat_bubflt6mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington non-trawl length compositions for males and females"}
 
-![Length composition data for the Oregon non-trawl fishery \label{fig:OR_ntwl_lencomp}](../figures/plots/comp_lendat_bubflt5mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon non-trawl length compositions for males and females"}
+![Age composition data for the California trawl fishery for females (red) and males (blue) \label{fig:CA_twl_agecomp}](../figures/plots/comp_agedat_bubflt1mkt0.png){width="100%" height="100%" alt="Bubble plot of California trawl age compositions for males and females"}
 
-![Length composition data for the Washington non-trawl fishery \label{fig:WA_ntwl_lencomp}](../figures/plots/comp_lendat_bubflt6mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington non-trawl length compositions for males and females"}
+![Age composition data for the Oregon trawl fishery for females (red) and males (blue) \label{fig:OR_twl_agecomp}](../figures/plots/comp_agedat_bubflt2mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of Oregon trawl age compositions for males and females"}
 
-![Age composition data for the California trawl fishery \label{fig:CA_twl_agecomp}](../figures/plots/comp_agedat_bubflt1mkt0.png){width="100%" height="100%" alt="Bubble plot of California trawl age compositions for males and females"}
+![Age composition data for the Washington trawl fishery for females (red) and males (blue) \label{fig:WA_twl_agecomp}](../figures/plots/comp_agedat_bubflt3mkt0_page3.png){width="100%" height="100%" alt="Bubble plot of Washington trawl age compositions for males and females"}
 
-![Age composition data for the Oregon trawl fishery \label{fig:OR_twl_agecomp}](../figures/plots/comp_agedat_bubflt2mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of Oregon trawl age compositions for males and females"}
+![Age composition data for the California non-trawl fishery for females (red) and males (blue) \label{fig:CA_ntwl_agecomp}](../figures/plots/comp_agedat_bubflt4mkt0.png){width="100%" height="100%" alt="Bubble plot of California non-trawl age compositions for males and females"}
 
-![Age composition data for the Washington trawl fishery \label{fig:WA_twl_agecomp}](../figures/plots/comp_agedat_bubflt3mkt0_page3.png){width="100%" height="100%" alt="Bubble plot of Washington trawl age compositions for males and females"}
+![Age composition data for the Oregon non-trawl fishery for females (red) and males (blue) \label{fig:OR_ntwl_agecomp}](../figures/plots/comp_agedat_bubflt5mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon non-trawl age compositions for males and females"}
 
-![Age composition data for the California non-trawl fishery \label{fig:CA_ntwl_agecomp}](../figures/plots/comp_agedat_bubflt4mkt0.png){width="100%" height="100%" alt="Bubble plot of California non-trawl age compositions for males and females"}
+![Age composition data for the Washington non-trawl fishery for females (red) and males (blue) \label{fig:WA_ntwl_agecomp}](../figures/plots/comp_agedat_bubflt6mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington non-trawl age compositions for males and females"}
 
-![Age composition data for the Oregon non-trawl fishery \label{fig:OR_ntwl_agecomp}](../figures/plots/comp_agedat_bubflt5mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon non-trawl age compositions for males and females"}
+![Length composition data for the Oregon at-sea hake fishery for females (red) and males (blue) \label{fig:OR_hake_lencomp}](../figures/plots/comp_lendat_bubflt11mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon at-sea hake length compositions for males and females"}
 
-![Age composition data for the Washington non-trawl fishery \label{fig:WA_ntwl_agecomp}](../figures/plots/comp_agedat_bubflt6mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington non-trawl age compositions for males and females"}
+![Length composition data for the Washington at-sea hake fishery for females (red) and males (blue) \label{fig:WA_hake_lencomp}](../figures/plots/comp_lendat_bubflt12mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington at-sea hake length compositions for males and females"}
 
-![Length composition data for the Oregon at-sea-hake fishery \label{fig:OR_hake_lencomp}](../figures/plots/comp_lendat_bubflt11mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon at-sea-hake length compositions for males and females"}
+![Age composition data for the Oregon at-sea hake fishery for females (red) and males (blue) \label{fig:OR_hake_agecomp}](../figures/plots/comp_agedat_bubflt11mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon at-sea hake age compositions for males and females"}
 
-![Length composition data for the Washington at-sea-hake fishery \label{fig:WA_hake_lencomp}](../figures/plots/comp_lendat_bubflt12mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington at-sea-hake length compositions for males and females"}
+![Age composition data for the Washington at-sea hake fishery for females (red) and males (blue) \label{fig:WA_hake_agecomp}](../figures/plots/comp_agedat_bubflt12mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington at-sea hake age compositions for males and females"}
 
-![Age composition data for the Oregon at-sea-hake fishery \label{fig:OR_hake_agecomp}](../figures/plots/comp_agedat_bubflt11mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon at-sea-hake age compositions for males and females"}
+![Length composition data for the California recreational fishery for unsexed (black) \label{fig:CA_rec_lencomp}](../figures/plots/comp_lendat_bubflt7mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of California recreational length compositions for unsexed fish"}
 
-![Age composition data for the Washington at-sea-hake fishery \label{fig:WA_hake_agecomp}](../figures/plots/comp_agedat_bubflt12mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington at-sea-hake age compositions for males and females"}
+![Length composition data for the Oregon recreational fishery for females (red), males (blue), and unsexed (black) \label{fig:OR_rec_lencomp}](../figures/plots/comp_lendat_bubflt8mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of Oregon recreational length compositions for males, females, and unsexed fish"}
 
-![Length composition data for the California recreational fishery \label{fig:CA_rec_lencomp}](../figures/plots/comp_lendat_bubflt7mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of California recreational length compositions for unsexed fish"}
-
-![Length composition data for the Oregon recreational fishery \label{fig:OR_rec_lencomp}](../figures/plots/comp_lendat_bubflt8mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of Oregon recreational length compositions for males, females, and unsexed fish"}
-
-![Length composition data for the Washington recreational fishery \label{fig:WA_rec_lencomp}](../figures/plots/comp_lendat_bubflt9mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of Washington non-trawl length compositions for males, females, and unsexed fish"}
+![Length composition data for the Washington recreational fishery for females (red), males (blue), and unsexed (black) \label{fig:WA_rec_lencomp}](../figures/plots/comp_lendat_bubflt9mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of Washington non-trawl length compositions for males, females, and unsexed fish"}
 
 ![Aggregate length composition data for the three fisheries with bimodal patterns in length \label{fig:agglencomp}](../figures/comp_lendat__aggregated_across_time_custom.png){width="100%" height="100%" alt="Aggregate plots of length compositions for males, females, and unsexed fish across all length distributions"}
 
-![Age composition data for the Oregon recreational fishery \label{fig:OR_rec_agecomp}](../figures/plots/comp_agedat_bubflt8mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon recreational age compositions for males and females"}
+![Age composition data for the Oregon recreational fishery for females (red) and males (blue) \label{fig:OR_rec_agecomp}](../figures/plots/comp_agedat_bubflt8mkt0.png){width="100%" height="100%" alt="Bubble plot of Oregon recreational age compositions for males and females"}
 
-![Age composition data for the Washington recreational fishery \label{fig:WA_rec_agecomp}](../figures/plots/comp_agedat_bubflt9mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington recreational age compositions for males and females"}
+![Age composition data for the Washington recreational fishery for females (red) and males (blue) \label{fig:WA_rec_agecomp}](../figures/plots/comp_agedat_bubflt9mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington recreational age compositions for males and females"}
+
+![Length composition data for the West Coast Groundfish Bottomtrawl Survey for females (red) and males (blue) \label{fig:wcgbts_lencomp}](../figures/plots/comp_lendat_bubflt28mkt0.png){width="100%" height="100%" alt="Bubble plot of WCGBTS length compositions for males and females showing a wide range of lengths over time"}
+
+![Length composition data for the early years of the Triennial Survey for females (red) and males (blue) \label{fig:triearly_lencomp}](../figures/plots/comp_lendat_bubflt29mkt0.png){width="100%" height="100%" alt="Bubble plot of the Triennial survey length compositions for males and females from 1980 to 1992"}
+
+![Length composition data for the later years of the Triennial Survey for females (red) and males (blue) \label{fig:trilate_lencomp}](../figures/plots/comp_lendat_bubflt30mkt0.png){width="100%" height="100%" alt="Bubble plot of the Triennial survey length compositions for males and females from 1995 to 2004"}
 
 ## Biology
 
-![Maturity at age relationship \label{fig:compare_maturity}](../figures/compare_maturity.png){width="100%" height="100%" alt="Two logistic curves for 2015 and 2023, 2015 is shifted left of 2023 and asymptotes below 1, 2023 asymptotes at 1"}
+![Maturity at age relationship used for the current assessment (black), compared to the last benchmark assessment (red). Sample sizes are shown as gray circles \label{fig:compare_maturity}](../figures/compare_maturity.png){width="100%" height="100%" alt="Two logistic curves for 2015 and 2023, 2015 is shifted left of 2023 and asymptotes below 1, 2023 asymptotes at 1"}
 
 ![Fecundity at length relationship \label{fig:compare_fecundity}](../figures/compare_fecundity.png){width="100%," height="100%," alt="Two exponential curves for 2015 and 2023, 2023 is lower"}
 
-![Weight-length relationship \label{fig:WL}](../figures/WL.png){width="100%," height="100%," alt="Exponential weight-length curves for males and females nearly overlapping, with relatively small spread of data"}
+![Weight-length relationship for male and females \label{fig:WL}](../figures/WL.png){width="100%," height="100%," alt="Exponential weight-length curves for males and females nearly overlapping, with relatively small spread of data"}
 
-![Weight-length comparison for females \label{fig:compare_WL}](../figures/compare_WL.png){width="100%," height="100%," alt="2015 and 2023 exponential weight-length relationships nearly overlapping"}
+![Weight-length comparisons for males and females with previous benchmark assessment \label{fig:compare_WL}](../figures/compare_WL.png){width="100%," height="100%," alt="2015 and 2023 exponential weight-length relationships nearly overlapping and for sexes"}
 
-![Externally estimated age-length relationship by Sex and latitude, where "North" is latitudes greater than $43.3672^\circ$N (Coos Bay, OR) \label{fig:spatial_AL}](../figures/growth_diffs.png){width="100%," height="100%," alt="Figure showing age-length data and four fitted curves for north and south males and females. Females are larger than males, but northern individuals are only slightly larger than southern individuals"}
+![Externally estimated age-length relationship by Sex and latitude, where "North" is latitudes greater than $43.3672^\circ$N (Coos Bay, OR) for females (red), males (blue), and unsexed (yellow) \label{fig:spatial_AL}](../figures/growth_diffs.png){width="100%," height="100%," alt="Figure showing age-length data and four fitted curves for north and south males and females. Females are larger than males, but northern individuals are only slightly larger than southern individuals"}
 
-![Sex ratio by age in the \gls{s-wcgbt} \label{fig:sex_ratio_age}](../figures/age_fraction_female.png){width="100%," alt="Figure showing fraction female close to 50% until around age 20 when it becomes almost all male"}
+![Sex ratio by age in the \gls{s-wcgbt} for females (red), males (blue) and unsexed (green) \label{fig:sex_ratio_age}](../figures/age_fraction_female.png){width="100%," alt="Figure showing fraction female close to 50% until around age 20 when it becomes almost all male"}
 
-![Sex ratio by length in the \gls{s-wcgbt} \label{fig:sex_ratio_length}](../figures/length_fraction_female.png){width="100%," alt="Figure showing fraction female close to 50% until around 45 when it becomes almost all female"}
+![Sex ratio by length in the \gls{s-wcgbt} for females (red), males (blue) and unsexed (green) \label{fig:sex_ratio_length}](../figures/length_fraction_female.png){width="100%," alt="Figure showing fraction female close to 50% until around 45 when it becomes almost all female"}
 
 ## Model bridging
 
@@ -166,111 +172,111 @@ label = 'noncomm-selex-male')
 
 ### Fits to data
 
-#### Length compositions
+<!-- #### Length compositions -->
 
-![Length composition aggregated across years by fleet with the model estimated fit to the data by sex (green unsexed, red female, and blue male \label{fig:len-agg-fit}](../figures/plots/comp_lenfit__aggregated_across_time.png){width="100%," alt="Figure showing fits of modeled length composition for all fleets generally matching the distribution observed in the data"}
+![Length composition aggregated across years by fleet with the model estimated fit to the data by sex (green unsexed, red female, and blue male) \label{fig:len-agg-fit}](../figures/plots/comp_lenfit__aggregated_across_time.png){width="100%," alt="Figure showing fits of modeled length composition for all fleets generally matching the distribution observed in the data"}
 
-![Pearson residuals for lengths in the California trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson1}](../figures/plots/comp_lenfit_residsflt1mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years"}
+![Pearson residuals for lengths in the California trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black) \label{fig:len-pearson1}](../figures/plots/comp_lenfit_residsflt1mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years"}
 
 ![Mean length for the California trawl fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit1}](../figures/plots/comp_lenfit_data_weighting_TA1.8_1_CA_TWL.png){width="100%," alt="Two panel figure with uncertainty around each point of mean length slightly decreasing in early years and stable since"}
 
-![Pearson residuals for lengths in the Oregon trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson2}](../figures/plots/comp_lenfit_residsflt2mkt0_page3.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years"}
+![Pearson residuals for lengths in the Oregon trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected)for females (red) and males (blue) \label{fig:len-pearson2}](../figures/plots/comp_lenfit_residsflt2mkt0_page3.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years"}
 
 ![Mean length for the Oregon trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit2}](../figures/plots/comp_lenfit_data_weighting_TA1.8_2_OR_TWL.png){width="100%," alt="Figure of mean length with uncertainty around each point showing a decrease early years, stable until 2010, and increasing since"}
 
-![Pearson residuals for lengths in the Washington trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson3}](../figures/plots/comp_lenfit_residsflt3mkt0_page3.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
+![Pearson residuals for lengths in the Washington trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black) \label{fig:len-pearson3}](../figures/plots/comp_lenfit_residsflt3mkt0_page3.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
 
 ![Mean length for the Washington trawl fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit3}](../figures/plots/comp_lenfit_data_weighting_TA1.8_3_WA_TWL.png){width="100%," alt="Two panel figure with uncertainty around each point of mean length slightly decreasing in early years and stable since"}
 
-![Pearson residuals for lengths in the California non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson4}](../figures/plots/comp_lenfit_residsflt4mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
+![Pearson residuals for lengths in the California non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black)  \label{fig:len-pearson4}](../figures/plots/comp_lenfit_residsflt4mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
 
 ![Mean length for the California non-trawl fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit4}](../figures/plots/comp_lenfit_data_weighting_TA1.8_4_CA_NTWL.png){width="100%," alt="Two panel figure with uncertainty around each point of mean length changing little except an increase in the most recent years"}
 
-![Pearson residuals for lengths in the Oregon non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson5}](../figures/plots/comp_lenfit_residsflt5mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern and indicating bimodality in recent years"}
+![Pearson residuals for lengths in the Oregon non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black) \label{fig:len-pearson5}](../figures/plots/comp_lenfit_residsflt5mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern and indicating bimodality in recent years"}
 
 ![Mean length for the Oregon non-trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit5}](../figures/plots/comp_lenfit_data_weighting_TA1.8_5_OR_NTWL.png){width="100%," alt="Figure with uncertainty around each point of sparse mean length data declining to 2000, experiencing a shift downward until 2020, after which length shifts upward"}
 
-![Pearson residuals for lengths in the Washington non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson6}](../figures/plots/comp_lenfit_residsflt6mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
+![Pearson residuals for lengths in the Washington non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:len-pearson6}](../figures/plots/comp_lenfit_residsflt6mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
 
 ![Mean length for the Washington non-trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit6}](../figures/plots/comp_lenfit_data_weighting_TA1.8_6_WA_NTWL.png){width="100%," alt="Figure with uncertainty around each point of sparse and variable mean length data"}
 
-![Pearson residuals for lengths in the California recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson7}](../figures/plots/comp_lenfit_residsflt7mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
+![Pearson residuals for lengths in the California recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for unsexed (black) \label{fig:len-pearson7}](../figures/plots/comp_lenfit_residsflt7mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
 
 ![Mean length for the California recreational fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit7}](../figures/plots/comp_lenfit_data_weighting_TA1.8_7_CA_REC.png){width="100%," alt="Figure with uncertainty around each point of mean length data that cycles over time"}
 
-![Pearson residuals for lengths in the Oregon recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson8}](../figures/plots/comp_lenfit_residsflt8mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern excpet for some underfitting of large length between 1992 and 2008"}
+![Pearson residuals for lengths in the Oregon recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black) \label{fig:len-pearson8}](../figures/plots/comp_lenfit_residsflt8mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern excpet for some underfitting of large length between 1992 and 2008"}
 
 ![Mean length for the Oregon recreational fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit8}](../figures/plots/comp_lenfit_data_weighting_TA1.8_8_OR_REC.png){width="100%," alt="Two panel figure with uncertainty around each point of mean length that is variable and slightly increasing over time"}
 
-![Pearson residuals for lengths in the Washington recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson9}](../figures/plots/comp_lenfit_residsflt9mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern and indicating bimodality in recent years"}
+![Pearson residuals for lengths in the Washington recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black) \label{fig:len-pearson9}](../figures/plots/comp_lenfit_residsflt9mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern and indicating bimodality in recent years"}
 
 ![Mean length for the Washington recreational fleet with 95 percent confidence intervals based on current samples sizes for unsexed (top panel) and sexed (bottom panel) samples \label{fig:mean-len-fit9}](../figures/plots/comp_lenfit_data_weighting_TA1.8_9_WA_REC.png){width="100%," alt="Two panel figure with uncertainty around each point of mean length that is generally unchanging over time with an increase in recent years"}
 
-![Pearson residuals for lengths in the Oregon at-sea-hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson11}](../figures/plots/comp_lenfit_residsflt11mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
+![Pearson residuals for lengths in the Oregon at-sea hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:len-pearson11}](../figures/plots/comp_lenfit_residsflt11mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
 
-![Mean length for the Oregon at-sea-hake fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit11}](../figures/plots/comp_lenfit_data_weighting_TA1.8_11_OR_ASHOP.png){width="100%," alt="Figure with uncertainty around each point of mean length that is unchanging over time"}
+![Mean length for the Oregon at-sea hake fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-len-fit11}](../figures/plots/comp_lenfit_data_weighting_TA1.8_11_OR_ASHOP.png){width="100%," alt="Figure with uncertainty around each point of mean length that is unchanging over time"}
 
-![Pearson residuals for lengths in the Washington at-sea-hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson12}](../figures/plots/comp_lenfit_residsflt12mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with underfitting of larger lengths in the early 2000s"}
+![Pearson residuals for lengths in the Washington at-sea hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females(red) and males (blue) \label{fig:len-pearson12}](../figures/plots/comp_lenfit_residsflt12mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with underfitting of larger lengths in the early 2000s"}
 
-![Mean length for the Washington at-sea-hake fleet with 95 percent confidence intervals based on current samples \label{fig:mean-len-fit12}](../figures/plots/comp_lenfit_data_weighting_TA1.8_12_WA_ASHOP.png){width="100%," alt="Figure with uncertainty around each point of mean length that is unchanging over time"}
+![Mean length for the Washington at-sea hake fleet with 95 percent confidence intervals based on current samples \label{fig:mean-len-fit12}](../figures/plots/comp_lenfit_data_weighting_TA1.8_12_WA_ASHOP.png){width="100%," alt="Figure with uncertainty around each point of mean length that is unchanging over time"}
 
-![Pearson residuals for lengths in the West Coast Groundfish Bottomtrawl Survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson28}](../figures/plots/comp_lenfit_residsflt28mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
+![Pearson residuals for lengths in the West Coast Groundfish Bottomtrawl Survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:len-pearson28}](../figures/plots/comp_lenfit_residsflt28mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
 
 ![Mean length for the West Coast Groundfish Bottomtrawl Survey with 95 percent confidence intervals based on current samples \label{fig:mean-len-fit28}](../figures/plots/comp_lenfit_data_weighting_TA1.8_28_coastwide_NWFSC.png){width="100%," alt="Figure with uncertainty around each point of mean length that is variable but non-trending over time"}
 
-![Pearson residuals for lengths in the early Triennial Survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson29}](../figures/plots/comp_lenfit_residsflt29mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
+![Pearson residuals for lengths in the early Triennial Survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:len-pearson29}](../figures/plots/comp_lenfit_residsflt29mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
 
 ![Mean length for the early Triennial Survey with 95 percent confidence intervals based on current samples \label{fig:mean-len-fit29}](../figures/plots/comp_lenfit_data_weighting_TA1.8_29_coastwide_Tri_early.png){width="100%," alt="Figure with uncertainty around each point of mean length that is declining over time"}
 
-![Pearson residuals for lengths in the late Triennial Survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:len-pearson30}](../figures/plots/comp_lenfit_residsflt30mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
+![Pearson residuals for lengths in the late Triennial Survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:len-pearson30}](../figures/plots/comp_lenfit_residsflt30mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern"}
 
 ![Mean length for the late Triennial Survey with 95 percent confidence intervals based on current samples \label{fig:mean-len-fit30}](../figures/plots/comp_lenfit_data_weighting_TA1.8_30_coastwide_Tri_late.png){width="100%," alt="Figure with uncertainty around each point of mean length that is increasing over time"}
 
-#### Age compositions
+<!-- #### Age compositions -->
 
-![Age composition aggregated across years by fleet with the model estimated fit to the data by sex (red female, and blue male \label{fig:age-agg-fit}](../figures/plots/comp_agefit__aggregated_across_time.png){width="100%," alt="Figure showing fits of modeled age composition for all fleets generally matching the distribution observed in the data"}
+![Age composition aggregated across years by fleet with the model estimated fit to the data by sex (red female, and blue male) \label{fig:age-agg-fit}](../figures/plots/comp_agefit__aggregated_across_time.png){width="100%," alt="Figure showing fits of modeled age composition for all fleets generally matching the distribution observed in the data"}
 
-![Pearson residuals for ages in the California trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson1}](../figures/plots/comp_agefit_residsflt1mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years"}
+![Pearson residuals for ages in the California trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson1}](../figures/plots/comp_agefit_residsflt1mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years"}
 
 ![Mean age for the California trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit1}](../figures/plots/comp_agefit_data_weighting_TA1.8_1_CA_TWL.png){width="100%," alt="Figure with uncertainty around each point of mean age which is slightly higher in early years compared to later years"}
 
-![Pearson residuals for ages in the Oregon trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson2}](../figures/plots/comp_agefit_residsflt2mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with underfitting old samples in the early and recent years"}
+![Pearson residuals for ages in the Oregon trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson2}](../figures/plots/comp_agefit_residsflt2mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with underfitting old samples in the early and recent years"}
 
 ![Mean age for the Oregon trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit2}](../figures/plots/comp_agefit_data_weighting_TA1.8_2_OR_TWL.png){width="100%," alt="Figure with uncertainty around each point of mean age higher in early years compared to later years"}
 
-![Pearson residuals for ages in the Washington trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson3}](../figures/plots/comp_agefit_residsflt3mkt0_page3.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with overfitting of young samples in the early and years and underfitting moderatlely old samples in the 2000s"}
+![Pearson residuals for ages in the Washington trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson3}](../figures/plots/comp_agefit_residsflt3mkt0_page3.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with overfitting of young samples in the early and years and underfitting moderatlely old samples in the 2000s"}
 
 ![Mean age for the Washington trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit3}](../figures/plots/comp_agefit_data_weighting_TA1.8_3_WA_TWL.png){width="100%," alt="Figure with uncertainty around each point of mean age that is variabilty and cycles over time"}
 
-![Pearson residuals for ages in the California non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson4}](../figures/plots/comp_agefit_residsflt4mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals from sparse samples"}
+![Pearson residuals for ages in the California non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson4}](../figures/plots/comp_agefit_residsflt4mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals from sparse samples"}
 
 ![Mean age for the California non-trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit4}](../figures/plots/comp_agefit_data_weighting_TA1.8_4_CA_NTWL.png){width="100%," alt="Figure with uncertainty around each point of mean age which is variable and from sparse samples"}
 
-![Pearson residuals for ages in the Oregon non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson5}](../figures/plots/comp_agefit_residsflt5mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals from sparse samples"}
+![Pearson residuals for ages in the Oregon non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson5}](../figures/plots/comp_agefit_residsflt5mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals from sparse samples"}
 
 ![Mean age for the Oregon non-trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit5}](../figures/plots/comp_agefit_data_weighting_TA1.8_5_OR_NTWL.png){width="100%," alt="Figure with uncertainty around each point of mean age which is variable and from sparse samples"}
 
-![Pearson residuals for ages in the Washington non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson6}](../figures/plots/comp_agefit_residsflt6mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals without trends"}
+![Pearson residuals for ages in the Washington non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson6}](../figures/plots/comp_agefit_residsflt6mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals without trends"}
 
 ![Mean age for the Washington non-trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit6}](../figures/plots/comp_agefit_data_weighting_TA1.8_6_WA_NTWL.png){width="100%," alt="Figure with uncertainty around each point of mean age that is variable and without trend"}
 
-![Pearson residuals for ages in the Oregon recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson8}](../figures/plots/comp_agefit_residsflt8mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals underfitting older ages in recent years"}
+![Pearson residuals for ages in the Oregon recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson8}](../figures/plots/comp_agefit_residsflt8mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals underfitting older ages in recent years"}
 
 ![Mean age for the Oregon recreational fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit8}](../figures/plots/comp_agefit_data_weighting_TA1.8_8_OR_REC.png){width="100%," alt="Figure with uncertainty around each point of mean age which shows an increase in recent years"}
 
-![Pearson residuals for ages in the Washington recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson9}](../figures/plots/comp_agefit_residsflt9mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals overfitting younger ages"}
+![Pearson residuals for ages in the Washington recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson9}](../figures/plots/comp_agefit_residsflt9mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals overfitting younger ages"}
 
 ![Mean age for the Washington recreational fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit9}](../figures/plots/comp_agefit_data_weighting_TA1.8_9_WA_REC.png){width="100%," alt="Figure with uncertainty around each point of mean age which shows no trend until 2020 at which point mean age steps up to older ages"}
 
-![Pearson residuals for ages in the Oregon at-sea-hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson11}](../figures/plots/comp_agefit_residsflt11mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with little trend"}
+![Pearson residuals for ages in the Oregon at-sea hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson11}](../figures/plots/comp_agefit_residsflt11mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with little trend"}
 
-![Mean age for the Oregon at-sea-hake fleet fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit11}](../figures/plots/comp_agefit_data_weighting_TA1.8_11_OR_ASHOP.png){width="100%," alt="Figure with uncertainty around each point of mean age which shows no trend"}
+![Mean age for the Oregon at-sea hake fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit11}](../figures/plots/comp_agefit_data_weighting_TA1.8_11_OR_ASHOP.png){width="100%," alt="Figure with uncertainty around each point of mean age which shows no trend"}
 
-![Pearson residuals for ages in the Washington at-sea-hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) \label{fig:age-pearson12}](../figures/plots/comp_agefit_residsflt12mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with little trend"}
+![Pearson residuals for ages in the Washington at-sea hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson12}](../figures/plots/comp_agefit_residsflt12mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with little trend"}
 
-![Mean age for the Washington at-sea-hake fleet fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit12}](../figures/plots/comp_agefit_data_weighting_TA1.8_12_WA_ASHOP.png){width="100%," alt="Figure with uncertainty around each point of mean age which shows no trend"}
+![Mean age for the Washington at-sea hake fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit12}](../figures/plots/comp_agefit_data_weighting_TA1.8_12_WA_ASHOP.png){width="100%," alt="Figure with uncertainty around each point of mean age which shows no trend"}
 
-#### Conditional age at length compositions
+<!-- #### Conditional age at length compositions -->
 
 ![Pearson residuals for conditional age-at-length in the West Coast Groundfish Bottomtrawl Survey (plot 1 of 2). Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male) \label{fig:caal-pearson28_1}](../figures/comp_condAALfit_residsflt28mkt0_page1_custom.png){width="100%," alt="Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 2003-2012"}
 
@@ -280,7 +286,7 @@ label = 'noncomm-selex-male')
 
 ![Pearson residuals for conditional age-at-length in the late Triennial survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male) \label{fig:caal-pearson30}](../figures/plots/comp_condAALfit_residsflt30mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 1996-2004"}
 
-#### Survey indices
+<!-- #### Survey indices -->
 
 ![Fit of model to \gls{s-wcgbt}. Lines represent input 95 percent confidence interval of survey index \label{fig:wcgbts-fit}](../figures/plots/index2_cpuefit_28_coastwide_NWFSC.png){width="100%," height="100%," alt="Figure showing model generally fitting survey data well"}
 
@@ -293,8 +299,6 @@ label = 'noncomm-selex-male')
 ## Diagnostics
 
 ![Comparison of base model spawning output with estimates from the models with lower likelihood found during the two rounds of jitter analyses \label{fig:jitter_compare}](../figures/jitter_compare1_spawnbio.png){width="100%," alt="Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model"}
-
-![Comparison of recruitment deviations estimated in DFO (2022) and this model. Deviations are detrended using standard linear regression to account for opposite long-term recruitment trends in the two models. Dashed line is the 1:1 line. Points that fall on this line have perfect correspondence between the two models. \label{fig:canada-rec}](../figures/canada_rec.png){width="100%" height="100%" alt="Scatter plot showing mild correspondence between U.S. and Canada detrended recruitment deviations."}
 
 ![Comparison of the relative change in estimated management quantities as compared to the base model for structural sensitivities.The quantities compared are 1) the estimate of unfished spawning output (SB~0~), spawning output in 2023 (SB~2023~), the relative spawning output in 2023 (SB~2023~/SB~0~), the yield resulting in a population at a spawning potential ratio of 0.5 (Yield~SPR=0.50~), and the fishing mortality associated with that yield (F~SPR=0.50~). The thick lines at the top indicate the 95 percent confidence interval around the point estimate of the quantity from the base model, where each color corresponds with a specific quantity in the legend. Values to the right of the vertical dashed line indicate the quantity was estimated higher than in the base model, whereas values to the left indicate the quantity was estimated lower. \label{fig:sens-summary}](../figures/sensitivities/sens_summary.png){width="100%," alt="Figure summarizing how estimates of derived quantities differ between sensitivity models and base model and increasing francis age and length weights result in the largest changes and most other quantities fall within the 95% confidence intervals for the respective derived quantities"}
 
@@ -339,6 +343,8 @@ label = 'retro_relbio')
 ![Likelihood profile showing support from various data sources for different values of male natural mortality. Change in log-likelihood is relative to the base model. Values associated the likelihoods that fall below the red dashed line are within the 95% chi-squared confidence interval. \label{fig:male-m-profile}](../../models/5_5_0_hessian_KLO_profile_NatM_uniform_Mal_GP_1_prior_like_1/piner_panel_NatM_uniform_Mal_GP_1.png){width="100%" height="100%" alt="Four-panel figure showing influence of different likelihood components and different fleets within age, length, and survey likelihood components on profile of male natural mortality"}
 
 ![Summary biomass of current and past full and update assessments in 1000s of mt. Summary biomass shows age 5+ canary rockfish with the exception of the 2001 update, which provided summary biomass for age 3+ canary rockfish \label{fig:hist_compare}](../figures/historical_assessment_smry_biomss.png){width="100%," alt="Figure showing biomass trajectories showing a decline to 2000 followed by an increase until the end year of the assessment"}
+
+![Comparison of recruitment deviations estimated in DFO (2022) and this model. Deviations are detrended using standard linear regression to account for opposite long-term recruitment trends in the two models. Dashed line is the 1:1 line. Points that fall on this line have perfect correspondence between the two models. \label{fig:canada-rec}](../figures/canada_rec.png){width="100%" height="100%" alt="Scatter plot showing mild correspondence between U.S. and Canada detrended recruitment deviations."}
 
 ## Management
 

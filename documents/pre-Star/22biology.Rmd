@@ -147,8 +147,7 @@ SSC-approved prior for steepness in 2023 assumes a beta distribution
 with a mean of 0.72 and standard deviation of 0.16
 [@pfmc_accepted_2023]. The prior parameters are based on the
 Thorson-Dorn rockfish prior (commonly used in past West Coast rockfish
-assessments) conducted by James Thorson (personal communication, NWFSC,
-NOAA) which was reviewed and endorsed by the \gls{ssc} in 2017. However,
+assessments) which was reviewed and endorsed by the \gls{ssc} in 2017. However,
 this approach was subsequently rejected for future analysis in 2019 when
 the new meta-analysis resulted in a mean value of approximately 0.95. In
 the absence of a new method for generating a prior for steepness the
@@ -251,7 +250,7 @@ a positive bias relative to CAPS break-and-burn reads [+3.76 yrs. at age
 A qualitative examination of the new break and burn double reads showed
 no evidence that the ageing estimation had changed over time relative to
 the samples included in the previous analyses. Furthermore, a new
-TMB-based ageing error software has been developed (A. Punt pers. comm.)
+TMB-based ageing error software has been developed (A. Punt, University of Washington, personal communication)
 but has not yet been fully explored or documented. Therefore, revision
 of the ageing error matrices has been left as a research project to be
 completed in time for the next full assessment.

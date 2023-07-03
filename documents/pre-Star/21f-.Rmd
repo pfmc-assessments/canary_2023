@@ -1,6 +1,6 @@
 ## Fishery-Dedependent Data
 
-### Total Removals
+### Total Removals {#removals}
 
 Removals (1892-2022) for canary rockfish were compiled from multiple data sources. This assessment includes total removals (landings plus dead discards) by state for the following fleets: trawl, non-trawl, recreational, foreign trawl, and at-sea hake. A summary of total removals are provided in Table \ref{tab:catches1} and Table \ref{tab:catches2}, and Figure \ref{fig:catches}.
 

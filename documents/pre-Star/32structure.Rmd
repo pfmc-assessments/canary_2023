@@ -16,7 +16,7 @@ benchmark assessment used an older version of Stock Synthesis, version
 3.24V. The R package r4ss, version 1.48.0, along with R version 4.2.2
 were used to investigate and plot model fits.
 
-### Balance of realism and parsimony
+### Balance of Realism and Parsimony
 
 The base assessment model for `r spp` was developed to balance parsimony
 and realism, and the goal was to estimate a spawning output trajectory
@@ -137,7 +137,7 @@ are more completely described in Section \@ref(biology). The effect of
 these changes on model results in described below in the bridging
 analysis.
 
-### Bridging analysis from the 2015 Benchmark Assessment
+### Bridging Analysis from the 2015 Benchmark Assessment
 
 The exploration of models began by bridging from the 2015 benchmark
 assessment model to the newest version of Stock Synthesis, version
@@ -208,7 +208,7 @@ to determine the best fit to the data.
 
 ### Key Assumptions and Structural Choices
 
-#### Definition of fleets and areas
+#### Definition of Fleets and Areas
 
 To foster comparability between the coastwide base model and a
 state-stratified model more similar to the 2015 base model, we retain
@@ -219,35 +219,40 @@ ordered from south to north. That is, fleet 1 is California trawl, fleet
 
 Fleets in the base model include:
 
-1-3. Trawl -- Bottom trawl gears, including shrimp trawl and mid-water
+\begin{enumerate}
+
+\item[1-3] Trawl -- Bottom trawl gears, including shrimp trawl and mid-water
 trawl.
 
-4-6. Non-trawl -- The non-trawl fleet includes a variety of sources of
+\item[4-6] Non-trawl -- The non-trawl fleet includes a variety of sources of
 directed and bycatch mortality in commercial fisheries.
 
-7-9. Recreational -- Including both private-rental and party-charter
+\item[7-9] Recreational -- Including both private-rental and party-charter
 modes.
 
-10-12. At-sea hake -- The at-sea hake fleet includes both tribal and
+\item[10-12] At-sea hake -- The at-sea hake fleet includes both tribal and
 non-tribal at-sea hake fisheries.
 
-13-15. Foreign -- The foreign fleet operated 1966-1976, and does not
+\item[13-15] Foreign -- The foreign fleet operated 1966-1976, and does not
 include any composition data. We assume that the foreign fleets have
 selectivity equal to that of their respective trawl fleet.
 
-28. \gls{s-wcgbt}
+\item[28] \gls{s-wcgbt}
 
-29. \gls{s-tri} early -- because canary rockfish sampling should be
+\item[29] \gls{s-tri} early -- because canary rockfish sampling should be
     minimally impacted by the changes in the triennial survey that
     occurred in 1995, we chose to mirror selectivity and catchability
     between the early (1980--1992) and late triennial (1995--2004)
     fleets, but maintain two fleets to explore sensitivity to this
     assumption.
 
-30. \gls{s-tri} -- late period
+\item[30] \gls{s-tri} late
 
-31. Pre-recruit survey
+\item[31] Pre-recruit survey
 
+\end{enumerate}
+
+Fleets 16 through 27 were holdovers from the previous model structure and were not used.
 <!-- The following state-stratified survey fleets were retained from 2015 in the model files and had -->
 
 <!-- data updated to 2022 for comparison between the base model and a current -->
@@ -262,7 +267,7 @@ selectivity equal to that of their respective trawl fleet.
 
 <!-- 25-27. State-stratified pre-recruit -->
 
-#### Initialization of the model
+#### Initialization of the Model
 
 We start the model in the first year of reconstructed catch data, 1892.
 The population is assumed to experience no fishing mortality prior to
@@ -270,7 +275,7 @@ this year, and to start in a stable age-distribution. Early recruitment
 deviations are estimated starting in the first model year. Main period
 recruitment deviations begin in 1960 and end in 2022.
 
-#### Conditional age at length data {#caal}
+#### Conditional Age at Length Data {#caal}
 
 Age-frequency data from the \gls{s-wcgbt} and \gls{s-tri} were compiled
 as conditional age-at-length distributions by sex and year. The approach
@@ -301,7 +306,7 @@ of variation are included when estimating growth parameters.
 
 ### Model Parameters
 
-#### Model likelihood components
+#### Model Likelihood Components
 
 The model contains four primary likelihood components:
 
@@ -329,7 +334,7 @@ overdispersion. Recruitment deviations are assumed to follow a lognormal
 distribution, where the standard deviation of this distribution is set
 to be 0.5. Priors for select biological parameters are described below.
 
-#### Data weighting
+#### Data Weighting
 
 Length and age composition data for the commercial fleets started with a
 sample size determined from the equation listed in Section
@@ -364,7 +369,7 @@ Sensitivities were performed examining the difference in the model fits
 and results due to weighting using the McAllister-Ianelli Harmonic Mean
 Weighting [@mcallister_bayesian_1997] method and are described in
 Section \@ref(sensitivities). Note however that this method was found to
-be inferior to the Francis method through simulation
+be inferior to the Francis method
 [@punt_weighting_2017]. We also explored the Dirichlet Multinomial
 Weighting [@thorson_model-based_2017], which is appealing because it
 conducts the data weighting internally by estimating one additional
@@ -374,7 +379,7 @@ thoroughly simulation tested, and nearly all data weights for both
 lengths and ages were estimated close to one. This was deemed
 implausible and the method was not explored further.
 
-#### Priors and constraints on parameters
+#### Priors and Constraints on Parameters
 
 Priors were used for fixed parameter values for male natural mortality
 and steepness in the base model, as well as for the estimated parameter
@@ -383,9 +388,9 @@ priors for these parameters are described in Section \@ref(biology) for
 natural mortality and steepness and are not repeated here. We model
 recruitment deviations around the stock-recruit relationship which are
 penalized towards zero with standard deviation of $\sigma_R = 0.5$ and
-enforce that main period deviation sum to one. Other than these
-parameters and those that are fixed, we do not include any other
-informative priors or constraints on parameters.
+constrained to sum to one. For estimated parameters, we set lower and upper bounds
+to keep the minimization algorithms within a reasonable parameter space. We do not include any other
+informative priors or structural constraints on parameters. 
 
 #### Selectivity assumptions
 
@@ -476,12 +481,12 @@ logarithmic female offset to parameter 4 for all fleets and blocks with
 sex-specific composition data. Sensitivity to excluding sex-dependent
 selectivity is described in Section \@ref(sensitivities).
 
-#### Stock Recruitment function
+#### Stock Recruitment Function
 
 In this assessment the logarithm of $R_0$ (unfished recruitment) was estimated, while steepness
 was fixed at its prior mean of 0.72. Lognormal deviations from the
 standard Beverton-Holt stock-recruit relationship were estimated from
-1892-2022 with a fixed $\sigma_R$ value of 0.5. There is limited
+1892--2022 with a fixed $\sigma_R$ value of 0.5. There is limited
 information regarding recruitment prior to 1960 but deviations are
 estimated in the base model to account for uncertainty around the
 unfished condition to a degree consistent with estimated variability in
