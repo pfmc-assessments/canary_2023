@@ -332,7 +332,7 @@ file.copy(from =  here('models','Bridging coastwide', '3_3_8_sexDependentSelex',
 # Parameter table ---------------------------------------------------------
 
 mod_params = mod23$parameters[, 
-                              (names(model$parameters) %in%
+                              (names(mod23$parameters) %in%
                                  c("Num","Label","Value","Phase","Min",
                                    "Max","Status","Parm_StDev",
                                    "Pr_type","Prior","Pr_SD"))] 
@@ -361,7 +361,6 @@ mod_params[mod_params$Label == "Eggs_scalar_Fem_GP_1",3] = format(as.numeric(mod
 #Change offset to be on normal scale
 mod_params[mod_params$Label == "L_at_Amin_Mal_GP_1",3] = exp(as.numeric(mod_params[mod_params$Label == "L_at_Amin_Mal_GP_1",3])) * as.numeric(mod_params[mod_params$Label == "L_at_Amin_Fem_GP_1",3])
 
-mod_params[,'Value'] = round(as.numeric(mod_params[,'Value']),3)  
 remove <- which(grepl("ForeRecr", mod_params$Label ))
 mod_params <- mod_params[-remove, ]
 mod_params[,'Parm_StDev'] = round(as.numeric(mod_params[,'Parm_StDev']), 3) 
@@ -376,8 +375,17 @@ mod_params = mod_params[, !(names(mod_params) %in% drops)]
 rownames(mod_params) = c()
 mod_params[,"Label"] = gsub("\\_", " ", mod_params[,"Label"])
 mod_params[,"PR_type"] = gsub("\\_", " ", mod_params[,"PR_type"])
-# Add column names
 
+# Set all negative phase values to -99
+mod_params[mod_params$Phase <0 ,"Phase"] <- -99
+
+# FracFemale max value with fewer digits
+mod_params[mod_params$Label=="FracFemale GP 1","Min"] <- "(1e-06, 0.999)"
+
+#Remove the late triennial q value which should is mirrored but still an estimated parameter
+mod_params <- mod_params[mod_params$Label!="LnQ base 30 coastwide Tri late(30)",]
+
+# Add column names
 names(mod_params) <- c('Parameter',
                        'Value',
                        'Phase',
