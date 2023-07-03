@@ -308,18 +308,14 @@ readr::read_csv(here('documents/figures/sensitivities/productivity_table.csv')) 
   kableExtra::landscape()
 ```
 
-\newpage
-
 ```{r, results = 'asis'}
 readr::read_csv(here('documents','tables','data-weight-compare.csv')) |>
   knitr::kable(caption = "Data weightings applied to length and age compositions according to the `Francis` and `McAlister Ianelli` (MI) methods. `CAAL` is conditional age-at-length data.",
                label = 'dw-compare',
                format = 'latex',
-               booktabs = TRUE) |>
-  kableExtra::landscape()
+               booktabs = TRUE)
 ```
 
-\newpage
 
 <!-- ======================================================= -->
 <!-- ********  Reference points *************** --> 
