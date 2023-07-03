@@ -70,7 +70,7 @@ The 2015 STAR panel and SSC did not list any major deficiencies for the previous
 
 **Recommendation**: Basic life history research may help to resolve assessment uncertainties regarding appropriate values for natural mortality and steepness, and how to best account for the apparent loss of older females in the population.
 
-**Response**: This assessment includes fecundity and maturity curves based on new data made available since the last benchmark assessment. While efforts have been undertaken to understand the apparent loss of older females, this has not resulted in any clear resolution. A research study sampling in non-trawlable habitat along the U.S. West Coast found a similar lack of old females in the data [@Brooks_thesis_2021]. Examination of data from the Oregon trawl fleet indicates that sex ratios have been more constant across ages in the last decade than they had been previously (L. Rasmuson, pers. comm.).
+**Response**: This assessment includes fecundity and maturity curves based on new data made available since the last benchmark assessment. While efforts have been undertaken to understand the apparent loss of older females, this has not resulted in any clear resolution. A research study sampling in non-trawlable habitat along the U.S. West Coast found a similar lack of old females in the data [@Brooks_thesis_2021]. Examination of data from the Oregon trawl fleet indicates that sex ratios have been more constant across ages in the last decade than they had been previously (L. Rasmuson, \gls{odfw}), personal communication, 1/23/23).
 
 ## Response to Groundfish Subcommittee Requests
 

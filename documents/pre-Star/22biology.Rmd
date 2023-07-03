@@ -32,15 +32,14 @@ fishery age data well, and was a better biological explanation for the
 disappearance of older age females than the alternative hypothesis that
 the older females were not vulnerable to the fishery. The pattern of
 male-skewed sex ratio at older ages has been observed along the U.S.
-West Coast in fishery data off Oregon (Rasmussen pers. comm.
-\gls{odfw}), Canada [@dfo2023canary], and Alaska and in black rockfish
+West Coast in fishery data off Oregon (L. Rasmuson, \gls{odfw}), personal communication, 1/23/23), Canada [@dfo2023canary], and Alaska and in black rockfish
 in addition to canary and yellowtail rockfishes. Although it has been
 found in these three semi-pelagic species, the pattern has not been
 observed for bocaccio (*Sebastes paucispinis*), chilipepper rockfish
 (*Sebastes goodei*), shortbelly rockfish (*Sebastes jordani*), or dusky
 rockfishes (*Sebastes ciliatus*, in Alaska), which are also semi-pelagic.
 However, starting in the 2010's the male-skewed sex ratio has evened out
-in fishery data off Oregon (Rasmussen pers. comm. ODFW). The pattern has
+in fishery data off Oregon (L. Rasmuson \gls{odfw}), personal communication, 1/23/23). The pattern has
 remained within the \gls{s-wcgbt} and has not evened off in recent
 years.
 
@@ -115,8 +114,8 @@ Fecundity was fixed at the parameter values from the meta-analysis in
 @dick_meta-analysis_2017. Existing species specific fecundity
 information for canary rockfish is limited and only 9 samples of canary
 rockfish exist within the rockfish fecundity database housed at the
-\gls{sefsc} (S. Beyer, personal communication, May 22, 2023, University
-of Washington). @dick_meta-analysis_2017 performed their analysis on
+\gls{sefsc} (S. Beyer, University
+of Washington, personal communication, 5/22/23). @dick_meta-analysis_2017 performed their analysis on
 subgenera with at least three species, which excluded canary rockfish,
 so the relationship in @dick_meta-analysis_2017 for general *Sebastes*
 species was used for this assessment. Fecundity was assumed as a power
@@ -250,7 +249,7 @@ a positive bias relative to CAPS break-and-burn reads [+3.76 yrs. at age
 A qualitative examination of the new break and burn double reads showed
 no evidence that the ageing estimation had changed over time relative to
 the samples included in the previous analyses. Furthermore, a new
-TMB-based ageing error software has been developed (A. Punt, University of Washington, personal communication)
+TMB-based ageing error software has been developed (A. Punt, University of Washington, personal communication, 2023)
 but has not yet been fully explored or documented. Therefore, revision
 of the ageing error matrices has been left as a research project to be
 completed in time for the next full assessment.
