@@ -52,7 +52,8 @@ pp_2009 <- read.table(rep_2009,
                       skip = grep("TIME_SERIES", lines2009)[2],
                       nrows = grep("SPR_series", lines2009)[2] - grep("TIME_SERIES", lines2009)[2] - 3,
                       header = TRUE,
-                      fill = TRUE)[pp_2009$Era!="FORE",c(2,3,5:8)]
+                      fill = TRUE)
+pp_2009 <- pp_2009[pp_2009$Era!="FORE",c(2,3,5:8)]
 colnames(pp_2009)[3:6] <- paste0("X2009_",colnames(pp_2009)[3:6])
 
 
@@ -64,7 +65,8 @@ pp_2007 <- read.table(rep_2007,
                       skip = grep("TIME_SERIES", lines2007),
                       nrows = grep("SPR_series", lines2007) - grep("TIME_SERIES", lines2007) - 3,
                       header = TRUE,
-                      fill = TRUE)[pp_2007$Era!="FORE",c(2,3,5:8)]
+                      fill = TRUE)
+pp_2007 <-[pp_2007$Era!="FORE",c(2,3,5:8)]
 
 #2005 Smy biomass at age 3
 rep_2005 <- file.path("CanaryRf_2005\\Canary Models_2005\\ss2.rep")
