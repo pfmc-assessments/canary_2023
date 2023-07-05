@@ -70,7 +70,7 @@
 
 ![Weight-length comparisons for males and females with previous benchmark assessment \label{fig:compare_WL}](../figures/compare_WL.png){width="100%," height="100%," alt="2015 and 2023 exponential weight-length relationships nearly overlapping and for sexes"}
 
-![Externally estimated age-length relationship by Sex and latitude, where "North" is latitudes greater than $43.3672^\circ$N (Coos Bay, OR) for females (red), males (blue), and unsexed (yellow) \label{fig:spatial_AL}](../figures/growth_diffs.png){width="100%," height="100%," alt="Figure showing age-length data and four fitted curves for north and south males and females. Females are larger than males, but northern individuals are only slightly larger than southern individuals"}
+![Externally estimated age-length relationship by Sex and latitude, where "North" is latitudes greater than $43.3672^\circ$N (Coos Bay, OR) for females (red), males (blue), and unsexed (yellow). Note that in the base model growth is estimated internally and is assumed constant across latitudes. \label{fig:spatial_AL}](../figures/growth_diffs.png){width="100%," height="100%," alt="Figure showing age-length data and four fitted curves for north and south males and females. Females are larger than males, but northern individuals are only slightly larger than southern individuals"}
 
 ![Sex ratio by age in the \gls{s-wcgbt} for females (red), males (blue) and unsexed (green) \label{fig:sex_ratio_age}](../figures/age_fraction_female.png){width="100%," alt="Figure showing fraction female close to 50% until around age 20 when it becomes almost all male"}
 
@@ -78,9 +78,9 @@
 
 ## Model bridging
 
-![Model version bridge comparison of estimated spawning output \label{fig:bridge-exe-bio}](../figures/bridge0_exe_spawnbio_uncertainty.png){width="100%," alt="Figure showing spawning output from 2015 benchmark is similar when using the 2015 and 2023 versions of stock synthesis"}
+![Model version bridge comparison of estimated spawning output of the 2015 assessment \label{fig:bridge-exe-bio}](../figures/bridge0_exe_spawnbio_uncertainty.png){width="100%," alt="Figure showing spawning output from 2015 benchmark is similar when using the 2015 and 2023 versions of stock synthesis"}
 
-![Model version bridge comparison of estimated spawning output relative to unfished \label{fig:bridge-exe-relbio}](../figures/bridg0_exe_compare4_Bratio_uncertainty.png){width="100%," alt="Figure showing spawning output relative to unfished from 2015 benchmark is similar when using the 2015 and 2023 versions of stock synthesis"}
+![Model version bridge comparison of estimated spawning output relative to unfished of the 2015 assessment \label{fig:bridge-exe-relbio}](../figures/bridg0_exe_compare4_Bratio_uncertainty.png){width="100%," alt="Figure showing spawning output relative to unfished from 2015 benchmark is similar when using the 2015 and 2023 versions of stock synthesis"}
 
 ![Data bridge comparison of estimated spawning output \label{fig:bridge-data-bio}](../figures/bridge1_data_spawnbio_uncertainty.png){width="100%," alt="Figure showing changes from the 2015 benchmark assessment as data are updated. Updating fishery data continue the increase in recovery while updating survey data result in recent declines"}
 

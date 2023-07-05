@@ -32,18 +32,18 @@ structure by unmirroring fleet selectivities among states and allowing
 sex-dependent selectivity at larger sizes. We balance the increased
 complexity in spatial fleet structure by simplifying the selectivity
 parameterization and combining fleets and minimizing the use of blocks
-where able, and assuming natural mortality to be age-invariant, as
-opposed to increasing at age.
+where possible, and assuming natural mortality to be age-invariant, as
+opposed to increasing with age for females.
 
 ### Model Changes from the Last Assessment
 
 The assessment model structure has been significantly altered from the
 2015 benchmark stock assessment [@thorson_status_2016]. The primary
-change in terms of effects on model results is with the change in
+change affecting model results is the change in
 modeling of natural mortality. We model natural mortality as
 sex-dependent and age-invariant which offers a simplified and more
 biologically believable approach to natural mortality than an increasing
-linear ramp in female natural mortality. Assumptions to this choice are
+linear ramp in female natural mortality. While natural mortality of females and males likely is similar at young ages, given that the fisheries and surveys do not fully select the smaller, younger fish, natural mortality at young ages does not matter as much as a reasonable cumulative natural mortality at older ages. Assumptions to this choice are
 tested with sensitivities and described in Section \@ref(sensitivities).
 
 Another substantial change is in the treatment of spatial structure in
@@ -54,31 +54,30 @@ yet increase the spatial complexity of the fishery. This amounts to
 using an areas-as-fleets approach [@punt_spatial_2019]. Although an
 areas-as-fleets approach does not account for potential regional
 differences in depletion, because catches are assumed to act over the
-entire modeled area, early explorations indicated some instability in
-the spatial model when unmirroring and expanding selectivity. Through
-bridging (described below) we show that the change in population
-structure does not appear to have a large effect on model results,
-especially relative to other changes in natural mortality and the
+entire modeled area, explorations indicated instability when unmirroring and expanding selectivity, thus suggesting that the data does not support realistic parameterization within the spatial model. Through
+bridging of the spatial model (described below) we show that the change in population
+structure does not have a large effect on model results,
+especially relative to changes in the modeling of natural mortality and the
 relative contribution of various data sources to model estimates.
 
 By reducing complexity in the population structure of the model, we
 could increase the spatial complexity of the fishery. Spatial fleet
 dynamics allow the model structure to account for varying selectivity
 and historical management actions that may have impacted the fishery and
-the available data in specific ways. Fleets were assumed to have the
-same selectivity across states in the 2015 assessment. We allowed
+the available data in specific ways. In the 2015 assessment fleets were assumed to have the
+same selectivity across states. We allowed
 selectivity estimates to be informed by the dynamics in waters where
-they fish, although we have mirrored some fleets where we believe it is
+they fish, although we have mirrored some fleets where we believe and the data indicate it is
 appropriate to do so. We have also increased the number of selectivity
-blocks for the non-trawl and recreational fisheries, which we believe is
+blocks for the non-trawl and recreational fisheries, which is
 appropriate given the large changes in regulations for `r spp`. Lastly,
 we have elected to include sex-dependent selectivity, which both
-improves fits to data, but also allows dynamics between male and female
+improves fits to data and allows dynamics between male and also female
 natural mortality to align better with observed sex-ratios.
-Sensitivities to choice about selectivity are described in Section
+Sensitivities to choices about selectivity are described in Section
 \@ref(sensitivities).
 
-While in general, fleet structure in the base model is more complex than
+While, in general, fleet structure in the base model is more complex than
 in the 2015 assessment, we simplified our fleets where reasonable. We
 treated survey fleets as exclusively survey fleets, and did not model
 the small amount of catches from these surveys. It is no longer standard
@@ -99,12 +98,12 @@ their historical reconstructions, and past issues with catch time series
 mentioned in the last assessment review process and in subsequent
 catch-only updates have been corrected. Catch time series for the
 foreign fleets was also repartitioned to states more consistently with
-patterns observed in the non-foreign fishery. We also assigned data from
+patterns observed in the non-foreign fishery. We assigned data from
 shrimp trawls as part of the trawl, where for the 2015 assessment they
 were included within the non-trawl fleets. Available length and age data
-have been provided using updated and more reproducible approaches.
-Significant effort was made by the \gls{nwfsc} ageing lab in providing
-age reads for new and past `r spp`. These allow age composition data for
+have been processed using updated and more reproducible approaches.
+Substantial effort was made by the \gls{nwfsc} ageing lab in providing
+age reads for new and previously collected `r spp` otoliths. These allow age composition data for
 recreational fleets to be included as well as additional years of data
 for other fishery and survey fleets. Although more age data were
 available, we elected to remove surface age reads from the model due to
@@ -178,7 +177,7 @@ different estimates for initial spawning output, but collectively offset
 and result in continuing the trajectory from the 2015 benchmark
 assessment.
 
-Changes due to altering the structure of natural mortality are
+Changes due to altering the structure of natural mortality are fairly
 substantial (Figures \ref{fig:bridge-Mcons-bio} and
 \ref{fig:bridge-Mcons-relbio}). Assuming constant natural mortality
 results in similar parameter estimates for male and female natural
@@ -195,7 +194,7 @@ spawning output relative to unfished.
 
 Changes in how selectivity was modeled are shown in Figures
 \ref{fig:bridge-selex-bio} and \ref{fig:bridge-selex-relbio}. Allowing
-selectivity to be sex-dependent had a large change in the degree of
+selectivity to be sex-dependent resulted in a large change in the degree of
 recovery in spawning output relative to unfished, due to an increase in
 the estimated value of female natural mortality. Other changes in
 selectivity including unmirroring fleets and using alternative
@@ -388,7 +387,7 @@ priors for these parameters are described in Section \@ref(biology) for
 natural mortality and steepness and are not repeated here. We model
 recruitment deviations around the stock-recruit relationship which are
 penalized towards zero with standard deviation of $\sigma_R = 0.5$ and
-constrained to sum to one. For estimated parameters, we set lower and upper bounds
+constrained to sum to one over the main period. For estimated parameters, we set lower and upper bounds
 to keep the minimization algorithms within a reasonable parameter space. We do not include any other
 informative priors or structural constraints on parameters. 
 
@@ -423,7 +422,7 @@ parameter to govern the dome-ness of the selectivity shape instead of
 two.
 
 The foreign fishery does not have length or age composition samples
-available, and selectivity is mirrored to the domestic trawl fishery for
+available. Therefore, selectivity is mirrored to the domestic trawl fishery for
 each state. We also specify that commercial trawl selectivity is
 mirrored between Oregon and Washington due to similar composition data
 and the fact that many vessels cross the border while fishing and then

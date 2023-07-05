@@ -60,14 +60,14 @@ selectivity for smaller fish is greater in the non-trawl fleet than in the trawl
 cm. The range of lengths selected is more compressed but has shifted
 towards larger fish by 2 cm in the most recent years compared to before
 2000. The selectivity curve has changed the most over time in Oregon.
-Prior to 2000, the peak in selectivity was 55 cm, decreased to 33 cm in
+Prior to 2000, the peak in selectivity was 55 cm. It then decreased to 33 cm in
 the 2000s, and increased to 45 cm in the most recent period. The
-Washington non-trawl fleet has sparse data so has constant selectivity
+Washington non-trawl fleet has sparse data so is modeled as having constant selectivity
 across time, with a peak at 47 cm.
 
 The at-sea hake fishery has mirrored selectivity across each state given
-the similarities in the fishery along the coast. The selectivity is more
-narrow than either the trawl or non-trawl fleets, with a steep increase
+the similarities in the fishery along the coast. The selectivity curve is more
+narrow than that for either the trawl or non-trawl fleets, with a steep increase
 around 40 cm and peak at 44 cm. No time-varying selectivity is applied
 to the at-sea hake fishery.
 
@@ -82,7 +82,7 @@ other fleets includes earlier years. All recreational fleets show strong
 dome-ness, with the greatest decline during the period of
 non-rentention.
 
-Among surveys, the \gls{s-wcgbt} and \gls{s-tri} are estimated to have a
+The \gls{s-wcgbt} and \glspl{s-tri} are estimated to have a
 slowly increasing selectivity curve across a wide range of lengths;
 starting at very small sizes and increasing to a peak near 43--44cm.
 This likely reflects the spatial and bathymetric coverage and
@@ -96,9 +96,8 @@ For all fleets and surveys, male selectivity shows a greater dome-ness
 than females. This is likely compensating for a lower availability of
 large females given that their natural mortality estimate is higher than
 males. Thus, greater selectivity for females allows them to be selectied for at
-a larger size prorportional to their occurrence in the population, which
-is less than males due to greater mortality.
-
+a rate proportional to their occurrence in the population, which
+is less than males due to greater mortality. This also allows for effective fishing mortality on larger and older females to be greater than for males, such that both natural mortality and fishing mortality contribute to the smaller number of old females observed.
 
 #### Catchability
 
@@ -135,15 +134,14 @@ recruitment deviations are shown in Figures \ref{fig:recruits} and
 
 Years with the highest recruitment deviations were estimated to have
 occurred in the 1960s and continued through 2000. Starting around 2004
-recruitment deviations became more consistently negative and were their
-most negative in 2018. This period corresponds to a period of relatively
+recruitment deviations became more consistently negative and reached their nadir in 2018. This period corresponds to a period of relatively
 sparse composition data. Deviations have increased to average levels
 since 2018 but these deviations are more uncertain given the few years
 available to sample these age classes. The recruitment bias adjustment
 applied within the model across years is shown in Figure
 \ref{fig:bias-adjust}. This relationship was updated during early model
 exploration with the final version near to the suggested alternative
-provided within r4ss such that it was left at the earlier values. Similarly, the value of $\sigma_R$ was tuned to match the observed variation in recruitment deviations, following @methot_adjusting_2011, and as provided in r4ss. The tuned value was similar (0.47 for the period 1960-2022) to that already used so no further change to $\sigma_R$ was done. 
+provided within r4ss such that it was left at the earlier values. Similarly, the value of $\sigma_R$ was tuned to match the observed variation in recruitment deviations, following @methot_adjusting_2011, and as provided in r4ss. The tuned value was similar (0.47 for the period 1960-2022) to that already used so the value of 0.5 was retained. 
 
 ### Fits to the Data
 
@@ -164,7 +162,7 @@ Fits to indices of abundance are shown for each survey fleet (Figures
 to the \gls{s-wcgbt} indices are generally within the 95% confidence interval
 bounds with the exception of 2009 and 2019. With 19 years of survey
 data, approximately one year is expected to fall outside of the 95%
-confidence interval. The residuals appear randomly distributed, with no
+confidence interval, and two falling outside the range would not be an usual occurrence. The residuals appear randomly distributed, with no
 particularly long strings of positive or negative values. The survey
 index increases slowly, with a minor break point between a
 "low" state until 2013 and a "high" state thereafter. The triennial
@@ -181,4 +179,4 @@ estimated standard deviation. Sensitivity to estimation of this additional varia
 
 ### Population Trajectory
 
-Summary time series of population trajectories are provided in Table \ref{tab:timeseries}. The estimated spawning output (in millions of eggs) is shown in Figure \ref{fig:ssb}, total biomass in Figure \ref{fig:tot-bio}, spawning output relative to unfished in Figure \ref{fig:depl}, and fishing intensity measured as one minus the spawning potential ratio (1-SPR) in Figure \ref{fig:spr}. Spawning output declines from the 1940s with the increase in harvest (Figure \ref{fig:catches}), stabilizes in the 1970s, and then declines to its lowest point in 1995. Spawning output stabilizes until 2000 when levels increase steadily to recent years with a slowing trend. The estimated total biomass follows the same general trend as observed in spawning output but with a more pronounced decrease from 1980 to 1995 (Figure \ref{fig:tot-bio}). The estimated spawning output relative to the unfished equilibrium spawning output was at its lowest (`r round(100*min(model$sprseries$Deplete,na.rm=TRUE), 1)` percent) in 1995 and has since increased and. It is currently within the precautionary zone at `r round(100*model$current_depletion, 1)` percent for 2022 (Figure \ref{fig:depl}). Population trajectories track the patterns in fishing intensity, where fishing intensity was steadily above a fishing mortality that would produce an SPR of 0.5 starting in the 1960s and lasting nearly four decades (Figure \ref{fig:spr}). Fishing intensity has been low since 2000 but has recently increased to a fishing mortality corresponding to an SPR of near 0.5. 
+Summary time series of population trajectories are provided in Table \ref{tab:timeseries}. The estimated spawning output (in millions of eggs) is shown in Figure \ref{fig:ssb}, total biomass in Figure \ref{fig:tot-bio}, spawning output relative to unfished in Figure \ref{fig:depl}, and fishing intensity measured as one minus the spawning potential ratio (1-SPR) in Figure \ref{fig:spr}. Spawning output declines from the 1940s with the increase in harvest (Figure \ref{fig:catches}), stabilizes in the 1970s, and then declines to its lowest point in 1995. Spawning output stabilizes until 2000 when levels increase steadily to recent years with a slowing trend. The estimated total biomass follows the same general trend as observed in spawning output but with a more pronounced decrease from 1980 to 1995 (Figure \ref{fig:tot-bio}). The estimated spawning output relative to the unfished equilibrium spawning output was at its lowest (`r round(100*min(model$sprseries$Deplete,na.rm=TRUE), 1)` percent) in 1995 and has since increased. It is currently within the precautionary zone at `r round(100*model$current_depletion, 1)` percent for 2022 (Figure \ref{fig:depl}). Population trajectories track the patterns in fishing intensity, where fishing intensity was steadily above a fishing mortality that would produce an SPR of 0.5 starting in the 1960s and lasting nearly four decades (Figure \ref{fig:spr}). Fishing intensity has been low since 2000 but has recently increased to a fishing mortality corresponding to an SPR of near 0.5. 
