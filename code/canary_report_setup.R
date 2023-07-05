@@ -47,8 +47,9 @@ setwd(doc_dir)
 #   edit = FALSE
 # )
 
-model_name <- "5_5_0_hessian"
-model_dir <- file.path(dir, "models", model_name)
+#This is now defined in 00a.Rmd. If change the base model change that in 00a.Rmd
+# model_name <- "5_5_0_hessian"
+# model_dir <- file.path(dir, "models", model_name)
 
 sa4ss::read_model(mod_loc = model_dir, 
                   save_loc = doc_dir, 
