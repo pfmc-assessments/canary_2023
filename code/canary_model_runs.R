@@ -12720,6 +12720,118 @@ file.copy(from = file.path(here('models',new_name,'jitter_compare_for_report'), 
 
 ##########################################################################################
 
-#Sensitivities on base can probably go into separate script called sensitivities
+#Internal review deadline break
+
 ##########################################################################################
+
+####------------------------------------------------####
+### 6_0_0_priors - Fix male M prior, remove unused priors 
+####------------------------------------------------####
+
+new_name <- "6_0_0_priors"
+old_name <- "5_5_0_hessian"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+
+##
+#Make changes
+##
+
+mod$ctl$MG_parms[-grep("NatM_p_1", rownames(mod$ctl$MG_parms)),"PR_type"] <- 0 #turn off non-M priors
+mod$ctl$MG_parms[grep("NatM_p_1_Mal_GP_1", rownames(mod$ctl$MG_parms)),"PR_type"] <- 3 #lognormal prior
+
+mod$ctl$SR_parms[-grep("SR_BH_steep", rownames(mod$ctl$SR_parms)),"PR_type"] <- 0 #turn off non-M priors
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_5_0_hessian',
+                                                 '6_0_0_priors')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Pre star base',
+                                     'Fix parm priors'),
+                    subplots = c(1, 3), print = TRUE, plotdir = here('models',new_name))
+
+
+
+####------------------------------------------------####
+### 6_0_1_growthInits - Set external growth params as growth inits 
+####------------------------------------------------####
+
+new_name <- "6_0_1_growthInits"
+old_name <- "6_0_0_priors"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+
+##
+#Make changes
+##
+
+mod$ctl$MG_parms[grep("L_at_|VonBert_K", rownames(mod$ctl$MG_parms)),"INIT"] <- c(11.38, 57.9, 0.1427, 0, 51.32, 0.175)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_5_0_hessian',
+                                                 '6_0_0_priors',
+                                                 '6_0_1_growthInits')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Pre star base',
+                                     'Fix parm priors',
+                                     'Use external growth as inits'),
+                    subplots = c(1, 3), print = TRUE, plotdir = here('models',new_name))
+
+#Growth inits do change result but fit is poorer and parms are at bounds.
+#Overall growth values are very similar. Differences due to selectivity
+round(pp$likelihoods_used,2)
+round(pp_base$likelihoods_used,2)
+
+
+
 
