@@ -399,6 +399,100 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           skipfinished = FALSE)
 
 
+# Even More Simplified blocks -----------------------------------------------------
+
+#Because WA/OR trawl in later times are similarish (mostly for males) and could also be combined
+
+#Based on looking at the selectivity patterns:
+#No blocks for CA trawl, CA non-trawl, and one block for OR non-trawl (block 2000-2019 and keep before and after together)
+#and use only one block for WA/OR trawl (>2000)
+#No blocks for CA rec, OR rec, and only one block for WA rec (recent)
+
+mod <- base_mod
+
+mod$ctl$N_Block_Designs <- 3
+mod$ctl$blocks_per_pattern <- c(1,1,1)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+
+#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+mod$ctl$Block_Design <- list(c(2000, 2022), #OR/WA TWL fleets
+                             c(2000, 2019), #OR ntwl
+                             c(2021, 2022)) #WA rec
+
+# Use new block set up
+selex_new <- mod$ctl$size_selex_parms
+selex_new[grepl('CA_TWL|CA_NTWL|CA_REC|OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 0
+selex_new[intersect(
+  grep('CA_REC', rownames(selex_new)),
+  grep('PFemOff', rownames(selex_new))), c('Block', 'Block_Fxn')] <- 0
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+
+mod$ctl$size_selex_parms <- selex_new
+
+
+#Time varying selectivity table
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+new_name <- 'simpler_block_OR_NTWL_TWL'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# Add blocks to trawl fleet in 2017 -----------------------------------------------------
+
+#Not a great signal in any of the trawl fleets here but things reopened
+
+mod <- base_mod
+
+mod$ctl$blocks_per_pattern <- c(3,2,2,2,2)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+
+#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2016, 2017, 2022), #TWL fleets
+                             c(2000, 2019, 2020, 2022), #CA/OR ntwl
+                             c(2004, 2016, 2017, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR rec
+                             c(2006, 2020, 2021, 2022)) #WA rec
+
+#Time varying selectivity table
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+new_name <- 'block_TWL_2017'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
 # Add released fish into length comps for CA and OR rec fleets -----------------------------------------------------
 
 mod <- base_mod
@@ -521,10 +615,28 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 #For WCGBTS
 mod <- base_mod
 
-mod$ctl$size_selex_parms[grep("P_3_28_coastwide",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(15,-99)
+mod$ctl$size_selex_parms[grep("P_4_28_coastwide",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(15,-99)
 mod$ctl$size_selex_parms[grep("PFemOff_3_28_coastwide",rownames(mod$ctl$size_selex_parms)),"PHASE"] <- -99
 
 new_name <- 'wcgbts_asymptotic'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+#Early TWL in WA/OR
+mod <- base_mod
+
+mod$ctl$size_selex_parms[grep("P_4_2_OR_TWL",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(15,-99)
+mod$ctl$size_selex_parms[grep("PFemOff_3_2_OR_TWL",rownames(mod$ctl$size_selex_parms)),"PHASE"] <- -99
+
+new_name <- 'WA_OR_TWL_early_asymptotic'
 
 SS_write(mod, here('models/sensitivities', new_name),
          overwrite = TRUE)
