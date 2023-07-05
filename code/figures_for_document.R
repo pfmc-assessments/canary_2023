@@ -177,6 +177,7 @@ readr::read_csv(here('data/ACLs.csv')) |>
   dplyr::arrange(YEAR) |>
   dplyr::select(Year = YEAR, OFL:ACL) |>
   dplyr::inner_join(dplyr::select(catch.ts, Year, `Total Mortality` = TOTAL)) |>
+  dplyr::mutate(ABC = round(ABC, 0)) |>
   write.csv(file = here('documents/tables/ACL_history.csv'), row.names = FALSE)
 
 
