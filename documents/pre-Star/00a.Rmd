@@ -11,6 +11,11 @@ output:
     keep_tex: true
 lang: en
 papersize: letter
+colorlinks: true
+urlcolor: blue
+filecolor: black
+citecolor: black
+linkcolor: black
 ---
 
 ```{r opts, include = FALSE}

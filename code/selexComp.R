@@ -23,9 +23,10 @@
 plot_sel_ret <- function(mod,
                          fleet = 1,
                          Factor = "Lsel",
-                         sex = 1) {
+                         sex = 1,
+                         legloc = "topleft") {
   
-  input = r4ss::SS_read(mod$inputs$dir)
+  #input = r4ss::SS_read(mod$inputs$dir)
   
   years <- mod$startyr:mod$endyr
   # run selectivity function to get table of info on time blocks etc.
@@ -49,6 +50,13 @@ plot_sel_ret <- function(mod,
   infotable$lty <- nrow(infotable):1
   infotable$lwd <- 3
   infotable$longname <- infotable$Yr_range
+  if(fleet == 9) { #fix table for WA rec which reports out separate 2021 and 2022
+    newinfo <- infotable[c(1,2,4),]
+    newinfo$lty <- infotable[2:4,"lty"]
+    newinfo$col <- infotable[2:4,"col"]
+    newinfo[3,c("longname","Yr_range")] <- c("2021-2022","2021-2022")
+    infotable <- newinfo
+  }
   # run plot function again, passing in the modified infotable
   r4ss::SSplotSelex(mod,
                     fleets = fleet,
@@ -62,16 +70,17 @@ plot_sel_ret <- function(mod,
                       "Retention",
                       "Discard mortality"
                     ),
-                    legendloc = "topright",
-                    years = years,
+                    legendloc = legloc,
+                    years = 1892:2021,
                     subplots = 1,
                     plot = TRUE,
                     print = FALSE,
                     infotable = infotable,
-                    mainTitle = TRUE,
+                    mainTitle = FALSE,
                     mar = c(2,2,2,1),
                     plotdir = mod$inputs$dir
   )
+  mtext(infotable$FleetName, side = 3, line = 0.1)
 }
 
 #' Plot selectivity and retention for the commercial fleets
@@ -111,8 +120,11 @@ plot_sel_comm <- function(mod, sex = 1) {
   #ASHOP
   plot_sel_ret(mod, Factor = "Lsel", fleet = 10, sex = sex)
   mtext("Selectivity", side = 2, line = 3, las = 0)
+  mtext("Length (cm)", side = 1, line = 2.5)
   plot_sel_ret(mod, Factor = "Lsel", fleet = 11, sex = sex)
+  mtext("Length (cm)", side = 1, line = 2.5)
   plot_sel_ret(mod, Factor = "Lsel", fleet = 12, sex = sex)
+  mtext("Length (cm)", side = 1, line = 2.5)
   
   dev.off()
   
@@ -160,8 +172,11 @@ plot_sel_noncomm <- function(mod, sex = 1, spatial = TRUE) {
     #Triennial late
     plot_sel_ret(mod, Factor = "Lsel", fleet = 22, sex = sex)
     mtext("Selectivity", side = 2, line = 3, las = 0)
+    mtext("Length (cm)", side = 1, line = 2.5)
     plot_sel_ret(mod, Factor = "Lsel", fleet = 23, sex = sex)
+    mtext("Length (cm)", side = 1, line = 2.5)
     plot_sel_ret(mod, Factor = "Lsel", fleet = 24, sex = sex)
+    mtext("Length (cm)", side = 1, line = 2.5)
     
   }
   
@@ -169,17 +184,20 @@ plot_sel_noncomm <- function(mod, sex = 1, spatial = TRUE) {
     par(mfrow = c(2,3), oma = c(2,2,0,0), las = 1)
     
     #REC
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 7, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 7, sex = sex, legloc = "topright")
     mtext("Selectivity", side = 2, line = 3, las = 0)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 8, sex = sex)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 9, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 8, sex = sex, legloc = "topright")
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 9, sex = sex, legloc = "topright")
     #NWFSC trawl coastal
     plot_sel_ret(mod, Factor = "Lsel", fleet = 28, sex = sex)
     mtext("Selectivity", side = 2, line = 3, las = 0)
+    mtext("Length (cm)", side = 1, line = 2.5)
     #Triennial early coastal
     plot_sel_ret(mod, Factor = "Lsel", fleet = 29, sex = sex)
+    mtext("Length (cm)", side = 1, line = 2.5)
    #Triennial late coastal
     plot_sel_ret(mod, Factor = "Lsel", fleet = 30, sex = sex)
+    mtext("Length (cm)", side = 1, line = 2.5)
     
   }
   
