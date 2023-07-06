@@ -3089,7 +3089,7 @@ new_name <- 'Bridging coastwide/3_3_3_lambda1'
 #Copy inputs
 ##
 
-copy_SS_inputs(dir.old = here('models/Bridging coastwide/3_3_2_coastwide_selex'), 
+copy_SS_inputs(dir.old = here('models/Bridging coastwide/3_3_2_coastwide_unmirrorANDselex'), 
                dir.new = here('models',new_name),
                overwrite = TRUE)
 

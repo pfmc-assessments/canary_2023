@@ -11,7 +11,7 @@
 "Mat slope Fem GP 1","-0.688",-99,"(-3, 3)",NA,NA,"None"
 "Eggs scalar Fem GP 1","7.218e-08",-99,"(1e-10, 0.1)",NA,NA,"None"
 "Eggs exp len Fem GP 1","4.043",-99,"(2, 6)",NA,NA,"None"
-"NatM uniform Mal GP 1","0.064",-99,"(0.02, 0.2)",NA,NA,"Normal (-2.74, 0.31)"
+"NatM uniform Mal GP 1","0.064",-99,"(0.02, 0.2)",NA,NA,"Log Norm (-2.74, 0.31)"
 "L at Amin Mal GP 1","8.344",-99,"(0, 15)",NA,NA,"None"
 "L at Amax Mal GP 1","54.648",3,"(50, 70)","OK",0.269,"None"
 "VonBert K Mal GP 1","0.156",3,"(0.02, 0.21)","OK",0.002,"None"

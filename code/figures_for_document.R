@@ -217,7 +217,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  '3_1_8_survey',
                                                  '3_1_1_update_data')))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+  SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
                                      '+Removals',
                                      '+Fishery comps',
                                      '+Fishery removals and comps',
@@ -245,7 +245,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  '3_2_6_WL',
                                                  '3_2_7_update_bio_Mval_phases')))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+  SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
                                      'All data updated',
                                      '+Mortality value',
                                      '+Maturity',
@@ -270,7 +270,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  '3_2_7_update_bio_Mval_phases',
                                                  '3_2_7_update_bio_Mconstant_phases')))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+  SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
                                      'All data updated',
                                      'All biology values and data updated',
                                      'Mortality structure as age invariant'),
@@ -294,7 +294,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
 
 dir.create(here('models','Bridging coastwide', '3_3_6_coastwide_tuned', 'for_report'))
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+  SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
                                      'Spatial model',
                                      "Coastwide model",
                                      'Spatial model (tuned)',
@@ -317,7 +317,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  '3_3_8_sexDependentSelex')))
 
 SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('2021:SSv3.30.21',
+  SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
                                      'Coastwide model (tuned)',
                                      'Update selectivity (tuned)',
                                      'Sex dependent selectivity parameter 4 (untuned)'),
@@ -348,6 +348,9 @@ mod_params[-sci_note,'Value'] <- round(as.numeric(mod_params[-sci_note,'Value'])
 
 # Combine bounds into one column
 mod_params$Min = paste('(', mod_params$Min, ', ', mod_params$Max, ')', sep='')
+
+# Set Male M prior to lognormal
+mod_params$Pr_type[grep("NatM_uniform_Mal_GP_1",mod_params$Label)] <- "Log_Norm"
 
 # Combine prior info to one column
 mod_params$PR_type = ifelse(mod_params$Pr_type == 'No_prior' , 'None', paste(mod_params$Pr_type,' (', mod_params$Prior,  ', ', mod_params$Pr_SD, ')', sep = ''))

@@ -66,7 +66,7 @@ pp_2007 <- read.table(rep_2007,
                       nrows = grep("SPR_series", lines2007) - grep("TIME_SERIES", lines2007) - 3,
                       header = TRUE,
                       fill = TRUE)
-pp_2007 <-[pp_2007$Era!="FORE",c(2,3,5:8)]
+pp_2007 <- pp_2007[pp_2007$period!="FORE",c(2,3,5:8)]
 
 #2005 Smy biomass at age 3
 rep_2005 <- file.path("CanaryRf_2005\\Canary Models_2005\\ss2.rep")
@@ -196,10 +196,10 @@ lines(pp_2023$Yr, pp_2023$X2023_Bio_smry,
       col="red", lwd=3)
 #Add legend
 legendnames <- substr(sub(".*X", "", 
-                          c(colnames(smry[,-c(1,grep("smry3|scen2",colnames(smry)))]),"X2023")), 
+                          c("X2023", colnames(smry[,-c(1,grep("smry3|scen2",colnames(smry)))]))), 
                       1, 4)
 legend('bottomleft', legend=legendnames, ncol = 3,
-       col=c(assess.colors[1:(length(legendnames)-1)], "red"), lwd=c(3, rep(2, 7)), bty='n')
+       col=c("red",assess.colors[1:(length(legendnames)-1)]), lwd=c(3, rep(2, 7)), bty='n')
 box()
 
 
@@ -217,9 +217,9 @@ lines(pp_2023$Yr, pp_2023$X2023_Recruit_0,
       col='red', lwd=3)
 #Add legend
 legendnames <- substr(sub(".*X", "", 
-                          c(colnames(recruit[,-c(1,grep("smry3|scen2",colnames(smry)))]),"X2023")), 
+                          c("X2023", colnames(recruit[,-c(1,grep("smry3|scen2",colnames(smry)))]))), 
                       1, 4)
 legend('topleft', legend=legendnames, ncol =3,
-       col=c(assess.colors[1:(length(legendnames)-1)], "red"), lwd=c(3, rep(2, 7)), bty='n')
+       col=c("red", assess.colors[1:(length(legendnames)-1)]), lwd=c(3, rep(2, 7)), bty='n')
 box()
 dev.off()

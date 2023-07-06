@@ -71,17 +71,19 @@ readr::read_csv(here('documents/tables/ACL_history.csv')) |>
 ```{r, results = 'asis', message=FALSE}
 readr::read_csv(here('documents/tables/pacfin_lengths.csv')) |>
   dplyr::select(Year, 
-         Trips_TWL.C, Lengths_TWL.C, Trips_NTWL.C, Lengths_NTWL.C,
-         Trips_TWL.O, Lengths_TWL.O, Trips_NTWL.O, Lengths_NTWL.O,
-         Trips_TWL.W, Lengths_TWL.W, Trips_NTWL.W, Lengths_NTWL.W) |>
+         Trips_TWL.C, Lengths_TWL.C, Trips_TWL.O, Lengths_TWL.O, Trips_TWL.W, Lengths_TWL.W, 
+         Trips_NTWL.C, Lengths_NTWL.C, Trips_NTWL.O, Lengths_NTWL.O, Trips_NTWL.W, Lengths_NTWL.W) |>
   as.data.frame() |>
   sa4ss::table_format(caption = "Summary of the number of length samples and trips for commercial trawl (TWL) and non-trawl (NTWL) fleets for California (CA), Oregon (OR), and Washington (WA)",
                       label = "comm-sample-lengths",
                       align = 'l',
                       col.names = c("Year",
-                            "Trips CA TWL", "Lengths CA TWL", "Trips CA NTWL", "Lengths CA NTWL", 
-                            "Trips OR TWL", "Lengths OR TWL", "Trips OR NTWL", "Lengths OR TWL", 
-                            "Trips WA TWL", "Lengths WA TWL", "Trips WA NTWL", "Lengths WA TWL"),
+                            "Trips CA TWL", "Lengths CA TWL", 
+                            "Trips OR TWL", "Lengths OR TWL", 
+                            "Trips WA TWL", "Lengths WA TWL",
+                            "Trips CA NTWL", "Lengths CA NTWL", 
+                            "Trips OR NTWL", "Lengths OR TWL", 
+                             "Trips WA NTWL", "Lengths WA TWL"),
                       longtable = TRUE,
                       landscape = TRUE)
 ```
@@ -91,17 +93,19 @@ readr::read_csv(here('documents/tables/pacfin_lengths.csv')) |>
 ```{r, results = 'asis', message=FALSE}
 readr::read_csv(here('documents/tables/pacfin_ages.csv')) |>
   dplyr::select(Year, 
-         Trips_TWL.C, Ages_TWL.C, Trips_NTWL.C, Ages_NTWL.C,
-         Trips_TWL.O, Ages_TWL.O, Trips_NTWL.O, Ages_NTWL.O,
-         Trips_TWL.W, Ages_TWL.W, Trips_NTWL.W, Ages_NTWL.W) |>
+         Trips_TWL.C, Ages_TWL.C, Trips_TWL.O, Ages_TWL.O, Trips_TWL.W, Ages_TWL.W,
+         Trips_NTWL.C, Ages_NTWL.C, Trips_NTWL.O, Ages_NTWL.O, Trips_NTWL.W, Ages_NTWL.W) |>
   as.data.frame() |>
   sa4ss::table_format(caption = "Summary of the number of aged samples and trips for commercial trawl (TWL) and non-trawl (NTWL) fleets for California (CA), Oregon (OR), and Washington (WA)",
                       label = "comm-sample-age",
                       align = 'l',
                       col.names = c("Year",
-                            "Trips CA TWL", "Ages CA TWL", "Trips CA NTWL", "Ages CA NTWL", 
-                            "Trips OR TWL", "Ages OR TWL", "Trips OR NTWL", "Ages OR TWL", 
-                            "Trips WA TWL", "Ages WA TWL", "Trips WA NTWL", "Ages WA TWL"),
+                            "Trips CA TWL", "Ages CA TWL", 
+                            "Trips OR TWL", "Ages OR TWL", 
+                            "Trips WA TWL", "Ages WA TWL", 
+                            "Trips CA NTWL", "Ages CA NTWL", 
+                            "Trips OR NTWL", "Ages OR NTWL", 
+                            "Trips WA NTWL", "Ages WA NTWL"),
                       longtable = TRUE,
                       landscape = TRUE)
 ```
@@ -199,9 +203,14 @@ readr::read_csv(here('documents/tables/triennial_summary.csv')) |>
 
 
 ```{r, results = 'asis', message=FALSE}
-readr::read_csv(here('documents/tables/parameters.csv')) |>
-  as.data.frame() |>
-  sa4ss::table_format(caption = "List of parameters used in the base model, including estimated values and standard deviations (SD), bounds (minimum and maximum), estimation phase (negative values not estimated), status (indicates if parameters are near bounds), and prior type information (mean and SD).",
+options(knitr.kable.NA = NA)
+parm_table <- readr::read_csv(here('documents/tables/parameters.csv')) |>
+  as.data.frame()
+parm_table[parm_table$Parameter == "Wtlen 1 Fem GP 1","Value"] = format(parm_table[parm_table$Parameter == "Wtlen 1 Fem GP 1","Value"], scientific = TRUE)
+parm_table[parm_table$Parameter == "Wtlen 1 Mal GP 1","Value"] = format(parm_table[parm_table$Parameter == "Wtlen 1 Mal GP 1","Value"], scientific = TRUE)
+parm_table[parm_table$Parameter == "Eggs scalar Fem GP 1","Value"] = format(parm_table[parm_table$Parameter == "Eggs scalar Fem GP 1","Value"], scientific = TRUE)
+
+sa4ss::table_format(parm_table, caption = "List of parameters used in the base model, including estimated values and standard deviations (SD), bounds (minimum and maximum), estimation phase (negative values not estimated), status (indicates if parameters are near bounds), and prior type information (mean and SD).",
                       label = "params",
                       align = 'l',
                       # col_names = col_names,
@@ -252,7 +261,7 @@ timeseries = read.csv(file.path(model_dir, "tables", "TimeSeries.csv"))
 col_names = c("Year", "Total Biomass (mt)", "Spawning Output", "Total Biomass 5+ (mt)", "Fraction Unfished", "Age-0 Recruits", "Total Mortality (mt)", "1-SPR", "Exploitation Rate")
 
 table_format(x = round(timeseries,2),
-                 caption = "Time series of population estimates from the base model. Spawning output is in millions of eggs and age-0 recruits is in numbers of 1000s.",
+                 caption = "Time series of population estimates from the base model. Spawning output is in millions of eggs and age-0 recruits is in numbers of 1000s. Note that projected 2023 and 2024 have yet to be provided, so are entered here as zero.",
                  label = "timeseries",
                  longtable = TRUE,
                  col_names = col_names,
@@ -331,6 +340,7 @@ readr::read_csv(here('documents','tables','data-weight-compare.csv')) |>
 <!-- ``` -->
 
 ```{r, results = 'asis'}
+options(knitr.kable.NA = '')
 readr::read_csv(file.path(model_dir, "tables", "e_ReferencePoints_ES.csv")) |>
   knitr::kable(caption = 'Summary of reference points and management quantities, including estimates of 95 percent intervals',
                label = 'ref-pts',

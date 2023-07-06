@@ -159,6 +159,11 @@ current base model followed five general steps:
 4.  Reapply current data weighting practices.
 5.  Update structure of selectivity.
 
+To arrive at a final base model additional revisions to the fleet
+structure, weightings, selectivity blocks, and selectivity
+parameterizations were made after these five steps in order
+to determine the best fit to the data.
+
 A thorough description of the current base model is presented separately
 below. This section is intended only to more clearly identify where
 substantive changes were made from the previous benchmark assessment.
@@ -177,11 +182,10 @@ different estimates for initial spawning output, but collectively offset
 and result in continuing the trajectory from the 2015 benchmark
 assessment.
 
-Changes due to altering the structure of natural mortality are fairly
-substantial (Figures \ref{fig:bridge-Mcons-bio} and
-\ref{fig:bridge-Mcons-relbio}). Assuming constant natural mortality
-results in similar parameter estimates for male and female natural
-mortality, and reduces the degree of recovery in spawning output
+Changes due to altering the structure of natural mortality are more
+substantial than changes to data and biology (Figures \ref{fig:bridge-Mcons-bio} and
+\ref{fig:bridge-Mcons-relbio}). Assuming age-invariant natural mortality
+results in a female natural mortality estimate of 0.076, which is larger at young ages but smaller at older ages than estimates using a ramp in natural mortality as applied previously. Although assuming age-invariant natural mortality results in similar recent spawning output and trajectory, doing so increases the estimate of $ln(R_0)$ and thus reduces the degree of recovery in spawning output
 relative to unfished, as also shown within sensitivities from the 2015
 benchmark assessment. Also similar to the findings from the 2015
 benchmark assessment, changing the structure of the population from
@@ -190,7 +194,7 @@ spatial to non-spatial resulted in small changes in the current model
 \ref{fig:bridge-spatial-relbio}). Updating the data weighting process to
 current standard weighting practices and to account for the new updated
 data however resulted in a decrease in the degree of recovery in
-spawning output relative to unfished.
+spawning output relative to unfished, due in part to a reduced estimate for female natural mortality to 0.065 in the coastwide model and 0.071 in the spatial model. 
 
 Changes in how selectivity was modeled are shown in Figures
 \ref{fig:bridge-selex-bio} and \ref{fig:bridge-selex-relbio}. Allowing
@@ -199,11 +203,6 @@ recovery in spawning output relative to unfished, due to an increase in
 the estimated value of female natural mortality. Other changes in
 selectivity including unmirroring fleets and using alternative
 parameterizations resulted in small changes.
-
-To arrive at a final base model additional revisions to the fleet
-structure, weightings, selectivity blocks, and selectivity
-parameterizations were made after the five aforementioned steps in order
-to determine the best fit to the data.
 
 ### Key Assumptions and Structural Choices
 
@@ -469,9 +468,9 @@ sex-ratios at age among trawl and survey landings. There appeared to be
 lack of support for young females, in particular, to have higher natural
 mortality. When age-varying natural mortality was assumed, as done in
 previous stock assessments for `r spp`, higher values for older female
-natural mortality were estimated. We found that allowing sex-dependent
+natural mortality were estimated. We found that by allowing sex-dependent
 selectivity in parameter 4, which governs how steeply selectivity
-declines at larger sizes, the fit to the data improved. Sex-dependence
+declines at larger sizes, the estimate for female natural mortality increased and the fit to the data improved. Sex-dependence
 on other selectivity parameters was explored, but parameter 4 had the
 largest per-parameter improvement in likelihood, and was large enough to
 warrant the additional number of selecitivity parameters. We therefore
