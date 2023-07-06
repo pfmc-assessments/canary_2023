@@ -113,7 +113,7 @@
 ```{r, results = 'asis'}
 sa4ss::add_figure(
 filein = file.path(model_dir, "selectivity_comm.png"), 
-caption = "Selectivity curves for commercial fleets over time for females",
+caption = "Selectivity curves for commercial fleets over time for females. If only one curve is included for a fleet it is applied over all years",
 alt_caption = "Figure showing logistic curves of length-based selectivty that tend to be shifted towards larger fish in the earlier time periods",
 label = 'comm-selex-female')
 ```
@@ -121,7 +121,7 @@ label = 'comm-selex-female')
 ```{r, results = 'asis'}
 sa4ss::add_figure(
 filein = file.path(model_dir, "selectivity_comm_males.png"), 
-caption = "Selectivity curves for commercial fleets over time for males",
+caption = "Selectivity curves for commercial fleets over time for males. If only one curve is included for a fleet it is applied over all years",
 alt_caption = "Figure showing logistic curves of length-based selectivty that tend to be shifted towards larger fish in the earlier time periods and show a steep truncation at larger sizes",
 label = 'comm-selex-male')
 ```
@@ -129,7 +129,7 @@ label = 'comm-selex-male')
 ```{r, results = 'asis'}
 sa4ss::add_figure(
 filein = file.path(model_dir, "selectivity_noncomm.png"), 
-caption = "Selectivity curves for recreational and survey fleets over time for females",
+caption = "Selectivity curves for recreational and survey fleets over time for females. If only one curve is included for a fleet it is applied over all years",
 alt_caption = "Figure showing logistic curves of length-based selectivty that tend to be shifted towards smaller fish in the earlier time periods for recreational fleets. Survey curves are not time varying",
 label = 'noncomm-selex-female')
 ```
@@ -137,7 +137,7 @@ label = 'noncomm-selex-female')
 ```{r, results = 'asis'}
 sa4ss::add_figure(
 filein = file.path(model_dir, "selectivity_noncomm_males.png"), 
-caption = "Selectivity curves for recreational and survey fleets over time for males",
+caption = "Selectivity curves for recreational and survey fleets over time for males. If only one curve is included for a fleet it is applied over all years",
 alt_caption = "Figure showing logistic curves of length-based selectivty that tend to be shifted towards smaller fish in the earlier time periods for recreational fleets. Survey curves are not time varying. All curves show a steep truncation at larger sizes",
 label = 'noncomm-selex-male')
 ```
