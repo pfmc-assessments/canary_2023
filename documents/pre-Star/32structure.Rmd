@@ -156,7 +156,7 @@ current base model followed five general steps:
 To arrive at a final base model additional revisions were made after these five steps in order
 to determine the best fit to the data. These include correcting an error in the generation of the triennial index of abundance, which was found late in the bridging process, and revisions to the fleet
 structure, weightings, selectivity blocks, selectivity
-parameterizations, and extending the period of early recruitment deviations.  
+parameterizations, and extending the period of early recruitment deviations.
 <!-- These include fleet structure: mirror WA/OR twl, unmirror WA TWL/NTWL -->
 <!-- Weightings: self explanatory -->
 <!-- Blocks: Updating from Jim's simpler blocks -->
