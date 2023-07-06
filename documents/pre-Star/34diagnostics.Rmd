@@ -56,7 +56,7 @@ There are numerous possible ways to parameterize selectivity in a stock assessme
 
 -   WA NTWL asymptotic: Assume the Washington non-trawl fleet has asymptotic selectivity. The base model assumes all fleets can have dome-shaped selectivity, and many do, which could lead to the presence of cryptic biomass. The Washington non-trawl fleet was deemed most likely to have asymptotic selectivity because 1) it fishes in untrawlable habitat where larger fish likely reside, 2) the average size of canary rockfish tends to increase northward along the coast, and 3) there is no nearshore component so harvest would presumably be at depths where larger individuals would be found.
 
--   \Gls{s-wcgbt} asymptotic: Assume the \gls{s-wcgbt} has asymptotic selectivity. This sensitivity serves a similar purpose as the sensitivity assuming the Washington non-trawl fleet has asymptotic selectivity. The \gls{s-wcgbt} samples across a full range of depths that encompass canary rockfish habitat, as well as sampling across latitudes, and so also is a candidate to have asymptotic selectivity. 
+-   \Gls{s-wcgbt} asymptotic: Assume the \gls{s-wcgbt} has asymptotic selectivity. This sensitivity serves a similar purpose as the sensitivity assuming the Washington non-trawl fleet has asymptotic selectivity. The \gls{s-wcgbt} samples across the full range of deeper depths of canary rockfish habitat where larger individuals likely reside, as well as samples across a wide range of latitudes, and so could presumably encounter larger individuals. 
 
 -   Float Q: Move all triennial data into the early triennial period and float Q (i.e., calculate it analytically). Complete one iteration of Francis data weighting.
 
