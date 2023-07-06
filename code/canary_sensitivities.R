@@ -986,14 +986,15 @@ make_detailed_sensitivites <- function(biglist, mods_to_include, pretty_names = 
 
 selectivity <- c('no_sex_selectivity', 
                  # 'selex_parm6', does not converge
-                 'simpler_block_OR_NTWL', 
+                 'simpler_block_OR_NTWL_TWL', 
                  'wa_ntwl_asymptotic',
-                 # 'wcgbts_asymptotic' does not converge
+                 'wcgbts_asymptotic',
                  'float_q',
                  'unmirror_tri')
 selec_pretty <- c('No sex selectivity',
                   'Simpler blocks',
                   'WA NTWL asymptotic',
+                  'WCGBTS asymptotic',
                   'Float Q',
                   'Unmirror Tri')
 
