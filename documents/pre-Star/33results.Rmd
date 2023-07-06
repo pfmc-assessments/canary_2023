@@ -12,7 +12,7 @@ survey, 75 parameters for length-based selectivity and blocks along with
 22 parameters for sex-dependent selectivity and blocks, and 131
 recruitment deviations. The likelihood components from fitting the base model to data are shown in Table \ref{tab:like}. The estimated data weights by the Francis method are shown in Table \ref{tab:data-weights}.
 
-The full r4ss plotting output is available in the supplementary material on the [Pacific Fishery Management Council website](pcouncil.org) (these figures will not be available until the assessment is finalized).
+The full r4ss plotting output is available in the supplementary material on the [Pacific Fishery Management Council website](https://www.pcouncil.org) (these figures will not be available until the assessment is finalized).
 
 
 #### Biology Parameters
