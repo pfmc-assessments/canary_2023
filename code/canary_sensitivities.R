@@ -1016,12 +1016,14 @@ data_choices <- c('no_sparse_comps',
                   'prerec_data',
                   'released_lengths_in',
                   'canada_catches', 
-                  'catch_se_0.1')
+                  'catch_se_0.1',
+                  'bomb_radiocarbon_age')
 data_pretty <- c('No sparse comps',
                  'Pre-recruit data',
                  'Released lengths in',
                  'Canada catches',
-                 'Catch SE 0.1')
+                 'Catch SE 0.1',
+                 'Bomb radiocarbon age bias')
 
 productivity <- c('est_h',
                   'est_male_M',
@@ -1087,7 +1089,6 @@ CI <- 0.95
 
 sensitivity_output <- SSsummarize(big_sensitivity_output) 
 
-sensitivity_output <- SSsummarize(big_sensitivity_output) 
 lapply(big_sensitivity_output, function(.)
   .$warnings[grep('gradient', .$warnings)]) # check gradients
 
@@ -1149,4 +1150,4 @@ ggplot(dev.quants, aes(x = relErr, y = mod_num, col = Metric, pch = Metric)) +
                      limits = c(1, length(pretty_names) + 2), minor_breaks = NULL) +
   xlab("Relative change") 
 ggsave(file.path(outdir, 'sens_summary.png'),  dpi = 300,  
-       width = 6, height = 7, units = "in")
+       width = 6, height = 6.5, units = "in")
