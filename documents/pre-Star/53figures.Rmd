@@ -320,7 +320,7 @@ label = 'noncomm-selex-male')
 
 ```{r, results = 'asis'}
 sa4ss::add_figure(
-filein = file.path(paste0(model_dir,"_retro"), "compare2_spawnbio_uncertainty.png"), 
+filein = here("models/5_5_0_hessian_retro", "compare2_spawnbio_uncertainty.png"), 
 caption = "Change in spawning output when the most recent five years of data are sequentially removed from the model",
 alt_caption = "Figure showing five retrospective runs with slightly lower estimates of initial and ending spawning output compared to the base model",
 label = 'retro_bio')
@@ -328,7 +328,7 @@ label = 'retro_bio')
 
 ```{r, results = 'asis'}
 sa4ss::add_figure(
-filein = file.path(paste0(model_dir,"_retro"), "compare4_Bratio_uncertainty.png"), 
+filein = here("models/5_5_0_hessian_retro", "compare4_Bratio_uncertainty.png"), 
 caption = "Change in spawning output relative to unfished when the most recent five years of data are sequentially removed from the model",
 alt_caption = "Figure showing five retrospective runs with similar estimates for fraction of unfished compared to the base model",
 label = 'retro_relbio')

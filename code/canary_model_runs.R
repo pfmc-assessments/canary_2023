@@ -12833,5 +12833,78 @@ round(pp$likelihoods_used,2)
 round(pp_base$likelihoods_used,2)
 
 
+####------------------------------------------------####
+### 6_1_0_projections - add GMT projections 
+####------------------------------------------------####
 
+new_name <- "6_1_0_projections"
+old_name <- "6_0_0_priors"
 
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+##
+#Make changes
+##
+
+ForeCatch <- readxl::read_excel(here('data-raw/GMT Canary Projected Removals 2023.xlsx'),
+                   range = 'A1:L9') |>
+  dplyr::rename(Year = '...1') |>
+  tidyr::pivot_longer(cols = -Year, names_to = 'fleet_name', values_to = 'catch') |>
+  dplyr::mutate(split = stringr::str_split(fleet_name, ' '),
+                state = sapply(split, function(.x)
+                  .x[which(stringr::str_length(.x) == 2)]),
+                fleet = sapply(split, function(.x)
+                  .x[which(stringr::str_length(.x) > 2)]),
+                fleet_abbrv = dplyr::case_when(fleet == 'At-sea' ~ 'ASHOP',
+                                               fleet == 'trawl' ~ 'TWL',
+                                               fleet == 'nontrawl' ~ 'NTWL',
+                                               fleet == 'recreational' ~ 'REC'),
+                fleet_no_num = paste(state, fleet_abbrv, sep = '_'),
+                Seas = 1) |>
+  dplyr::select(Year, catch, fleet_no_num, Seas) |>
+  dplyr::left_join(fleet.converter) |>
+  dplyr::select(Year, Seas, Fleet = fleet, `Catch or F` = catch) |>
+  dplyr::filter(Year %in% 2023:2024) |>
+  as.data.frame()
+
+mod$fore$ForeCatch <- ForeCatch
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_5_0_hessian',
+                                                 '6_1_0_projections'))) |>
+  SSsummarize() |>
+  SStableComparisons()
+
+xx$model1 - xx$model2
+# Model runs are identical
