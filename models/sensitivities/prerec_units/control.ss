@@ -201,13 +201,13 @@
 10	0	0	0	#_22 22_CA_Tri_late        
 10	0	0	0	#_23 23_OR_Tri_late        
 10	0	0	0	#_24 24_WA_Tri_late        
-10	0	0	0	#_25 25_CA_prerec          
-10	0	0	0	#_26 26_OR_prerec          
-10	0	0	0	#_27 27_WA_prerec          
+ 0	0	0	0	#_25 25_CA_prerec          
+ 0	0	0	0	#_26 26_OR_prerec          
+ 0	0	0	0	#_27 27_WA_prerec          
 10	0	0	0	#_28 28_coastwide_NWFSC    
 10	0	0	0	#_29 29_coastwide_Tri_early
 10	0	0	0	#_30 30_coastwide_Tri_late 
-10	0	0	0	#_31 31_coastwide_prerec   
+ 0	0	0	0	#_31 31_coastwide_prerec   
 #
 #_SizeSelex
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn  #  parm_name

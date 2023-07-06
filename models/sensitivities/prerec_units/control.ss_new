@@ -304,13 +304,13 @@
  10 0 0 0 # 22 22_CA_Tri_late
  10 0 0 0 # 23 23_OR_Tri_late
  10 0 0 0 # 24 24_WA_Tri_late
- 10 0 0 0 # 25 25_CA_prerec
- 10 0 0 0 # 26 26_OR_prerec
- 10 0 0 0 # 27 27_WA_prerec
+ 0 0 0 0 # 25 25_CA_prerec
+ 0 0 0 0 # 26 26_OR_prerec
+ 0 0 0 0 # 27 27_WA_prerec
  10 0 0 0 # 28 28_coastwide_NWFSC
  10 0 0 0 # 29 29_coastwide_Tri_early
  10 0 0 0 # 30 30_coastwide_Tri_late
- 10 0 0 0 # 31 31_coastwide_prerec
+ 0 0 0 0 # 31 31_coastwide_prerec
 #
 #_          LO            HI          INIT         PRIOR         PR_SD       PR_type      PHASE    env-var    use_dev   dev_mnyr   dev_mxyr     dev_PH      Block    Blk_Fxn  #  parm_name
 # 1   1_CA_TWL LenSelex

@@ -97,6 +97,8 @@ mod <- base_mod
 
 mod$dat$fleetinfo[grep('prerec', mod$dat$fleetinfo$fleetname), 'units'] <- 33
 
+mod$ctl$age_selex_types[grep('prerec', rownames(mod$ctl$age_selex_types)), 'Pattern'] <- 0
+
 # Assume survey is recruitment index but occurs after density-dependence. 
 # May be more statistically defensible? This was Owen's idea.
 
@@ -725,7 +727,7 @@ SSsummarize(xx) |>
 mod <- base_mod
 
 #CHANGE THE PRIOR TYPE TO LOGNORMAL
-mod$ctl$MG_parms[grep("NatM_p_1_Mal",rownames(mod$ctl$MG_parms)), c("PR_type", "PHASE")] <- c(3,2)
+mod$ctl$MG_parms[grep("NatM_p_1_Mal",rownames(mod$ctl$MG_parms)), c("PR_type", "PHASE")] <- c(3, r4ss:::get_last_phase(mod$ctl))
 
 new_name <- 'est_male_M'
 
@@ -931,8 +933,27 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           skipfinished = FALSE)
 
 
-# Summaries ---------------------------------------------------------------
 
+# Bomb radiocarbon --------------------------------------------------------
+
+mod <- base_mod
+
+bias_rows <- seq(1, nrow(mod$dat$ageerror), by = 2)
+mod$dat$ageerror[bias_rows,] <- 0.9 * (mod$dat$ageerror[bias_rows,]-0.5) + 0.5
+
+new_name <- 'bomb_radiocarbon_age'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+# Summaries ---------------------------------------------------------------
+ 
 make_detailed_sensitivites <- function(biglist, mods_to_include, pretty_names = mods_to_include, 
                                        outdir, grp_name) {
   
