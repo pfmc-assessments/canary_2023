@@ -116,7 +116,7 @@ In whole, these steps are not currently standard practice. For this
 assessment we do not adjust lambda values. Rather we allow the data
 weighting procedure to offset the contributions of age and length data,
 including conditional-age-at-length data in the data weighting, while
-confirming the sample sizes of composition data do not exceed the number
+checking that the sample sizes of composition data do not exceed the number
 of fish actually sampled.
 
 Lastly, a number of changes due to updating fixed parameter estimates
@@ -153,10 +153,15 @@ current base model followed five general steps:
 4.  Reapply current data weighting practices.
 5.  Update structure of selectivity.
 
-To arrive at a final base model additional revisions to the fleet
-structure, weightings, selectivity blocks, and selectivity
-parameterizations were made after these five steps in order
-to determine the best fit to the data.
+To arrive at a final base model additional revisions were made after these five steps in order
+to determine the best fit to the data. These include correcting an error in the generation of the triennial index of abundance, which was found late in the bridging process, and revisions to the fleet
+structure, weightings, selectivity blocks, selectivity
+parameterizations, and extending the period of early recruitment deviations.  
+<!-- These include fleet structure: mirror WA/OR twl, unmirror WA TWL/NTWL -->
+<!-- Weightings: self explanatory -->
+<!-- Blocks: Updating from Jim's simpler blocks -->
+<!-- Selectivity parameterization: mirroring triennial selex and q, removing some sex selectivity for fleets, lowering some bounds on some selex parameters -->
+<!-- Also includes not use the triennial mixture CPUE values -->
 
 A thorough description of the current base model is presented separately
 below. This section is intended only to more clearly identify where
@@ -353,7 +358,7 @@ down-weighted. We applied four iterations of the Francis method when
 data-weighting, which resulted in converged estimates. The weighting of
 both the length and age composition was allowed to exceed one, and we
 confirmed that data sources that were upweighted did not have a weighted
-sample size above the number of fish sampled. Weights for
+sample size above the number of fish sampled that would be a cause for concern. Weights for
 conditional-age-at-length data, which were a direct count of the number
 of available ages, were all less than one.
 

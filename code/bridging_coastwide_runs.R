@@ -3532,6 +3532,262 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 
+########################################################
+#Add two more model runs for bridging for report based on internal review
+# Updated blocks (ala model 4_5_2)
+# Retune (ala model 4_7_1)
+########################################################
+
+####------------------------------------------------####
+### 3_4_0_blocks Update to new blocking structure  ----
+####------------------------------------------------####
+
+new_name <- "Bridging coastwide/3_4_0_blocks"
+old_name <- 'Bridging coastwide/3_3_8_sexDependentSelex'
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+
+##
+#Make Changes
+##
+
+### Update blocks ----
+mod$ctl$N_Block_Designs <- 5
+mod$ctl$blocks_per_pattern <- c(2,2,2,2,2)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+
+#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+#Keeping 2000 block instead of 2001 since the data seems to suggest change there (also same as last assessment)
+mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2022), #TWL fleets
+                             c(2000, 2019, 2020, 2022), #CA/OR ntwl
+                             c(2004, 2016, 2017, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR rec
+                             c(2006, 2020, 2021, 2022)) #WA rec
+
+### Update selectivity parameter table matching Jim's parameters setup ----
+
+selex_new <- mod$ctl$size_selex_parms
+
+# Use new block set up
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 1
+selex_new[grepl('_TWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+selex_new[grepl('CA_NTWL|OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 2
+#WA NTWL is set to mirror WA TWL due to better aggregate match. 
+
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
+selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 4
+selex_new[grepl('OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 5
+selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block_Fxn')] <- 2
+
+mod$ctl$size_selex_parms <- selex_new
+
+### Time varying selectivity table ----
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 3_4_1_tri Update triennial mirror q and selex  ----
+####------------------------------------------------####
+
+new_name <- "Bridging coastwide/3_4_1_tri_qselex"
+old_name <- 'Bridging coastwide/3_4_0_blocks'
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+
+##
+#Make Changes
+##
+
+#Mirror selectivity of late triennial to early
+mod$ctl$size_selex_types["30_coastwide_Tri_late",c("Pattern", "Male", "Special")] <- c(15, 0, 29)
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep(
+  "_Tri_late",rownames(mod$ctl$size_selex_parms)),]
+
+
+#Remove float for triennials and mirror
+mod$ctl$Q_options[c('29_coastwide_Tri_early','30_coastwide_Tri_late'), "float"] <- 0
+mod$ctl$Q_options["30_coastwide_Tri_late", c("link", "link_info")] <- c(2, 29)
+mod$ctl$Q_parms["LnQ_base_30_coastwide_Tri_late(30)", "INIT"] <- 0 #This gets ignored so is not needed but using 0 to indicate a change
+#Turn on phase
+mod$ctl$Q_parms[c('LnQ_base_29_coastwide_Tri_early(29)',
+                  'LnQ_base_30_coastwide_Tri_late(30)'), "PHASE"] <- 2
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+
+####------------------------------------------------####
+### 3_4_2_tri_index Update to new triennial index (not mixture) mirror q and selex  ----
+####------------------------------------------------####
+
+new_name <- "Bridging coastwide/3_4_2_tri_index"
+old_name <- 'Bridging coastwide/3_4_0_blocks'
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+
+##
+#Make Changes
+##
+
+#Update index
+tri.cpue <- read.csv(file.path(wd,'Assessments/Assessment Data/2023 Assessment Cycle/canary rockfish/triennial/delta_lognormal/index/est_by_area.csv')) |>
+  dplyr::mutate(fleet_no_num = paste0(area, ifelse(year <= 1992, '_Tri_early', '_Tri_late'))) |>
+  dplyr::left_join(fleet.converter) |> 
+  dplyr::mutate(seas = 7) |>
+  dplyr::select(year, seas, index = fleet, obs = est, se_log = se) |>
+  dplyr::mutate(year = ifelse(index %in% fleet.converter$fleet[grep('coastwide', fleet.converter$fleetname)],
+                              year, -year))
+
+mod$dat$CPUE <- dplyr::filter(mod$dat$CPUE, 
+                              !(index %in% fleet.converter$fleet[grep('Tri', fleet.converter$fleetname)])) |>
+  dplyr::bind_rows(tri.cpue)
+
+
+#Mirror selectivity of late triennial to early
+mod$ctl$size_selex_types["30_coastwide_Tri_late",c("Pattern", "Male", "Special")] <- c(15, 0, 29)
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep(
+  "_Tri_late",rownames(mod$ctl$size_selex_parms)),]
+
+
+#Remove float for triennials and mirror
+mod$ctl$Q_options[c('29_coastwide_Tri_early','30_coastwide_Tri_late'), "float"] <- 0
+mod$ctl$Q_options["30_coastwide_Tri_late", c("link", "link_info")] <- c(2, 29)
+mod$ctl$Q_parms["LnQ_base_30_coastwide_Tri_late(30)", "INIT"] <- 0 #This gets ignored so is not needed but using 0 to indicate a change
+#Turn on phase
+mod$ctl$Q_parms[c('LnQ_base_29_coastwide_Tri_early(29)',
+                  'LnQ_base_30_coastwide_Tri_late(30)'), "PHASE"] <- 2
+
+
+##
+#Output files and run run with hessian
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess',
+          # show_in_console = TRUE, 
+          skipfinished = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('converted_detailed_hessian',
+                                                 'Bridging coastwide/3_3_8_sexDependentSelex',
+                                                 'Bridging coastwide/3_4_0_blocks',
+                                                 'Bridging coastwide/3_4_1_tri_qselex',
+                                                 'Bridging coastwide/3_4_2_tri_index')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
+                                     'Sex dependent selectivity',
+                                     'Update blocks',
+                                     '+ triennial q and selectivity',
+                                     "+ triennial index"),
+                    subplots = c(1:4,9,11), print = TRUE, plotdir = here('models',new_name), 
+                    uncertainty = c(TRUE,rep(FALSE,4)))
+
+
+# ####------------------------------------------------####
+# ### 3_4_1_tune340 Tune model 340  ----
+# ####------------------------------------------------####
+# 
+# new_name <- 'Bridging coastwide/3_4_1_tune340'
+# old_name <- "Bridging coastwide/3_4_0_blocks"
+# 
+# ##
+# #Copy inputs
+# ##
+# 
+# copy_SS_inputs(dir.old = here('models',old_name),
+#                dir.new = here('models',new_name),
+#                overwrite = TRUE)
+# file.copy(from = file.path(here('models',old_name),"Report.sso"),
+#           to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+# file.copy(from = file.path(here('models',old_name),"CompReport.sso"),
+#           to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+# file.copy(from = file.path(here('models',old_name),"warning.sso"),
+#           to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+# 
+# mod.out <- SS_output(here('models', new_name))
+# xx <- r4ss::tune_comps(replist = mod.out, 
+#                        option = 'Francis', 
+#                        dir = here('models', new_name), 
+#                        exe = here('models/ss_win.exe'), 
+#                        niters_tuning = 4, 
+#                        extras = '-nohess',
+#                        allow_up_tuning = TRUE)
+# 
+# pp <- SS_output(here('models',new_name))
+# SS_plots(pp, plot = c(1:26)[-c(12:18)])
+# 
+# #Tuning from the change in blocks doesn't matter as much.
+
 
 
 

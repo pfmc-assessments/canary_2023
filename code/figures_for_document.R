@@ -314,14 +314,16 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                       subdir = c('../converted_detailed_hessian',
                                                  '3_3_6_coastwide_tuned',
                                                  '3_3_4_coastwide_tuned',
-                                                 '3_3_8_sexDependentSelex')))
+                                                 '3_3_8_sexDependentSelex',
+                                                 '../5_5_0_hessian')))
 
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
                                      'Coastwide model (tuned)',
                                      'Update selectivity (tuned)',
-                                     'Sex dependent selectivity parameter 4 (untuned)'),
-                    subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,3)),
+                                     'Sex dependent selectivity parameter 4',
+                                     'Base (tuned)'),
+                    subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,4)),
                     plotdir = here('models','Bridging coastwide', '3_3_8_sexDependentSelex'))
 
 file.copy(from =  here('models','Bridging coastwide', '3_3_8_sexDependentSelex',
