@@ -153,7 +153,7 @@ current base model followed five general steps:
 4.  Reapply current data weighting practices.
 5.  Update structure of selectivity.
 
-To arrive at a final base model additional revisions were made after these five steps in order
+To arrive at a final base model additional revisions were made after these five steps
 to determine the best fit to the data. These include correcting an error in the generation of the triennial index of abundance, which was found late in the bridging process, and revisions to the fleet
 structure, weightings, selectivity blocks, selectivity
 parameterizations, and extending the period of early recruitment deviations.
@@ -161,7 +161,6 @@ parameterizations, and extending the period of early recruitment deviations.
 <!-- Weightings: self explanatory -->
 <!-- Blocks: Updating from Jim's simpler blocks -->
 <!-- Selectivity parameterization: mirroring triennial selex and q, removing some sex selectivity for fleets, lowering some bounds on some selex parameters -->
-<!-- Also includes not use the triennial mixture CPUE values -->
 
 A thorough description of the current base model is presented separately
 below. This section is intended only to more clearly identify where
@@ -200,8 +199,7 @@ Changes in how selectivity was modeled are shown in Figures
 selectivity to be sex-dependent resulted in a large change in the degree of
 recovery in spawning output relative to unfished, due to an increase in
 the estimated value of female natural mortality. Other changes in
-selectivity including unmirroring fleets and using alternative
-parameterizations resulted in small changes.
+selectivity including unmirroring fleets and using an alternative parameterization of the double normal (three parameter instead of four) resulted in small changes. Various additional changes as described above result in the final base model. 
 
 ### Key Assumptions and Structural Choices
 
