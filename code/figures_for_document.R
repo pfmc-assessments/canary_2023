@@ -15,6 +15,7 @@ library(dplyr)
 source(here('code/selexComp.R'))
 
 base_mod <- '5_5_0_hessian'
+base_mod_proj <- '6_1_0_projections'
 mod15 <- SS_output(here('models','2015base'))
 mod23 <- SS_output(here('models', base_mod))
 
@@ -484,5 +485,39 @@ dplyr::select(mod23$recruit, Yr, dev) |>
 
 ggsave(here('documents/figures/canada_rec.png'), device = 'png', width = 6.5,
        height = 5, units = 'in', dpi = 300)
+
+
+
+# Projection table ----------------------------------------------------
+
+tab = readr::read_csv(here('models',base_mod_proj, "tables", "g_Projections_ES.csv")) |> data.frame()
+man = readr::read_csv(here('data/ACLs.csv')) |> data.frame()
+
+out = cbind(tab$Year,
+            c(round(man[man$YEAR %in% c(2023, 2024) & man$SPECIFICATION_TYPE == "OFL", "VAL"],0), rep("-",10)),
+            c(round(man[man$YEAR %in% c(2023, 2024) & man$SPECIFICATION_TYPE == "ABC", "VAL"],0), rep("-",10)),
+            c(round(man[man$YEAR %in% c(2023, 2024) & man$SPECIFICATION_TYPE == "ACL", "VAL"],0), rep("-",10)),
+            c(round(tab[1:2,'ABC.Catch..mt.'],2), rep("-",10)),
+            c(rep("-",2), round(tab[3:12,"Predicted.OFL..mt."], 2)),
+            c(rep("-",2), PEPtools::get_buffer(2023:2034,0.5,0.45)[-c(1,2),2]),
+            c(rep("-",2), round(round(tab[3:12,'Predicted.OFL..mt.'],2)*PEPtools::get_buffer(2023:2034,0.5,0.45)[-c(1,2),2],2)),  
+            c(rep("-",2), round(tab[3:12,'ABC.Catch..mt.'],2)),
+            round(tab[ ,5:ncol(tab)], 2))
+
+col_names = c('Year',
+              'Adopted OFL (mt)',
+              'Adopted ABC (mt)',
+              'Adopted ACL (mt)',
+              "Assumed removals (mt)",
+              "OFL (mt)",
+              "Buffer",
+              "ABC",
+              "ACL",
+              "Spawning Output",
+              "Fraction Unfished")
+
+colnames(out)<-col_names
+
+write.csv(out, here('documents','tables','projections.csv'), row.names = FALSE)
 
 
