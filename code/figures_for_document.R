@@ -322,7 +322,7 @@ SSsummarize(xx) |>
                                      'Coastwide model (tuned)',
                                      'Update selectivity (tuned)',
                                      'Sex dependent selectivity parameter 4',
-                                     'Base (tuned)'),
+                                     'Various changes (base model)'),
                     subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,4)),
                     plotdir = here('models','Bridging coastwide', '3_3_8_sexDependentSelex'))
 
