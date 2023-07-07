@@ -64,6 +64,52 @@ SSsummarize(xx) |>
                                      'Add WCVI catches to WA'),
                     print = TRUE, plotdir = here('models/sensitivities',new_name))
 
+
+# Survey catches --------------------------------------------------------
+
+#also combine the 1975 omitted value to 1976
+
+mod <- base_mod
+survey_catch <- googlesheets4::read_sheet(googledrive::drive_get("research_catch"))
+survey_catch$mt <- survey_catch$total_catch_wt_kg/1000
+
+dplyr::select(Year, WA_TWL = Trawl, WA_NTWL = NTWL) |>
+  dplyr::mutate(seas = 1, catch_se = 0.05) |>
+  tidyr::pivot_longer(cols = c(WA_TWL, WA_NTWL), 
+                      names_to = 'fleet_no_num', 
+                      values_to = 'canada_catch') |>
+  dplyr::left_join(fleet.converter) |>
+  dplyr::select(-fleetname, -fleet_no_num) |>
+  dplyr::right_join(base_mod$dat$catch) |> 
+  dplyr::mutate(dplyr::across(c(catch, canada_catch),
+                              ~ tidyr::replace_na(., replace = 0)),
+                catch = catch + canada_catch) |>
+  dplyr::select(year, seas, fleet, catch, catch_se) |>
+  as.data.frame()
+
+mod$dat
+
+
+new_name <- 'survey_catches'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+beepr::beep()
+
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   file.path('sensitivities', new_name)))))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'Add WCVI catches to WA'),
+                    print = TRUE, plotdir = here('models/sensitivities',new_name))
+
 # Prerecruit survey add 3 years -------------------------------------------
 
 mod <- base_mod
@@ -163,6 +209,87 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           extras = '-nohess', 
           show_in_console = FALSE, 
           skipfinished = FALSE)
+
+
+# M breakpoint 10 ------------------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(10, 11)
+
+# Add extra rows to MG table
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+# Fix young female M at male M
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+new_name <- 'M_break10'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+
+# M breakpoint 20 ------------------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(20, 21)
+
+# Add extra rows to MG table
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+# Fix young female M at male M
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+new_name <- 'M_break20'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   'sensitivities/M_break10',
+                                                   'sensitivities/M_break20',
+                                                   'sensitivities/M_ramp'))))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'M break 10',
+                                     'M break 20',
+                                     'M ramp'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
 
 
 # D-M data weighting ------------------------------------------------------
