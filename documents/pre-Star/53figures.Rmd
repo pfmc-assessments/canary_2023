@@ -54,7 +54,9 @@
 
 ![Age composition data for the Washington recreational fishery for females (red) and males (blue) \label{fig:WA_rec_agecomp}](../figures/plots/comp_agedat_bubflt9mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington recreational age compositions for males and females"}
 
-![Length composition data for the West Coast Groundfish Bottomtrawl Survey for females (red) and males (blue) \label{fig:wcgbts_lencomp}](../figures/plots/comp_lendat_bubflt28mkt0.png){width="100%" height="100%" alt="Bubble plot of WCGBTS length compositions for males and females showing a wide range of lengths over time"}
+![Map of \gls{s-wcgbt} stations and density of catches of `r spp`. Faint gray dots are tows without `r spp`. Larger redder circles indicate higher catch rates. \{fig:wcgbts-tows}](../figures/cpue_map.png){width="100%" height="100%" alt="Map of survey tows of canary rockfish showing highest catch rates in northern Oregon and especially Washington, with catches tapering off south of San Francisco Bay and virtually no catches south of Point Conception"}
+
+![Length composition data for the \gls{s-wcgbt} for females (red) and males (blue) \label{fig:wcgbts_lencomp}](../figures/plots/comp_lendat_bubflt28mkt0.png){width="100%" height="100%" alt="Bubble plot of WCGBTS length compositions for males and females showing a wide range of lengths over time"}
 
 ![Length composition data for the early years of the Triennial Survey for females (red) and males (blue) \label{fig:triearly_lencomp}](../figures/plots/comp_lendat_bubflt29mkt0.png){width="100%" height="100%" alt="Bubble plot of the Triennial survey length compositions for males and females from 1980 to 1992"}
 
