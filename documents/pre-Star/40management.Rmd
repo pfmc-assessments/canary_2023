@@ -10,6 +10,11 @@ The 2022 `r spp` spawning output relative to unfished spawning biomass is within
 
 To be completed following the STAR panel.
 
+<!-- A ten-year projection of the base model with catches equal to the estimated \gls{acl} based on the category 1 time-varying $\sigma$ (0.5) with $P^*$ = 0.45 (i.e., termed the "buffer") for years 2025-2034 is shown in Table \ref{tab:project}. The removals in 2023 and 2024 were set equal to the recommended fleet-specific values as provided by the \gls{gmt} (W. Roberts, \gls{wdfw}, personal communication, 7/6/23).   -->
+
+<!-- At the end of the projection period, 2034, the projected ACL removals result in spawning output relative to unfished increasing to be `r round(100*(model$timeseries$SpawnBio[model$timeseries$Yr==2034]/model$timeseries$SpawnBio[1]),1)` percent. -->
+
+
 ## Evaluation of Scientific Uncertainty
 
 The model estimated uncertainty around the `r model$endyr+1` spawning output for `r spp` is $\sigma$ = `r round(model$Pstar_sigma,2)` and the uncertainty around the OFL was $\sigma$ = `r round(model$OFL_sigma, 2)`. Each of these are very likely to underestimate overall uncertainty due to the necessity to fix several key population dynamics parameters (e.g., steepness, recruitment variance, natural mortality for males) and because there is no explicit incorporation of model structural uncertainty (although see the decision table for alternative states of nature; to be complete after the STAR panel).

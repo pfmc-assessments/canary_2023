@@ -18,7 +18,7 @@ The \gls{s-ccfrp} has conducted fishery-independent data collection efforts onbo
 
 The Deb Wilson-Vandenberg data set originated from an onboard observer survey conducted by \gls{cdfw} in central California from 1988--1998 and is referred to as the Deb Wilson-Vandenberg onboard observer survey [@reilly_onboard_1998]. The fine-scale catch and effort data allow better filtering of the data for indices to fishing stops within suitable habitat for the target species. Length data from this dataset was applied in the assessment but the representativeness as a fishery-dependent index to inform coastwide dynamics is questionable. As such, we did not pursue development of an index from this dataset.  
 
-#### CRFS Onboard Drift Index
+#### CRFS Onboard CPFV Index
 
 The state of California implemented a statewide onboard observer sampling program in 1999 [@monk_documentation_2014]. The program surveys the \gls{cpfv} fleet fishing out of 15 coastal counties and two counties inside San Francisco Bay, representing 46 site locations. Observers collect spatially-explicit catch and release records. During an onboard observer trip the sampler rides along on the \gls{cpfv} and records location-specific catch and discard information to the species level for a subset of anglers onboard the vessel. Due to similar concerns about representativeness of a coastwide index as other state specific indices of abundance, as well as concerns with shifts in fishing due to significant changes in the regulations during this time period, we did not pursue development of an index from this dataset.
  
