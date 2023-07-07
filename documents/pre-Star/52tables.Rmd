@@ -26,7 +26,7 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                digits = 1) |>
   kableExtra::kable_styling(
       latex_options = c("repeat_header"),
-      font_size = 8)
+      font_size = 9)
 ```
 
 \newpage
@@ -78,14 +78,14 @@ readr::read_csv(here('documents/tables/pacfin_lengths.csv')) |>
                       label = "comm-sample-lengths",
                       align = 'l',
                       col.names = c("Year",
-                            "Trips CA TWL", "Lengths CA TWL", 
-                            "Trips OR TWL", "Lengths OR TWL", 
-                            "Trips WA TWL", "Lengths WA TWL",
-                            "Trips CA NTWL", "Lengths CA NTWL", 
-                            "Trips OR NTWL", "Lengths OR TWL", 
-                             "Trips WA NTWL", "Lengths WA TWL"),
+                            "Trips TWL CA", "Lengths TWL CA", 
+                            "Trips TWL OR", "Lengths TWL OR", 
+                            "Trips TWL WA", "Lengths TWL WA",
+                            "Trips NTWL CA", "Lengths NTWL CA", 
+                            "Trips NTWL OR", "Lengths TWL OR", 
+                             "Trips NTWL WA", "Lengths TWL WA"),
                       longtable = TRUE,
-                      landscape = TRUE)
+                      landscape = FALSE)
 ```
 
 \newpage
@@ -100,14 +100,14 @@ readr::read_csv(here('documents/tables/pacfin_ages.csv')) |>
                       label = "comm-sample-age",
                       align = 'l',
                       col.names = c("Year",
-                            "Trips CA TWL", "Ages CA TWL", 
-                            "Trips OR TWL", "Ages OR TWL", 
-                            "Trips WA TWL", "Ages WA TWL", 
-                            "Trips CA NTWL", "Ages CA NTWL", 
-                            "Trips OR NTWL", "Ages OR NTWL", 
-                            "Trips WA NTWL", "Ages WA NTWL"),
+                            "Trips TWL CA", "Ages TWL CA", 
+                            "Trips TWL OR", "Ages TWL OR", 
+                            "Trips TWL WA", "Ages TWL WA", 
+                            "Trips NTWL CA", "Ages NTWL CA", 
+                            "Trips NTWL OR", "Ages NTWL OR", 
+                            "Trips NTWL WA", "Ages NTWL WA"),
                       longtable = TRUE,
-                      landscape = TRUE)
+                      landscape = FALSE)
 ```
 
 \newpage
@@ -152,9 +152,7 @@ readr::read_csv(here('documents/tables/rec_lengths.csv')) |>
                format = 'latex',
                col.names = c("Year", "Lengths CA", "Trips CA", "Lengths OR", "Trips OR", "Lengths WA", "Trips WA"),
                booktabs = TRUE,
-               longtable = TRUE,
-               escape = TRUE) #%>%
-  #kable_styling(font_size = 7) Need to install this package though to have this work
+               longtable = TRUE)
 ```
 
 \newpage
@@ -167,8 +165,7 @@ readr::read_csv(here('documents/tables/rec_ages.csv')) |>
                format = 'latex',
                col.names = c("Year", "Ages OR", "Trips OR", "Ages WA", "Trips WA"),
                booktabs = TRUE,
-               longtable = TRUE)  #%>%
-  #kable_styling(font_size = 7) Need to install this package though to have this work
+               longtable = TRUE)
 ```
 
 \newpage
@@ -235,8 +232,7 @@ readr::read_csv(file.path(model_dir, "tables", "likelihoods.csv")) |>
                col.names = c("Data type", "Total"),
                booktabs = TRUE,
                escape = TRUE,
-               digits = 2) #%>%
-  #kable_styling(font_size = 7) Need to install this package though to have this work
+               digits = 2)
 ```
 
 \newpage
@@ -261,7 +257,7 @@ timeseries = read.csv(file.path(model_dir, "tables", "TimeSeries.csv"))
 col_names = c("Year", "Total Biomass (mt)", "Spawning Output", "Total Biomass 5+ (mt)", "Fraction Unfished", "Age-0 Recruits", "Total Mortality (mt)", "1-SPR", "Exploitation Rate")
 
 table_format(x = round(timeseries,2),
-                 caption = "Time series of population estimates from the base model. Spawning output is in millions of eggs and age-0 recruits is in numbers of 1000s. Note that projected 2023 and 2024 estimates of total mortality have yet to be provided, so are entered here as zero.",
+                 caption = "Time series of population estimates from the base model. Spawning output is in millions of eggs and age-0 recruits is in numbers of 1000s. Total mortality for 2023 and 2024 is based on projected estimates provided by the Groundfish Management Team.",
                  label = "timeseries",
                  longtable = TRUE,
                  col_names = col_names,
@@ -277,11 +273,18 @@ table_format(x = round(timeseries,2),
 readr::read_csv(here('documents/figures/sensitivities/data_table.csv')) |>
   dplyr::mutate(dplyr::across(-...1, ~ sapply(., format, digits = 3, scientific = FALSE))) |>
   dplyr::rename(` ` = '...1') |>
-  knitr::kable(caption = 'Estimates of likelihood components and major model parameters for data sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, not all likelihoods are comparable.',
-               label = 'data-sens',
-               format = 'latex',
-               booktabs = TRUE) |>
-  kableExtra::landscape()
+  # knitr::kable(caption = 'Estimates of likelihood components and major model parameters for data sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, not all likelihoods are comparable.',
+  #              label = 'data-sens',
+  #              format = 'latex',
+  #              booktabs = TRUE) |>
+  # kableExtra::landscape()
+  table_format(caption = 'Estimates of likelihood components and major model parameters for data sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, likelihoods for the `Float Q` model are not comparable.',
+             label = "data-sens",
+             row.names = FALSE,
+             landscape = TRUE,
+             custom_width = TRUE,
+             col_to_adjust = c(2,3,4,5,6),
+             width = c("2.54cm", "2.54cm", "1.905cm", "1.27cm", "1.27cm", "2.54cm"))
 ```
 
 ```{r, results = 'asis'}
@@ -299,11 +302,18 @@ readr::read_csv(here('documents/figures/sensitivities/weighting_table.csv')) |>
 readr::read_csv(here('documents/figures/sensitivities/selectivity_table.csv')) |>
   dplyr::mutate(dplyr::across(-...1, ~ sapply(., format, digits = 3, scientific = FALSE))) |>
   dplyr::rename(` ` = '...1') |>
-  knitr::kable(caption = 'Estimates of likelihood components and major model parameters for selectivity sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, likelihoods for the `Float Q` model are not comparable.',
-               label = 'selec-sens',
-               format = 'latex',
-               booktabs = TRUE) |>
-  kableExtra::landscape()
+  # knitr::kable(caption = 'Estimates of likelihood components and major model parameters for selectivity sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, likelihoods for the `Float Q` model are not comparable.',
+  #              label = 'selec-sens',
+  #              format = 'latex',
+  #              booktabs = TRUE) |>
+  # kableExtra::landscape()
+  table_format(caption = 'Estimates of likelihood components and major model parameters for selectivity sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, likelihoods for the `Float Q` model are not comparable.',
+             label = "selec-sens",
+             row.names = FALSE,
+             landscape = TRUE,
+             custom_width = TRUE,
+             col_to_adjust = c(3,4,5),
+             width = c("1.27cm", "1.905cm", "1.905cm"))
 ```
 
 ```{r, results = 'asis'}
@@ -350,5 +360,3 @@ readr::read_csv(file.path(model_dir, "tables", "e_ReferencePoints_ES.csv")) |>
                booktabs = TRUE,
                escape = FALSE)
 ```
-
-
