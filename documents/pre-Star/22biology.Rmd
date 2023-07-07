@@ -35,7 +35,7 @@ male-skewed sex ratio at older ages has been observed along the U.S.
 West Coast in fishery data off Oregon (L. Rasmuson, \gls{odfw}), personal communication, 1/23/23), Canada [@dfo2023canary], and Alaska and in black rockfish
 in addition to canary and yellowtail rockfishes. Although it has been
 found in these three semi-pelagic species, the pattern has not been
-observed for bocaccio (*Sebastes paucispinis*), chilipepper rockfish
+observed for bocaccio, chilipepper rockfish
 (*Sebastes goodei*), shortbelly rockfish (*Sebastes jordani*), or dusky
 rockfishes (*Sebastes ciliatus*, in Alaska), which are also semi-pelagic.
 However, starting in the 2010's the male-skewed sex ratio has evened out
