@@ -339,9 +339,34 @@ strata <- nwfscSurvey::CreateStrataDF.fn(
   lats.south     = c( 32,   32,   34.5, 34.5),
   lats.north     = c( 34.5, 34.5, 49,   49))
 
+# define strata for wcgbts, triennial surveys
+wcgbts_strata <- nwfscSurvey::CreateStrataDF.fn(
+  names = apply(expand.grid(x = c('s.ca', 'n.ca', 'or', 'wa'), 
+                            y = c('deep', 'shallow')), 
+                MARGIN = 1, 
+                FUN = stringr::str_flatten,
+                collapse = '.'),
+  depths.shallow = rep(c(55, 183), each = 4),
+  depths.deep    = rep(c(183, 350), each = 4),
+  lats.south     = rep(c(32, 34.5, 42, 46), 2),
+  lats.north     = rep(c(34.5, 42, 46, 49), 2)
+)
+
+tri_strata <- nwfscSurvey::CreateStrataDF.fn(
+  names = apply(expand.grid(x = c('ca', 'or', 'wa'), 
+                            y = c('deep', 'shallow')), 
+                MARGIN = 1, 
+                FUN = stringr::str_flatten,
+                collapse = '.'),
+  depths.shallow = rep(c(55, 183), each = 3),
+  depths.deep    = rep(c(183, 350), each = 3),
+  lats.south     = rep(c(37, 42, 46), 2), # sampling effort changed btw pt. concep & 37 degrees
+  lats.north     = rep(c(42, 46, 49), 2)
+)
+
 biomass <- nwfscSurvey::Biomass.fn(dir = NULL, 
                                    dat = wcgbts_catch,  
-                                   strat.df = strata)
+                                   strat.df = wcgbts_strata)
 
 # Compare to model-based indices
 lognormal.ind <- read.csv(
@@ -473,3 +498,28 @@ ggridges::geom_density_ridges(aes(x = residuals, y = factor(Year)), alpha = 0.25
   geom_vline(xintercept = 0)
 
 head(predictions)
+
+
+# Get fraction of survey by state -----------------------------------------
+
+readr::read_csv('Q:/assessments/assessment data/2023 assessment cycle/canary rockfish/wcgbts/delta_lognormal/index/est_by_area.csv') |>
+  dplyr::select(area, year, est) |>
+  tidyr::pivot_wider(names_from = area, values_from = est) |>
+  tail(5) |>
+  dplyr::summarise(dplyr::across(WA:CA, ~ mean(.x))) |>
+  dplyr::mutate(dplyr::across(WA:CA, ~ .x/(WA+OR+CA)))
+
+purrr::imap(biomass$All$Strata, ~ tibble::tibble(year = as.numeric(stringr::str_remove(.y, '[:alpha:]+')),
+                                                 WA = sum(.x[c('wa.deep', 'wa.shallow'),'Bhat']),
+                                                 OR = sum(.x[c('or.deep', 'or.shallow'),'Bhat']),
+                                                 CA = sum(.x[c('s.ca.deep', 's.ca.shallow', 'n.ca.deep', 'n.ca.shallow'), 'Bhat']))) |>
+  purrr::list_rbind() |>
+  # tail(5) |>
+  dplyr::summarise(dplyr::across(WA:CA, ~ mean(.x))) |>
+  dplyr::mutate(dplyr::across(WA:CA, ~ .x/(WA+OR+CA)))
+
+# Design-based is very different over last 5 years due to 2 big catch events off of OR
+# More similar to model-based over full time series
+# Model-based is basically the same last 5 years or full time series
+# Use model-based last 5 years.
+
