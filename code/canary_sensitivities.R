@@ -278,6 +278,9 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE, 
           skipfinished = FALSE)
 
+pp <- SS_output(here('models/sensitivities',new_name))
+SS_plots(pp, plot = c(1:26))
+
 xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
                                         subdir = c(base_mod_name,
                                                    'sensitivities/M_break10',
@@ -1156,10 +1159,12 @@ data_pretty <- c('No sparse comps',
 productivity <- c('est_h',
                   'est_male_M',
                   'M_ramp',
+                  'M_break20',
                   'single_M')
 prod_pretty <- c('Estimate h',
                  'Estimate male M',
                  'M ramp',
+                 'M break 20',
                  'Single M')
 
 sens_names <- c(selectivity,
