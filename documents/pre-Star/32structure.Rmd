@@ -76,7 +76,7 @@ in the 2015 assessment, we simplified our fleets where reasonable. We
 treated survey fleets as exclusively survey fleets, and did not model
 the small amount of catches from these surveys. It is no longer standard
 practice to include surveys as fishing fleets in West Coast assessment.
-We also removed the California at-sea-hake fishery composition data,
+We also removed the California at-sea hake fishery composition data,
 which was very sparse, and incorrectly assigned to California, and
 combined selectivity for the Washington and Oregon fleets, which have
 similar dynamics and fish across state boundaries.
@@ -203,7 +203,7 @@ selectivity including unmirroring fleets and using an alternative parameterizati
 
 ### Key Assumptions and Structural Choices
 
-#### Definition of Fleets and Areas
+#### Definition of Fleets and Areas {#fleets}
 
 To foster comparability between the coastwide base model and a
 state-stratified model more similar to the 2015 base model, we retain
@@ -308,7 +308,7 @@ The model contains four primary likelihood components:
 1.  Fit to survey indices of abundance (included for fleets 28-31).
 2.  Fit to length composition samples (included for fleets 1-12 with the
     exception of fleet 10, and fleets 28-30, i.e., all fishing fleets
-    except the foreign fleets, California at-sea-hake, and the
+    except the foreign fleets, California at-sea hake, and the
     pre-recruit survey).
 3.  Fit to age composition samples (marginal ages are included for
     fisheries, i.e., fleets 1-6 and 8-9, and 11-12, and conditional
