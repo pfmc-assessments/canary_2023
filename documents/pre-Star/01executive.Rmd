@@ -106,10 +106,7 @@ readr::read_csv(file.path(model_dir, 'tables', 'd_SPR_ES.csv'), name_repair = 'm
 
 ## Ecosystem considerations{-}
 
-Replace text with
-a summary of reviewed environmental and ecosystem factors that appear to be correlated with stock dynamics.
-These may include variability in they physical environment, habitat, competitors, prey, or predators that directly or indirectly affects the stock's status, vital rates (growth, survival, productivity/recruitment) or range and distribution.
-Note which, if any, ecosystem factors are used in the assessment and how (e.g., as background information, in data preparations, as data inputs, in decisions about model structure).
+Although ecosystem factors have not been explicitly modeled in this assessment, there are several important aspects of the recent California current ecosystem that appear to warrant consideration. Lingcod, a potentially important predator of small canary, have rebuilt over the last two decades. To the extent that the component of natural mortality of canary rockfish added by predation from Lingcod and other predators has been increasing over recent years, recruitment may be underestimated. This effect could also lead to longer than predicted recovery times for `r spp`. Conversely, Pacific salmon are known to consume young canary rockfish, and their populations have generally declined in recent years. Canary rockfish recruitment, growth, and condition have all been found to be associated with the \gls{pdo}, as well as other basin-scale indices. However, relationships between productivity of fish populations with non-mechanistic basin-scale indicators such as the \gls{pdo} have been degrading in recent years due to climate change, so these relationships may not be reliable predictors moving forward. According to a recent California Current climate vulnerability analysis that ranked species on a scale of low, moderate, high, and very high, `r spp` have high exposure and high sensitivity to climate change, similar to most rockfish. The prevalence of a strong 1999 year-class for many west coast groundfish species suggest that environmentally driven recruitment variation may be correlated among species with relatively diverse life-history strategies. Much research is currently underway to explore these phenomena, and it appears likely that more explicit exploration of ecosystem processes and influences may be able to be incorporated into management both within and outside of future `r spp` stock assessments.
 
 ## Reference points{-}
 
@@ -130,6 +127,8 @@ readr::read_csv(file.path(model_dir, "tables", "e_ReferencePoints_ES.csv"), name
 
 ## Management performance{-}
 
+Total mortality is generally well below the annual catch limit. However, from 2013--2016 the stock was designated as overfished. During that time, attainment averaged around 60%, though in 2015 the full \gls{acl} was nearly achieved (93% attainment). Beginning, in 2017, the \gls{acl} increased more than tenfold with the lifting of the overfished designation. Since that time, catches have increased and attainment has averaged around 40%.  
+
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/ACL_history.csv')) |>
   knitr::kable(caption = 'The OFL (overfishing limit), ABC (allowable biological catch), ACL (annual catch limit), and total mortality (landings + dead discards) in metric tons',
@@ -146,8 +145,13 @@ Include OFL (encountered), OFL (retained), and OFL (dead) if different due to di
 
 ## Unresolved problems and major uncertainties{-}
 
-Replace text with
-any special issues that complicate scientific assessment, questions about the best model scenario, etc.
+Although not required before the STAR panel, below is a description of problems and uncertainties as identified by the STAT to help guide discussion during review. This section will be more fully completed following the STAR panel. 
+
+The major uncertainty in the opinion of the STAT is treatment of natural mortality. This issue has been a long-standing uncertainty for `r spp` assessments, and remains so. This uncertainty arises from observations in survey and fishery data that age-based sex-ratios are male skewed starting around age 20. This could be explained by females being less susceptible to capture, or to fewer females in the population, or to some combination of both. No refugia for old females has been found thus far suggesting mortality may be a more probable culprit, however sex ratios within Oregon fishery data have been nearer to equal in the last decade. Regardless, there is uncertainty on how best to model this dynamic. 
+
+The choice of how to model natural mortality matters. Assuming sex-specific age-invariant natural mortality results in a more pessimistic outlook, because With the added length and age samples, natural mortality for females is estimated near to the prior estimate (0.066). If natural mortality is age-dependent, female natural mortality is estimated to be higher at older ages, and the magnitude of the value increases with the age at which the break in natural mortality occurs. A higher natural mortality estimate results in a more optimistic population estimate that increases dramatically from low abundance in the 2000s. Modeling selectivity as sex-dependent, as in the base model, reflects a middle ground in the estimate of natural mortality, in that age-invariant estimates between males and females differ by 18 percent (with females higher), while avoiding the less common biological assumption that natural mortality increases with age.  
+
+A challenge with the current base model is that the likelihood surface around the maximum likelihood estimate is flat, likely due to the number of selectivity parameters and correlation among them. Jittering suggests that solutions on the likelihood surface near to the base model produce similar population trajectories, giving support for a similar region of estimates on the likelihood surface (i.e., jittering finds estimates with lower negative log-likelihoods, but within the same mode). Modeling selectivity as a three parameter double-normal reduces correlation in parameters compared to a four parameter formulation; however modeling sex-dependent selectivity reintroduces a fourth selectivity parameter. Simplifying the number of selectivity parameters by reducing the number of time-varying blocks degrades model fit by a large degree and does not appear to be a solution for reducing model complexity. 
 
 ## Decision table and projections{-}
 
@@ -155,10 +159,23 @@ These are to be completed after the STAR panel
 
 ## Scientific uncertainty{-}
 
-Replace text with
-the sigma value and the basis for its calculation.
+The model estimate of $\sigma_\text{OFL}$, the uncertainty around the overfishing limit, is `r round(model$OFL_sigma, 3)`. Given the significant structural uncertainty in the model, particularly around natural mortality, selectivity, and the processes leading to the lack of older females in the population, this is considered an underestimate. It is also lower than the default Category 1 uncertainty value of 0.5, so projections will use the default value of $\sigma_\text{OFL} = 0.5$.
 
 ## Research and data needs{-}
 
-Replace text with
-information gaps that seriously impede the stock assessment.
+We list current research recommendations and prioritize them from high to low. Lower priority needs should not not be interpreted as unimportant, but rather lower relative to other priorities listed here.
+
+1.  Continued research into the rationale for skewed sex ratios and empirical studies to estimate natural mortality rates, as well as basic life history research for fecundity and growth. This remains a critical uncertainty for canary rockfish, as well as other species of rockfish along the U.S. West Coast, but one that remains largely unknown. The rate of natural mortality as well as whether and to what extent it increases with age is a major source of uncertainty for this assessment, as it has been for past assessments. Recent evidence suggesting sex ratios are nearer unity may be informative, but further research to understand the mechanism by which this occurs would be beneficial for understand the ability of `r spp` to recover. (High)
+
+2.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of a non-trawl coast-wide fishery-independent indices. This could mean an expansion of the \gls{s-hkl} into more northern waters, or taking advantage of developments in model-based index standardization to stitch together multiple similar overlapping fishery-independent non-trawl sampling programs that have occurred over smaller spatial and temporal scales than the \gls{s-wcgbt}. This also has the potential to provide biological data in a variety of habitats and across latitudinal gradients which when aged using current best practices can help inform biological parameters that have been suggested by Brooks [-@Brooks_thesis_2021] to occur above the southern range of canary rockfish but were not seen to the same extent in current \gls{s-wcgbt} data. (Medium)
+
+3.  Similar to recommendations 1 and 2, other biological relationships can be updated to better understand dynamics for `r spp`. Few samples of canary rockfish are available to inform estimates of fecundity. Fecundity for canary rockfish was based on a genus level relationship from @dick_meta-analysis_2017. The resulting curve from these two relationships did not greatly differ but did result in changes in the spawning output within the bridging analysis. Greater species-specific information on canary rockfish fecundity would ensure that biological relationships better reflect individual species dynamics should they differ from other species in their genus. (Medium)
+
+4.  This assessment model does not include any ecosystem or climate considerations, but `r spp` are considered highly vulnerable and highly exposed to climate change. To date, most research has relied on non-mechanistic basin-scale indices that may not be reliable predictors of how environmental conditions will impact productivity moving forward. In addition, the lack of correspondence between recruitment deviations estimated in this assessment and in British Columbia is concerning, as recruitment deviations are often used as response variables to understand environmental drivers of productivity. We recommend further research into environmental drivers of canary rockfish productivity to understand how future and past climate change impact both short-term and long-term changes in productivity. Doing this research in a multispecies manner across groundfish species, particularly those with similar life histories, may lead to more statistical power to gain new insight. (Medium)
+
+5.  Further exploration of differences in spatial and non-spatial modeling structure, stability, and results. The structure of `r spp` stock assessments has varied over time. The 2015 assessment added population structure so as to more explicitly describe potential regional differences in depletion. For this assessment we return to a coastwide model for reasons explain previously. Although the 2015 model showed little difference in results between a spatial and coastwide model, which is also supported through bridging analyses both before and after data weighting, balancing spatial explorations of differences in exploitation, movement, or biological patterns with the realities of model complexity and stability within the time frame of production stock assessments is challenging. Given that this issue could apply to other species in addition to `r spp` we suggest the possibility of establishing a process by which research-based assessments can be done to explore these issues, similar to the research track process on the east coast of the U.S. (Medium)
+
+6.  Research to inform understanding of movement rates for a spatial model, as well as improve estimates of natural mortality. Large scale movement patterns for `r spp` are generally unknown. However, even a small number of tagging samples collected intermittently can improve model estimates [@goethel_tagging_2019]. Any method that determines both the extent and direction of movement would be useful; the method need not be limited to tagging. (Low)
+
+7.  Ageing error matrices were not updated from the 2015 assessment. Revision of the ageing error matrices, incorporating the new aged `r spp` data and utilizing new analytical methods are topics for future research. Potential bias in ageing of old `r spp` based on bomb-radiocarbon data (A. Stephens, \gls{nwfsc}, personal communication, May 2023) should also be considered in these analyses. (Low)
+
