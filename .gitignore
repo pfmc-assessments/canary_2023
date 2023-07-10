@@ -59,6 +59,7 @@ literature/
 *.jpeg
 data_workshop_figs/
 data_explore_figs/
+*.zip
 
 # stock synthesis files
 admodel.cov
