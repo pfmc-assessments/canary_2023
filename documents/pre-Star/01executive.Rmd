@@ -33,24 +33,19 @@ knitr::kable(tab,
              caption = 'Summary of catches (mt) by fleet over the last ten years. Discards are included in catches for each fleet, so total landings and total dead catch are equivalent.', 
              label = 'es-catch',
              format = 'latex',
-             booktabs = TRUE)
+             booktabs = TRUE) |> 
+  kableExtra::landscape() |>
+  kableExtra::kable_styling(
+      font_size = 9)
 ```
 
 ![Catches of canary rockfish over full assessment period by fleet \label{fig:es-catch}](../figures/plots/catch2%20landings%20stacked.png){width="100%" height="100%" alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
 
 ## Data and assessment {.unnumbered}
 
-`r Spp` was most recently assessed in 2015 using an age-structured population model that allowed for spatial differences in recruitment deviations and depletion by state. The current assessment uses an areas-as-fleets approach to account for different sizes and ages of fish available in each state, but returns to a coastwide population model configuration.
+`r Spp` was most recently assessed in 2015 using an age-structured population model that allowed for spatial differences in recruitment deviations and depletion by state. The current assessment uses an areas-as-fleets approach to account for different sizes and ages of fish available in each state, but returns to a coastwide population model configuration. 
 
-This assessment uses the stock assessment framework Stock Synthesis
-
-```{r es-modelversion, echo=FALSE}
-if (exists("model")) {
-  strsplit(model$SS_version,";")[[1]][1]
-}
-```
-
-(SS3). Each assessment model is a two-sex age-structured model operating on an annual time step covering the period `r model$startyr` to `r model$endyr`, with a twelve-year projection, and assumes an unfished population prior to `r model$startyr`. Population dynamics are modeled for ages 1 through 35, with age 1 including dynamics for age 0, and age 35 being the accumulator age. The model also allows for differences in selectivity between sexes.
+This assessment uses the stock assessment framework Stock Synthesis (SS3; version 3.30.21.00). Each assessment model is a two-sex age-structured model operating on an annual time step covering the period 1892 to 2022, with a twelve-year projection, and assumes an unfished population prior to 1897. Population dynamics are modeled for ages 1 through 35, with age 1 including dynamics for age 0, and age 35 being the accumulator age. The model also allows for differences in selectivity between sexes.
 
 This assessment includes updated catches from five fleets (commercial trawl, non-trawl, foreign, and at-sea hake, and recreational), each of which is divided across three states, fishery-independent indices from the \gls{s-wcgbt} and \gls{s-tri}, age and length data from the fishery and surveys, and a pre-recruit survey. It extends all of these data sets from the previous assessment through 2022, and uses updated age data from additional aged otoliths from the 1986 \gls{s-tri} and other years and sources.
 
@@ -64,33 +59,53 @@ The base model estimate of spawning output is similar to previous assessments hi
 
 ```{r results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, 'tables', 'b_SSB_ES.csv'), name_repair = 'minimal') |>
-  knitr::kable(caption = 'Spawning output (millions of eggs) and fraction of unfished spawning output for last ten years. Upper and lower confidence intervals are 2.5% and 97.5%, respectively.', 
-               label = 'es-ssb',
+  data.frame() |>
+  table_format(caption = "Spawning output (millions of eggs) and fraction of unfished spawning output for last ten years. Upper and lower confidence intervals are 2.5 percent and 97.5 percent, respectively.",
+               label = "es-ssb",
                digits = 2,
-               output = 'latex',
-               booktabs = TRUE)
+               col.names = c("Year", "Spawning Output", "Lower Interval", "Upper Interval", "Fraction Unfished", "Lower Interval", "Upper Interval"),
+               row.names = FALSE)
+  # knitr::kable(caption = 'Spawning output (millions of eggs) and fraction of unfished spawning output for last ten years. Upper and lower confidence intervals are 2.5 percent and 97.5 percent, respectively.', 
+  #              label = 'es-ssb',
+  #              digits = 2,
+  #              format = 'latex',
+  #              booktabs = TRUE)
 ```
+
+\newpage
 
 ![Estimate of spawning output (millions of eggs) over full assessment period. Dashed lines cover 95% confidence interval. \label{fig:ssb-es}](../figures/plots/ts7_Spawning_output_with_95_asymptotic_intervals_intervals.png){width="100%" height="100%" alt="Figure showing lowering of spawning output into 1990s and slow increase since"}
 
 ![Estimate of relative spawning depletion over full assessment period. Dashed lines cover 95% confidence interval. \label{fig:depl-es}](../figures/plots/ts9_Relative_spawning_output_intervals.png){width="100%" height="100%" alt="Figure showing similar trends to spawning output surpassing the 0.4 target around 1980, going below the 0.25 threshold shortly thereafter, and then recovering to between the threshold and target starting in around 2015"}
 
+\newpage
+
 ## Recruitment {.unnumbered}
 
-Replace text with trends and current levels relative to virgin or historic levels and description of uncertainty.
+Recruitment dynamics (Table \ref{tab:recr-es}, Figures \ref{fig:rec-es} and \ref{fig:recdev-es}) are assumed to follow a Beverton-Holt stock-recruit function and the steepness parameter was fixed at the value of 0.72, which is the mean of steepness prior probability distribution. The level of virgin recruitment (ln~R~0) is estimated to inform the magnitude of the initial stock size. Annual recruitment is treated as stochastic with ‘main’ recruitment deviations estimated for 1960--2022 and ‘early’ deviations for 1892--1959. 
+
+The recruitment time series is punctuated by a large recruitment event in 1968, following by a generally declining trend until the 2000s where recruitment varies around a relatively stable average. Among recent years large events occurred in 2003, 2007, and 2013, and 2021--2023. The 1965 recruitment was estimated at about 7 million age-0 recruits while the latter six were in the 2.5-3 million range. Recent (since 2000) recruitment has averaged around 2.3 million recruits. Recruitment follows a cyclical pattern since 2000 but has more often had deviations below the average (negative recruitment deviations) than above the average.
 
 ```{r results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, 'tables', 'c_Recr_ES.csv'), name_repair = 'minimal') |>
-  knitr::kable(caption = 'Estimates of recruitment (1000s of fish) and recruitment deviations over last ten years with 95% confidence interval',
-               label = 'recr-es',
+  data.frame() |>
+  table_format(caption = "Estimates of recruitment (1000s of fish) and recruitment deviations over last ten years with 95 percent confidence interval",
+               label = "recr-es",
                digits = 2,
-               output = 'latex',
-               booktabs = TRUE)
+               col.names = c("Year", "Recruitment", "Lower Interval", "Upper Interval", "Recruitment Deviations", "Lower Interval", "Upper Interval"),
+               row.names = FALSE)
+  # knitr::kable(caption = 'Estimates of recruitment (1000s of fish) and recruitment deviations over last ten years with 95 percent confidence interval',
+  #              label = 'recr-es',
+  #              digits = 2,
+  #              format = 'latex',
+  #              booktabs = TRUE)
 ```
 
 ![Estimate of age-0 recruitment (1000s of fish) over full assessment period. Bars represent 95% confidence intervals. \label{fig:rec-es}](../figures/plots/ts11_Age-0_recruits_(1000s)_with_95_asymptotic_intervals.png){width="100%" height="100%" alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
 
 ![Estimate of multiplicative devations from stock-recruit relationship (recruitment deviations) over full assessment period. Bars represent 95% confidence intervals. Blue points are early and forecast recruitment deviations, while black points are for the main period. \label{fig:recdev-es}](../figures/plots/recdevs2_withbars.png){width="100%" height="100%" alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
+
+\newpage
 
 ## Exploitation status {.unnumbered}
 
@@ -100,10 +115,17 @@ Fishing intensity rose from zero to close to the target around 1950, and then ro
 
 ```{r results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, 'tables', 'd_SPR_ES.csv'), name_repair = 'minimal') |>
-  knitr::kable(caption = 'Estimates of 1-SPR (spawning potentital ratio) and exploitation rate over last ten years with 95% confidence interval.',
-               label = 'spr-es',
+  data.frame() |>
+  table_format(caption = "Estimates of 1-SPR (spawning potentital ratio) and exploitation rate over last ten years with 95 percent confidence interval.",
+               label = "spr-es",
                digits = 2,
-               output = 'latex')
+               col.names = c("Year", "1-SPR", "Lower Interval", "Upper Interval", "Exploitation Rate", "Lower Interval", "Upper Interval"),
+               row.names = FALSE)
+  # knitr::kable(caption = 'Estimates of 1-SPR (spawning potentital ratio) and exploitation rate over last ten years with 95 percent confidence interval.',
+  #              label = 'spr-es',
+  #              digits = 2,
+  #              format = 'latex',
+  #              booktabs = TRUE)
 ```
 
 ![Estimates of 1-SPR (spawning potential ratio, i.e., fishing intensity) versus spawning output relative to unfished level for full time series. Vertical dashed lines are at 0.25 (limit), 0.4 (target), and 1 (unfished level). Horizontal dashed lines are at 0.5 (target) and 1 (theoretical limit). Arrows point in chronological direction with red to yellow colors representing years early in the assessment period and dark blue representing present-day. Gray oval is 95% confidence ellipse for joint distribution of depletion and fishing intensity in terminal model year (2022), with solid gray vertical and horizontal lines representing 95% confidence interval of each quantity individually. \label{fig:kobe-es}](../figures/plots/SPR4_phase.png){height="100%" width="100%" alt="Figure showing population starts at unfished levels, slowly declines with fishing intensity around target levels until 1970s, then fishing intensity increases and depletion declines below target until around 2000, when fishing intensity rapidly declines and population slowly rebuilds. Around 2015 fishing intensity increases towards target levels with depletion still slightly below target"}
