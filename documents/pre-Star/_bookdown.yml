@@ -6,6 +6,7 @@ rmd_files: [
   '00bibliography.Rmd',
   '00title.Rmd',
   '02disclaimer.Rmd',
+  '01executive.Rmd',
   '11introduction.Rmd',
   '20data.Rmd',
   '21f-.Rmd',
