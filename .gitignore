@@ -49,6 +49,7 @@ literature/
 
 # ignore figures (take up a lot of space)
 *.png
+!figure_title.png
 !documents/figures/*.png
 !documents/figures/sensitivities/*.png
 !models/5_5_0_hessian_retro/*.png
