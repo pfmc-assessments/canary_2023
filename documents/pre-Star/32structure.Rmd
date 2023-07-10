@@ -303,7 +303,7 @@ of variation are included when estimating growth parameters.
 
 #### Model Likelihood Components
 
-The model contains four primary likelihood components:
+The model contains five primary likelihood components:
 
 1.  Fit to survey indices of abundance (included for fleets 28-31).
 2.  Fit to length composition samples (included for fleets 1-12 with the
@@ -315,7 +315,7 @@ The model contains four primary likelihood components:
     age-at-length samples are included for surveys, fleets 28-30).
 4.  Penalties on recruitment deviations which range from 1892-2022 as
     well as penalties from prior likelihoods for parameters estimated
-    with prior distributions.
+    with prior distributions and for uncertainty around catches.
 
 Indices of abundance are assumed to exhibit lognormal measurement
 errors, where the log-standard deviation from the model used to
@@ -327,7 +327,7 @@ for the composition data, and where this input sample size is
 subsequently weighted to account for additional sources of
 overdispersion. Recruitment deviations are assumed to follow a lognormal
 distribution, where the standard deviation of this distribution is set
-to be 0.5. Priors for select biological parameters are described below.
+to be 0.5. Total removals are assumed to follow a lognormal distribution with standard deviation set to 0.05. Priors for select biological parameters are described below.
 
 #### Data Weighting
 

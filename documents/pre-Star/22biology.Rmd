@@ -242,9 +242,8 @@ CAPS break-and-burn reads, and the \gls{wdfw} break-and-burn reads have
 a positive bias relative to CAPS break-and-burn reads [+3.76 yrs. at age
 30, their Figure 38 in @thorson_status_2016].
 
-A qualitative examination of the new break and burn double reads showed
-no evidence that the ageing estimation had changed over time relative to
-the samples included in the previous analyses. Furthermore, a new
+There is little evidence to suggest ageing estimation has changed over time relative to
+the samples included in the previous analyses. A new
 TMB-based ageing error software has been developed (A. Punt, University of Washington, personal communication, 2023)
 but has not yet been fully explored or documented. Therefore, revision
 of the ageing error matrices has been left as a research project to be
