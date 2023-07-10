@@ -4,17 +4,15 @@ executive[["stock"]] <- paste0("This assessment reports the status of ",
   spp, " (_", spp_latin, "_) off the U.S. West Coast using data through 2022.")
 ```
 
-# Executive summary{-}
+# Executive summary {.unnumbered}
 
-## Stock{-}
+## Stock {.unnumbered}
 
 `r executive[["stock"]]` The stock of `r spp` was modeled as a single coastwide population. While `r spp` are modeled as a single population, spatial aspects are addressed through geographic separation of data sources/fleets where possible. There is currently no genetic evidence suggesting distinct biological stocks of `r spp` off the U.S. West Coast. This assessment does not account for populations located in Canadian or Mexican waters and assumes that these northern and southern populations do not contribute to nor take from the population being assessed here.
 
-
-## Catches{-}
+## Catches {.unnumbered}
 
 `r Spp` is caught in both commercial and recreational fisheries off the U.S. West Coast, with the majority of catches coming from commercial sources (Figure \ref{fig:es-catch}). The rockfish fishery off the U.S. West Coast developed off California late in the 19th century and was catching an average of almost 2,500 metric tons per year over the period 1916-1940 (with an increase in catches in 1916, during World War I). To the north, the rockfish fishery developed slowly and became established during the early 1940s, when the United States became involved in World War II and wartime shortages of red meat created an increased demand for other sources of protein. Rockfish catches dropped somewhat following the war, and were generally stable from the 1950s to the 1960s. In 1977, when the \gls{msfcma} was enacted, the large foreign-dominated rockfish fishery that had developed since the late 1960s had its catches eliminated, and the domestic trawl fishery subsequently increased its catches. The trawl fishery reached a peak in the early 1980s (1982: 5,155 mt) and subsequently decreased after the establishment of strict management restrictions starting in the mid-1990s. The decrease in the trawl fishery allowed the recreational and non-trawl fisheries to take a larger proportion of total catch beginning in the 2000s. Following the removal of the overfished designation in 2015, catches increased considerably, though to levels well below those seen during much of the period of industrial fishing. Today, most catch still occurs in the trawl fishery (particularly in a growing midwater trawl fleet), though there is a sizable recreational component of landings as well (Table \ref{tab:es-catch}).
-
 
 ```{r results='asis', message=FALSE}
 tab <- readr::read_csv(file.path(model_dir, 'tables', 'a_Catches_ES.csv')) |>
@@ -33,29 +31,29 @@ knitr::kable(tab,
              booktabs = TRUE)
 ```
 
-![Catches of canary rockfish over full assessment period by fleet \label{fig:es-catch}](../figures/plots/catch2 landings stacked.png){width="100%" height="100%" alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
+![Catches of canary rockfish over full assessment period by fleet \label{fig:es-catch}](../figures/plots/catch2%20landings%20stacked.png){width="100%" height="100%" alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
 
-## Data and assessment{-}
+## Data and assessment {.unnumbered}
 
+`r Spp` was most recently assessed in 2015 using an age-structured population model that allowed for spatial differences in recruitment deviations and depletion by state. The current assessment uses an areas-as-fleets approach to account for different sizes and ages of fish available in each state, but returns to a coastwide population model configuration.
 
-`r Spp` was most recently assessed in 2015 using an age-structured population model that allowed for spatial differences in recruitment deviations and depletion by state. The current assessment uses an areas-as-fleets approach to account for different sizes and ages of fish available in each state, but returns to a coastwide population model configuration. 
+This assessment uses the stock assessment framework Stock Synthesis
 
-This assessment uses the stock assessment framework Stock Synthesis 
-```{r es-modelversion, echo=FALSE} 
+```{r es-modelversion, echo=FALSE}
 if (exists("model")) {
   strsplit(model$SS_version,";")[[1]][1]
 }
 ```
-(SS3). Each assessment model is a two-sex age-structured model operating on an annual time step covering the period 1892 to 2022, with a twelve-year projection, and assumes an unfished population prior to 1897. Population dynamics are modeled for ages 1 through 35, with age 1 including dynamics for age 0, and age 35 being the accumulator age. The model also allows for differences in selectivity between sexes.
 
-This assessment includes updated catches from five fleets (commercial trawl, non-trawl, foreign, and at-sea hake, and recreational), each of which is divided across three states, fishery-independent indices from the \gls{s-wcgbt} and \gls{s-tri}, age and length data from the fishery and surveys, and a pre-recruit survey. It extends all of these data sets from the previous assessment through 2022, and uses updated age data from additional aged otoliths from the 1986 \gls{s-tri} and other years and sources. 
+(SS3). Each assessment model is a two-sex age-structured model operating on an annual time step covering the period `r model$startyr` to `r model$endyr`, with a twelve-year projection, and assumes an unfished population prior to `r model$startyr`. Population dynamics are modeled for ages 1 through 35, with age 1 including dynamics for age 0, and age 35 being the accumulator age. The model also allows for differences in selectivity between sexes.
 
-Growth is assumed to follow the von Bertalanffy growth model, and the assessment explicitly estimates all parameters describing somatic growth. Recruitment dynamics are assumed to follow the Beverton-Holt stock-recruit function, and recruitment deviations are estimated. In addition, this assessment includes a maturity curve based on newly analyzed ovaries; updated biological relationships for fecundity, steepness, and mortality; and new assumptions on the modeling of natural mortality. 
+This assessment includes updated catches from five fleets (commercial trawl, non-trawl, foreign, and at-sea hake, and recreational), each of which is divided across three states, fishery-independent indices from the \gls{s-wcgbt} and \gls{s-tri}, age and length data from the fishery and surveys, and a pre-recruit survey. It extends all of these data sets from the previous assessment through 2022, and uses updated age data from additional aged otoliths from the 1986 \gls{s-tri} and other years and sources.
+
+Growth is assumed to follow the von Bertalanffy growth model, and the assessment explicitly estimates all parameters describing somatic growth. Recruitment dynamics are assumed to follow the Beverton-Holt stock-recruit function, and recruitment deviations are estimated. In addition, this assessment includes a maturity curve based on newly analyzed ovaries; updated biological relationships for fecundity, steepness, and mortality; and new assumptions on the modeling of natural mortality.
 
 Model uncertainty is explicitly included in this assessment by parameter estimation uncertainty. Model specification uncertainty is explored through sensitivity analyses addressing alternative input assumptions such as data treatment and weighting, and treatment of life history parameters, selectivity, and recruitment. Base models were selected that best fit the observed data while balancing the desire to capture the central tendency across sources of uncertainty, ensure model realism and tractability, and promote robustness to potential model mis-specification.
 
-
-## Stock biomass and dynamics{-}
+## Stock biomass and dynamics {.unnumbered}
 
 The base model estimate of spawning output is similar to previous assessments historically with unfished spawning output, in millions of eggs, estimated to be 8,150, and declining to a minimum of 515 in 1995. Estimates since 1995 have differed from the last assessment in that spawning output has increased at a slower rate; to a recent peak of 2,651 in 2023. In terms of spawning output relative to unfished, the minimum was 0.063 in 1995, and the current 2023 estimate is 0.325 (Table \ref{tab:es-ssb}, Figures \ref{fig:ssb-es} and \ref{fig:depl-es}).
 
@@ -72,11 +70,9 @@ readr::read_csv(file.path(model_dir, 'tables', 'b_SSB_ES.csv'), name_repair = 'm
 
 ![Estimate of relative spawning depletion over full assessment period. Dashed lines cover 95% confidence interval. \label{fig:depl-es}](../figures/plots/ts9_Relative_spawning_output_intervals.png){width="100%" height="100%" alt="Figure showing similar trends to spawning output surpassing the 0.4 target around 1980, going below the 0.25 threshold shortly thereafter, and then recovering to between the threshold and target starting in around 2015"}
 
-## Recruitment{-}
+## Recruitment {.unnumbered}
 
-Replace text with
-trends and current levels relative to virgin or historic levels and
-description of uncertainty.
+Replace text with trends and current levels relative to virgin or historic levels and description of uncertainty.
 
 ```{r results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, 'tables', 'c_Recr_ES.csv'), name_repair = 'minimal') |>
@@ -89,13 +85,11 @@ readr::read_csv(file.path(model_dir, 'tables', 'c_Recr_ES.csv'), name_repair = '
 
 ![Estimate of age-0 recruitment (1000s of fish) over full assessment period. Bars represent 95% confidence intervals. \label{fig:rec-es}](../figures/plots/ts11_Age-0_recruits_(1000s)_with_95_asymptotic_intervals.png){width="100%" height="100%" alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
 
-![Estimate of multiplicative devations from stock-recruit relationship (recruitment deviations) over full assessment period. Bars represent 95% confidence intervals. Blue points are early and forecast recruitment deviations, while black points are for the main period. \label{fig:recdev-es} ](../figures/plots/recdevs2_withbars.png){width="100%" height="100%" alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
+![Estimate of multiplicative devations from stock-recruit relationship (recruitment deviations) over full assessment period. Bars represent 95% confidence intervals. Blue points are early and forecast recruitment deviations, while black points are for the main period. \label{fig:recdev-es}](../figures/plots/recdevs2_withbars.png){width="100%" height="100%" alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
 
-## Exploitation status{-}
+## Exploitation status {.unnumbered}
 
-Replace text with
-total catch divided by exploitable biomass or SPR harvest rate.
-
+Replace text with total catch divided by exploitable biomass or SPR harvest rate.
 
 ```{r results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, 'tables', 'd_SPR_ES.csv'), name_repair = 'minimal') |>
@@ -107,15 +101,13 @@ readr::read_csv(file.path(model_dir, 'tables', 'd_SPR_ES.csv'), name_repair = 'm
 
 ![Estimates of 1-SPR (spawning potential ratio, i.e., fishing intensity) versus spawning output relative to unfished level for full time series. Vertical dashed lines are at 0.25 (limit), 0.4 (target), and 1 (unfished level). Horizontal dashed lines are at 0.5 (target) and 1 (theoretical limit). Arrows point in chronological direction with red to yellow colors representing years early in the assessment period and dark blue representing present-day. Gray oval is 95% confidence ellipse for joint distribution of depletion and fishing intensity in terminal model year (2022), with solid gray vertical and horizontal lines representing 95% confidence interval of each quantity individually. \label{fig:kobe-es}](../figures/plots/SPR4_phase.png){height="100%" width="100%" alt="Figure showing population starts at unfished levels, slowly declines with fishing intensity around target levels until 1970s, then fishing intensity increases and depletion declines below target until around 2000, when fishing intensity rapidly declines and population slowly rebuilds. Around 2015 fishing intensity increases towards target levels with depletion still slightly below target"}
 
-## Ecosystem considerations{-}
+## Ecosystem considerations {.unnumbered}
 
 Although ecosystem factors have not been explicitly modeled in this assessment, there are several important aspects of the recent California current ecosystem that appear to warrant consideration. Lingcod, a potentially important predator of small canary, have rebuilt over the last two decades. To the extent that the component of natural mortality of canary rockfish added by predation from Lingcod and other predators has been increasing over recent years, recruitment may be underestimated. This effect could also lead to longer than predicted recovery times for `r spp`. Conversely, Pacific salmon are known to consume young canary rockfish, and their populations have generally declined in recent years. Canary rockfish recruitment, growth, and condition have all been found to be associated with the \gls{pdo}, as well as other basin-scale indices. However, relationships between productivity of fish populations with non-mechanistic basin-scale indicators such as the \gls{pdo} have been degrading in recent years due to climate change, so these relationships may not be reliable predictors moving forward. According to a recent California Current climate vulnerability analysis that ranked species on a scale of low, moderate, high, and very high, `r spp` have high exposure and high sensitivity to climate change, similar to most rockfish. The prevalence of a strong 1999 year-class for many west coast groundfish species suggest that environmentally driven recruitment variation may be correlated among species with relatively diverse life-history strategies. Much research is currently underway to explore these phenomena, and it appears likely that more explicit exploration of ecosystem processes and influences may be able to be incorporated into management both within and outside of future `r spp` stock assessments.
 
-## Reference points{-}
+## Reference points {.unnumbered}
 
-Replace text with
-management targets and definition of overfishing, including the harvest rate that brings the stock to equilibrium at $B_{40\%}$, i.e., the $B_{MSY}$ proxy and the equilibrium stock size that results from fishing at the default harvest rate, i.e., the $F_{MSY}$ proxy.
-Include Table of estimated reference points for ssb, SPR, exploitation rate, and yield based on SSB proxy for MSY, SPR proxy for MSY, and estimated MSY values.
+The management target for `r spp` is 40% of unfished spawning output, or $B_{40\%}$. This is associated with an annual exploitation rate of `r round(model$derived_quants['annF_Btgt', 'Value'], 0)` yr^-1^ (95% confidence interval, `r stringr::str_flatten(round(qnorm(c(0.025, 0.975), model$derived_quants['annF_Btgt', 'Value'], model$derived_quants['annF_Btgt', 'StdDev']), 0), collapse = '-')`) and yield of `r round(model$derived_quants['Dead_Catch_Btgt', 'Value'], 0)` (`r stringr::str_flatten(round(qnorm(c(0.025, 0.975), model$derived_quants['Dead_Catch_Btgt', 'Value'], model$derived_quants['Dead_Catch_Btgt', 'StdDev']), 0), collapse = '-')`). The target fishing intensity is $1-\text{SPR}=0.5$ (where SPR is spawning potential ratio), which leads to an equilibrium spawning output of `r round(model$derived_quants['SSB_SPR', 'Value'], 0)` million eggs (`r stringr::str_flatten(round(qnorm(c(0.025, 0.975), model$derived_quants['SSB_SPR', 'Value'], model$derived_quants['SSB_SPR', 'StdDev']), 0), collapse = '-')`).
 
 ```{r, results = 'asis'}
 options(knitr.kable.NA = '')
@@ -128,9 +120,9 @@ readr::read_csv(file.path(model_dir, "tables", "e_ReferencePoints_ES.csv"), name
                escape = FALSE)
 ```
 
-## Management performance{-}
+## Management performance {.unnumbered}
 
-Total mortality is generally well below the annual catch limit. However, from 2013--2016 the stock was designated as overfished. During that time, attainment averaged around 60%, though in 2015 the full \gls{acl} was nearly achieved (93% attainment). Beginning, in 2017, the \gls{acl} increased more than tenfold with the lifting of the overfished designation. Since that time, catches have increased and attainment has averaged around 40%.  
+Total mortality is generally well below the annual catch limit. However, from 2013--2016 the stock was designated as overfished. During that time, attainment averaged around 60%, though in 2015 the full \gls{acl} was nearly achieved (93% attainment). Beginning, in 2017, the \gls{acl} increased more than tenfold with the lifting of the overfished designation. Since that time, catches have increased and attainment has averaged around 40%.
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/ACL_history.csv')) |>
@@ -140,31 +132,27 @@ readr::read_csv(here('documents/tables/ACL_history.csv')) |>
                booktabs = TRUE)
 ```
 
-Include Table of most recent 10 years of
-catches in comparison with OFL, ABC, HG, and OY/ACL values,
-overfishing levels,
-actual catch and discard.
-Include OFL (encountered), OFL (retained), and OFL (dead) if different due to discard and discard mortality.
+Include Table of most recent 10 years of catches in comparison with OFL, ABC, HG, and OY/ACL values, overfishing levels, actual catch and discard. Include OFL (encountered), OFL (retained), and OFL (dead) if different due to discard and discard mortality.
 
-## Unresolved problems and major uncertainties{-}
+## Unresolved problems and major uncertainties {.unnumbered}
 
-Although not required before the STAR panel, below is a description of problems and uncertainties as identified by the STAT to help guide discussion during review. This section will be more fully completed following the STAR panel. 
+Although not required before the STAR panel, below is a description of problems and uncertainties as identified by the STAT to help guide discussion during review. This section will be more fully completed following the STAR panel.
 
-The major uncertainty in the opinion of the STAT is treatment of natural mortality. This issue has been a long-standing uncertainty for `r spp` assessments, and remains so. This uncertainty arises from observations in survey and fishery data that age-based sex-ratios are male skewed starting around age 20. This could be explained by females being less susceptible to capture, or to fewer females in the population, or to some combination of both. No refugia for old females has been found thus far suggesting mortality may be a more probable culprit, however sex ratios within Oregon fishery data have been nearer to equal in the last decade. Regardless, there is uncertainty on how best to model this dynamic. 
+The major uncertainty in the opinion of the STAT is treatment of natural mortality. This issue has been a long-standing uncertainty for `r spp` assessments, and remains so. This uncertainty arises from observations in survey and fishery data that age-based sex-ratios are male skewed starting around age 20. This could be explained by females being less susceptible to capture, or to fewer females in the population, or to some combination of both. No refugia for old females has been found thus far suggesting mortality may be a more probable culprit, however sex ratios within Oregon fishery data have been nearer to equal in the last decade. Regardless, there is uncertainty on how best to model this dynamic.
 
-The choice of how to model natural mortality matters. Assuming sex-specific age-invariant natural mortality results in a more pessimistic outlook, because With the added length and age samples, natural mortality for females is estimated near to the prior estimate (0.066). If natural mortality is age-dependent, female natural mortality is estimated to be higher at older ages, and the magnitude of the value increases with the age at which the break in natural mortality occurs. A higher natural mortality estimate results in a more optimistic population estimate that increases dramatically from low abundance in the 2000s. Modeling selectivity as sex-dependent, as in the base model, reflects a middle ground in the estimate of natural mortality, in that age-invariant estimates between males and females differ by 18 percent (with females higher), while avoiding the less common biological assumption that natural mortality increases with age.  
+The choice of how to model natural mortality matters. Assuming sex-specific age-invariant natural mortality results in a more pessimistic outlook, because With the added length and age samples, natural mortality for females is estimated near to the prior estimate (0.066). If natural mortality is age-dependent, female natural mortality is estimated to be higher at older ages, and the magnitude of the value increases with the age at which the break in natural mortality occurs. A higher natural mortality estimate results in a more optimistic population estimate that increases dramatically from low abundance in the 2000s. Modeling selectivity as sex-dependent, as in the base model, reflects a middle ground in the estimate of natural mortality, in that age-invariant estimates between males and females differ by 18 percent (with females higher), while avoiding the less common biological assumption that natural mortality increases with age.
 
-A challenge with the current base model is that the likelihood surface around the maximum likelihood estimate is flat, likely due to the number of selectivity parameters and correlation among them. Jittering suggests that solutions on the likelihood surface near to the base model produce similar population trajectories, giving support for a similar region of estimates on the likelihood surface (i.e., jittering finds estimates with lower negative log-likelihoods, but within the same mode). Modeling selectivity as a three parameter double-normal reduces correlation in parameters compared to a four parameter formulation; however modeling sex-dependent selectivity reintroduces a fourth selectivity parameter. Simplifying the number of selectivity parameters by reducing the number of time-varying blocks degrades model fit by a large degree and does not appear to be a solution for reducing model complexity. 
+A challenge with the current base model is that the likelihood surface around the maximum likelihood estimate is flat, likely due to the number of selectivity parameters and correlation among them. Jittering suggests that solutions on the likelihood surface near to the base model produce similar population trajectories, giving support for a similar region of estimates on the likelihood surface (i.e., jittering finds estimates with lower negative log-likelihoods, but within the same mode). Modeling selectivity as a three parameter double-normal reduces correlation in parameters compared to a four parameter formulation; however modeling sex-dependent selectivity reintroduces a fourth selectivity parameter. Simplifying the number of selectivity parameters by reducing the number of time-varying blocks degrades model fit by a large degree and does not appear to be a solution for reducing model complexity.
 
-## Decision table and projections{-}
+## Decision table and projections {.unnumbered}
 
 These are to be completed after the STAR panel
 
-## Scientific uncertainty{-}
+## Scientific uncertainty {.unnumbered}
 
 The model estimate of $\sigma_\text{OFL}$, the uncertainty around the overfishing limit, is `r round(model$OFL_sigma, 3)`. Given the significant structural uncertainty in the model, particularly around natural mortality, selectivity, and the processes leading to the lack of older females in the population, this is considered an underestimate. It is also lower than the default Category 1 uncertainty value of 0.5, so projections will use the default value of $\sigma_\text{OFL} = 0.5$.
 
-## Research and data needs{-}
+## Research and data needs {.unnumbered}
 
 We list current research recommendations and prioritize them from high to low. Lower priority needs should not not be interpreted as unimportant, but rather lower relative to other priorities listed here.
 
@@ -181,4 +169,3 @@ We list current research recommendations and prioritize them from high to low. L
 6.  Research to inform understanding of movement rates for a spatial model, as well as improve estimates of natural mortality. Large scale movement patterns for `r spp` are generally unknown. However, even a small number of tagging samples collected intermittently can improve model estimates [@goethel_tagging_2019]. Any method that determines both the extent and direction of movement would be useful; the method need not be limited to tagging. (Low)
 
 7.  Ageing error matrices were not updated from the 2015 assessment. Revision of the ageing error matrices, incorporating the new aged `r spp` data and utilizing new analytical methods are topics for future research. Potential bias in ageing of old `r spp` based on bomb-radiocarbon data (A. Stephens, \gls{nwfsc}, personal communication, May 2023) should also be considered in these analyses. (Low)
-
