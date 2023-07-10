@@ -1,3 +1,8 @@
+\clearpage
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
+
+
 ```{r executive, echo = FALSE}
 executive <- list()
 executive[["stock"]] <- paste0("This assessment reports the status of ",
@@ -89,7 +94,9 @@ readr::read_csv(file.path(model_dir, 'tables', 'c_Recr_ES.csv'), name_repair = '
 
 ## Exploitation status {.unnumbered}
 
-Replace text with total catch divided by exploitable biomass or SPR harvest rate.
+There are two measures of exploitation status (Table \ref{tab:spr-es}). The target harvest rate is determined by 1-SPR or "fishing intensity." SPR is the spawning potential ratio, or percent of unfished spawning output that would result at equilibrium from fishing at a given rate. Because the target is based on 1-SPR, a value of 0 means no fishing is occurring (unfished spawning output would result at equilibrium from fishing at the current rate), and a value of 1 means all spawning fish would be killed before spawning at equilibrium, and the population would collapse. The second measure is the exploitation rate, or total dead catch divided by total age `r model$summary_age`+ biomass.
+
+Fishing intensity rose from zero to close to the target around 1950, and then rose from the target to near 1.0 in the 1970s (Figure \ref{fig:kobe-es}). Intensity remained slightly below 1.0 from 1980 to the mid-1990s as the population rapidly depleted. Exploitation rates dropped dramatically in 2000 with the overfished designation, and the population has been slowly rebuilding since. Exploitation rates rose again in 2017 and have been close to target levels since, although spawning output remains slightly below the target, indicating additional yield may be possible if the population further rebuilds.
 
 ```{r results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, 'tables', 'd_SPR_ES.csv'), name_repair = 'minimal') |>
@@ -132,8 +139,6 @@ readr::read_csv(here('documents/tables/ACL_history.csv')) |>
                booktabs = TRUE)
 ```
 
-Include Table of most recent 10 years of catches in comparison with OFL, ABC, HG, and OY/ACL values, overfishing levels, actual catch and discard. Include OFL (encountered), OFL (retained), and OFL (dead) if different due to discard and discard mortality.
-
 ## Unresolved problems and major uncertainties {.unnumbered}
 
 Although not required before the STAR panel, below is a description of problems and uncertainties as identified by the STAT to help guide discussion during review. This section will be more fully completed following the STAR panel.
@@ -156,7 +161,7 @@ The model estimate of $\sigma_\text{OFL}$, the uncertainty around the overfishin
 
 We list current research recommendations and prioritize them from high to low. Lower priority needs should not not be interpreted as unimportant, but rather lower relative to other priorities listed here.
 
-1.  Continued research into the rationale for skewed sex ratios and empirical studies to estimate natural mortality rates, as well as basic life history research for fecundity and growth. This remains a critical uncertainty for canary rockfish, as well as other species of rockfish along the U.S. West Coast, but one that remains largely unknown. The rate of natural mortality as well as whether and to what extent it increases with age is a major source of uncertainty for this assessment, as it has been for past assessments. Recent evidence suggesting sex ratios are nearer unity may be informative, but further research to understand the mechanism by which this occurs would be beneficial for understand the ability of `r spp` to recover. (High)
+1.  Continued research into the rationale for skewed sex ratios and empirical studies to estimate natural mortality rates, as well as basic life history research for fecundity and growth. 
 
 2.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of a non-trawl coast-wide fishery-independent indices. This could mean an expansion of the \gls{s-hkl} into more northern waters, or taking advantage of developments in model-based index standardization to stitch together multiple similar overlapping fishery-independent non-trawl sampling programs that have occurred over smaller spatial and temporal scales than the \gls{s-wcgbt}. This also has the potential to provide biological data in a variety of habitats and across latitudinal gradients which when aged using current best practices can help inform biological parameters that have been suggested by Brooks [-@Brooks_thesis_2021] to occur above the southern range of canary rockfish but were not seen to the same extent in current \gls{s-wcgbt} data. (Medium)
 
