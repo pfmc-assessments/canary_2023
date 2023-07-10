@@ -15,7 +15,7 @@ This assessment updates the data that were used in the 2015 benchmark assessment
     c.  In Washington, landed recreational catches (1967--2022) along with estimates of recreational releases were provided directly by \gls{wdfw}. Historical commercial landed catches (1935--1980) are based on those used in the previous assessment. Commercial landed catches from 1981--2022 are from \gls{pacfin}.
     d.  Foreign trawl fleet catches from 1966--1976 are based on Rogers [-@rogers_species_2003].
     e.  Total removals of canary in the at-sea hake fishery (1973--2022) were provided by the \gls{nwfsc} \gls{ashop}.
-    f.  Total commercial discards for recent years (2003--2021) are estimated in the annual mortality report using data from a variety of sources including the West Coast Groundfish Observer Program, and are [publicly available](https://www.pcouncil.org/documents/2022/08/g-1-b-nwfsc-report-1-estimated-discard-and-catch-of-groundfish-species-in-the-2021-west-coast-fisheries.pdf/).
+    f.  Total commercial discards for recent years (2003--2021) are estimated in the annual mortality report using data from a variety of sources including the \gls{wcgop}, and are [publicly available](https://www.pcouncil.org/documents/2022/08/g-1-b-nwfsc-report-1-estimated-discard-and-catch-of-groundfish-species-in-the-2021-west-coast-fisheries.pdf/).
     g.  Discard rates for 1981-1994 are obtained from the Pikitch study [@pikitch_evaluation_1988] as analyzed by J. Wallace.
 
 2.  Fishery-independent data are included from three different surveys:

@@ -45,9 +45,9 @@ if (exists("model")) {
 ```
 (SS3).
 
-`r Spp` was most recently assessed in 2015 using an age-structured population model that allowed for spatial differences in recruitment deviations and depletion by state. The current assessment uses an areas-as-fleets approach to account for different sizes and ages of fish available in each state, but returns to a coastwide model configuration. 
+`r Spp` was most recently assessed in 2015 using an age-structured population model that allowed for spatial differences in recruitment deviations and depletion by state. The current assessment uses an areas-as-fleets approach to account for different sizes and ages of fish available in each state, but returns to a coastwide population model configuration. 
 
-This assessment includes catches from five fleets, each of which is divided across three states, adult fishery-independent indices from the \gls{s-wcgbt} and \gls{s-tri}, age and length data from the fishery and adult surveys, and a pre-recruit survey. It extends all of these data sets from the previous assessment. In addition, it includes a maturity curve based on newly analyzed ovaries and age data from recently aged otoliths from the 1986 \gls{s-tri}.
+This assessment includes updated catches from five fleets, each of which is divided across three states, fishery-independent indices from the \gls{s-wcgbt} and \gls{s-tri}, age and length data from the fishery and surveys, and a pre-recruit survey. It extends all of these data sets from the previous assessment to 2022. In addition, this assessment includes a maturity curve based on newly analyzed ovaries, other updated biological relationships, new assumptions on the modeling of natural mortality, and updated age data from additional aged otoliths from the 1986 \gls{s-tri} and other years and sources.
 
 ## Stock biomass and dynamics{-}
 
@@ -151,9 +151,7 @@ any special issues that complicate scientific assessment, questions about the be
 
 ## Decision table and projections{-}
 
-Replace text with
-projected yields (OFL, ABC, and ACL), spawning biomass, and stock depletion levels for each year.
-OFL calculations should be based on the assumption that future catches equal ABCs and not OFLs.
+These are to be completed after the STAR panel
 
 ## Scientific uncertainty{-}
 

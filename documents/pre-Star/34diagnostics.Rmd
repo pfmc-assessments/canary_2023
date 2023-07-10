@@ -1,10 +1,10 @@
 ## Model Diagnostics
 
-### Convergence status
+### Convergence Status
 
 The base model has a final gradient of \<0.00001 and the hessian is determinant. We therefore conclude that the parameter estimates represent a local minimum and near enough to a global minimum so as not to differ appreciably in results. No parameters are at or within 5 percent of a boundary and one parameter pair has a high correlation coefficient between 0.90 and 0.95.
 
-#### Evidence of search for global convergence
+#### Evidence of Search for Global Convergence
 
 A search for global convergence was conducted multiple times. Model convergence was first determined by starting the minimization process from dispersed values of the maximum likelihood estimates to determine if the estimation routine found a lower likelihood. Starting parameters were jittered using the jitter function built into Stock Synthesis, using a jitter fraction of 0.05. This was repeated 60 times with no runs returning to the base model likelihood and one returning to a likelihood that was 2 likelihood units lower. The run with improved likelihood had one parameter on a bound which was fixed before an additional 50 runs were conducted jittering from the initial parameter estimates from the improved likelihood model. This second jitter analysis had three runs return to the improved likelihood estimate, four runs just above, and one run that was one likelihood unit lower. A third jittering analysis was repeated 50 times, jittering from the initial parameter estimates from the twice-improved model, with five runs returning to the twice-improved likelihood value and one just above.
 
@@ -14,7 +14,7 @@ Although the base model indicates an overall global minimum can be obtained that
 
 The base model contains substantial uncertainty in both how data were processed, and structural assumptions made. We test senstivity to a number of these assumptions. In general, structural assumptions regarding how productive the population is and how the model handles the relative lack of old females in age composition data led to the strongest changes in model outputs (Figure \@ref(fig:sens-summary)). All sensitivities with the exception of the bomb radiocarbon age bias led to relatively similar estimates of growth parameters, indicating growth is well-estimated in the model and we do not discuss it beyond the bomb radiocarbon sensitivity (Tables \@ref(tab:data-sens)--\@ref(tab:prod-sens)). We divide the sensitivities into four groups: how data are prepared, how data are weighted, selectivity and catchability, and population productivity.
 
-#### Data choices
+#### Data Choices
 
 Compiling data for the assessment model required a number of choices and assumptions. The following sensitivity models fall under data choices:
 
@@ -32,7 +32,7 @@ Compiling data for the assessment model required a number of choices and assumpt
 
 Overall, decisions with respect to input data had a low impact on model outcomes (Table \@ref(tab:data-sens), Figures \@ref(fig:data-ssb-compare) and \@ref(fig:data-bratio-compare)). Sensitivities generally led to similar current biomass levels, but varying estimates of unfished biomass, leading to somewhat different depletion estimates. Still, in all cases depletion in 2023 was within the 95% confidence interval of the base model. Most models produced similar estimates of female natural mortality. The bomb radiocarbon sensitivity produced a somewhat lower estimate because the additional ageing error bias allows for more older fish in the population than the base model assumes. The bomb radiocarbon sensitivity also had a higher unfished biomass (outside base model 95% confidence interval), somewhat higher depletion (within base model 95% confidence interval), and slower estimates of von Bertalanffy growth rates because the sensitivity increases all ages by 10%, but leaves lengths unchanged. Including Canadian catches predictably increased the population scale substantially, well outside of the 95% confidence interval. Because Canadian fishing continued during the period `r spp` was declared overfished in the U.S., including Canadian catches also resulted in a more muted recovery and somewhat lower depletion in 2023.
 
-#### Data weighting
+#### Data Weighting
 
 The assessment model contains data from a variety of sources, some of which are expected to be more informative than others. Sampling units from these different data sources are not necessarily comparable (e.g., an observation from a survey index versus an observation of a fish length). Data weighting procedures are objective algorithms that can be used to assign weights to different data sources to optimize the fit of the model to the data. The following sensitivity models fall under data weighting:
 

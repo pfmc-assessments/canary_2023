@@ -36,7 +36,7 @@ The assessment model structure has been significantly altered from the
 change affecting model results is the change in
 modeling of natural mortality. We model natural mortality as
 sex-dependent and age-invariant which offers a simplified and more
-biologically believable approach to natural mortality than an increasing
+biologically common approach to modeling natural mortality than an increasing
 linear ramp in female natural mortality. While natural mortality of females and males likely is similar at young ages, given that the fisheries and surveys do not fully select the smaller, younger fish, natural mortality at young ages does not matter as much as a reasonable cumulative natural mortality at older ages. Assumptions to this choice are
 tested with sensitivities and described in Section \@ref(sensitivities).
 
@@ -48,7 +48,7 @@ yet increase the spatial complexity of the fishery. This amounts to
 using an areas-as-fleets approach [@punt_spatial_2019]. Although an
 areas-as-fleets approach does not account for potential regional
 differences in depletion, because catches are assumed to act over the
-entire modeled area, explorations indicated instability when unmirroring and expanding selectivity, thus suggesting that the data does not support realistic parameterization within the spatial model. Through
+entire modeled area, early explorations indicated instability when unmirroring and expanding selectivity, thus suggesting that the data may not support realistic parameterization within the spatial model. Through
 bridging of the spatial model (described below) we show that the change in population
 structure does not have a large effect on model results,
 especially relative to changes in the modeling of natural mortality and the
@@ -58,10 +58,10 @@ By reducing complexity in the population structure of the model, we
 could increase the spatial complexity of the fishery. Spatial fleet
 dynamics allow the model structure to account for varying selectivity
 and historical management actions that may have impacted the fishery and
-the available data in specific ways. In the 2015 assessment fleets were assumed to have the
+the available data in specific ways. In the 2015 assessment, fleets were assumed to have the
 same selectivity across states. We allowed
 selectivity estimates to be informed by the dynamics in waters where
-they fish, although we have mirrored some fleets where we believe and the data indicate it is
+they fish, although we have mirrored some fleets where we believe the data indicate it is
 appropriate to do so. We have also increased the number of selectivity
 blocks for the non-trawl and recreational fisheries, which is
 appropriate given the large changes in regulations for `r spp`. Lastly,
@@ -75,8 +75,8 @@ While, in general, fleet structure in the base model is more complex than
 in the 2015 assessment, we simplified our fleets where reasonable. We
 treated survey fleets as exclusively survey fleets, and did not model
 the small amount of catches from these surveys. It is no longer standard
-practice to include surveys as fishing fleets in West Coast assessment.
-We also removed the California at-sea-hake fishery composition data,
+practice to include surveys as fishing fleets in West Coast assessments.
+We also removed the California at-sea hake fishery composition data,
 which was very sparse, and incorrectly assigned to California, and
 combined selectivity for the Washington and Oregon fleets, which have
 similar dynamics and fish across state boundaries.
@@ -91,8 +91,8 @@ been updated according to current best knowledge. States have updated
 their historical reconstructions, and past issues with catch time series
 mentioned in the last assessment review process and in subsequent
 catch-only updates have been corrected. Catch time series for the
-foreign fleets was also repartitioned to states more consistently with
-patterns observed in the non-foreign fishery. We assigned data from
+foreign fleets was also repartitioned to states in a manner more consistent with
+patterns observed in the domestic fishery. We assigned data from
 shrimp trawls as part of the trawl, where for the 2015 assessment they
 were included within the non-trawl fleets. Available length and age data
 have been processed using updated and more reproducible approaches.
@@ -110,7 +110,7 @@ the likelihood was updated. The previous assessment applied equal data
 weights to each fleet type across areas, and preferentially downweighted
 age data based on the relative sample size compared to the number of
 length samples by applying impact factors (i.e. lambdas) to composition
-data less than one. Furthermore, the previous assessment did not apply
+data of less than one. Furthermore, the previous assessment did not apply
 data weighting to conditional-age-at-length data data from the surveys.
 In whole, these steps are not currently standard practice. For this
 assessment we do not adjust lambda values. Rather we allow the data
@@ -124,7 +124,7 @@ and prior values were made for this assessment compared to the 2015
 assessment. These changes include updates to the steepness prior,
 natural mortality prior, the fecundity relationship, and a change in
 maturity from length-at-biological maturity to
-age-at-functional-maturity based on additional work-up of maturity
+age-at-functional-maturity based on additional analysis of maturity
 samples by Melissa Head at \gls{nwfsc}. Changes to biological parameters
 are more completely described in Section \@ref(biology). The effect of
 these changes on model results in described below in the bridging
@@ -154,7 +154,7 @@ current base model followed five general steps:
 5.  Update structure of selectivity.
 
 To arrive at a final base model additional revisions were made after these five steps
-to determine the best fit to the data. These include correcting an error in the generation of the triennial index of abundance, which was found late in the bridging process, and revisions to the fleet
+to determine the best fit to the data. These include correcting an error in the generation of the triennial index of abundance, which was found late in the bridging process, revisions to the fleet
 structure, weightings, selectivity blocks, selectivity
 parameterizations, and extending the period of early recruitment deviations.
 <!-- These include fleet structure: mirror WA/OR twl, unmirror WA TWL/NTWL -->
@@ -203,7 +203,7 @@ selectivity including unmirroring fleets and using an alternative parameterizati
 
 ### Key Assumptions and Structural Choices
 
-#### Definition of Fleets and Areas
+#### Definition of Fleets and Areas {#fleets}
 
 To foster comparability between the coastwide base model and a
 state-stratified model more similar to the 2015 base model, we retain
@@ -308,7 +308,7 @@ The model contains four primary likelihood components:
 1.  Fit to survey indices of abundance (included for fleets 28-31).
 2.  Fit to length composition samples (included for fleets 1-12 with the
     exception of fleet 10, and fleets 28-30, i.e., all fishing fleets
-    except the foreign fleets, California at-sea-hake, and the
+    except the foreign and California at-sea hake fleets, and the
     pre-recruit survey).
 3.  Fit to age composition samples (marginal ages are included for
     fisheries, i.e., fleets 1-6 and 8-9, and 11-12, and conditional
@@ -334,7 +334,7 @@ to be 0.5. Priors for select biological parameters are described below.
 Length and age composition data for the commercial fleets started with a
 sample size determined from the equation listed in Section
 \@ref(comm-composition-data). The exception to this was for the
-at-sea-hake fishery where input sample sizes were based on the number of
+at-sea hake fishery where input sample sizes were based on the number of
 hauls. Input sample size for length and age composition data for the
 recreational fishery was determined based on the number of estimated
 trips (described in Section \@ref(rec-composition-data)). Length
@@ -353,7 +353,7 @@ across years, model explains the variability in the data. If the
 variability around the mean does not encompass the model predictions,
 then that data source should be weighted, and typically is
 down-weighted. We applied four iterations of the Francis method when
-data-weighting, which resulted in converged estimates. The weighting of
+data-weighting, which resulted in stable weights. The weighting of
 both the length and age composition was allowed to exceed one, and we
 confirmed that data sources that were upweighted did not have a weighted
 sample size above the number of fish sampled that would be a cause for concern. Weights for

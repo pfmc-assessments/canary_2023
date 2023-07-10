@@ -16,7 +16,7 @@ mortality from 0.06 yr$^{-1}$ at age 9 to roughly 0.18 yr$^{-1}$ at age
 25, the plus group. In 1999, the ramp was adjusted to be from 0.06 at
 age 11 to 0.20 at age 25, and the document contains an extensive review
 of life history theory regarding increasing female natural mortality
-[@stat1999canary]. @methot2002canary fixed male and young female natural
+[Crone et al. -@stat1999canary]. @methot2002canary fixed male and young female natural
 mortality at 0.06, but estimated an offset for older females, and based
 the slope of increasing natural mortality on maturity, not age,
 resulting in a non-linear ramp by age. In 2005, that option was no
@@ -35,13 +35,10 @@ male-skewed sex ratio at older ages has been observed along the U.S.
 West Coast in fishery data off Oregon (L. Rasmuson, \gls{odfw}), personal communication, 1/23/23), Canada [@dfo2023canary], and Alaska and in black rockfish
 in addition to canary and yellowtail rockfishes. Although it has been
 found in these three semi-pelagic species, the pattern has not been
-observed for bocaccio, chilipepper rockfish
-(*Sebastes goodei*), shortbelly rockfish (*Sebastes jordani*), or dusky
+observed for bocaccio, chilipepper rockfish, shortbelly rockfish, or dusky
 rockfishes (*Sebastes ciliatus*, in Alaska), which are also semi-pelagic.
-However, starting in the 2010's the male-skewed sex ratio has evened out
-in fishery data off Oregon (L. Rasmuson \gls{odfw}), personal communication, 1/23/23). The pattern has
-remained within the \gls{s-wcgbt} and has not evened off in recent
-years.
+However, starting in the 2010's the sex ratio has been less skewed in fishery data off Oregon (L. Rasmuson \gls{odfw}), personal communication, 1/23/23). The sex ratio has
+remained male-skewed within the \gls{s-wcgbt} in recent years.
 
 In this assessment, we elect to model natural mortality for males and
 females separately as has been done in past assessments. After
@@ -71,7 +68,7 @@ in Section \@ref(sensitivities).
 ### Maturity
 
 We estimate the maturity schedule using available histological
-measurements from female ovaries. This includes 163 samples collected by
+measurements from female ovaries. This includes 226 samples collected by
 \gls{odfw} and \gls{wdfw} during winter (October--February) in 2014,
 2015, and 2016; and 527 ovaries collected during the \gls{s-wcgbt} in
 2009--2016 across a range of depths (57--222 m) and latitudes
