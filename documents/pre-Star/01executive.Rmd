@@ -8,12 +8,13 @@ executive[["stock"]] <- paste0("This assessment reports the status of ",
 
 ## Stock{-}
 
-`r executive[["stock"]]`
+`r executive[["stock"]]` The stock of `r spp` was modeled as a single coastwide population. While `r spp` are modeled as a single population, spatial aspects are addressed through geographic separation of data sources/fleets where possible. There is currently no genetic evidence suggesting distinct biological stocks of `r spp` off the U.S. West Coast. This assessment does not account for populations located in Canadian or Mexican waters and assumes that these northern and southern populations do not contribute to nor take from the population being assessed here.
+
 
 ## Catches{-}
 
-Replace text with
-trends and current levels.
+`r Spp` is caught in both commercial and recreational fisheries off the U.S. West Coast, with the majority of catches coming from commercial sources (Figure \ref{fig:es-catch}). The rockfish fishery off the U.S. West Coast developed off California late in the 19th century and was catching an average of almost 2,500 metric tons per year over the period 1916-1940 (with an increase in catches in 1916, during World War I). To the north, the rockfish fishery developed slowly and became established during the early 1940s, when the United States became involved in World War II and wartime shortages of red meat created an increased demand for other sources of protein. Rockfish catches dropped somewhat following the war, and were generally stable from the 1950s to the 1960s. In 1977, when the \gls{msfcma} was enacted, the large foreign-dominated rockfish fishery that had developed since the late 1960s had its catches eliminated, and the domestic trawl fishery subsequently increased its catches. The trawl fishery reached a peak in the early 1980s (1982: 5,155 mt) and subsequently decreased after the establishment of strict management restrictions starting in the mid-1990s. The decrease in the trawl fishery allowed the recreational and non-trawl fisheries to take a larger proportion of total catch beginning in the 2000s. Following the removal of the overfished designation in 2015, catches increased considerably, though to levels well below those seen during much of the period of industrial fishing. Today, most catch still occurs in the trawl fishery (particularly in a growing midwater trawl fleet), though there is a sizable recreational component of landings as well (Table \ref{tab:es-catch}).
+
 
 ```{r results='asis', message=FALSE}
 tab <- readr::read_csv(file.path(model_dir, 'tables', 'a_Catches_ES.csv')) |>
@@ -36,20 +37,27 @@ knitr::kable(tab,
 
 ## Data and assessment{-}
 
-This assessment uses the stock assessment framework
-Stock Synthesis 
+
+`r Spp` was most recently assessed in 2015 using an age-structured population model that allowed for spatial differences in recruitment deviations and depletion by state. The current assessment uses an areas-as-fleets approach to account for different sizes and ages of fish available in each state, but returns to a coastwide population model configuration. 
+
+This assessment uses the stock assessment framework Stock Synthesis 
 ```{r es-modelversion, echo=FALSE} 
 if (exists("model")) {
   strsplit(model$SS_version,";")[[1]][1]
 }
 ```
-(SS3).
+(SS3). Each assessment model is a two-sex age-structured model operating on an annual time step covering the period 1892 to 2022, with a twelve-year projection, and assumes an unfished population prior to 1897. Population dynamics are modeled for ages 1 through 35, with age 1 including dynamics for age 0, and age 35 being the accumulator age. The model also allows for differences in selectivity between sexes.
 
-`r Spp` was most recently assessed in 2015 using an age-structured population model that allowed for spatial differences in recruitment deviations and depletion by state. The current assessment uses an areas-as-fleets approach to account for different sizes and ages of fish available in each state, but returns to a coastwide population model configuration. 
+This assessment includes updated catches from five fleets (commercial trawl, non-trawl, foreign, and at-sea hake, and recreational), each of which is divided across three states, fishery-independent indices from the \gls{s-wcgbt} and \gls{s-tri}, age and length data from the fishery and surveys, and a pre-recruit survey. It extends all of these data sets from the previous assessment through 2022, and uses updated age data from additional aged otoliths from the 1986 \gls{s-tri} and other years and sources. 
 
-This assessment includes updated catches from five fleets, each of which is divided across three states, fishery-independent indices from the \gls{s-wcgbt} and \gls{s-tri}, age and length data from the fishery and surveys, and a pre-recruit survey. It extends all of these data sets from the previous assessment to 2022. In addition, this assessment includes a maturity curve based on newly analyzed ovaries, other updated biological relationships, new assumptions on the modeling of natural mortality, and updated age data from additional aged otoliths from the 1986 \gls{s-tri} and other years and sources.
+Growth is assumed to follow the von Bertalanffy growth model, and the assessment explicitly estimates all parameters describing somatic growth. Recruitment dynamics are assumed to follow the Beverton-Holt stock-recruit function, and recruitment deviations are estimated. In addition, this assessment includes a maturity curve based on newly analyzed ovaries; updated biological relationships for fecundity, steepness, and mortality; and new assumptions on the modeling of natural mortality. 
+
+Model uncertainty is explicitly included in this assessment by parameter estimation uncertainty. Model specification uncertainty is explored through sensitivity analyses addressing alternative input assumptions such as data treatment and weighting, and treatment of life history parameters, selectivity, and recruitment. Base models were selected that best fit the observed data while balancing the desire to capture the central tendency across sources of uncertainty, ensure model realism and tractability, and promote robustness to potential model mis-specification.
+
 
 ## Stock biomass and dynamics{-}
+
+The base model estimate of spawning output is similar to previous assessments historically with unfished spawning output, in millions of eggs, estimated to be 8,150, and declining to a minimum of 515 in 1995. Estimates since 1995 have differed from the last assessment in that spawning output has increased at a slower rate; to a recent peak of 2,651 in 2023. In terms of spawning output relative to unfished, the minimum was 0.063 in 1995, and the current 2023 estimate is 0.325 (Table \ref{tab:es-ssb}, Figures \ref{fig:ssb-es} and \ref{fig:depl-es}).
 
 ```{r results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, 'tables', 'b_SSB_ES.csv'), name_repair = 'minimal') |>
@@ -63,11 +71,6 @@ readr::read_csv(file.path(model_dir, 'tables', 'b_SSB_ES.csv'), name_repair = 'm
 ![Estimate of spawning output (millions of eggs) over full assessment period. Dashed lines cover 95% confidence interval. \label{fig:ssb-es}](../figures/plots/ts7_Spawning_output_with_95_asymptotic_intervals_intervals.png){width="100%" height="100%" alt="Figure showing lowering of spawning output into 1990s and slow increase since"}
 
 ![Estimate of relative spawning depletion over full assessment period. Dashed lines cover 95% confidence interval. \label{fig:depl-es}](../figures/plots/ts9_Relative_spawning_output_intervals.png){width="100%" height="100%" alt="Figure showing similar trends to spawning output surpassing the 0.4 target around 1980, going below the 0.25 threshold shortly thereafter, and then recovering to between the threshold and target starting in around 2015"}
-Replace text with
-trends and current levels relative to virgin or historic levels and
-description of uncertainty.
-Include Table for last 10 years.
-Include Figure with long-term estimates.
 
 ## Recruitment{-}
 
