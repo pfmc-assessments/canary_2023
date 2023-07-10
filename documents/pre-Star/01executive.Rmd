@@ -39,7 +39,7 @@ knitr::kable(tab,
       font_size = 9)
 ```
 
-![Catches of canary rockfish over full assessment period by fleet \label{fig:es-catch}](../figures/plots/catch2%20landings%20stacked.png){width="100%" height="100%" alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
+![Catches of canary rockfish over full assessment period by fleet \label{fig:es-catch}](../figures/catch2 landings stacked_custom.png){width="100%" height="100%" alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
 
 ## Data and assessment {.unnumbered}
 
