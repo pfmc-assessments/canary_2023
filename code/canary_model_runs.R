@@ -12393,6 +12393,17 @@ legend("topleft",
 )
 dev.off()
 
+# #confirm external growth is within bounds (taken from discussion #21)
+# age = c(1:40)
+# lmm <- 8.344 + (54.6481000	 - 8.344) * (1-exp(-0.1558210 * (age-1)))
+# lfm <- 8.344 + (59.4463000 - 8.344) * (1-exp(-0.1372000	 * (age-1)))
+# lmx <- 11.365088 + (51.320627 - 11.365088) * (1-exp(-0.175495  * (age-1)))
+# lfx <- 11.382156  + (57.900273	 - 11.382156 ) * (1-exp(-0.142700 * (age-1)))
+# 
+# SSplotBiology(pp,subplot=1)
+# lines(age,lfx,col=1,lty=1,lwd=3)
+# lines(age,lmx,col=1,lty=2,lwd=3)
+
 
 
 ####------------------------------------------------####
