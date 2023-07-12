@@ -278,7 +278,7 @@ readr::read_csv(here('documents/figures/sensitivities/data_table.csv')) |>
   #              format = 'latex',
   #              booktabs = TRUE) |>
   # kableExtra::landscape()
-  table_format(caption = 'Estimates of likelihood components and major model parameters for data sensitivities. Likelihood is negative log-likelihood, where lower values indicate better fit to data. Because of differences in input data, likelihoods for the `Float Q` model are not comparable.',
+  table_format(caption = 'Estimates of likelihood components and major model parameters for data sensitivities. Likelihood is negative log-likelihood, where a lower value would indicate better fit to data. However, because of differences in input data for these sensitivities, likelihoods are generally uncomparable among scenarios.',
              label = "data-sens",
              row.names = FALSE,
              landscape = TRUE,
@@ -365,6 +365,10 @@ readr::read_csv(file.path(model_dir, "tables", "e_ReferencePoints_ES.csv")) |>
 ```
 
 
+<!-- ======================================================= -->
+<!-- ******** Projection and Decision Tables *************** --> 
+<!-- ======================================================= -->
+
 <!-- ```{r, results = 'asis'} -->
 <!-- #options(knitr.kable.NA = '') -->
 <!-- readr::read_csv(here('documents','tables','projections.csv'), na = "-") |> -->
@@ -379,3 +383,4 @@ readr::read_csv(file.path(model_dir, "tables", "e_ReferencePoints_ES.csv")) |>
 <!--              col_to_adjust = c(2,3,4,5,10,11), -->
 <!--              width = c("1.27cm", "1.27cm", "1.27cm", "1.676cm", "1.676cm", "1.676cm")) -->
 <!-- ``` -->
+
