@@ -8,6 +8,8 @@ fleet.converter <- base_mod$dat$fleetinfo |>
                 fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
   dplyr::select(fleetname, fleet_no_num, fleet)
 
+source(here('code/selexComp.R'))
+
 # Canadian catches --------------------------------------------------------
 
 # This spreadsheet sums catches in Canadian areas 3C and 3D, i.e., 
@@ -67,28 +69,30 @@ SSsummarize(xx) |>
 
 # Survey catches --------------------------------------------------------
 
-#also combine the 1975 omitted value to 1976
+#Set up surveys to be catch fleets and also combine the 1975 omitted value to 1976 for ASHOP
 
 mod <- base_mod
+
+mod$dat$fleetinfo[grep("28|29|30",mod$dat$fleetinfo$fleetname),]$units <- 1
+
 survey_catch <- googlesheets4::read_sheet(googledrive::drive_get("research_catch"))
 survey_catch$mt <- survey_catch$total_catch_wt_kg/1000
+survey_catch$fleet <- dplyr::case_when(survey_catch$Survey == "Triennial" & survey_catch$Year <= 1992 ~ 29,
+                                       survey_catch$Survey == "Triennial" & survey_catch$Year > 1992 ~ 30,
+                                       survey_catch$Survey == "NWFSC.Combo" ~ 28)
 
-dplyr::select(Year, WA_TWL = Trawl, WA_NTWL = NTWL) |>
+agg_survey <- survey_catch |>
+  dplyr::mutate(year = Year) |>
+  dplyr::group_by(year, fleet) |> 
+  dplyr::summarize(catch = sum(mt)) |>
   dplyr::mutate(seas = 1, catch_se = 0.05) |>
-  tidyr::pivot_longer(cols = c(WA_TWL, WA_NTWL), 
-                      names_to = 'fleet_no_num', 
-                      values_to = 'canada_catch') |>
-  dplyr::left_join(fleet.converter) |>
-  dplyr::select(-fleetname, -fleet_no_num) |>
-  dplyr::right_join(base_mod$dat$catch) |> 
-  dplyr::mutate(dplyr::across(c(catch, canada_catch),
-                              ~ tidyr::replace_na(., replace = 0)),
-                catch = catch + canada_catch) |>
-  dplyr::select(year, seas, fleet, catch, catch_se) |>
-  as.data.frame()
+  dplyr::select(year, seas, fleet, catch, catch_se) |> 
+  as.data.frame() |>
+  dplyr::full_join(mod$dat$catch)
 
-mod$dat
+agg_survey[agg_survey$fleet==11 & agg_survey$year == 1976,"catch"] =  9.024
 
+mod$dat$catch <- agg_survey
 
 new_name <- 'survey_catches'
 SS_write(mod, here('models/sensitivities', new_name),
@@ -99,16 +103,9 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           extras = '-nohess', 
           show_in_console = FALSE, 
           skipfinished = FALSE)
-beepr::beep()
 
-xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
-                                        subdir = c(base_mod_name,
-                                                   file.path('sensitivities', new_name)))))
 
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('Base model',
-                                     'Add WCVI catches to WA'),
-                    print = TRUE, plotdir = here('models/sensitivities',new_name))
+
 
 # Prerecruit survey add 3 years -------------------------------------------
 
@@ -295,6 +292,163 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
 
 
+# M ramp and sex-constant selectivity ------------------------------------------------
+
+mod <- base_mod
+
+#Sex male and female selectivity to be equal
+mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
+mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- 99
+
+#setup M ramp
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(6, 14)
+
+# Add extra rows to MG table
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+# Fix young female M at male M
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+new_name <- 'M_ramp_no_sex_selex'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models/sensitivities',new_name))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+# M break 10 and sex-constant selectivity ------------------------------------------------
+
+mod <- base_mod
+
+#Sex male and female selectivity to be equal
+mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
+mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- 99
+
+#Setup M breakpoint
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(10, 11)
+
+# Add extra rows to MG table
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+# Fix young female M at male M
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+new_name <- 'M_break10_no_sex_selex'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models/sensitivities',new_name))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+# M break 20 and sex-constant selectivity ------------------------------------------------
+
+mod <- base_mod
+
+#Sex male and female selectivity to be equal
+mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
+mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- 99
+
+#Setup M breakpoint
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(20, 21)
+
+# Add extra rows to MG table
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+# Fix young female M at male M
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+new_name <- 'M_break20_no_sex_selex'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models/sensitivities',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   'sensitivities/M_break10',
+                                                   'sensitivities/M_break10_no_sex_selex',
+                                                   'sensitivities/M_break20',
+                                                   'sensitivities/M_break20_no_sex_selex',
+                                                   'sensitivities/M_ramp',
+                                                   'sensitivities/M_ramp_no_sex_selex'))))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'M break 10',
+                                     'M break 10 no sex selex',
+                                     'M break 20',
+                                     'M break 20 no sex selex',
+                                     'M ramp',
+                                     'M ramp no sex selex'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
+
+
 # D-M data weighting ------------------------------------------------------
 
 mod <- base_mod
@@ -344,9 +498,6 @@ SS_output(dir = new_dir) |>
                    extras = '-nohess',
                    allow_up_tuning = TRUE,
                    write = TRUE)
-
-
-# Bomb radiocarbon bias ---------------------------------------------------
 
 
 # Float Triennial Q -------------------------------------------------------
@@ -602,6 +753,8 @@ mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2016, 2017, 2022), #TWL fleets
                              c(2004, 2014, 2015, 2022), #OR rec
                              c(2006, 2020, 2021, 2022)) #WA rec
 
+selex_new <- mod$ctl$size_selex_parms
+
 #Time varying selectivity table
 selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
   dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
@@ -623,6 +776,51 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           extras = '-nohess', 
           show_in_console = FALSE,
           skipfinished = FALSE)
+
+
+# Add blocks to trawl fleet in 2020 -----------------------------------------------------
+
+#Not a great signal in any of the trawl fleets here but 2020 was when depths were opened back up
+#State partners suggested 2017 was bigger factor but also wanted to add 2020 here too
+
+mod <- base_mod
+
+mod$ctl$blocks_per_pattern <- c(3,2,2,2,2)
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+
+#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2019, 2020, 2022), #TWL fleets
+                             c(2000, 2019, 2020, 2022), #CA/OR ntwl
+                             c(2004, 2016, 2017, 2022), #CA rec
+                             c(2004, 2014, 2015, 2022), #OR rec
+                             c(2006, 2020, 2021, 2022)) #WA rec
+
+selex_new <- mod$ctl$size_selex_parms
+
+#Time varying selectivity table
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+new_name <- 'block_TWL_2020'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+#Fit is not as good but it puts the model in the high recent recdev high recovery place (without greatly lowering female M). 
+
 
 
 # Add released fish into length comps for CA and OR rec fleets -----------------------------------------------------
@@ -1081,6 +1279,31 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           extras = '-nohess', 
           show_in_console = FALSE,
           skipfinished = FALSE)
+
+
+# Use suggested bias correction values --------------------------------------------------------
+
+
+mod_output <- SS_output(here('models',base_mod_name),covar=TRUE)
+biasadj <- SS_fitbiasramp(mod_output, verbose = TRUE)
+
+mod <- base_mod
+
+mod$ctl$last_early_yr_nobias_adj <- biasadj$newbias$par[1]
+mod$ctl$last_yr_fullbias_adj <- biasadj$newbias$par[3]
+mod$ctl$max_bias_adj <- biasadj$newbias$par[5]
+
+new_name <- 'update_bias'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
 
 # Summaries ---------------------------------------------------------------
  
