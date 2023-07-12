@@ -104,6 +104,17 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE, 
           skipfinished = FALSE)
 
+pp <- SS_output(here('models/sensitivities',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   'sensitivities/survey_catches'))))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'Add survey catches'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
+
 
 
 
@@ -1303,6 +1314,15 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           extras = '-nohess', 
           show_in_console = FALSE,
           skipfinished = FALSE)
+
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   'sensitivities/update_bias'))))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'Update bias'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
+
 
 
 # Summaries ---------------------------------------------------------------
