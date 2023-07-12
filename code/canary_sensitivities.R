@@ -117,8 +117,6 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
 
 
-
-
 # Prerecruit survey add 3 years -------------------------------------------
 
 mod <- base_mod
@@ -917,6 +915,96 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           extras = '-nohess', 
           show_in_console = FALSE,
           skipfinished = FALSE)
+
+
+# Use comps from updated PacFIN utilities -----------------------------------------------------
+
+mod <- base_mod
+
+#Update pacfin comps
+length.min <- min(mod$dat$lbin_vector)
+length.max <- max(mod$dat$lbin_vector)
+age.min <- min(mod$dat$agebin_vector)
+age.max <- max(mod$dat$agebin_vector)
+
+read.fishery.comps <- function(filename, exclude) {
+  
+}
+
+pacfin.ages <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Acomps_{amin}_{amax}_formatted_noNAs.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-state, -Ntows, -Nsamps) |>
+    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+                                                                       area = .x,
+                                                                       fleet = .fleet)])) |> 
+    `names<-`(names(mod$dat$agecomp))
+}) |> 
+  purrr::list_rbind() 
+
+pacfin.lengths <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Lcomps_{lmin}_{lmax}_formatted_noNAs.csv',
+                           area = .x,
+                           lmin = length.min,
+                           lmax = length.max))) |>
+    dplyr::select(-state, -Ntows, -Nsamps) |>
+    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+                                                                       area = .x, 
+                                                                       fleet = .fleet)])) |>
+    `names<-`(names(mod$dat$lencomp))
+}) |>
+  purrr::list_rbind()
+
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(pacfin.ages$FltSvy))) |>
+  dplyr::bind_rows(pacfin.ages)
+
+mod$dat$lencomp <- mod$dat$lencomp |> 
+  dplyr::filter(!(FltSvy %in% unique(pacfin.lengths$FltSvy))) |>
+  dplyr::bind_rows(pacfin.lengths)
+
+#Make adjustments to remove spiky data (model 201)
+#Remove sex = 0 fish for all AGE comps (Most have small absolute sample size or small relative to sexed samples)
+#NTWL (WA, OR); ASHOP (WA), Rec (OR, WA), and TWL (CA, OR, WA). Of these WA TWL has most samples so could be kept.  
+table(mod$dat$agecomp$FltSvy, mod$dat$agecomp$Gender, mod$dat$agecomp$Yr <0)
+mod$dat$agecomp$Yr[mod$dat$agecomp$Gender == 0] <- -1 * 
+  mod$dat$agecomp$Yr[mod$dat$agecomp$Gender == 0]
+
+#Remove sex = 0 fish for some LENGTH comps that have few samples (absolute or relative to sexed samples)
+#NTWL (WA, OR); ASHOP (WA, OR), and TWL (OR). WA rec has sparse data but sex=0 is similarly sparse as sex=3 so keep   
+table(mod$dat$lencomp$FltSvy, mod$dat$lencomp$Gender, mod$dat$lencomp$Yr <0)
+mod$dat$lencomp$Yr[mod$dat$lencomp$Gender == 0 & mod$dat$lencomp$FltSvy %in% c(2,5,6,11,12)] <- -1 * 
+  mod$dat$lencomp$Yr[mod$dat$lencomp$Gender == 0 & mod$dat$lencomp$FltSvy %in% c(2,5,6,11,12)]
+
+new_name <- 'updated_PacFIN_utilities_comps_nospiky'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+pp <- SS_output(here('models/sensitivities',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   'sensitivities/updated_PacFIN_utilities_comps'))))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'PacFIN util comps'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
+
+
 
 # Sex-constant M (TOR)-----------------------------------------------------
 
