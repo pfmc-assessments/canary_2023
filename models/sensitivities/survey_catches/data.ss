@@ -41,9 +41,9 @@
 3	 1	1	32	0	25_CA_prerec          	#_25
 3	 1	1	32	0	26_OR_prerec          	#_26
 3	 1	1	32	0	27_WA_prerec          	#_27
-3	 1	1	 1	0	28_coastwide_NWFSC    	#_28
-3	 1	1	 1	0	29_coastwide_Tri_early	#_29
-3	 1	1	 1	0	30_coastwide_Tri_late 	#_30
+1	 1	1	 2	0	28_coastwide_NWFSC    	#_28
+1	 1	1	 2	0	29_coastwide_Tri_early	#_29
+1	 1	1	 2	0	30_coastwide_Tri_late 	#_30
 3	 1	1	32	0	31_coastwide_prerec   	#_31
 #_Catch data
 #_year	season	fleet	catch	catch_se

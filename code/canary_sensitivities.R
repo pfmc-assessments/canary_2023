@@ -74,6 +74,7 @@ SSsummarize(xx) |>
 mod <- base_mod
 
 mod$dat$fleetinfo[grep("28|29|30",mod$dat$fleetinfo$fleetname),]$units <- 1
+mod$dat$fleetinfo[grep("28|29|30",mod$dat$fleetinfo$fleetname),]$type <- 1
 
 survey_catch <- googlesheets4::read_sheet(googledrive::drive_get("research_catch"))
 survey_catch$mt <- survey_catch$total_catch_wt_kg/1000
