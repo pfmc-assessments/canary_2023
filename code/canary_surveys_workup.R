@@ -32,9 +32,12 @@ if(Sys.getenv("USERNAME") == "Kiva.Oken") {
 }
 
 # load data from gdrive
-# wcgbts_bio <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreadsheets/d/1GfsJ4oJNqXm6tjSA3NeBR9L6F1ZwQp5b7-f7nHMKM2A/edit#gid=0')
-# triennial_bio <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreadsheets/d/1cStwfD0-jaNj44ANCEmNNw7lWrMRVdrmt3GjwiqVfl8/edit#gid=0',
+# wcgbts_bio <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreadsheets/d/19lmADWs0doiKdxUHHfdWPVBfTp_OwD77QXxkcRbGOKw/edit#gid=0')
+# triennial_bio = list()
+# triennial_bio$Ages <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreadsheets/d/1oAl-qJEwGxNKjEdyIX_8LmEtF4sNeihv_-aeHhx97PQ/edit#gid=0',
 #                                            sheet = 'age')
+# triennial_bio$Lengths <- googlesheets4::read_sheet(ss = 'https://docs.google.com/spreadsheets/d/1oAl-qJEwGxNKjEdyIX_8LmEtF4sNeihv_-aeHhx97PQ/edit#gid=0',
+#                                            sheet = 'length')
 # Coos Bay latitude: 43.3672
 
 # Combine age data from triennial and wcgbts, create flags --------
@@ -143,6 +146,16 @@ age_combo %>%
   facet_wrap(~is_south_ca, 
              labeller = as_labeller(c(`TRUE` = 'CA', `FALSE` = 'OR-WA'))) +
   ggsidekick::theme_sleek()
+
+#combining for STAR
+age_combo %>%
+  dplyr::filter(survey == 'trawl') %>%
+  ggplot() +
+  geom_point(aes(x = Age, y = Length_cm, col = is_south_ca), alpha = 0.25, pch=16) + 
+  geom_function(data = transform(age_combo, is_south_ca = TRUE), col = 2,
+                fun = vbgf, args = as.list(coefs1)) +
+  geom_function(data = transform(age_combo, is_south_ca = FALSE), col = 4, lty = 2,
+                fun = vbgf, args = as.list(coefs2))
 
 dplyr::group_by(wcgbts_bio, factor(Year)) %>% 
   dplyr::summarise(n = dplyr::n()) %>%
