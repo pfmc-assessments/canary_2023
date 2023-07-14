@@ -531,3 +531,57 @@ colnames(out)<-col_names
 write.csv(out, here('documents','tables','projections.csv'), row.names = FALSE)
 
 
+
+#Sample sizes figures for STAR presentation -----------------------------------
+fdlen <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_lengths.csv')),
+                   readr::read_csv(here('data/Canary_ashop_LengthComps_hauls_and_samples.csv')),
+                   by = "Year"),
+                   readr::read_csv(here('documents/tables/rec_lengths.csv')), by = join_by(Year == year)) |>
+  dplyr::select(contains("Lengths") | contains("N", ignore.case=FALSE) | contains("Year")) |>
+  dplyr::select(!contains("Trips")) |>
+  dplyr::rename("Lengths_ASHOP.O" = "OR_N",
+                "Lengths_ASHOP.W" = "WA_N",
+                "Lengths_REC.C" = "N_CA",
+                "Lengths_REC.O" = "N_OR",
+                "Lengths_REC.W" = "N_WA") |>
+  tidyr::pivot_longer(cols = - Year, names_pattern = "(Lengths)_(.*).(.)", 
+                      names_to = c(".value", "fleet", "state"))
+
+
+fdage <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_ages.csv')),
+                             readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')),
+                             by = "Year"),
+                   readr::read_csv(here('documents/tables/rec_ages.csv')), by = join_by(Year == year)) |>
+  dplyr::select(contains("Ages") | contains("N", ignore.case=FALSE) | contains("Year")) |>
+  dplyr::select(!contains("Trips")) |>
+  dplyr::rename("Ages_ASHOP.O" = "OR_N",
+                "Ages_ASHOP.W" = "WA_N",
+                "Ages_REC.O" = "O_or_ora_N",
+                "Ages_REC.W" = "W_wa_sport_N") |>
+  tidyr::pivot_longer(cols = - Year, names_pattern = "(Ages)_(.*).(.)", 
+                      names_to = c(".value", "fleet", "state"))
+  
+
+lab_val = c("California", "Oregon", "Washington")
+names(lab_val) = c("C","O","W")
+
+ggplot(fdlen, aes(fill=fleet, x=Year, y = Lengths)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of length samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(here('documents','figures',"lenN_fleet.png")),
+       width = 6, height = 6)
+
+ggplot(fdage, aes(fill=fleet, x=Year, y = Ages)) + 
+  geom_bar(position="stack", stat="identity") +
+  facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
+  xlab("Year") +
+  ylab("# of aged samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+ggsave(file.path(here('documents','figures',"ageN_fleet.png")),
+       width = 6, height = 6)
+
+  
+
