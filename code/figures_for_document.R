@@ -284,6 +284,16 @@ file.copy(from =  here('models','Bridging coastwide', '3_2_7_update_bio_Mval_pha
                     c("bridge3_M_spawnbio_uncertainty.png","bridge3_M_compare4_Bratio_uncertainty.png")),overwrite = TRUE)
 
 
+#Natural mortality for presentation
+
+png(here('documents','figures',"natural_mortality.png"), width = 4, height = 5, units = "in", res = 300)
+  curve(dlnorm(x, meanlog=log(5.4/84), sdlog=0.31), from=0, to=0.2, yaxs = 'i',
+        xlab = "Natural Mortality", ylab = "Density")
+  abline(v=5.4/84, lty = 3)
+dev.off()
+
+
+
 #Spatial structure and tuning --------------------------------
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models','Bridging coastwide'),
