@@ -12335,10 +12335,10 @@ r4ss::run(dir = here('models',new_name),
 
 pp <- SS_output(here('models',new_name))
 SS_plots(pp)
-SSplotData(pp, print = TRUE, subplots = c(1), plotdir = here('documents/figures'),
+SSplotData(pp, print = TRUE, subplots = c(1,2), plotdir = here('documents/figures'),
            pwidth = 5.5, pheight = 7, ptsize = 8,margins = c(5.1, 2.1, 2.1, 10.1))
-file.rename(from = file.path(here('documents/figures'), "data_plot.png"),
-            to = file.path(here('documents/figures'), "data_plot_custom.png"))
+file.rename(from = file.path(here('documents/figures'), c("data_plot.png","data_plot2.png")),
+            to = file.path(here('documents/figures'), c("data_plot_custom.png","data_plot2_custom.png")))
 #To make CAAL plots on fewer plots run this which copied the two CAAL WCGBTS plots to documents/figures
 SS_plots(pp, plot = 18, maxrows2 = 4, maxcols2 = 5, printfolder = "custom_plots")
 file.rename(from = file.path(here('models', new_name, 'custom_plots'), "comp_condAALfit_residsflt28mkt0_page1.png"),
