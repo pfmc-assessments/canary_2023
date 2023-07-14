@@ -12393,6 +12393,32 @@ legend("topleft",
 )
 dev.off()
 
+#Improve legend on catch plot - thanks to Ian
+png(file.path(here('documents/figures'), "catch1 landings_customTWL.png"),
+    res = 300, 
+    units = "in",
+    width = 6.5, 
+    height = 4.1, # change this to make it taller
+    pointsize = 10 # change this to make the text even smaller
+    # r4ss default is pointsize = 10
+)
+
+fleets_with_catch <- sort(unique(pp$catch$Fleet))
+legend_labels <- pp$FleetNames[fleets_with_catch]
+# colors matching what's done in SSplotCatch()
+# (removes first color from vector)
+legend_colors <- r4ss::rich.colors.short(length(legend_labels) + 1)[-1]
+legend_colors <- r4ss::rich.colors.short(3)
+
+SSplotCatch(pp, showlegend = FALSE, subplots = 1, ymax = 6000, addmax = FALSE, fleetcols = c(legend_colors,rep(NA,length(fleets_with_catch)-3)))
+legend("topleft",
+       fill = c(1,legend_colors), 
+       legend = c("Total",legend_labels[1:3]), 
+       bty = "n",
+       ncol = 1 # number of columns: could change this to 3 if you want
+)
+dev.off()
+
 # #confirm external growth is within bounds (taken from discussion #21)
 # age = c(1:40)
 # lmm <- 8.344 + (54.6481000	 - 8.344) * (1-exp(-0.1558210 * (age-1)))
