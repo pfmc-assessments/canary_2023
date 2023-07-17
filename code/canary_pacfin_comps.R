@@ -111,7 +111,7 @@ Pdata2 <- Pdata %>%
 PdataAge = Pdata2 #set up for age comps later
 rmNoFin <- which(!is.na(PdataAge$Age) & is.na(PdataAge$FISH_AGE_YEARS_FINAL)) #remove ages without FINAL_AGE assigned (see github issue #11)
 PdataAge <- PdataAge[-rmNoFin,]
-PdataAge <- PdataAge[!is.na(PdataAge[,"Age"]),]
+PdataAge <- PdataAge[!is.na(PdataAge[,"FISH_AGE_YEARS_FINAL"]),]
 
 # PdataAgeCoast <- PdataAge #set up coast age comps for later
 # PdataAgeCoast$fleet <- sub("\\..*", "", PdataAgeCoast$fleet) #keep only stuff before "."
@@ -168,7 +168,7 @@ trips_sample <- PdataAge %>%
     Ages = length(Age)
   )
 colnames(trips_sample)[2] <- "Year"
-# write.csv(trips_sample, row.names = FALSE, file = file.path(git_dir, "data", "Canary_PacFIN_AgeComps_trips_and_samples.csv"))
+# write.csv(trips_sample, row.names = FALSE, file = file.path(git_dir, "data", "Canary_PacFIN_AgeComps_trips_and_samples_FISH_AGE_YEARS_FINAL.csv"))
 #Coast samples we can sum together
 
 # #Put in format for the report
@@ -258,7 +258,7 @@ Acomps = getComps(Adata_exp, Comps = "AGE", defaults = c("fleet", "fishyr", "sea
 for(ageerr in unique(Acomps$ageerr)) {
   writeComps(
     inComps = Acomps[Acomps$ageerr == ageerr,],
-      fname = file.path(git_dir, "data", paste0("Canary_PacFIN_AgeCompsAgeErr",ageerr,".csv")),
+      fname = file.path(git_dir, "data", paste0("Canary_PacFIN_AgeCompsAgeErr",ageerr,"_FISH_AGE_YEARS_FINAL.csv")),
       abins = myAbins,
       partition = 0,
       ageErr = ageerr,
@@ -405,7 +405,7 @@ wa_all_comps = rbind(wa_comps, wa_sexed_comps)
 ca_all_comps = or_all_comps = wa_all_comps = NULL
 
 for(i in unique(Acomps$ageerr)){
-  out = read.csv(file.path(git_dir, "data", paste0("Canary_PacFIN_AgeCompsAgeErr",i,".csv")), skip = 3, header = FALSE)
+  out = read.csv(file.path(git_dir, "data", paste0("Canary_PacFIN_AgeCompsAgeErr",i,"_FISH_AGE_YEARS_FINAL.csv")), skip = 3, header = FALSE)
   
   ##
   #Extract Unsexed fish
@@ -459,9 +459,9 @@ for(i in unique(Acomps$ageerr)){
   wa_all_comps = rbind(wa_all_comps, wa_comps, wa_sexed_comps)
 }
 
-# write.csv(ca_all_comps, file = file.path(git_dir, "data", "forSS","CA_PacFIN_Acomps_1_35_formatted.csv"), row.names = FALSE)
-# write.csv(or_all_comps, file = file.path(git_dir, "data", "forSS","OR_PacFIN_Acomps_1_35_formatted.csv"), row.names = FALSE)
-# write.csv(wa_all_comps, file = file.path(git_dir, "data", "forSS","WA_PacFIN_Acomps_1_35_formatted.csv"), row.names = FALSE)
+# write.csv(ca_all_comps, file = file.path(git_dir, "data", "forSS","CA_PacFIN_Acomps_1_35_formatted_FISH_AGE_YEARS_FINAL.csv"), row.names = FALSE)
+# write.csv(or_all_comps, file = file.path(git_dir, "data", "forSS","OR_PacFIN_Acomps_1_35_formatted_FISH_AGE_YEARS_FINAL.csv"), row.names = FALSE)
+# write.csv(wa_all_comps, file = file.path(git_dir, "data", "forSS","WA_PacFIN_Acomps_1_35_formatted_FISH_AGE_YEARS_FINAL.csv"), row.names = FALSE)
 
 
 # ##
