@@ -12970,3 +12970,153 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
 
 xx$model1 - xx$model2
 # Model runs are identical
+
+
+####------------------------------------------------####
+### 7_0_0_fixAges - Correct error in commercial age comp work up (include recent ages now) 
+####------------------------------------------------####
+
+new_name <- "7_0_0_addAges"
+old_name <- "6_1_0_projections"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+fleet.converter <- mod$dat$fleetinfo |>
+  dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
+                fleet = as.numeric(stringr::str_extract(fleetname, '[:digit:]+'))) |>
+  dplyr::select(fleetname, fleet_no_num, fleet)
+
+##
+#Make changes
+##
+
+#Update pacfin comps
+length.min <- min(mod$dat$lbin_vector)
+length.max <- max(mod$dat$lbin_vector)
+age.min <- min(mod$dat$agebin_vector)
+age.max <- max(mod$dat$agebin_vector)
+
+read.fishery.comps <- function(filename, exclude) {
+  
+}
+
+#Just need to do so for ages
+pacfin.ages <- purrr::map(list('CA', 'OR', 'WA'), function(.x) {
+  read.csv(here(glue::glue('data/forSS/{area}_PacFIN_Acomps_{amin}_{amax}_formatted_fixAges.csv',
+                           area = .x,
+                           amin = age.min,
+                           amax = age.max))) |>
+    dplyr::select(-state, -Ntows, -Nsamps) |>
+    dplyr::mutate(fleet = sapply(fleet, function(.fleet)
+      fleet.converter$fleet[fleet.converter$fleet_no_num == glue::glue('{area}_{fleet}',
+                                                                       area = .x,
+                                                                       fleet = .fleet)])) |> 
+    `names<-`(names(mod$dat$agecomp))
+}) |> 
+  purrr::list_rbind() 
+
+mod$dat$agecomp <- mod$dat$agecomp |> 
+  dplyr::filter(!(FltSvy %in% unique(pacfin.ages$FltSvy))) |>
+  dplyr::bind_rows(pacfin.ages)
+
+#Make adjustments to remove spiky data (ala model 201)
+#Remove sex = 0 fish for all AGE comps (Most have small absolute sample size or small relative to sexed samples)
+#NTWL (WA, OR); ASHOP (WA), Rec (OR, WA), and TWL (CA, OR, WA). Of these WA TWL has most samples so could be kept.  
+table(mod$dat$agecomp$FltSvy, mod$dat$agecomp$Gender, mod$dat$agecomp$Yr <0)
+mod$dat$agecomp$Yr[mod$dat$agecomp$Gender == 0 & mod$dat$agecomp$Yr >0] <- -1 * 
+  mod$dat$agecomp$Yr[mod$dat$agecomp$Gender == 0 & mod$dat$agecomp$Yr >0]
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_5_0_hessian',
+                                                 '7_0_0_addAges')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Pre star base',
+                                     'Add omitted commercial ages'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 7_0_1_tune - Retun 
+####------------------------------------------------####
+
+new_name <- "7_0_1_tune"
+old_name <- "7_0_0_addAges"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models',old_name),
+               dir.new = here('models',new_name),
+               overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"covar.sso"),
+          to = file.path(here('models',new_name),"covar.sso"), overwrite = TRUE)
+
+pp <- SS_output(here('models',old_name))
+
+##
+#Make changes
+##
+
+xx=r4ss::tune_comps(replist = pp, 
+                    option = 'Francis', 
+                    dir = here('models', new_name), 
+                    exe = here('models/ss_win.exe'), 
+                    niters_tuning = 1, 
+                    extras = '-nohess',
+                    allow_up_tuning = TRUE)
+
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_5_0_hessian',
+                                                 '7_0_0_addAges',
+                                                 '7_0_1_tune')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Pre star base',
+                                     'Add omitted commercial ages',
+                                     'Retuned'),
+                    subplots = c(1, 3, 9, 11), print = TRUE, plotdir = here('models',new_name))
+
