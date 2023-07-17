@@ -546,7 +546,7 @@ fdlen <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_lengt
                 "Lengths_REC.W" = "N_WA") |>
   tidyr::pivot_longer(cols = - Year, names_pattern = "(Lengths)_(.*).(.)", 
                       names_to = c(".value", "fleet", "state"))
-
+fdlen$fleet <- factor(fdlen$fleet, levels = c("ASHOP","REC","NTWL","TWL"))
 
 fdage <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_ages.csv')),
                              readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')),
@@ -560,28 +560,55 @@ fdage <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_ages.
                 "Ages_REC.W" = "W_wa_sport_N") |>
   tidyr::pivot_longer(cols = - Year, names_pattern = "(Ages)_(.*).(.)", 
                       names_to = c(".value", "fleet", "state"))
+fdage$fleet <- factor(fdage$fleet, levels = c("ASHOP","REC","NTWL","TWL"))
   
 
 lab_val = c("California", "Oregon", "Washington")
 names(lab_val) = c("C","O","W")
 
+
 ggplot(fdlen, aes(fill=fleet, x=Year, y = Lengths)) + 
-  geom_bar(position="stack", stat="identity") +
+  geom_bar(position="stack", stat="identity", color = "gray", width = 1) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
   ylab("# of length samples") + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  scale_fill_manual(values=viridis::viridis(n=4))
 ggsave(file.path(here('documents','figures',"lenN_fleet.png")),
        width = 6, height = 6)
 
 ggplot(fdage, aes(fill=fleet, x=Year, y = Ages)) + 
-  geom_bar(position="stack", stat="identity") +
+  geom_bar(position="stack", stat="identity", color = "gray", width = 1) +
   facet_wrap("state", ncol=1, labeller = labeller(state = lab_val)) +
   xlab("Year") +
   ylab("# of aged samples") + 
-  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  scale_fill_manual(values=viridis::viridis(n=4))
 ggsave(file.path(here('documents','figures',"ageN_fleet.png")),
        width = 6, height = 6)
 
+
+#Squid plot for retro recruitments
+
+retro_model = "5_5_0_profile_retro_5yr"
+base <- mod23
+retro1 = SS_output(here('models',retro_model, "retro", "retro-1"), printstats = FALSE, verbose = FALSE, covar = FALSE)
+retro2 = SS_output(here('models',retro_model, "retro", "retro-2"), printstats = FALSE, verbose = FALSE, covar = FALSE)
+retro3 = SS_output(here('models',retro_model, "retro", "retro-3"), printstats = FALSE, verbose = FALSE, covar = FALSE)
+retro4 = SS_output(here('models',retro_model, "retro", "retro-4"), printstats = FALSE, verbose = FALSE, covar = FALSE)
+retro5 = SS_output(here('models',retro_model, "retro", "retro-5"), printstats = FALSE, verbose = FALSE, covar = FALSE)
+modelnames <- c("Base Model", paste0("Retro -", 1:5))
+
+mysummary <- SSsummarize(list(base, retro1, retro2, retro3, retro4, retro5))
+
+SSplotRetroRecruits(retroSummary = mysummary,
+                    endyrvec = rev(2013:2023), #rev(2008:2023),
+                    cohorts = 2016:2022, #2010:2023,
+                    ylim=NULL,
+                    uncertainty=FALSE,
+                    labels=c('Recruitment deviation', 'Recruitment (millions)', 'relative to recent estimate', 'Age'),
+                    main="",
+                    mcmcVec=FALSE,devs=TRUE,
+                    relative=FALSE,labelyears=TRUE,legend=FALSE,leg.ncols=4)
   
 
