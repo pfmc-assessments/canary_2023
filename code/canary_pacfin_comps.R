@@ -165,17 +165,17 @@ trips_sample <- PdataAge %>%
   dplyr::group_by(fleet, year) %>%
   dplyr::summarise(
     Trips = length(unique(SAMPLE_NO)),
-    Ages = length(Age)
+    Ages = length(FISH_AGE_YEARS_FINAL)
   )
 colnames(trips_sample)[2] <- "Year"
 # write.csv(trips_sample, row.names = FALSE, file = file.path(git_dir, "data", "Canary_PacFIN_AgeComps_trips_and_samples_FISH_AGE_YEARS_FINAL.csv"))
 #Coast samples we can sum together
 
 # #Put in format for the report
-# write.csv(tidyr::pivot_wider(trips_sample,names_from = "fleet", values_from = c("Trips","Ages"), 
+# write.csv(tidyr::pivot_wider(trips_sample,names_from = "fleet", values_from = c("Trips","Ages"),
 #                              names_sort = TRUE, values_fill = 0) %>%
 #             arrange(Year),
-#           row.names = FALSE, file = file.path(git_dir,"documents","tables","pacfin_ages.csv"))
+#           row.names = FALSE, file = file.path(git_dir,"documents","tables","pacfin_ages_FISH_AGE_YEARS_FINAL.csv"))
 
 
 #################################################################################
@@ -237,6 +237,9 @@ writeComps(inComps = Lcomps,
 #################################################################################
 # Age comp expansions
 #################################################################################
+
+PdataAge$Age_old <- PdataAge$Age
+PdataAge$Age <- PdataAge$FISH_AGE_YEARS_FINAL
 
 Adata_exp <- getExpansion_1(Pdata = PdataAge,
                             fa = fa, fb = fb, ma = ma, mb = mb, ua = ua, ub = ub)
