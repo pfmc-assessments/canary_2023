@@ -13120,3 +13120,52 @@ SSsummarize(xx) |>
                                      'Retuned'),
                     subplots = c(1, 3, 9, 11), print = TRUE, plotdir = here('models',new_name))
 
+
+####------------------------------------------------####
+### 7_0_2_hessian - now run with a hessian 
+####------------------------------------------------####
+
+new_name <- "7_0_2_hessian"
+old_name <- "7_0_1_tune"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('5_5_0_hessian',
+                                                 '7_0_2_hessian')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Pre star base',
+                                     'Recent ages added'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+#Update sigmaR with tuned value? Suggests 0.5 is good so keep it
+pp$sigma_R_info[pp$sigma_R_info$period == "Main","alternative_sigma_R"]
+
+#Update bias adjust? Not really, just maybe start, last full bias, and max bias adj
+pp$breakpoints_for_bias_adjustment_ramp
+biasadj <- SS_fitbiasramp(pp, verbose = TRUE)
+
