@@ -13159,7 +13159,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Pre star base',
                                      'Recent ages added'),
-                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+                    subplot = c(1:4,9,11), print = TRUE, plotdir = here('models',new_name))
 
 
 #Update sigmaR with tuned value? Suggests 0.5 is good so keep it
@@ -13168,4 +13168,216 @@ pp$sigma_R_info[pp$sigma_R_info$period == "Main","alternative_sigma_R"]
 #Update bias adjust? Not really, just maybe start, last full bias, and max bias adj
 pp$breakpoints_for_bias_adjustment_ramp
 biasadj <- SS_fitbiasramp(pp, verbose = TRUE)
+
+
+####------------------------------------------------####
+### 7_0_3_asympSelex_waRec - the later block for WA rec has high corrrelation among the parameters. Set to asymptotic
+####------------------------------------------------####
+
+new_name <- "7_0_3_asympSelex_waRec"
+old_name <- "7_0_2_hessian"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms_tv[grep("SizeSel_P_4_9_WA_REC\\(9\\)_BLK5repl_2021",rownames(mod$ctl$size_selex_parms_tv)),c("INIT","PHASE")] <- c(15,-99)
+mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_9_WA_REC\\(9\\)_BLK5repl_2021",rownames(mod$ctl$size_selex_parms_tv)),"PHASE"] <- -99
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_0_3_asympSelex_waRec')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'Asymptotic selex for last WA Rec block'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 7_0_4_noSexSelex_waRec - the later block for WA rec has high corrrelation among the parameters. Remove sex selectivity
+####------------------------------------------------####
+
+new_name <- "7_0_4_noSexSelex_waRec"
+old_name <- "7_0_2_hessian"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_9_WA_REC\\(9\\)_BLK5repl_2021",rownames(mod$ctl$size_selex_parms_tv)),"PHASE"] <- -99
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_0_3_asympSelex_waRec',
+                                                 '7_0_4_noSexSelex_waRec')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'Asymptotic selex for last WA Rec block',
+                                     'No sex selex for last WA Rec block'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 7_0_5_noSexSelex_orNTWL - When resolving correlation in later block for WA rec, OR NTWL later block then has high corrrelation. 
+### Removing sex selectivity for WA rec seemed to resolve it so trying also for OR NTWL
+####------------------------------------------------####
+
+new_name <- "7_0_5_noSexSelex_orNTWL"
+old_name <- "7_0_4_noSexSelex_waRec"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_5_OR_NTWL\\(5\\)_BLK2repl_2020",rownames(mod$ctl$size_selex_parms_tv)),"PHASE"] <- -99
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_0_3_asympSelex_waRec',
+                                                 '7_0_4_noSexSelex_waRec',
+                                                 '7_0_5_noSexSelex_orNTWL')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'Asymptotic selex for last WA Rec block',
+                                     'No sex selex for last WA Rec block',
+                                     'No sex selex for last WA Rec and OR NTWL block'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 7_1_0_hessStep - run hess step in prep for jitter
+####------------------------------------------------####
+
+new_name <- "7_1_0_hessStep"
+old_name <- "7_0_2_hessian"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-hess_Step',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_1_0_hessStep',
+                                                 '7_0_4_noSexSelex_waRec',
+                                                 '7_0_5_noSexSelex_orNTWL')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'run hess step'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
 
