@@ -548,7 +548,7 @@ fdlen <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_lengt
                       names_to = c(".value", "fleet", "state"))
 fdlen$fleet <- factor(fdlen$fleet, levels = c("ASHOP","REC","NTWL","TWL"))
 
-fdage <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_ages.csv')),
+fdage <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_ages_fixAges.csv')),
                              readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')),
                              by = "Year"),
                    readr::read_csv(here('documents/tables/rec_ages.csv')), by = join_by(Year == year)) |>
@@ -584,8 +584,35 @@ ggplot(fdage, aes(fill=fleet, x=Year, y = Ages)) +
   ylab("# of aged samples") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   scale_fill_manual(values=viridis::viridis(n=4))
-ggsave(file.path(here('documents','figures',"ageN_fleet.png")),
+ggsave(file.path(here('documents','figures',"ageN_fleet_fixAges.png")),
        width = 6, height = 6)
+
+
+
+#Sample size figures for surveys
+fi <- full_join(readr::read_csv(here('documents/tables/wcgbts_summary.csv')),
+                             readr::read_csv(here('documents/tables/triennial_summary.csv')),
+                             by = "Year") |>
+  dplyr::select(contains("lengths") | contains("ages") | contains("Year")) |>
+  dplyr::rename("N_Lengths_WCGBTS" = "N lengths.x",
+                "N_Lengths_Triennial" = "N lengths.y",
+                "N_Ages_WCGBTS" = "N ages.x",
+                "N_Ages_Triennial" = "N ages.y") |>
+  tidyr::pivot_longer(cols = - Year, names_pattern = "(N)_(.*)_(.*)", 
+                      names_to = c(".value", "type", "fleet"))
+fi$type <- factor(fi$type, levels = c("Lengths","Ages"))
+
+
+ggplot(fi, aes(fill=fleet, x=Year, y = N)) + 
+  geom_bar(position="stack", stat="identity", color = "gray", width = 1) +
+  facet_wrap("type") +
+  xlab("Year") +
+  ylab("# of samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  scale_fill_manual(values=viridis::viridis(n=2))
+ggsave(file.path(here('documents','figures',"N_survey.png")),
+       width = 6, height = 4)
+
 
 
 #Squid plot for retro recruitments
