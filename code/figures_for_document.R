@@ -618,11 +618,23 @@ ggsave(file.path(here('documents','figures',"N_survey.png")),
 
 #Discard ratio plots -----------------------------------
 
-removals <- read.csv(here::here('data-raw',))
+removals <- read.csv(here::here('data-raw',"CONFIDENTIAL_canary_removals_forStateApproval_June8.csv"), header = TRUE)
 
+removals$TWL.mt <- removals$TWL.C + removals$TWL.O + removals$TWL.W
+removals$TWL.dis <- removals$TWL.C.dis + removals$TWL.O.dis + removals$TWL.W.dis
+removals$TWL.dis.ratio <- removals$TWL.dis/(removals$TWL.mt + removals$TWL.dis)
 
+removals$NTWL.mt <- removals$NTWL.C + removals$NTWL.O + removals$NTWL.W
+removals$NTWL.dis <- removals$NTWL.C.dis + removals$NTWL.O.dis + removals$NTWL.W.dis
+removals$NTWL.dis.ratio <- removals$NTWL.dis/(removals$NTWL.mt + removals$NTWL.dis)
 
-
+png(here('documents',"figures","commercial_discard_ratio.png"), width = 6, height = 4, units = "in", res=300)
+plot(removals$Year, removals$TWL.dis.ratio,type = "b", 
+     xlim = c(1975,2022), ylim = c(0,1), yaxs = 'i',
+     lwd = 3, ylab = "Proportion of removals that are discards")
+lines(removals$Year, removals$NTWL.dis.ratio, type = "b", lwd = 3, col = 2)
+legend("topleft",c("Trawl", "Non-trawl"), lwd = 3, col = c(1,2), lty = 1, bty = "n")
+dev.off()
 
 #Squid plot for retro recruitments -----------------------------------
 
