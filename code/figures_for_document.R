@@ -533,6 +533,8 @@ write.csv(out, here('documents','tables','projections.csv'), row.names = FALSE)
 
 
 #Sample sizes figures for STAR presentation -----------------------------------
+
+#Sample sizes for fishery data
 fdlen <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_lengths.csv')),
                    readr::read_csv(here('data/Canary_ashop_LengthComps_hauls_and_samples.csv')),
                    by = "Year"),
@@ -589,7 +591,7 @@ ggsave(file.path(here('documents','figures',"ageN_fleet_fixAges.png")),
 
 
 
-#Sample size figures for surveys
+#Sample size figures for survey data
 fi <- full_join(readr::read_csv(here('documents/tables/wcgbts_summary.csv')),
                              readr::read_csv(here('documents/tables/triennial_summary.csv')),
                              by = "Year") |>
@@ -614,10 +616,19 @@ ggsave(file.path(here('documents','figures',"N_survey.png")),
        width = 6, height = 4)
 
 
+#Discard ratio plots -----------------------------------
 
-#Squid plot for retro recruitments
+removals <- read.csv(here::here('data-raw',))
+
+
+
+
+
+#Squid plot for retro recruitments -----------------------------------
 
 retro_model = "5_5_0_profile_retro_5yr"
+retro_model = "5_5_0_hessian_retro"
+retro_model = "7_0_2_hessian_retro"
 base <- mod23
 retro1 = SS_output(here('models',retro_model, "retro", "retro-1"), printstats = FALSE, verbose = FALSE, covar = FALSE)
 retro2 = SS_output(here('models',retro_model, "retro", "retro-2"), printstats = FALSE, verbose = FALSE, covar = FALSE)
@@ -628,8 +639,10 @@ modelnames <- c("Base Model", paste0("Retro -", 1:5))
 
 mysummary <- SSsummarize(list(base, retro1, retro2, retro3, retro4, retro5))
 
+png(here('models',retro_model,"retrospective_dev_plots.png"), width = 6, height = 8, units = "in", res=300)
+par(mfrow = c(2, 1))
 SSplotRetroRecruits(retroSummary = mysummary,
-                    endyrvec = rev(2013:2023), #rev(2008:2023),
+                    endyrvec = rev(2016:2023), #rev(2008:2023),
                     cohorts = 2016:2022, #2010:2023,
                     ylim=NULL,
                     uncertainty=FALSE,
@@ -637,5 +650,14 @@ SSplotRetroRecruits(retroSummary = mysummary,
                     main="",
                     mcmcVec=FALSE,devs=TRUE,
                     relative=FALSE,labelyears=TRUE,legend=FALSE,leg.ncols=4)
-  
+SSplotRetroRecruits(retroSummary = mysummary,
+                    endyrvec = rev(2016:2023), #rev(2008:2023),
+                    cohorts = 2016:2022, #2010:2023,
+                    ylim=NULL,
+                    uncertainty=FALSE,
+                    labels=c('Recruitment deviation', 'Recruitment (millions)', 'relative to recent estimate', 'Age'),
+                    main="",
+                    mcmcVec=FALSE,devs=TRUE,
+                    relative=TRUE,labelyears=TRUE,legend=FALSE,leg.ncols=4)
+dev.off()  
 
