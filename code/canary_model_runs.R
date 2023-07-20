@@ -13336,43 +13336,40 @@ SSsummarize(xx) |>
 ### 7_1_0_hessStep - run hess step in prep for jitter
 ####------------------------------------------------####
 
-new_name <- "7_1_0_hessStep"
+#See this link:
+#https://nmfs-stock-synthesis.github.io/doc/SS330_User_Manual_release.html#using--hess_step-to-do-additional-newton-steps-using-the-inverse-hessian
+
+#Because running from a model with a hessian use -hess_step -binp ss.bar in SS3 call
+  
+new_name <- "7_1_0_hess_step"
 old_name <- "7_0_2_hessian"
 
 ##
 #Copy inputs
 ##
 
-mod <- SS_read(here('models',old_name))
-
+R.utils::copyDirectory(from = here('models', old_name),
+                       to = here('models', new_name), 
+                       overwrite = TRUE)
 
 ##
 #Output files and run
 ##
 
-SS_write(mod,
-         dir = here('models',new_name),
-         overwrite = TRUE)
-
+tictoc::tic()
 r4ss::run(dir = here('models',new_name),
           exe = here('models/ss_win.exe'),
-          extras = '-hess_Step',
+          extras = '-hess_step -binp ss.bar',
           # show_in_console = TRUE,
           skipfinished = FALSE)
+tictoc::toc()
 
 pp <- SS_output(here('models',new_name))
 SS_plots(pp, plot = c(1:26))
 
-plot_sel_comm(pp, sex=1)
-plot_sel_comm(pp, sex=2)
-plot_sel_noncomm(pp, sex=1, spatial = FALSE)
-plot_sel_noncomm(pp, sex=2, spatial = FALSE)
-
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                       subdir = c('7_0_2_hessian',
-                                                 '7_1_0_hessStep',
-                                                 '7_0_4_noSexSelex_waRec',
-                                                 '7_0_5_noSexSelex_orNTWL')))
+                                                 '7_1_0_hess_step')))
 
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Add omitted commercial ages',
