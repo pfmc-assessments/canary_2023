@@ -202,7 +202,7 @@ saveRDS(fit, here('models', new_name, 'mcmc_run.rds'))
 
 # Need to run on a model with .exe included in the folder, and which has phase for another parameter set to 1
 
-base_model <- '5_5_6_bestJitter'
+base_model <- '7_0_2_hessian'
 
 # new_name <- '5_5_0_profile'
 # 
@@ -252,6 +252,8 @@ model_settings$show_in_console <- FALSE
 tictoc::tic()
 run_diagnostics(mydir = here('models'), model_settings = model_settings)
 tictoc::toc()
+
+
 
 # rerun best jitter
 new_name <- paste0(base_model, '_best_jitter')
