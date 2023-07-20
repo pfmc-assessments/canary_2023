@@ -642,7 +642,7 @@ mysummary <- SSsummarize(list(base, retro1, retro2, retro3, retro4, retro5))
 png(here('models',retro_model,"retrospective_dev_plots.png"), width = 6, height = 8, units = "in", res=300)
 par(mfrow = c(2, 1))
 SSplotRetroRecruits(retroSummary = mysummary,
-                    endyrvec = rev(2016:2023), #rev(2008:2023),
+                    endyrvec = rev(2016:2022), #rev(2008:2023),
                     cohorts = 2016:2022, #2010:2023,
                     ylim=NULL,
                     uncertainty=FALSE,
@@ -651,7 +651,7 @@ SSplotRetroRecruits(retroSummary = mysummary,
                     mcmcVec=FALSE,devs=TRUE,
                     relative=FALSE,labelyears=TRUE,legend=FALSE,leg.ncols=4)
 SSplotRetroRecruits(retroSummary = mysummary,
-                    endyrvec = rev(2016:2023), #rev(2008:2023),
+                    endyrvec = rev(2016:2022), #rev(2008:2023),
                     cohorts = 2016:2022, #2010:2023,
                     ylim=NULL,
                     uncertainty=FALSE,
