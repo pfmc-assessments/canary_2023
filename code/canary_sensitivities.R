@@ -1480,13 +1480,15 @@ data_choices <- c('no_sparse_comps',
                   'released_lengths_in',
                   'canada_catches', 
                   'catch_se_0.1',
-                  'bomb_radiocarbon_age')
+                  'bomb_radiocarbon_age')#,
+                  #'../7_0_2_hessian')
 data_pretty <- c('No sparse comps',
                  'Pre-recruit data',
                  'Released lengths in',
                  'Canada catches',
                  'Catch SE 0.1',
-                 'Bomb radiocarbon age bias')
+                 'Bomb radiocarbon age bias')#,
+                 #'Add ages')
 
 productivity <- c('est_h',
                   'est_male_M',
@@ -1541,6 +1543,7 @@ make_detailed_sensitivites(big_sensitivity_output,
                            mods_to_include = data_choices,
                            outdir = outdir,
                            grp_name = 'data',
+                           grp_name = 'data_with_ages',
                            pretty_names = data_pretty)
 
 make_detailed_sensitivites(big_sensitivity_output, 
