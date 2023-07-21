@@ -229,6 +229,34 @@ ggsave(file.path(git_dir,"data_workshop_figs","com_lenDensity_fleet_reduced.png"
        width = 6, height = 8)
 
 
+#Compare to WCGOP lengths
+wcgop_len <- readxl::read_excel(path = file.path(dir,"Canary_WCGOP_ByState_Trawl-NonTrawl.xlsx"),
+                                sheet = "Length Frequency")
+wcgop_len_dat <- wcgop_len %>% 
+  type.convert(as.is = TRUE) %>% 
+  uncount(N_Fish)
+wcgop_len_dat$AGENCY_CODE <- dplyr::case_when(wcgop_len_dat$State == "CA" ~ "C",
+                                              wcgop_len_dat$State == "OR" ~ "O",
+                                              wcgop_len_dat$State == "WA" ~ "W")
+
+
+lab_val = c("California", "Oregon", "Washington")
+names(lab_val) = c("C","O","W")
+
+ggplot(wcgop_len_dat, aes(Lenbin, fill = Gear)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 1.3) +
+  facet_wrap("State", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Overlaid
+ggplot() + 
+  geom_density(aes(fish_lengthcm, fill = fleet.comb, color = fleet.comb), data = pacfin, alpha = 0.4, lwd = 0.8, adjust = 0.9) +
+  facet_wrap("AGENCY_CODE", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
+  geom_density(aes(Lenbin, fill = Gear), data = wcgop_len_dat[wcgop_len_dat$Year>2011,], alpha = 0.4, lwd = 0.8, adjust = 1.3)
+
+
 # #by sex - not very informative
 # ggplot(pacfin, aes(fish_lengthcm, fill = SEX_CODE, color = SEX_CODE)) +
 #   geom_density(alpha = 0.4, lwd = 0.8, adjust = 1.5) +

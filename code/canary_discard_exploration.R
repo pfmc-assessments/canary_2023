@@ -286,5 +286,24 @@ googlesheets4::sheet_write(dead, ss = xx, sheet = "discard_mt")
 googlesheets4::sheet_delete(ss = xx, sheet = "Sheet1")
 
 
+#-----------------------------------------------------------------------------------
+# Load the WCGOP discard lengths
+#-----------------------------------------------------------------------------------
+
+wcgop_len <- readxl::read_excel(path = file.path(dir,"Canary_WCGOP_ByState_Trawl-NonTrawl.xlsx"),
+                               sheet = "Length Frequency")
+wcgop_len_dat <- wcgop_len %>% 
+  type.convert(as.is = TRUE) %>% 
+  uncount(N_Fish)
+
+lab_val = c("California", "Oregon", "Washington")
+names(lab_val) = c("CA","OR","WA")
+
+ggplot(wcgop_len_dat, aes(Lenbin, fill = Gear)) +
+  geom_density(alpha = 0.4, lwd = 0.8, adjust = 1.3) +
+  facet_wrap("State", ncol=1, labeller = labeller(AGENCY_CODE = lab_val)) + 
+  xlab("Fish Length (cm)") +
+  ylab("Proportion") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 
