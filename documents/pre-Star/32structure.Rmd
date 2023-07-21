@@ -303,7 +303,7 @@ of variation are included when estimating growth parameters.
 
 #### Model Likelihood Components
 
-The model contains five primary likelihood components:
+The model contains four primary likelihood components:
 
 1.  Fit to survey indices of abundance (included for fleets 28-31).
 2.  Fit to length composition samples (included for fleets 1-12 with the
