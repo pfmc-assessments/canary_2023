@@ -11677,7 +11677,7 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models',new_name))
 
 ####------------------------------------------------####
-### 5_0_2_base Extend bounds on WA rec paramaeters at their bound to negative values, which are sensible
+### 5_0_2_base Extend bounds on WA rec paramaeters at their bound to negative values, which are sensible ----
 ####------------------------------------------------####
 
 new_name <- "5_0_2_base2"
@@ -11708,7 +11708,7 @@ mod$ctl$size_selex_parms[grep('SizeSel_P_3_9_WA_REC',rownames(mod$ctl$size_selex
 mod$ctl$size_selex_parms[grep('SizeSel_P_4_9_WA_REC',rownames(mod$ctl$size_selex_parms)),"LO"] <- -9
 
 ####------------------------------------------------####
-### 5_0_2_base Extend bounds on WA rec paramaeters at their bound to negative values, which are sensible
+### 5_0_2_base Extend bounds on WA rec paramaeters at their bound to negative values, which are sensible ----
 ####------------------------------------------------####
 
 new_name <- "5_0_2_base2"
@@ -11763,7 +11763,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_0_3_base Liklihood is worse when extend bounds so fix at 0
+### 5_0_3_base Liklihood is worse when extend bounds so fix at 0 ----
 ####------------------------------------------------####
 
 #WA catches are not yet in PacFIN so just manually adjust here
@@ -11836,7 +11836,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_0_4_OR_Rec_fix2 No sex specific selectivity for OR Rec. It was really struggling.  
+### 5_0_4_OR_Rec_fix2 No sex specific selectivity for OR Rec. It was really struggling. ---- 
 ####------------------------------------------------####
 
 new_name <- "5_0_4_OR_Rec_fix2"
@@ -11876,7 +11876,7 @@ r4ss::run(dir = here('models',new_name),
 # SS_plots(pp)
 
 ####------------------------------------------------####
-### 5_0_5_OR_Rec_fix1 No sex specific selectivity for OR Rec. It was really struggling.  
+### 5_0_5_OR_Rec_fix1 No sex specific selectivity for OR Rec. It was really struggling.  ----
 ####------------------------------------------------####
 
 new_name <- "5_0_5_OR_Rec_fix1"
@@ -11936,7 +11936,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_1_1_wa_rec_par3_4_lowbound Make a number of corrections. 
+### 5_1_1_wa_rec_par3_4_lowbound Make a number of corrections. ----
 ##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
 ##  Change WA rec params at bounds by allowing parameters 3 and 4 (and timevarying) to have lower bound of -9 
 ####------------------------------------------------####
@@ -11988,7 +11988,7 @@ plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 ####------------------------------------------------####
-### 5_1_2_WA_NTWL_descend_lowbound Set lower bound for parm 4 of WA NTWL to -9
+### 5_1_2_WA_NTWL_descend_lowbound Set lower bound for parm 4 of WA NTWL to -9 ----
 ####------------------------------------------------####
 
 new_name <- "5_1_2_WA_NTWL_descend_lowbound"
@@ -12035,7 +12035,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_1_3_no_WA_REC_midblock Gradient on peak in middle block is lowish, mid block doesnt seem to change so remove
+### 5_1_3_no_WA_REC_midblock Gradient on peak in middle block is lowish, mid block doesnt seem to change so remove ----
 ####------------------------------------------------####
 
 new_name <- "5_1_3_no_WA_REC_midblock"
@@ -12085,7 +12085,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_2_1_wa_rec_parm_fix Make a number of corrections. 
+### 5_2_1_wa_rec_parm_fix Make a number of corrections. ----
 ##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
 ##  Change WA rec params at bounds by fixing at values 
 ####------------------------------------------------####
@@ -12136,7 +12136,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_3_1_no_WA_rec_midBlock Make a number of corrections
+### 5_3_1_no_WA_rec_midBlock Make a number of corrections ----
 ##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
 ##  Change WA rec params at bounds by removing the middle block
 ####------------------------------------------------####
@@ -12187,7 +12187,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_4_1_all_parm34_lowerBound Make a number of corrections
+### 5_4_1_all_parm34_lowerBound Make a number of corrections ----
 ##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
 ##  Change WA rec params at bounds by setting lower bound for ALL parameter 3 and 4 to -9
 ####------------------------------------------------####
@@ -12239,7 +12239,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_4_2_some_parm34_lowerBound Make a number of corrections
+### 5_4_2_some_parm34_lowerBound Make a number of corrections ----
 ##  Change middle block of OR rec to not have sex dependent selex (copy from 5_0_5_OR_Rec_fix1)
 ##  Change WA rec params at bounds by setting lower bound for NTWL and REC parameters 3 and 4 from OR or WA to -9
 ####------------------------------------------------####
@@ -12314,7 +12314,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 5_5_0_hessian Run hessian 
+### 5_5_0_hessian Run hessian ----
 ####------------------------------------------------####
 
 new_name <- "5_5_0_hessian"
@@ -12433,7 +12433,7 @@ dev.off()
 
 
 ####------------------------------------------------####
-### 5_5_1_biasAdj - Overall this doesn't seem to be worthwhile. Minor changes and more params on bounds
+### 5_5_1_biasAdj - Overall this doesn't seem to be worthwhile. Minor changes and more params on bounds ----
 ####------------------------------------------------####
 
 new_name <- "5_5_1_biasAdj"
@@ -12502,7 +12502,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_5_2_bestJitter Running with ctl.ss_new as ctl file 
+### 5_5_2_bestJitter Running with ctl.ss_new as ctl file ----
 ####------------------------------------------------####
 
 new_name <- "5_5_2_bestJitter_hessian"
@@ -12658,7 +12658,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 5_5_6_bestJitter Running with ctl.ss_new as ctl file 
+### 5_5_6_bestJitter Running with ctl.ss_new as ctl file ----
 ####------------------------------------------------####
 
 new_name <- "5_5_6_bestJitter"
@@ -12703,7 +12703,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
-### 5_6_0_Mphase Change female M phase back to 2
+### 5_6_0_Mphase Change female M phase back to 2 ----
 ####------------------------------------------------####
 
 new_name <- "5_6_0_Mphase"
@@ -12787,7 +12787,7 @@ file.copy(from = file.path(here('models',new_name,'jitter_compare_for_report'), 
 ##########################################################################################
 
 ####------------------------------------------------####
-### 6_0_0_priors - Fix male M prior, remove unused priors 
+### 6_0_0_priors - Fix male M prior, remove unused priors ----
 ####------------------------------------------------####
 
 new_name <- "6_0_0_priors"
@@ -12836,7 +12836,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 6_0_1_growthInits - Set external growth params as growth inits 
+### 6_0_1_growthInits - Set external growth params as growth inits ----
 ####------------------------------------------------####
 
 new_name <- "6_0_1_growthInits"
@@ -12896,7 +12896,7 @@ round(pp_base$likelihoods_used,2)
 
 
 ####------------------------------------------------####
-### 6_1_0_projections - add GMT projections 
+### 6_1_0_projections - add GMT projections ----
 ####------------------------------------------------####
 
 new_name <- "6_1_0_projections"
@@ -12973,7 +12973,7 @@ xx$model1 - xx$model2
 
 
 ####------------------------------------------------####
-### 7_0_0_fixAges - Correct error in commercial age comp work up (include recent ages now) 
+### 7_0_0_fixAges - Correct error in commercial age comp work up (include recent ages now) ----
 ####------------------------------------------------####
 
 new_name <- "7_0_0_addAges"
@@ -13064,7 +13064,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 7_0_1_tune - Retun 
+### 7_0_1_tune - Retune ---- 
 ####------------------------------------------------####
 
 new_name <- "7_0_1_tune"
@@ -13122,7 +13122,7 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
-### 7_0_2_hessian - now run with a hessian 
+### 7_0_2_hessian - now run with a hessian ----
 ####------------------------------------------------####
 
 new_name <- "7_0_2_hessian"
@@ -13159,7 +13159,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Pre star base',
                                      'Recent ages added'),
-                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+                    subplot = c(1:4,9,11), print = TRUE, plotdir = here('models',new_name))
 
 
 #Update sigmaR with tuned value? Suggests 0.5 is good so keep it
@@ -13168,4 +13168,214 @@ pp$sigma_R_info[pp$sigma_R_info$period == "Main","alternative_sigma_R"]
 #Update bias adjust? Not really, just maybe start, last full bias, and max bias adj
 pp$breakpoints_for_bias_adjustment_ramp
 biasadj <- SS_fitbiasramp(pp, verbose = TRUE)
+
+
+####------------------------------------------------####
+### 7_0_3_asympSelex_waRec - the later block for WA rec has high corrrelation among the parameters. Set to asymptotic ----
+####------------------------------------------------####
+
+new_name <- "7_0_3_asympSelex_waRec"
+old_name <- "7_0_2_hessian"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms_tv[grep("SizeSel_P_4_9_WA_REC\\(9\\)_BLK5repl_2021",rownames(mod$ctl$size_selex_parms_tv)),c("INIT","PHASE")] <- c(15,-99)
+mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_9_WA_REC\\(9\\)_BLK5repl_2021",rownames(mod$ctl$size_selex_parms_tv)),"PHASE"] <- -99
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_0_3_asympSelex_waRec')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'Asymptotic selex for last WA Rec block'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 7_0_4_noSexSelex_waRec - the later block for WA rec has high corrrelation among the parameters. Remove sex selectivity ----
+####------------------------------------------------####
+
+new_name <- "7_0_4_noSexSelex_waRec"
+old_name <- "7_0_2_hessian"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_9_WA_REC\\(9\\)_BLK5repl_2021",rownames(mod$ctl$size_selex_parms_tv)),"PHASE"] <- -99
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_0_3_asympSelex_waRec',
+                                                 '7_0_4_noSexSelex_waRec')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'Asymptotic selex for last WA Rec block',
+                                     'No sex selex for last WA Rec block'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 7_0_5_noSexSelex_orNTWL ---- 
+### When resolving correlation in later block for WA rec, OR NTWL later block then has high corrrelation. 
+### Removing sex selectivity for WA rec seemed to resolve it so trying also for OR NTWL
+####------------------------------------------------####
+
+new_name <- "7_0_5_noSexSelex_orNTWL"
+old_name <- "7_0_4_noSexSelex_waRec"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_5_OR_NTWL\\(5\\)_BLK2repl_2020",rownames(mod$ctl$size_selex_parms_tv)),"PHASE"] <- -99
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_0_3_asympSelex_waRec',
+                                                 '7_0_4_noSexSelex_waRec',
+                                                 '7_0_5_noSexSelex_orNTWL')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'Asymptotic selex for last WA Rec block',
+                                     'No sex selex for last WA Rec block',
+                                     'No sex selex for last WA Rec and OR NTWL block'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 7_1_0_hessStep - run hess step in prep for jitter ----
+####------------------------------------------------####
+
+#See this link:
+#https://nmfs-stock-synthesis.github.io/doc/SS330_User_Manual_release.html#using--hess_step-to-do-additional-newton-steps-using-the-inverse-hessian
+
+#Because running from a model with a hessian use -hess_step -binp ss.bar in SS3 call
+  
+new_name <- "7_1_0_hess_step"
+old_name <- "7_0_2_hessian"
+
+##
+#Copy inputs
+##
+
+R.utils::copyDirectory(from = here('models', old_name),
+                       to = here('models', new_name), 
+                       overwrite = TRUE)
+
+##
+#Output files and run
+##
+
+tictoc::tic()
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-hess_step -binp ss.bar',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+tictoc::toc()
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_1_0_hess_step')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'run hess step'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
 

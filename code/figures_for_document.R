@@ -533,6 +533,8 @@ write.csv(out, here('documents','tables','projections.csv'), row.names = FALSE)
 
 
 #Sample sizes figures for STAR presentation -----------------------------------
+
+#Sample sizes for fishery data
 fdlen <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_lengths.csv')),
                    readr::read_csv(here('data/Canary_ashop_LengthComps_hauls_and_samples.csv')),
                    by = "Year"),
@@ -548,7 +550,7 @@ fdlen <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_lengt
                       names_to = c(".value", "fleet", "state"))
 fdlen$fleet <- factor(fdlen$fleet, levels = c("ASHOP","REC","NTWL","TWL"))
 
-fdage <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_ages.csv')),
+fdage <- left_join(full_join(readr::read_csv(here('documents/tables/pacfin_ages_fixAges.csv')),
                              readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')),
                              by = "Year"),
                    readr::read_csv(here('documents/tables/rec_ages.csv')), by = join_by(Year == year)) |>
@@ -584,13 +586,61 @@ ggplot(fdage, aes(fill=fleet, x=Year, y = Ages)) +
   ylab("# of aged samples") + 
   theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   scale_fill_manual(values=viridis::viridis(n=4))
-ggsave(file.path(here('documents','figures',"ageN_fleet.png")),
+ggsave(file.path(here('documents','figures',"ageN_fleet_fixAges.png")),
        width = 6, height = 6)
 
 
-#Squid plot for retro recruitments
+
+#Sample size figures for survey data
+fi <- full_join(readr::read_csv(here('documents/tables/wcgbts_summary.csv')),
+                             readr::read_csv(here('documents/tables/triennial_summary.csv')),
+                             by = "Year") |>
+  dplyr::select(contains("lengths") | contains("ages") | contains("Year")) |>
+  dplyr::rename("N_Lengths_WCGBTS" = "N lengths.x",
+                "N_Lengths_Triennial" = "N lengths.y",
+                "N_Ages_WCGBTS" = "N ages.x",
+                "N_Ages_Triennial" = "N ages.y") |>
+  tidyr::pivot_longer(cols = - Year, names_pattern = "(N)_(.*)_(.*)", 
+                      names_to = c(".value", "type", "fleet"))
+fi$type <- factor(fi$type, levels = c("Lengths","Ages"))
+
+
+ggplot(fi, aes(fill=fleet, x=Year, y = N)) + 
+  geom_bar(position="stack", stat="identity", color = "gray", width = 1) +
+  facet_wrap("type") +
+  xlab("Year") +
+  ylab("# of samples") + 
+  theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  scale_fill_manual(values=viridis::viridis(n=2))
+ggsave(file.path(here('documents','figures',"N_survey.png")),
+       width = 6, height = 4)
+
+
+#Discard ratio plots -----------------------------------
+
+removals <- read.csv(here::here('data-raw',"CONFIDENTIAL_canary_removals_forStateApproval_June8.csv"), header = TRUE)
+
+removals$TWL.mt <- removals$TWL.C + removals$TWL.O + removals$TWL.W
+removals$TWL.dis <- removals$TWL.C.dis + removals$TWL.O.dis + removals$TWL.W.dis
+removals$TWL.dis.ratio <- removals$TWL.dis/(removals$TWL.mt + removals$TWL.dis)
+
+removals$NTWL.mt <- removals$NTWL.C + removals$NTWL.O + removals$NTWL.W
+removals$NTWL.dis <- removals$NTWL.C.dis + removals$NTWL.O.dis + removals$NTWL.W.dis
+removals$NTWL.dis.ratio <- removals$NTWL.dis/(removals$NTWL.mt + removals$NTWL.dis)
+
+png(here('documents',"figures","commercial_discard_ratio.png"), width = 6, height = 4, units = "in", res=300)
+plot(removals$Year, removals$TWL.dis.ratio,type = "b", 
+     xlim = c(1975,2022), ylim = c(0,1), yaxs = 'i',
+     lwd = 3, ylab = "Proportion of removals that are discards")
+lines(removals$Year, removals$NTWL.dis.ratio, type = "b", lwd = 3, col = 2)
+legend("topleft",c("Trawl", "Non-trawl"), lwd = 3, col = c(1,2), lty = 1, bty = "n")
+dev.off()
+
+#Squid plot for retro recruitments -----------------------------------
 
 retro_model = "5_5_0_profile_retro_5yr"
+retro_model = "5_5_0_hessian_retro"
+retro_model = "7_0_2_hessian_retro"
 base <- mod23
 retro1 = SS_output(here('models',retro_model, "retro", "retro-1"), printstats = FALSE, verbose = FALSE, covar = FALSE)
 retro2 = SS_output(here('models',retro_model, "retro", "retro-2"), printstats = FALSE, verbose = FALSE, covar = FALSE)
@@ -601,8 +651,10 @@ modelnames <- c("Base Model", paste0("Retro -", 1:5))
 
 mysummary <- SSsummarize(list(base, retro1, retro2, retro3, retro4, retro5))
 
+png(here('models',retro_model,"retrospective_dev_plots.png"), width = 6, height = 8, units = "in", res=300)
+par(mfrow = c(2, 1))
 SSplotRetroRecruits(retroSummary = mysummary,
-                    endyrvec = rev(2013:2023), #rev(2008:2023),
+                    endyrvec = rev(2016:2022), #rev(2008:2023),
                     cohorts = 2016:2022, #2010:2023,
                     ylim=NULL,
                     uncertainty=FALSE,
@@ -610,5 +662,14 @@ SSplotRetroRecruits(retroSummary = mysummary,
                     main="",
                     mcmcVec=FALSE,devs=TRUE,
                     relative=FALSE,labelyears=TRUE,legend=FALSE,leg.ncols=4)
-  
+SSplotRetroRecruits(retroSummary = mysummary,
+                    endyrvec = rev(2016:2022), #rev(2008:2023),
+                    cohorts = 2016:2022, #2010:2023,
+                    ylim=NULL,
+                    uncertainty=FALSE,
+                    labels=c('Recruitment deviation', 'Recruitment (millions)', 'relative to recent estimate', 'Age'),
+                    main="",
+                    mcmcVec=FALSE,devs=TRUE,
+                    relative=TRUE,labelyears=TRUE,legend=FALSE,leg.ncols=4)
+dev.off()  
 
