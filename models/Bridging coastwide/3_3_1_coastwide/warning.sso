@@ -1,7 +1,0 @@
-Note 1 Information: Max harvest rate typically is >1.0 for F_method 2, 3 or 4 0.9
-Warning 1 : Setting in starter does not request all priors, and 15 parameters have priors and are not estimated, so their prior not included in obj_fun.
-Warning 2 : Final gradient: 0.000830116 is larger than final_conv: 0.0001
-Note 2 Information: No *.ss_new and fewer *.sso files written after mceval
-Warning 3 : Reminder: Number of lamdas !=0.0 and !=1.0:  20
-Note 3 Information:  N parameters that are on or within 1% of min-max bound: 10; check results, variance may be suspect
- 3 warnings  and 3 notes 

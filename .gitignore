@@ -124,3 +124,6 @@ _main.Rmd
 *.Rdata
 *.Rds
 *.Rda
+
+# Reduced size branch
+Models/*
