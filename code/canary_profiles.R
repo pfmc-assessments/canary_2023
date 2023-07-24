@@ -3,7 +3,7 @@ library(r4ss)
 library(here)
 library(tictoc)
 
-base_model <- '5_0_1_base'
+base_model <- '6_1_0_projections'
 
 # Female M profile --------------------------------------------------------
 
@@ -134,6 +134,24 @@ run_diagnostics(mydir = here('models'),
 tictoc::toc()
 beepr::beep()
 
+# sigmaR profile -------------------------------------------------------
+
+profile.settings <- get_settings_profile(parameters = 'SR_sigmaR',
+                                         low = 0.4, high = 1,
+                                         step_size = 0.1, 
+                                         param_space = 'real',
+                                         use_prior_like = 0) 
+settings <- get_settings(settings = list(base_name = base_model,
+                                         run = 'profile',
+                                         profile_details = profile.settings,
+                                         exe = 'ss_win',
+                                         extras = '-nohess',
+                                         usepar = TRUE,
+                                         parlinenum = 53,
+                                         init_values_src = 1))
+
+run_diagnostics(mydir = here('models'), 
+                model_settings = settings)
 
 # Jitter ------------------------------------------------------------------
 
