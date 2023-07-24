@@ -1022,6 +1022,14 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE,
           skipfinished = FALSE)
 
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
 # One asymptotic fleet (TOR) ----------------------------------------------
 
 #For WA NTWL
@@ -1359,8 +1367,6 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           extras = '-nohess', 
           show_in_console = FALSE,
           skipfinished = FALSE)
-
-
 
 # Bomb radiocarbon --------------------------------------------------------
 
