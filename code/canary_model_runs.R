@@ -13399,7 +13399,7 @@ mod <- SS_read(here('models',old_name))
 mod$ctl$Block_Design[[5]] <- c(2006, 2020)
 mod$ctl$blocks_per_pattern[5] <- 1
 mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[
-  !grepl('BLK5repl_2021', rownames(mod$ctl$size_selex_parms_tv)),]
+  -grep('BLK5repl_2021', rownames(mod$ctl$size_selex_parms_tv)),]
 
 ##
 #Output files and run
@@ -13412,7 +13412,7 @@ SS_write(mod,
 tictoc::tic()
 r4ss::run(dir = here('models',new_name),
           exe = here('models/ss_win.exe'),
-          extras = '-nohess',
+          # extras = '-nohess',
           show_in_console = TRUE,
           skipfinished = FALSE)
 tictoc::toc()
@@ -13420,13 +13420,48 @@ tictoc::toc()
 pp <- SS_output(here('models',new_name))
 SS_plots(pp, plot = c(1:26))
 
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('7_0_2_hessian',
-                                                 '7_1_0_hess_step')))
+####------------------------------------------------####
+### 7_3_1_ORntwl_no_late_block - late OR NTWL selectivity same as first block ----
+####------------------------------------------------####
 
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
-                                     'run hess step'),
-                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+new_name <- "7_3_1_ORntwl_no_late_block"
+old_name <- "7_3_0_WArec_no_late_block"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models', old_name), 
+               dir.new = here('models', new_name), 
+               overwrite = TRUE)
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+mod$ctl$Block_Design[[2]] <- c(2000, 2019)
+mod$ctl$blocks_per_pattern[2] <- 1
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[
+  -grep('BLK2repl_2020', rownames(mod$ctl$size_selex_parms_tv)),]
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+tictoc::tic()
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          show_in_console = TRUE,
+          skipfinished = FALSE)
+tictoc::toc()
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
 
 

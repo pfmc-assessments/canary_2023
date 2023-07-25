@@ -153,6 +153,15 @@ settings <- get_settings(settings = list(base_name = base_model,
 run_diagnostics(mydir = here('models'), 
                 model_settings = settings)
 
+load(here('models', 
+          paste0(base_model, '_profile_SR_sigmaR_prior_like_0'), 
+          'SR_sigmaR_profile_output.Rdata'))
+
+r4ss::SSplotComparisons(profilesummary, subplots = c(9,11,13,14), print = TRUE,
+                        plotdir = here('models', 
+                                        paste0(base_model, '_profile_SR_sigmaR_prior_like_0')),
+                        legendlabels = paste('SR_SigmaR =', seq(0.4, 1, 0.1)))
+
 # Jitter ------------------------------------------------------------------
 
 settings <- get_settings(settings = list(base_name = base_model,
