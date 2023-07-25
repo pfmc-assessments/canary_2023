@@ -157,10 +157,16 @@ load(here('models',
           paste0(base_model, '_profile_SR_sigmaR_prior_like_0'), 
           'SR_sigmaR_profile_output.Rdata'))
 
-r4ss::SSplotComparisons(profilesummary, subplots = c(9,11,13,14), print = TRUE,
+no.rec.dev <- SS_output(here('models/sensitivities/no_recdevs'))
+
+sigmaR.summary <- append(list(no.rec.dev), profilemodels) |> 
+  r4ss::SSsummarize()
+
+r4ss::SSplotComparisons(sigmaR.summary, subplots = c(1,3,9,11,13,14), print = TRUE,
                         plotdir = here('models', 
-                                        paste0(base_model, '_profile_SR_sigmaR_prior_like_0')),
-                        legendlabels = paste('SR_SigmaR =', seq(0.4, 1, 0.1)))
+                                       paste0(base_model, '_profile_SR_sigmaR_prior_like_0')),
+                        legendlabels = c('No rec dev',
+                                         paste('SR_SigmaR =', seq(0.4, 1, 0.1))))
 
 # Jitter ------------------------------------------------------------------
 

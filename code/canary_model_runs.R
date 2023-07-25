@@ -13691,7 +13691,10 @@ xx.sum |>
                                      'mirror OR NTWL to early'),
                     subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
-xx.sum |> SStableComparisons()
+xx.sum |> 
+  SStableComparisons() |>
+  `colnames<-`(c('', 'Full blocking', 'WA Rec mirrored early', 'OR NTWL mirrored early')) |>
+  write.csv(here('models', new_name, 'table_comp.csv'), row.names = FALSE)
 
 ####------------------------------------------------####
 ### 7_3_2_tuned - tune 7_3_1 ----
@@ -13779,8 +13782,8 @@ r4ss::run(dir = here('models',new_name),
           skipfinished = FALSE)
 
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('7_3_2_tuned',
-                                                 new_name)))
+                                      subdir = c(new_name,
+                                                 '7_3_2_tuned')))
 
 xx.sum <- r4ss::SSsummarize(xx)
 
@@ -13790,4 +13793,7 @@ xx.sum |>
                                      'mirror OR NTWL to early'),
                     subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
-xx.sum |> SStableComparisons()
+xx.sum |> 
+  SStableComparisons() |>
+  `colnames<-`(c('', 'Full blocking', 'OR NTWL mirrored early')) |>
+  write.csv(here('models', new_name, 'table_comp.csv'), row.names = FALSE)

@@ -1,0 +1,18 @@
+"","Full blocking","WA Rec mirrored early","OR NTWL mirrored early"
+"TOTAL_like",4223.76,4242.12,4370.37
+"Survey_like",-10.718,-10.6568,-8.81601
+"Length_comp_like",1836.85,1855.64,1966.71
+"Age_comp_like",2410.94,2409.21,2428.9
+"Parm_priors_like",0.101893,0.118061,0.122977
+"Recr_Virgin_millions",3.61224,3.66313,3.90999
+"SR_LN(R0)",8.19208,8.20607,8.27129
+"SR_BH_steep",0.72,0.72,0.72
+"NatM_uniform_Fem_GP_1",0.0742693,0.0750678,0.0753012
+"NatM_uniform_Mal_GP_1",0.0643,0.0643,0.0643
+"L_at_Amax_Fem_GP_1",59.3593,59.3244,58.955
+"L_at_Amax_Mal_GP_1",54.5786,54.4855,54.5829
+"VonBert_K_Fem_GP_1",0.137308,0.137362,0.13949
+"VonBert_K_Mal_GP_1",0.155545,0.156132,0.154853
+"SSB_Virgin",8629.28,8543.26,8910.32
+"Bratio_2021",0.310195,0.331123,0.287102
+"SPRratio_2020",0.364871,0.354013,0.33112
