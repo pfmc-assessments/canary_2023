@@ -22,6 +22,7 @@ if(Sys.getenv("USERNAME") == "Kiva.Oken") {
 }
 
 source(here('code/selexComp.R'))
+source(here('code/selexComp_age.R'))
 
 
 ##########################################################################################
@@ -13501,7 +13502,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 ### 7_2_2_WArec_reweight - 720 results in correlation with early rec ascendning and peak. Reweight WA rec ----
 ####------------------------------------------------####
 
-new_name <- "7_2_2_WArec_reweight"
+new_name <- "7_2_3_WArec_reweight"
 old_name <- "7_2_0_WArec_comb_late_block"
 
 ##
@@ -13541,6 +13542,46 @@ plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
+
+####------------------------------------------------####
+### 7_2_3_WArec_full_reweight - 720 results in correlation with early rec ascendning and peak. Reweight all not just WA rec ----
+####------------------------------------------------####
+
+new_name <- "7_2_3_WArec_full_reweight"
+old_name <- "7_2_0_WArec_comb_late_block"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models', old_name), 
+               dir.new = here('models', new_name), 
+               overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"covar.sso"),
+          to = file.path(here('models',new_name),"covar.sso"), overwrite = TRUE)
+
+##
+#Make changes
+##
+
+pp <- SS_output(here('models',new_name))
+
+xx=r4ss::tune_comps(replist = pp, 
+                    option = 'Francis', 
+                    dir = here('models', new_name), 
+                    exe = here('models/ss_win.exe'), 
+                    niters_tuning = 4, 
+                    extras = '-nohess',
+                    allow_up_tuning = TRUE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp)
 
 ####------------------------------------------------####
 ### 7_2_4_WArec_fix_ascend - 721 results in correlation with early rec ascendning and peak. Fix ascend at estimate ----
@@ -13589,6 +13630,31 @@ plot_sel_comm(pp, sex=1)
 plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_2_0_WArec_comb_late_block',
+                                                 '7_2_1_WArec_comb_all_block',
+                                                 '7_2_2_WArec_reweight',
+                                                 #'7_2_3_WArec_full_reweight',
+                                                 '7_2_4_WArec_fix_ascend')))
+
+xx.sum <- r4ss::SSsummarize(xx)
+
+xx.sum |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'step1: combine late WA Rec to middle',
+                                     'step2: combine all WA Rec',
+                                     'step2: reweight just WA rec',
+                                     #'step2: reweight all',
+                                     'step2: fix WA rec ascend'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+xx.sum |> 
+  SStableComparisons() |>
+  `colnames<-`(c('', 'With ages added', 'Step 1', 'Step2 combine all', 'Step2 reweight WA rec', 'Step 2 fix WA rec ascend')) |>
+  write.csv(here('models', new_name, 'table_comp.csv'), row.names = FALSE)
 
 ####------------------------------------------------####
 ### 7_3_0_WArec_no_late_block - late WA Rec selectivity same as first block ----
@@ -13735,6 +13801,11 @@ xx=r4ss::tune_comps(replist = pp,
 
 pp <- SS_output(here('models',new_name))
 SS_plots(pp)
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####

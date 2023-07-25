@@ -50,13 +50,13 @@ plot_sel_ret <- function(mod,
   infotable$lty <- nrow(infotable):1
   infotable$lwd <- 3
   infotable$longname <- infotable$Yr_range
-  if(fleet == 9) { #fix table for WA rec which reports out separate 2021 and 2022
-    newinfo <- infotable[c(1,2,4),]
-    newinfo$lty <- infotable[2:4,"lty"]
-    newinfo$col <- infotable[2:4,"col"]
-    newinfo[3,c("longname","Yr_range")] <- c("2021-2022","2021-2022")
-    infotable <- newinfo
-  }
+  # if(fleet == 9) { #fix table for WA rec which reports out separate 2021 and 2022
+  #   newinfo <- infotable[c(1,2,4),]
+  #   newinfo$lty <- infotable[2:4,"lty"]
+  #   newinfo$col <- infotable[2:4,"col"]
+  #   newinfo[3,c("longname","Yr_range")] <- c("2021-2022","2021-2022")
+  #   infotable <- newinfo
+  # }
   # run plot function again, passing in the modified infotable
   r4ss::SSplotSelex(mod,
                     fleets = fleet,
