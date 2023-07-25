@@ -13469,4 +13469,104 @@ tictoc::toc()
 pp <- SS_output(here('models',new_name))
 SS_plots(pp, plot = c(1:26))
 
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_3_0_WArec_no_late_block',
+                                                 new_name)))
 
+xx.sum <- r4ss::SSsummarize(xx)
+
+xx.sum |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'mirror WA Rec to early',
+                                     'mirror OR NTWL to early'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+xx.sum |> SStableComparisons()
+
+tune_comps(pp, niters_tuning = 0, option = 'Francis', dir = here('models', new_name), write = FALSE)
+
+####------------------------------------------------####
+### 7_3_2_tuned - tune 7_3_1 ----
+####------------------------------------------------####
+
+new_name <- "7_3_2_tuned"
+old_name <- "7_3_1_ORntwl_no_late_block"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models', old_name), 
+               dir.new = here('models', new_name), 
+               overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"covar.sso"),
+          to = file.path(here('models',new_name),"covar.sso"), overwrite = TRUE)
+
+pp <- SS_output(here('models',new_name))
+
+##
+#Make changes
+##
+
+xx=r4ss::tune_comps(replist = pp, 
+                    option = 'Francis', 
+                    dir = here('models', new_name), 
+                    exe = here('models/ss_win.exe'), 
+                    niters_tuning = 5, 
+                    extras = '-nohess',
+                    allow_up_tuning = TRUE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp)
+
+
+####------------------------------------------------####
+### 7_3_3_tuned_full_blocks - full blocks using retuned model ----
+####------------------------------------------------####
+
+new_name <- "7_3_3_tuned_full_blocks"
+old_name <- "7_3_2_tuned"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models', old_name), 
+               dir.new = here('models', new_name), 
+               overwrite = TRUE)
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+old.selex <- SS_read(here('models/7_0_2_hessian'))
+
+mod$ctl$Block_Design[[2]] <- c(2000, 2019, 2020, 2022)
+mod$ctl$blocks_per_pattern[2] <- 2
+mod$ctl$Block_Design[[5]] <- c(2006, 2020, 2021, 2022)
+mod$ctl$blocks_per_pattern[5] <- 2
+
+mod$ctl$size_selex_parms_tv <- old.selex$ctl$size_selex_parms_tv
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
