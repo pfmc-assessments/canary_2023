@@ -9,6 +9,7 @@ fleet.converter <- base_mod$dat$fleetinfo |>
   dplyr::select(fleetname, fleet_no_num, fleet)
 
 source(here('code/selexComp.R'))
+source(here('code/selexComp_age.R'))
 
 # Canadian catches --------------------------------------------------------
 
@@ -1022,13 +1023,18 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE,
           skipfinished = FALSE)
 
-pp <- SS_output(here('models',new_name))
+pp <- SS_output(here('models/sensitivities',new_name))
 SS_plots(pp, plot = c(1:26))
 
 plot_sel_comm(pp, sex=1)
 plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+plot_sel_comm_age(pp, sex=1, fact = "Asel2")
+plot_sel_comm_age(pp, sex=2, fact = "Asel2")
+plot_sel_noncomm_age(pp, sex=1, spatial = FALSE, fact = "Asel2")
+plot_sel_noncomm_age(pp, sex=2, spatial = FALSE, fact = "Asel2")
 
 # One asymptotic fleet (TOR) ----------------------------------------------
 
