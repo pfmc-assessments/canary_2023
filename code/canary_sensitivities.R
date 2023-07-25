@@ -1309,6 +1309,95 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           skipfinished = FALSE)
 
 
+# Remove survey indices by adjusting lambdas ------------------------------------------------------
+
+#Remove WCGBTS survey
+
+mod <- base_mod
+
+fleetIndices <- unique(mod$dat$CPUE[mod$dat$CPUE$year>0,]$index)
+mod$ctl$lambdas <- data.frame("like_comp" = 1, 
+                              "fleet" = sort(fleetIndices),
+                              "phase" = 1,
+                              "value" = 1,
+                              "sizefreq_method" = 1)
+rownames(mod$ctl$lambdas) = paste0("index_",fleet.converter[fleet.converter$fleet %in% fleetIndices,"fleetname"])
+mod$ctl$lambdas$value <- 0
+
+#Set lambdas
+mod$ctl$N_lambdas <- 1
+mod$ctl$lambdas <- mod$ctl$lambdas[mod$ctl$lambdas$fleet == 28,]
+
+new_name <- 'survey_wcgbts_lambda0'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+#Remove triennial surveys
+
+mod <- base_mod
+
+fleetIndices <- unique(mod$dat$CPUE[mod$dat$CPUE$year>0,]$index)
+mod$ctl$lambdas <- data.frame("like_comp" = 1, 
+                              "fleet" = sort(fleetIndices),
+                              "phase" = 1,
+                              "value" = 1,
+                              "sizefreq_method" = 1)
+rownames(mod$ctl$lambdas) = paste0("index_",fleet.converter[fleet.converter$fleet %in% fleetIndices,"fleetname"])
+mod$ctl$lambdas$value <- 0
+
+#Set lambdas
+mod$ctl$N_lambdas <- 2
+mod$ctl$lambdas <- mod$ctl$lambdas[mod$ctl$lambdas$fleet %in% c(29,30),]
+
+new_name <- 'survey_tri_lambda0'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+#Remove pre-recruit survey
+
+mod <- base_mod
+
+fleetIndices <- unique(mod$dat$CPUE[mod$dat$CPUE$year>0,]$index)
+mod$ctl$lambdas <- data.frame("like_comp" = 1, 
+                              "fleet" = sort(fleetIndices),
+                              "phase" = 1,
+                              "value" = 1,
+                              "sizefreq_method" = 1)
+rownames(mod$ctl$lambdas) = paste0("index_",fleet.converter[fleet.converter$fleet %in% fleetIndices,"fleetname"])
+mod$ctl$lambdas$value <- 0
+
+#Set lambdas
+mod$ctl$N_lambdas <- 1
+mod$ctl$lambdas <- mod$ctl$lambdas[mod$ctl$lambdas$fleet == 31,]
+
+new_name <- 'survey_prerecruit_lambda0'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
 # Remove any comps with sample inputs less than 5 ------------------------------------------------------
 
 mod <- base_mod
