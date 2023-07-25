@@ -13382,6 +13382,215 @@ SSsummarize(xx) |>
 
 
 ####------------------------------------------------####
+### 7_2_0_WArec_comb_late_block - late WA Rec selectivity combined with middle block ----
+####------------------------------------------------####
+
+new_name <- "7_2_0_WArec_comb_late_block"
+old_name <- "7_0_2_hessian"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+mod$ctl$Block_Design[[5]] <- c(2006, 2022)
+mod$ctl$blocks_per_pattern[5] <- 1
+
+
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[
+  !grepl('BLK5repl_2021', rownames(mod$ctl$size_selex_parms_tv)),]
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+tictoc::tic()
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+tictoc::toc()
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- r4ss::tune_comps(replist = pp, 
+                       option = 'Francis', 
+                       dir = here('models', new_name), 
+                       exe = here('models/ss_win.exe'), 
+                       niters_tuning = 0, 
+                       extras = '-nohess')
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_2_0_WArec_comb_late_block')))
+
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Add omitted commercial ages',
+                                     'Combine WA rec mid and late blocks'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+####------------------------------------------------####
+### 7_2_1_WArec_comb_all_block - 720 results in correlation with early rec ascendning and peak. Mirror all blocks ----
+####------------------------------------------------####
+
+new_name <- "7_2_1_WArec_comb_all_block"
+old_name <- "7_2_0_WArec_comb_late_block"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+mod$ctl$N_Block_Designs <- 4
+mod$ctl$Block_Design <- mod$ctl$Block_Design[-5]
+mod$ctl$blocks_per_pattern <- mod$ctl$blocks_per_pattern[-5]
+
+mod$ctl$size_selex_parms[grepl("WA_REC", rownames(mod$ctl$size_selex_parms)),"Block"] <- 0
+
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[
+  !grepl('BLK5repl_2006', rownames(mod$ctl$size_selex_parms_tv)),]
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+tictoc::tic()
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+tictoc::toc()
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 7_2_2_WArec_reweight - 720 results in correlation with early rec ascendning and peak. Reweight WA rec ----
+####------------------------------------------------####
+
+new_name <- "7_2_2_WArec_reweight"
+old_name <- "7_2_0_WArec_comb_late_block"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+#Use adjustments in suggested tunings in model 7_2_0 for WA rec length and age
+mod$ctl$Variance_adjustment_list[mod$ctl$Variance_adjustment_list$Fleet == 9,"Value"] <- c(0.4546, 0.419027)
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+tictoc::tic()
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+tictoc::toc()
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 7_2_4_WArec_fix_ascend - 721 results in correlation with early rec ascendning and peak. Fix ascend at estimate ----
+####------------------------------------------------####
+
+new_name <- "7_2_4_WArec_fix_ascend"
+old_name <- "7_2_0_WArec_comb_late_block"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+pp <- SS_output(here('models',old_name))
+
+#Fix at value of estimate from 7_2_0
+mod$ctl$size_selex_parms[grep("P_3_9_WA_REC", rownames(mod$ctl$size_selex_parms)), c("INIT","PHASE")] <- c(
+  pp$parameters[pp$parameters$Label=="Size_DblN_ascend_se_9_WA_REC(9)","Value"], -99)
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+tictoc::tic()
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+tictoc::toc()
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+####------------------------------------------------####
 ### 7_3_0_WArec_no_late_block - late WA Rec selectivity same as first block ----
 ####------------------------------------------------####
 
