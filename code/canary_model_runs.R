@@ -12358,6 +12358,11 @@ plot_sel_comm(pp, sex=2)
 plot_sel_noncomm(pp, sex=1, spatial = FALSE)
 plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
+plot_sel_comm_age(pp, sex=1, fact = "Asel2")
+plot_sel_comm_age(pp, sex=2, fact = "Asel2")
+plot_sel_noncomm_age(pp, sex=1, spatial = FALSE, fact = "Asel2")
+plot_sel_noncomm_age(pp, sex=2, spatial = FALSE, fact = "Asel2")
+
 xx=r4ss::tune_comps(replist = pp, 
                     option = 'Francis', 
                     dir = here('models', new_name), 

@@ -42,15 +42,31 @@ plot_sel_ret_age <- function(mod,
                                  print = TRUE,
                                  plotdir = mod$inputs$dir
   )$infotable
+  
+  infotable_len <- r4ss::SSplotSelex(mod,
+                                 fleets = fleet,
+                                 sexes = sex,
+                                 sizefactors = "Lsel",
+                                 years = years,
+                                 subplots = 1,
+                                 plot = FALSE,
+                                 print = TRUE,
+                                 plotdir = mod$inputs$dir
+  )$infotable
   # remove extra file (would need to sort out the relative path stuff)
   file.remove(file.path(mod$inputs$dir, "sel02_multiple_fleets_age1.png"))
+  file.remove(file.path(mod$inputs$dir, "sel01_multiple_fleets_length1.png"))
   nlines <- nrow(infotable)
-  infotable$col <- r4ss::rich.colors.short(max(6,nlines), alpha = 0.7) %>%
-    rev() %>% tail(nlines)
+  nlines_len <- nrow(infotable_len)
+  infotable$col <- NA
+  infotable[infotable$Yr%in%infotable_len$Yr,]$col <- r4ss::rich.colors.short(max(6,nlines_len), alpha = 0.7) %>%
+    rev() %>% tail(nlines_len)
   infotable$pch <- NA
-  infotable$lty <- nrow(infotable):1
+  infotable$lty <- 1
+  infotable[infotable$Yr%in%infotable_len$Yr,]$lty <- nrow(infotable_len):1
   infotable$lwd <- 3
-  infotable$longname <- infotable$Yr_range
+  infotable$longname <- NA
+  infotable[infotable$Yr%in%infotable_len$Yr,]$longname <- infotable_len$Yr_range
   # if(fleet == 9) { #fix table for WA rec which reports out separate 2021 and 2022
   #   newinfo <- infotable[c(1,2,4),]
   #   newinfo$lty <- infotable[2:4,"lty"]
