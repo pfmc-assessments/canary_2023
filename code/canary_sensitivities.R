@@ -1398,6 +1398,34 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           skipfinished = FALSE)
 
 
+#Upweight all survey index with lambda of 10
+
+mod <- base_mod
+
+fleetIndices <- unique(mod$dat$CPUE[mod$dat$CPUE$year>0,]$index)
+mod$ctl$lambdas <- data.frame("like_comp" = 1, 
+                              "fleet" = sort(fleetIndices),
+                              "phase" = 1,
+                              "value" = 1,
+                              "sizefreq_method" = 1)
+rownames(mod$ctl$lambdas) = paste0("index_",fleet.converter[fleet.converter$fleet %in% fleetIndices,"fleetname"])
+mod$ctl$lambdas$value <- 10
+
+#Set lambdas
+mod$ctl$N_lambdas <- 4
+
+new_name <- 'survey_lambda10'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
 # Remove any comps with sample inputs less than 5 ------------------------------------------------------
 
 mod <- base_mod
