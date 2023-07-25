@@ -1624,11 +1624,21 @@ productivity <- c('est_h',
                   'M_ramp',
                   'M_break20',
                   'single_M')
+
 prod_pretty <- c('Estimate h',
                  'Estimate male M',
                  'M ramp',
                  'M break 20',
                  'Single M')
+
+surveys <- c('survey_lambda10',
+             'survey_prerecruit_lambda0',
+             'survey_tri_lambda0',
+             'survey_wcgbts_lambda0')
+survey_pretty <- c('Upweight surveys x10',
+                   'No prerecruit',
+                   'No triennial',
+                   'No WCGBTS')
 
 sens_names <- c(selectivity,
                 weighting,
@@ -1680,6 +1690,12 @@ make_detailed_sensitivites(big_sensitivity_output,
                            outdir = outdir,
                            grp_name = 'productivity',
                            pretty_names = prod_pretty)
+
+make_detailed_sensitivites(big_sensitivity_output, 
+                           mods_to_include = surveys,
+                           outdir = outdir,
+                           grp_name = 'surveys',
+                           pretty_names = survey_pretty)
 
 current.year <- 2023
 CI <- 0.95
@@ -1746,5 +1762,6 @@ ggplot(dev.quants, aes(x = relErr, y = mod_num, col = Metric, pch = Metric)) +
   scale_y_continuous(breaks = 1:length(sens_names), name = '', labels = pretty_names, 
                      limits = c(1, length(pretty_names) + 2), minor_breaks = NULL) +
   xlab("Relative change") 
-ggsave(file.path(outdir, 'sens_summary.png'),  dpi = 300,  
+ggsave(file.path(outdir, 'survey_summary.png'),  dpi = 300,  
        width = 6, height = 6.5, units = "in")
+

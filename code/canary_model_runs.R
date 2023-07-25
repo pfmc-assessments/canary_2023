@@ -13781,17 +13781,29 @@ r4ss::run(dir = here('models',new_name),
           # show_in_console = TRUE,
           skipfinished = FALSE)
 
+
 xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c(new_name,
-                                                 '7_3_2_tuned')))
+                                      subdir = c('7_0_2_hessian',
+                                                 '7_3_0_WArec_no_late_block',
+                                                 '7_3_1_ORntwl_no_late_block',
+                                                 '7_3_2_tuned',
+                                                 '7_3_3_tuned_full_blocks')))
 
 xx.sum <- r4ss::SSsummarize(xx)
 
 xx.sum |>
   SSplotComparisons(legendlabels = c('Add omitted commercial ages',
-                                     'mirror WA Rec to early',
-                                     'mirror OR NTWL to early'),
+                                     '+ mirror WA Rec to early',
+                                     '+ mirror OR NTWL to early',
+                                     '+ retune',
+                                     'Full block structure, new weights'),
                     subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c(new_name,
+                                                 '7_3_2_tuned')))
+
+xx.sum <- r4ss::SSsummarize(xx)
 
 xx.sum |> 
   SStableComparisons() |>

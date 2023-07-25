@@ -3,7 +3,7 @@ library(r4ss)
 library(here)
 library(tictoc)
 
-base_model <- '6_1_0_projections'
+base_model <- '7_3_2_tuned'
 
 # Female M profile --------------------------------------------------------
 
@@ -269,7 +269,7 @@ get = get_settings_profile( parameters =  c("NatM_uniform_Fem_GP_1", "NatM_unifo
 #No effect with globalpar so using it for consistency
 model_settings = get_settings(settings = list(base_name = base_model,
                                               run = c("retro"),
-                                              profile_details = get[4,], #adjust value in get[x,] to each individually
+                                              # profile_details = get[4,], #adjust value in get[x,] to each individually
                                               exe = 'ss_win',
                                               extras = '-nohess',
                                               verbose = FALSE,
