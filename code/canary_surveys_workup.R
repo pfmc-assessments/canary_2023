@@ -536,3 +536,40 @@ purrr::imap(biomass$All$Strata, ~ tibble::tibble(year = as.numeric(stringr::str_
 # Model-based is basically the same last 5 years or full time series
 # Use model-based last 5 years.
 
+
+# STAR panel request: sex ratio -------------------------------------------
+
+sex_ratio <- dplyr::bind_rows(wcgbts_bio, triennial_bio$Ages) |> 
+  tibble::as_tibble() |>
+  dplyr::mutate(state = dplyr::case_when(Latitude_dd < 42 ~ 'CA',
+                                         Latitude_dd < 46.25 ~ 'OR',
+                                         TRUE ~ 'WA')) |>
+  dplyr::filter(!is.na(Age)) |>
+  dplyr::group_by(state, Age) |>
+  dplyr::summarize(Female = mean(Sex == 'F'),
+                   Male = mean(Sex == 'M'),
+                   Unsexed = 1-Female-Male,
+                   n_samp = dplyr::n())
+
+sex_ratio |>
+  tidyr::pivot_longer(cols = -c(state, Age, n_samp), names_to = 'Sex', values_to = 'Percent') |>
+  ggplot(aes(x = Age, y = Percent, fill = Sex)) +
+  geom_col() +
+  geom_vline(xintercept = 20) +
+  facet_wrap(~state) +
+  scale_fill_manual(values = c('Female' = 'red', 'Male' = 'blue', 'Unsexed' = 'darkgoldenrod1'))
+ggsave(here('data_workshop_figs/sex_ratio_star1.png'), device = 'png', dpi = 500,
+       width = 7, height = 4, units = 'in')
+
+sex_ratio |>
+  dplyr::mutate(lwr = sapply(Female, function(x) max(0, qnorm(0.025, x, sqrt(x*(1-x)/n_samp)))),
+                upr = sapply(Female, function(x) min(1, qnorm(0.975, x, sqrt(x*(1-x)/n_samp))))) |>
+  dplyr::filter(Age > 2) |>
+  ggplot(aes(x = Age, y = Female, col = state)) +
+  geom_point(alpha = 0.5) +
+  geom_linerange(aes(ymin = lwr, ymax = upr), alpha = 0.5) +
+  stat_smooth(se = FALSE) +
+  ylab('Percent female') +
+  viridis::scale_color_viridis(discrete=TRUE)
+ggsave(here('data_workshop_figs/sex_ratio_star2.png'), device = 'png', dpi = 500,
+       width = 7, height = 4, units = 'in')
