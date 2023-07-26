@@ -13970,3 +13970,55 @@ SSsummarize(xx) |>
                     subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
 
+####------------------------------------------------####
+### 7_4_0_hessian - run 7_3_2_tuned_best_jitter_ctlssnew with a hessian ----
+####------------------------------------------------####
+
+new_name <- "7_4_0_hessian"
+old_name <- "7_3_2_tuned_best_jitter_ctlssnew"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          # extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp)
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_3_2_tuned',
+                                                 '7_3_2_tuned_best_jitter',
+                                                 '7_3_2_tuned_best_jitter_ctlssnew',
+                                                 '6_1_0_projections',
+                                                 '7_0_2_hessian')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('model 2b',
+                                     'best model 2b jitter inits from .par file',
+                                     'best model 2b jitter inits from contrl.ss_new',
+                                     'Pre STAR base',
+                                     'Add omitted commercial ages'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+
