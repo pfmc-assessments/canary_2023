@@ -1491,6 +1491,43 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE,
           skipfinished = FALSE)
 
+
+# Increase uncertainty around catch (STAR panel request) ------------------------------------------------------
+
+mod <- base_mod
+
+mod$dat$catch[mod$dat$catch$year < 1980, "catch_se"] = 0.2
+
+new_name <- 'catch_se_0.2'
+
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models/sensitivities',new_name))
+
+summary(pp$catch$Obs - pp$catch$Exp)
+
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   'sensitivities/catch_se_0.1',
+                                                   'sensitivities/catch_se_0.2',
+                                                   'sensitivities/catch_se_0.5'))))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'Catch se 0.1',
+                                     'Catch se 0.2',
+                                     'Catch se 0.5'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
+
+
+
+
 # Bomb radiocarbon --------------------------------------------------------
 
 mod <- base_mod
