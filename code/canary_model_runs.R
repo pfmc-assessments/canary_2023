@@ -13970,6 +13970,86 @@ SSsummarize(xx) |>
                     subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
 
+
+####------------------------------------------------####
+### 7_3_4_ORntwl_no_late_block_only - 731 adjusted block for OR NTWL but also for CA NTWL
+####------------------------------------------------####
+
+new_name <- "7_3_4_ORntwl_no_late_block_only"
+old_name <- "7_3_2_tuned_best_jitter_ctlssnew"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models', old_name), 
+               dir.new = here('models', new_name), 
+               overwrite = TRUE)
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+#Add recent CA NTWL block back in and add separate OR NTWL block
+mod$ctl$N_Block_Designs <- 6
+mod$ctl$Block_Design[[2]] <- c(2000, 2019, 2020, 2022)
+mod$ctl$Block_Design[[6]] <- c(2000, 2019)
+mod$ctl$blocks_per_pattern[2] <- 2
+mod$ctl$blocks_per_pattern[6] <- 1
+names(mod$ctl$blocks_per_pattern)[6] <- "blocks_per_pattern_6"
+
+mod$ctl$size_selex_parms[grep("5_OR_NTWL",rownames(mod$ctl$size_selex_parms)),][which(mod$ctl$size_selex_parms[grep("5_OR_NTWL",rownames(mod$ctl$size_selex_parms)),]$Block == 2), "Block"] <- 6
+
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[
+  -grep('\\(5\\)_BLK2repl_2020', rownames(mod$ctl$size_selex_parms_tv)),]
+
+selex_new <- mod$ctl$size_selex_parms
+
+selex_new < selex_tv_
+selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
+  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
+  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
+
+rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
+  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
+  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
+  dplyr::select(-Block, -id)
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+tictoc::tic()
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          #extras = '-nohess',
+          show_in_console = TRUE,
+          skipfinished = FALSE)
+tictoc::toc()
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_3_2_tuned',
+                                                 '7_3_2_tuned_best_jitter_ctlssnew',
+                                                 '7_3_4_ORntwl_no_late_block_only')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('model 2b',
+                                     'best jitter inits from contrl.ss_new',
+                                     'CA NTWL full blocking'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+
+
+
 ####------------------------------------------------####
 ### 7_4_0_hessian - run 7_3_2_tuned_best_jitter_ctlssnew with a hessian ----
 ####------------------------------------------------####
