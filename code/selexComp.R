@@ -55,8 +55,15 @@ plot_sel_ret <- function(mod,
   #   newinfo$lty <- infotable[2:4,"lty"]
   #   newinfo$col <- infotable[2:4,"col"]
   #   newinfo[3,c("longname","Yr_range")] <- c("2021-2022","2021-2022")
-  #   infotable <- newinfo
+  #   infotable <- newinfo[-3,]
   # }
+  if(fleet == 9) { #If running on STAR models with simplified base model use this
+    newinfo <- infotable[c(1,2,4),]
+    newinfo$lty <- infotable[2:4,"lty"]
+    newinfo$col <- infotable[2:4,"col"]
+    newinfo[3,c("longname","Yr_range")] <- c("2021-2022","2021-2022")
+    infotable <- newinfo
+  }
   # run plot function again, passing in the modified infotable
   r4ss::SSplotSelex(mod,
                     fleets = fleet,
