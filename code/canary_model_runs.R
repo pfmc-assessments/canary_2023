@@ -13880,3 +13880,64 @@ xx.sum |>
   SStableComparisons() |>
   `colnames<-`(c('', 'Full blocking', 'OR NTWL mirrored early')) |>
   write.csv(here('models', new_name, 'table_comp.csv'), row.names = FALSE)
+
+
+####------------------------------------------------####
+### 7_3_2_tuned_best_jitter - run best bitter with par file ----
+####------------------------------------------------####
+
+new_name <- paste0('7_3_2_tuned', '_best_jitter')
+r4ss::copy_SS_inputs(dir.old = here('models', '7_3_2_tuned'),
+                     dir.new = here('models', new_name))
+file.copy(from = here('models', paste0(base_model, '_jitter_0.05'), 'ss.par_18.sso'),
+          to = here('models', new_name, 'ss.par'))
+mod <- SS_read(here('models', new_name))
+
+mod$start$init_values_src <- 1
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+####------------------------------------------------####
+### 7_3_2_tuned_best_jitter_ctlssnew - run with ctl.ss_new inits ----
+####------------------------------------------------####
+
+new_name <- "7_4_0_ctlssnew"
+old_name <- "7_3_2_tuned_best_jitter"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models', old_name), 
+               dir.new = here('models', new_name), 
+               overwrite = TRUE)
+
+file.copy(from = here('models', old_name, 'control.ss_new'),
+          to = here('models', new_name, 'control.ss'), overwrite = TRUE)
+
+mod <- SS_read(here('models',new_name))
+
+
+##
+#Make changes
+##
+
+mod$start$init_values_src <- 0
+
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+

@@ -236,6 +236,8 @@ saveRDS(fit, here('models', new_name, 'mcmc_run.rds'))
 # Need to run on a model with .exe included in the folder, and which has phase for another parameter set to 1
 
 base_model <- '7_0_2_hessian'
+base_model <- '7_3_2_tuned'
+
 
 # new_name <- '5_5_0_profile'
 # 
@@ -268,7 +270,7 @@ get = get_settings_profile( parameters =  c("NatM_uniform_Fem_GP_1", "NatM_unifo
 #Should do usepar because stabilizes. Testing this showed instability with some runs when not using it
 #No effect with globalpar so using it for consistency
 model_settings = get_settings(settings = list(base_name = base_model,
-                                              run = c("retro"),
+                                              run = c("jitter"),
                                               # profile_details = get[4,], #adjust value in get[x,] to each individually
                                               exe = 'ss_win',
                                               extras = '-nohess',
@@ -292,11 +294,11 @@ tictoc::toc()
 new_name <- paste0(base_model, '_best_jitter')
 r4ss::copy_SS_inputs(dir.old = here('models', base_model),
                      dir.new = here('models', new_name))
-file.copy(from = here('models', paste0(base_model, '_jitter_0.05'), 'ss.par_35.sso'),
+file.copy(from = here('models', paste0(base_model, '_jitter_0.05'), 'ss.par_18.sso'),
           to = here('models', new_name, 'ss.par'))
 mod <- SS_read(here('models', new_name))
 mod$start$init_values_src <- 1
-mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_9_WA_REC\\(9\\)_BLK5repl_2021",rownames(mod$ctl$size_selex_parms_tv)),c("INIT","PHASE")] <- c(9,-99)
+#mod$ctl$size_selex_parms_tv[grep("SizeSel_PFemOff_3_9_WA_REC\\(9\\)_BLK5repl_2021",rownames(mod$ctl$size_selex_parms_tv)),c("INIT","PHASE")] <- c(9,-99)
 SS_write(mod,
          dir = here('models',new_name),
          overwrite = TRUE)
