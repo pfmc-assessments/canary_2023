@@ -13176,6 +13176,22 @@ pp$breakpoints_for_bias_adjustment_ramp
 biasadj <- SS_fitbiasramp(pp, verbose = TRUE)
 
 
+##
+#Compare all the jitter runs for STAR panel day 2 request
+##
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_0_2_hessian',
+                                                 #'7_0_2_hessian_best_jitter',
+                                                 '7_0_2_hessian_best_jitter_ctlssnew')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('model 1',
+                                     #'best jitter inits from .par file',
+                                     'best jitter inits from contrl.ss_new'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models','7_0_2_hessian_best_jitter_ctlssnew'))
+
+
+
 ####------------------------------------------------####
 ### 7_0_3_asympSelex_waRec - the later block for WA rec has high corrrelation among the parameters. Set to asymptotic ----
 ####------------------------------------------------####
@@ -13902,7 +13918,7 @@ SS_write(mod,
 ### 7_3_2_tuned_best_jitter_ctlssnew - run with ctl.ss_new inits ----
 ####------------------------------------------------####
 
-new_name <- "7_4_0_ctlssnew"
+new_name <- "7_3_2_tuned_best_jitter_ctlssnew"
 old_name <- "7_3_2_tuned_best_jitter"
 
 ##
@@ -13939,5 +13955,18 @@ r4ss::run(dir = here('models',new_name),
           extras = '-nohess',
           # show_in_console = TRUE,
           skipfinished = FALSE)
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp)
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_3_2_tuned',
+                                                 '7_3_2_tuned_best_jitter',
+                                                 '7_3_2_tuned_best_jitter_ctlssnew')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('model 2b',
+                                     'best jitter inits from .par file',
+                                     'best jitter inits from contrl.ss_new'),
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
 
