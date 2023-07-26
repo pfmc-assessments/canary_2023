@@ -1511,18 +1511,17 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 
 pp <- SS_output(here('models/sensitivities',new_name))
 
-summary(pp$catch$Obs - pp$catch$Exp)
+plot(pp$catch$Obs - pp$catch$Exp, ylab = "Estimated minus input catch", 
+     xlab = "Year/Fleet combination")
 
 xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
                                         subdir = c(base_mod_name,
                                                    'sensitivities/catch_se_0.1',
-                                                   'sensitivities/catch_se_0.2',
-                                                   'sensitivities/catch_se_0.5'))))
+                                                   'sensitivities/catch_se_0.2'))))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Base model',
                                      'Catch se 0.1',
-                                     'Catch se 0.2',
-                                     'Catch se 0.5'),
+                                     'Catch se 0.2'),
                     subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
 
 
