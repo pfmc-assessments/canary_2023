@@ -82,7 +82,7 @@ readr::read_csv(here('documents/tables/pacfin_lengths.csv')) |>
                             "Trips TWL OR", "Lengths TWL OR", 
                             "Trips TWL WA", "Lengths TWL WA",
                             "Trips NTWL CA", "Lengths NTWL CA", 
-                            "Trips NTWL OR", "Lengths TWL OR", 
+                            "Trips NTWL OR", "Lengths NTWL OR", 
                              "Trips NTWL WA", "Lengths TWL WA"),
                       longtable = TRUE,
                       landscape = FALSE)
