@@ -3,13 +3,13 @@ library(r4ss)
 library(here)
 library(tictoc)
 
-base_model <- '7_3_2_tuned'
+base_model <- '7_3_5_reweight'
 
 # Female M profile --------------------------------------------------------
 
 profile.settings <- get_settings_profile(parameters = 'NatM_uniform_Fem_GP_1',
-                                         low = -0.005, high = 0.005,
-                                         step_size = 0.001,
+                                         low = -0.02, high = 0.02,
+                                         step_size = 0.005,
                                          param_space = 'relative',
                                          use_prior_like = 1) 
 settings <- get_settings(settings = list(base_name = base_model,
@@ -36,7 +36,7 @@ profile.settings <- get_settings_profile(parameters = 'NatM_uniform_Mal_GP_1',
                                          step_size = 0.005,
                                          param_space = 'relative',
                                          use_prior_like = 1) 
-settings <- get_settings(settings = list(base_name = '5_5_0_hessian_KLO',
+settings <- get_settings(settings = list(base_name = base_model,
                                          run = 'profile',
                                          profile_details = profile.settings,
                                          exe = 'ss_win',
@@ -263,23 +263,23 @@ base_model <- '7_3_5_reweight'
 # 
 
 get = get_settings_profile( parameters =  c("NatM_uniform_Fem_GP_1", "NatM_uniform_Mal_GP_1", "SR_BH_steep", "SR_LN(R0)"),
-                            low =  c(-0.02, -0.01, 0.50, -0.5),
-                            high = c(0.02, 0.01, 0.95,  0.5),
-                            step_size = c(0.005, 0.0025, 0.05, 0.1),
+                            low =  c(-0.02, -0.02, 0.50, -0.5),
+                            high = c(0.02, 0.02, 0.95,  0.5),
+                            step_size = c(0.005, 0.005, 0.05, 0.1),
                             use_prior_like = c(1,1,1,0),
                             param_space = c('relative', 'relative', 'real', 'relative'))
 
 #Should do usepar because stabilizes. Testing this showed instability with some runs when not using it
 #No effect with globalpar so using it for consistency
 model_settings = get_settings(settings = list(base_name = base_model,
-                                              run = c("retro"),
-                                              # profile_details = get[4,], #adjust value in get[x,] to each individually
+                                              run = c("profile"),
+                                              profile_details = get[1:2,], #adjust value in get[x,] to each individually
                                               exe = 'ss_win',
                                               extras = '-nohess',
                                               verbose = FALSE,
                                               globalpar = TRUE,
                                               usepar = TRUE,
-                                              parlinenum = 49,#c(5,29,51,49), #adjust to corresponding number
+                                              parlinenum = c(5,29),#c(5,29,51,49), #adjust to corresponding number
                                               init_values_src = 1))
 set.seed(230958)
 model_settings$Njitter <- 50

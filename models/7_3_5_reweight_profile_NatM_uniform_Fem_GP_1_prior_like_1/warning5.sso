@@ -1,0 +1,3 @@
+Warning 1 : 1st iteration warning: ssb(endyr)/ssb(styr)= 2.11072e-09; suggest start with larger R0 to get near 0.4; or use depletion fleet option
+Warning 2 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
+ 2 warnings 
