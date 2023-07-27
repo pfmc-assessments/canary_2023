@@ -13899,7 +13899,7 @@ xx.sum |>
 
 
 ####------------------------------------------------####
-### 7_3_2_tuned_best_jitter - run best bitter with par file ----
+### 7_3_2_tuned_best_jitter - run best jitter with par file ----
 ####------------------------------------------------####
 
 new_name <- paste0('7_3_2_tuned', '_best_jitter')
@@ -14006,7 +14006,6 @@ mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[
 
 selex_new <- mod$ctl$size_selex_parms
 
-selex_new < selex_tv_
 selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
   dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
   tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
@@ -14014,6 +14013,9 @@ selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
 rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
   stringr::str_remove('\\.\\.\\.[:digit:]+') |>
   stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+#Turn off sex dependent OR REC middle selectivity because have no sexed data
+selex_tv_pars[grep("SizeSel_PFemOff_3_8_OR_REC\\(8\\)_BLK4repl_2004",rownames(selex_tv_pars)),c("INIT","PHASE")] <- c(0,-99)
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
@@ -14037,17 +14039,101 @@ tictoc::toc()
 pp <- SS_output(here('models',new_name))
 SS_plots(pp, plot = c(1:26))
 
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
-xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                      subdir = c('7_3_2_tuned',
-                                                 '7_3_2_tuned_best_jitter_ctlssnew',
-                                                 '7_3_4_ORntwl_no_late_block_only')))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('model 2b',
-                                     'best jitter inits from contrl.ss_new',
-                                     'CA NTWL full blocking'),
-                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
+####------------------------------------------------####
+### 7_3_5_fixbound - OR NTWL ascending is steep. Fix that parameter
+####------------------------------------------------####
+
+new_name <- "7_3_5_fixbound"
+old_name <- "7_3_4_ORntwl_no_late_block_only"
+
+##
+#Copy inputs
+##
+
+mod <- SS_read(here('models',old_name))
+
+##
+#Make changes
+##
+
+#fix ascend limb to bound
+mod$ctl$size_selex_parms[grep("P_3_5_OR_NTWL",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(-9,-99) 
+
+##
+#Output files and run
+##
+
+SS_write(mod,
+         dir = here('models',new_name),
+         overwrite = TRUE)
+
+tictoc::tic()
+r4ss::run(dir = here('models',new_name),
+          exe = here('models/ss_win.exe'),
+          #extras = '-nohess',
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+tictoc::toc()
+
+pp <- SS_output(here('models',new_name))
+SS_plots(pp, plot = c(1:26))
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+
+####------------------------------------------------####
+### 7_3_5_reweight - OR NTWL ascending is steep. See if reweighting resolves (CA NTWL is 1.28)
+####------------------------------------------------####
+
+new_name <- "7_3_5_reweight"
+old_name <- "7_3_4_ORntwl_no_late_block_only"
+
+##
+#Copy inputs
+##
+
+copy_SS_inputs(dir.old = here('models', old_name), 
+               dir.new = here('models', new_name), 
+               overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"Report.sso"),
+          to = file.path(here('models',new_name),"Report.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"CompReport.sso"),
+          to = file.path(here('models',new_name),"CompReport.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"warning.sso"),
+          to = file.path(here('models',new_name),"warning.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',old_name),"covar.sso"),
+          to = file.path(here('models',new_name),"covar.sso"), overwrite = TRUE)
+
+pp <- SS_output(here('models',new_name))
+
+##
+#Make changes
+##
+
+  xx=r4ss::tune_comps(replist = pp, 
+                      option = 'Francis', 
+                      dir = here('models', new_name), 
+                      exe = here('models/ss_win.exe'), 
+                      niters_tuning = 1, 
+                      #extras = '-nohess',
+                      allow_up_tuning = TRUE)
+  
+  pp <- SS_output(here('models',new_name))
+  SS_plots(pp)
+  
+  plot_sel_comm(pp, sex=1)
+  plot_sel_comm(pp, sex=2)
+  plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+  plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 
 ####------------------------------------------------####
