@@ -1975,18 +1975,38 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
                                         subdir = c(base_mod_name,
                                                    'sensitivities/STAR_single_M',
-                                                   'sensitivities/STAR_M_break12',
-                                                   'sensitivities/STAR_M_break20',
-                                                   'sensitivities/STAR_M_ramp',
-                                                   'sensitivities/STAR_no_sex_selectivity'))))
-SSsummarize(xx) |>
-  SSplotComparisons(legendlabels = c('Model from request 10',
-                                     'Single M',
-                                     'M break 12',
-                                     'M break 20',
-                                     'M ramp 4-16',
-                                     'no sex selectivity'),
-                    subplots = c(1:4,9,11), print = TRUE, plotdir = here('models/sensitivities',new_name))
+                                                   # 'sensitivities/STAR_M_break12',
+                                                   # 'sensitivities/STAR_M_break20',
+                                                   'sensitivities/STAR_M_ramp'))))#,
+                                                   # 'sensitivities/STAR_no_sex_selectivity'))))
+xx.sum <- SSsummarize(xx)
 
-SSsummarize(xx) |>
-  SStableComparisons()
+xx.sum |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'Single M (low state)',
+                                     # 'M break 12',
+                                     # 'M break 20',
+                                     'M ramp 4-16 (high state)'),
+                                     # 'no sex selectivity'),
+                    subplots = c(2,4), print = TRUE, plotdir = here('models/sensitivities',new_name))
+
+
+SStableComparisons(xx.sum, 
+                   # names = c('Dead_Catch_MSY', 'Dead_Catch_SPR', 'Dead_Catch_Btgt', 'Bratio_2023'), 
+                   likenames = NULL, 
+                   modelnames = c('Model from request 10',
+                                  'Single M',
+                                  'M break 12',
+                                  'M break 20',
+                                  'M ramp 4-16',
+                                  'no sex selectivity')) |>
+  dplyr::mutate(across(-Label, ~ round(., 2))) |>
+  dplyr::rename(' ' = Label) |>
+  write.csv(here('models/sensitivities', new_name, 'table_comp.csv'),
+            row.names = FALSE)
+
+qnorm(c(0.25, 0.75), 
+      mean = xx.sum$quants[xx.sum$quants$Label=='SSB_2023', 'replist1'],
+      sd = xx.sum$quantsSD[xx.sum$quantsSD$Label=='SSB_2023', 'replist1'])
+filter(xx.sum$quants, Label == 'SSB_2023')
+
