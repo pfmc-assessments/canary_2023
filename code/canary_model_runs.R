@@ -14136,18 +14136,25 @@ pp <- SS_output(here('models',new_name))
   plot_sel_noncomm(pp, sex=2, spatial = FALSE)
   
   xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
-                                        subdir = c('7_3_2_tuned',
+                                        subdir = c('6_1_0_projections',
+                                                   '7_3_2_tuned',
                                                    '7_3_2_tuned_best_jitter_ctlssnew',
                                                    '7_3_4_ORntwl_no_late_block_only',
                                                    '7_3_5_fixbound',
                                                    '7_3_5_reweight')))
   SSsummarize(xx) |>
-    SSplotComparisons(legendlabels = c('model 2b',
-                                       'best model 2b jitter inits from contrl.ss_new',
+    SSplotComparisons(legendlabels = c('Pre-star base',
+                                       'model 2b',
+                                       'best model 2b jittered',
                                        'resplitting CA NTWL',
                                        'resplitting CA NTWL and fixing 1 parm on bound',
                                        'resplitting CA NTWL and reweighting'),
-                      subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
+                      subplot = c(1:4,9,11), print = TRUE, plotdir = here('models',new_name))
+  
+  SSsummarize(xx) |> 
+    SStableComparisons() |>
+    `colnames<-`(c('', 'Pre-star base', 'Model 2b', 'jittered model 2b', 'Resplit CA NTWL', 'Resplit CA NTWL fix', 'Resplit CA NTWL reweight')) |>
+    write.csv(here('models', new_name, 'table_comp.csv'), row.names = FALSE)
 
 
 ####------------------------------------------------####
