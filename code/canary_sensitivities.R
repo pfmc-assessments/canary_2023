@@ -1578,7 +1578,6 @@ SSsummarize(xx) |>
                     subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
 
 
-
 # Summaries ---------------------------------------------------------------
  
 make_detailed_sensitivites <- function(biglist, mods_to_include, pretty_names = mods_to_include, 
@@ -1801,3 +1800,193 @@ ggplot(dev.quants, aes(x = relErr, y = mod_num, col = Metric, pch = Metric)) +
 ggsave(file.path(outdir, 'survey_summary.png'),  dpi = 300,  
        width = 6, height = 6.5, units = "in")
 
+
+
+
+##############################################################
+#
+#STAR PANEL SENSITIVITES BASED ON NEW UPDATED MODEL
+#
+##############################################################
+
+base_mod_name <- '7_3_5_reweight'
+base_mod <- SS_read(here('models', base_mod_name))
+
+# STAR panel Sex-constant M (TOR)-----------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', 'PHASE'] <- -50
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', 'INIT'] <- 0.0643
+
+new_name <- 'STAR_single_M'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE,
+          skipfinished = FALSE)
+
+
+# STAR panel M breakpoint 12 ------------------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(11, 12)
+
+# Add extra rows to MG table
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+# Fix young female M at male M
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+new_name <- 'STAR_M_break12'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+
+# STAR panel M breakpoint 20 ------------------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(19, 20)
+
+# Add extra rows to MG table
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+# Fix young female M at male M
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+new_name <- 'STAR_M_break20'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+
+# STAR panel M ramp ------------------------------------------------------------------
+
+mod <- base_mod
+
+mod$ctl$natM_type <- 1
+mod$ctl$N_natM <- 2
+mod$ctl$M_ageBreakPoints <- c(6, 14)
+
+# Add extra rows to MG table
+M.ind <- grep('NatM', rownames(mod$ctl$MG_parms))
+
+mod$ctl$MG_parms <- mod$ctl$MG_parms[c(rep(M.ind[1], 2), (M.ind[1]+1):(M.ind[2]-1),
+                                       rep(M.ind[2], 2), (M.ind[2]+1):(nrow(mod$ctl$MG_parms))),]
+M.ind <- grep('1.1', rownames(mod$ctl$MG_parms))
+rownames(mod$ctl$MG_parms)[M.ind] <- stringr::str_replace(rownames(mod$ctl$MG_parms)[M.ind], 
+                                                          pattern = 'p_1', 
+                                                          replacement = 'p_2') |>
+  stringr::str_remove(pattern = '\\.1')
+
+# Fix young female M at male M
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')] <-
+  mod$ctl$MG_parms['NatM_p_1_Mal_GP_1', c('LO', 'HI', 'INIT', 'PRIOR', 'PR_SD', 'PR_type', 'PHASE')]
+
+new_name <- 'STAR_M_ramp'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+
+# STAR panel Sex-constant selectivity ------------------------------------------------
+
+mod <- base_mod
+
+mod <- base_mod
+
+#Turning off phases and resetting female offset values resulting in really bad gradient (though similar trajectory result)
+# #Turn off phases
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- -99
+# 
+# #Because inits were set to estimate values need to reset female offsets to 0
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'INIT'] <- 0
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'INIT'] <- 0
+
+#Turn off male options
+mod$ctl$size_selex_types$Male <- 0
+
+#Remove all female offsets
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep("PFemOff",rownames(mod$ctl$size_selex_parms)),]
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[-grep("PFemOff",rownames(mod$ctl$size_selex_parms_tv)),]
+
+new_name <- 'STAR_no_sex_selectivity'
+SS_write(mod, here('models/sensitivities', new_name),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models/sensitivities', new_name), 
+          exe = here('models/ss_win.exe'), 
+          extras = '-nohess', 
+          show_in_console = FALSE, 
+          skipfinished = FALSE)
+
+pp <- SS_output(here('models/sensitivities',new_name))
+SS_plots(pp, plot = c(1:26)[-c(12:19)])
+
+plot_sel_comm(pp, sex=1)
+plot_sel_comm(pp, sex=2)
+plot_sel_noncomm(pp, sex=1, spatial = FALSE)
+plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   'sensitivities/STAR_single_M',
+                                                   'sensitivities/STAR_M_break12',
+                                                   'sensitivities/STAR_M_break20',
+                                                   'sensitivities/STAR_M_ramp',
+                                                   'sensitivities/STAR_no_sex_selectivity'))))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Model from request 10',
+                                     'Single M',
+                                     'M break 12',
+                                     'M break 20',
+                                     'M ramp 4-16',
+                                     'no sex selectivity'),
+                    subplots = c(1:4,9,11), print = TRUE, plotdir = here('models/sensitivities',new_name))
+
+SSsummarize(xx) |>
+  SStableComparisons()
