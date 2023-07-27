@@ -272,7 +272,7 @@ get = get_settings_profile( parameters =  c("NatM_uniform_Fem_GP_1", "NatM_unifo
 #Should do usepar because stabilizes. Testing this showed instability with some runs when not using it
 #No effect with globalpar so using it for consistency
 model_settings = get_settings(settings = list(base_name = base_model,
-                                              run = c("jitter"),
+                                              run = c("retro"),
                                               # profile_details = get[4,], #adjust value in get[x,] to each individually
                                               exe = 'ss_win',
                                               extras = '-nohess',
