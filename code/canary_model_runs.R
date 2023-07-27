@@ -14134,6 +14134,20 @@ pp <- SS_output(here('models',new_name))
   plot_sel_comm(pp, sex=2)
   plot_sel_noncomm(pp, sex=1, spatial = FALSE)
   plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+  
+  xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c('7_3_2_tuned',
+                                                   '7_3_2_tuned_best_jitter_ctlssnew',
+                                                   '7_3_4_ORntwl_no_late_block_only',
+                                                   '7_3_5_fixbound',
+                                                   '7_3_5_reweight')))
+  SSsummarize(xx) |>
+    SSplotComparisons(legendlabels = c('model 2b',
+                                       'best model 2b jitter inits from contrl.ss_new',
+                                       'resplitting CA NTWL',
+                                       'resplitting CA NTWL and fixing 1 parm on bound',
+                                       'resplitting CA NTWL and reweighting'),
+                      subplot = c(1,3,9,11), print = TRUE, plotdir = here('models',new_name))
 
 
 ####------------------------------------------------####
