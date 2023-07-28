@@ -1,0 +1,53 @@
+---
+author:
+  - name: Brian J. Langseth
+    code: 1
+    first: B
+    middle: J
+    family: Langseth
+  - name: Kiva L. Oken
+    code: 1
+    first: K
+    middle: L
+    family: Oken
+  - name: Alison D. Whitman
+    code: 2
+    first: A
+    middle: D
+    family: Whitman
+  - name: John E. Budrick
+    code: 3
+    first: J
+    middle: E
+    family: Budrick
+  - name: Tien-Shui Tsou
+    code: 4
+    first: T
+    middle: '-'
+    family: Tsou
+author_list: Langseth, B.J., K.L. Oken, A.D. Whitman, J.E. Budrick, T.S. Tsou
+affiliation:
+  - code: 1
+    address: Northwest Fisheries Science Center, U.S. Department of Commerce, National
+      Oceanic and Atmospheric Administration, National Marine Fisheries Service, 2725
+      Montlake Boulevard East, Seattle, Washington 98112
+  - code: 2
+    address: Oregon Department of Fish and Wildlife, 2040 Southeast Marine Science
+      Drive, Newport, Oregon 97365
+  - code: 3
+    address: California Department of Fish and Wildlife, 1123 Industrial Rd., Suite
+      300, San Carlos, California 94070
+  - code: 4
+    address: Washington Department of Fish and Wildlife, 600 Capital Way North, Olympia,
+      Washington 98501
+address:
+  - ^1^Northwest Fisheries Science Center, U.S. Department of Commerce, National Oceanic
+    and Atmospheric Administration, National Marine Fisheries Service, 2725 Montlake
+    Boulevard East, Seattle, Washington 98112
+  - ^2^Oregon Department of Fish and Wildlife, 2040 Southeast Marine Science Drive,
+    Newport, Oregon 97365
+  - ^3^California Department of Fish and Wildlife, 1123 Industrial Rd., Suite 300,
+    San Carlos, California 94070
+  - ^4^Washington Department of Fish and Wildlife, 600 Capital Way North, Olympia,
+    Washington 98501
+---
