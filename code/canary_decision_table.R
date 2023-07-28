@@ -171,3 +171,46 @@ tab <- table_decision(
   list(low45, base45, high45)
 )
 writeLines(tab,here('documents',"tables", "decision_table.tex"))
+
+
+
+#####-------------------------------------------####
+#Run STAR panel request 15 of a projected base but with average recruitment from a time with lower recdevs
+#####-------------------------------------------####
+
+pstar <- 0.45
+base45 <- "7_3_5_reweight"
+
+#Set up base model with new recruitment period
+mod <- SS_read(here('models',base45))
+mod$fore$Fcast_years[c(5,6)] <- c(2014,2019)
+
+#Use catch from original base model with recruits from SR curve
+mod$fore$ForeCatch <- fore_catch
+
+#Turn off buffers
+mod$fore$Flimitfraction <- 1 #dont have years of buffer applied
+mod$fore$FirstYear_for_caps_and_allocations <- 2035 #these should be overwritten with the fixed catch but putting here anyway
+
+#I dont think we need to read from the par file but could
+
+SS_write(mod,
+         dir = here('models','decision_tables', paste0("base_",pstar,"_lowRecruit")),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models','decision_tables', paste0("base_",pstar,"_lowRecruit")),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_3_5_reweight',
+                                                 'decision_tables/base_0.45_lowRecruit')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('base model',
+                                     'average recruit from 2014-2019'), endyrvec = 2034, shadeForecast = TRUE,
+                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models','decision_tables', paste0("base_",pstar,"_lowRecruit")))
+
+
