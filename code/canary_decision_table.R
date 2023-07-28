@@ -1,5 +1,6 @@
 library(r4ss)
 library(here)
+library(dplyr)
 
 if(Sys.getenv("USERNAME") == "Brian.Langseth") {
   wd = "L:/"
