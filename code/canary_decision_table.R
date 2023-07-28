@@ -8,306 +8,165 @@ if(Sys.getenv("USERNAME") == "Kiva.Oken") {
   wd = "Q:/"
 }
 
-###################################################################################################
-# Run alternative states of nature models first ----
-####################################################################################################
+source(here('code/table_decision.R'))
 
+#Set up low and high states of nature
+low_state <- "sensitivities/STAR_single_M"
+high_state <- "sensitivities/STAR_M_ramp"
 
-#THIS IS NOT COMPLETE AND NEEDS TO BE UPDATED STARTING FROM HERE
+#####-------------------------------------------####
+#Run alternative states of nature for Pstar = 0.45 which we have already run for the base
+#####-------------------------------------------####
 
+pstar <- 0.45
+base45 <- "7_3_5_reweight"
 
-base <- "6_1_0_projections"
-base_mod <- SS_output(here('models',base))
+#Get new forecast catches
+base_mod <- SS_output(here('models',base45))
+fore_catch <- r4ss::SS_ForeCatch(base_mod, yrs = 2023:2034)
 
-fore_loc = grep("ForeCatch",base_mod$derived_quants$Label)
-baseABC = rbind(data.frame("Year" = c(2025:2034), "Seas" = 1, "Fleet" = 1, "Catch" = base_mod$derived_quants[fore_loc,"Value"][-c(1:2)]*0.265),
-                data.frame("Year" = c(2025:2034), "Seas" = 1, "Fleet" = 2, "Catch" = base_mod$derived_quants[fore_loc,"Value"][-c(1:2)]*0.735))
 
-model = "8_0_4b_highState_R0_baseABC"
-base.804 = SS_output(file.path(wd, model),covar=TRUE)
-SS_plots(base.804)
+##
+#Set up low state first
+##
+mod <- SS_read(here('models',low_state))
+mod$fore$ForeCatch <- fore_catch
 
-model = "8_0_5b_lowState_R0_baseABC"
-base.805 = SS_output(file.path(wd, model),covar=TRUE)
-SS_plots(base.805)
+#Turn off buffers
+mod$fore$Flimitfraction <- 1 #dont have years of buffer applied
+mod$fore$FirstYear_for_caps_and_allocations <- 2035 #these should be overwritten with the fixed catch but putting here anyway
 
+#Estimate from par file parameters
+mod$start$init_values_src <-1
 
+SS_write(mod,
+         dir = here('models','decision_tables',paste0("low_",pstar)),
+         overwrite = TRUE)
 
+r4ss::run(dir = here('models','decision_tables',paste0("low_",pstar)),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
 
 
+##
+#Now set up high state
+##
+mod <- SS_read(here('models',high))
+mod$fore$ForeCatch <- fore_catch
 
-#CODE FROM CHANTEL
+#Turn off buffers
+mod$fore$Flimitfraction <- 1 #dont have years of buffer applied
+mod$fore$FirstYear_for_caps_and_allocations <- 2035 #these should be overwritten with the fixed catch but putting here anyway
 
-###################################################################################################
-# ACL P* = 0.45 and sigma = 0.50 for both areas
-####################################################################################################
+#Estimate from par file parameters
+mod$start$init_values_src <-1
 
-run_name = "6_1_0_projections"
+SS_write(mod,
+         dir = here('models','decision_tables',paste0("high_",pstar)),
+         overwrite = TRUE)
 
-fore_catch <- read.csv(file.path(south_dt_loc, south_name, "Projection_Values.csv"))
-south_forecast <- fore_catch$Removals.Model1
-fleet_percents = c(0.04,	0.03,	0.72,	0.21)
+r4ss::run(dir = here('models','decision_tables',paste0("high_",pstar)),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
 
-years = 2025:2034
-fore.catch = NULL 
-fleets <- 4
 
-for(y in 1:length(years)){
-  for(f in 1:fleets){
-    calc = c(years[y], 1, f, fleet_percents[f]*south_forecast[y])
-    fore.catch = rbind(fore.catch, calc)
-  }
-}
-colnames(fore.catch) = c("Year", "Seas", "Fleet", "Catch or F")
-rownames(fore.catch) = NULL
-write.csv(fore.catch, file.path(south_dt_loc, paste0(south_name, "_", run_name, ".csv")), row.names = FALSE)
-
+#####-------------------------------------------####
+#Pstar = 0.40
+#####-------------------------------------------####
 
-wd <- file.path(user_dir, "models", "nca")
-north_dt_loc = file.path(wd, "_decision_table", "pstar_45")
-north_name = "10.0_south_post_star_base"
-north_loc = file.path(wd, north_name)
-north_forecast <- fore_catch$Removals.Model2
-fleet_percents = c(0.03, 0.05,	0.38, 0.54)
-
-years = 2025:2034
-fore.catch = NULL 
-fleets <- 4
-
-for(y in 1:length(years)){
-  for(f in 1:fleets){
-    calc = c(years[y], 1, f, fleet_percents[f]*north_forecast[y])
-    fore.catch = rbind(fore.catch, calc)
-  }
-}
-colnames(fore.catch) = c("Year", "Seas", "Fleet", "Catch or F")
-rownames(fore.catch) = NULL
-write.csv(fore.catch, file.path(north_dt_loc, paste0(north_name, "_", run_name, ".csv")), row.names = FALSE)
+pstar <- 0.40
 
+#Set up base model with new pstar
+mod <- SS_read(here('models',base45))
+mod$fore$Flimitfraction_m <- data.frame("Year" = 2023:2034, 
+                                        "Fraction" = get_buffer(c(2023:2034), sigma = 0.5, pstar = pstar)[,2])
+SS_write(mod,
+         dir = here('models','decision_tables',paste0("base_",pstar)),
+         overwrite = TRUE)
 
-
-# Grab the SO and depletion from the low state of nature
-south_low <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/sca/_decision_table/pstar_45/15.0_south_post_star_base_SR_parm[2]_decision_table_1.15_0.277_0.125")
-north_low <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/nca/_decision_table/pstar_45/10.0_north_post_star_base_SR_parm[2]_decision_table_1.15_0.3_0.125")
-
-
-years <- 2023:2034
-sb0 <- south_low$timeseries[south_low$timeseries$Yr == 1916, "SpawnBio"] + 
-  north_low$timeseries[north_low$timeseries$Yr == 1916, "SpawnBio"]
-sby <- south_low$timeseries[south_low$timeseries$Yr %in% years, "SpawnBio"] +
-  north_low$timeseries[north_low$timeseries$Yr %in% years, "SpawnBio"]
-
-sb <- sby
-depl <- sby / sb0
-out <- cbind(years, sb, depl)
-write.csv(out, file.path(south_dt_loc, paste0(run_name, "_low_state_of_nature.csv")))
-
-# Grab the SO and depletion from the high state of nature
-south_hi <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/sca/_decision_table/pstar_45/15.0_south_post_star_base_SR_parm[2]_decision_table_1.15_0.277_0.875")
-north_hi <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/nca/_decision_table/pstar_45/10.0_north_post_star_base_SR_parm[2]_decision_table_1.15_0.3_0.875")
-
-sb0 <- south_hi$timeseries[south_hi$timeseries$Yr == 1916, "SpawnBio"] + 
-  north_hi$timeseries[north_hi$timeseries$Yr == 1916, "SpawnBio"]
-sby <- south_hi$timeseries[south_hi$timeseries$Yr %in% years, "SpawnBio"] +
-  north_hi$timeseries[north_hi$timeseries$Yr %in% years, "SpawnBio"]
-
-sb <- sby
-depl <- sby / sb0
-out <- cbind(years, sb, depl)
-write.csv(out, file.path(south_dt_loc, paste0(run_name, "_high_state_of_nature.csv")))
-
-south <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/sca/_decision_table/pstar_45/15.0_south_post_star_base")
-north <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/nca/_decision_table/pstar_45/10.0_north_post_star_base")
-sb0 <- south$timeseries[south$timeseries$Yr == 1916, "SpawnBio"] + 
-  north$timeseries[north$timeseries$Yr == 1916, "SpawnBio"]
-sby <- south$timeseries[south$timeseries$Yr %in% years, "SpawnBio"] +
-  north$timeseries[north$timeseries$Yr %in% years, "SpawnBio"]
-
-sb <- sby
-depl <- sby / sb0
-out <- cbind(years, sb, depl)
-write.csv(out, file.path(south_dt_loc, paste0(run_name, "_base_state_of_nature.csv")))
-
-###################################################################################################
-# ACL P* = 0.40 and sigma = 0.50 for both areas
-####################################################################################################
-wd <- file.path(user_dir, "models", area)
-run_name =  "pstar_40_removals"
-south_dt_loc = file.path(wd, "_decision_table", "pstar_40")
-south_name = "15.0_south_post_star_base"
-south_loc = file.path(wd, "_decision_table", "pstar_40", south_name)
-
-fore_catch <- read.csv(file.path(south_loc, "Projection_Values.csv"))
-south_forecast <- fore_catch$Removals.Model1
-fleet_percents = c(0.04,	0.03,	0.72,	0.21)
-
-years = 2025:2034
-fore.catch = NULL 
-fleets <- 4
-
-for(y in 1:length(years)){
-  for(f in 1:fleets){
-    calc = c(years[y], 1, f, fleet_percents[f]*south_forecast[y])
-    fore.catch = rbind(fore.catch, calc)
-  }
-}
-colnames(fore.catch) = c("Year", "Seas", "Fleet", "Catch or F")
-rownames(fore.catch) = NULL
-write.csv(fore.catch, file.path(south_dt_loc, paste0(south_name, "_", run_name, ".csv")), row.names = FALSE)
-
-wd <- file.path(user_dir, "models", "nca")
-north_dt_loc = file.path(wd, "_decision_table", "pstar_40")
-north_name = "10.0_south_post_star_base"
-north_loc = file.path(north_dt_loc, north_name)
-north_forecast <- fore_catch$Removals.Model2
-fleet_percents = c(0.03, 0.05,	0.38, 0.54)
-
-years = 2025:2034
-fore.catch = NULL 
-fleets <- 4
-
-for(y in 1:length(years)){
-  for(f in 1:fleets){
-    calc = c(years[y], 1, f, fleet_percents[f]*north_forecast[y])
-    fore.catch = rbind(fore.catch, calc)
-  }
-}
-colnames(fore.catch) = c("Year", "Seas", "Fleet", "Catch or F")
-rownames(fore.catch) = NULL
-write.csv(fore.catch, file.path(north_dt_loc, paste0(north_name, "_", run_name, ".csv")), row.names = FALSE)
-
-
-
-# Grab the SO and depletion from the low state of nature
-south_low <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/sca/_decision_table/pstar_40/15.0_south_post_star_base_SR_parm[2]_decision_table_1.15_0.277_0.125")
-north_low <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/nca/_decision_table/pstar_40/10.0_north_post_star_base_SR_parm[2]_decision_table_1.15_0.3_0.125")
-
-years <- 2023:2034
-sb0 <- south_low$timeseries[south_low$timeseries$Yr == 1916, "SpawnBio"] + 
-  north_low$timeseries[north_low$timeseries$Yr == 1916, "SpawnBio"]
-sby <- south_low$timeseries[south_low$timeseries$Yr %in% years, "SpawnBio"] +
-  north_low$timeseries[north_low$timeseries$Yr %in% years, "SpawnBio"]
-
-sb <- sby
-depl <- sby / sb0
-out <- cbind(years, sb, depl)
-write.csv(out, file.path(south_dt_loc, paste0(run_name, "_low_state_of_nature.csv")))
-
-# Grab the SO and depletion from the high state of nature
-south_hi <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/sca/_decision_table/pstar_40/15.0_south_post_star_base_SR_parm[2]_decision_table_1.15_0.277_0.875")
-north_hi <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/nca/_decision_table/pstar_40/10.0_north_post_star_base_SR_parm[2]_decision_table_1.15_0.3_0.875")
-
-sb0 <- south_hi$timeseries[south_hi$timeseries$Yr == 1916, "SpawnBio"] + 
-  north_hi$timeseries[north_hi$timeseries$Yr == 1916, "SpawnBio"]
-sby <- south_hi$timeseries[south_hi$timeseries$Yr %in% years, "SpawnBio"] +
-  north_hi$timeseries[north_hi$timeseries$Yr %in% years, "SpawnBio"]
-
-sb <- sby
-depl <- sby / sb0
-out <- cbind(years, sb, depl)
-write.csv(out, file.path(south_dt_loc, paste0(run_name, "_high_state_of_nature.csv")))
-
-south <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/sca/_decision_table/pstar_40/15.0_south_post_star_base")
-north <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/nca/_decision_table/pstar_40/10.0_north_post_star_base")
-sb0 <- south$timeseries[south$timeseries$Yr == 1916, "SpawnBio"] + 
-  north$timeseries[north$timeseries$Yr == 1916, "SpawnBio"]
-sby <- south$timeseries[south$timeseries$Yr %in% years, "SpawnBio"] +
-  north$timeseries[north$timeseries$Yr %in% years, "SpawnBio"]
-
-sb <- sby
-depl <- sby / sb0
-out <- cbind(years, sb, depl)
-write.csv(out, file.path(south_dt_loc, paste0(run_name, "_base_state_of_nature.csv")))
-
-
-###################################################################################################
-# ACL P* = 0.35 and sigma = 0.50 for both areas
-####################################################################################################
-wd <- file.path(user_dir, "models", area)
-run_name =  "pstar_35_removals"
-south_dt_loc = file.path(wd, "_decision_table", "pstar_35")
-south_name = "15.0_south_post_star_base"
-south_loc = file.path(wd, "_decision_table", "pstar_35", south_name)
-
-fore_catch <- read.csv(file.path(south_loc, "Projection_Values.csv"))
-south_forecast <- fore_catch$Removals.Model1
-fleet_percents = c(0.04,	0.03,	0.72,	0.21)
-
-years = 2025:2034
-fore.catch = NULL 
-fleets <- 4
-
-for(y in 1:length(years)){
-  for(f in 1:fleets){
-    calc = c(years[y], 1, f, fleet_percents[f]*south_forecast[y])
-    fore.catch = rbind(fore.catch, calc)
-  }
-}
-colnames(fore.catch) = c("Year", "Seas", "Fleet", "Catch or F")
-rownames(fore.catch) = NULL
-write.csv(fore.catch, file.path(south_dt_loc, paste0(south_name, "_", run_name, ".csv")), row.names = FALSE)
-
-
-wd <- file.path(user_dir, "models", "nca")
-north_dt_loc = file.path(wd, "_decision_table", "pstar_35")
-north_name = "10.0_south_post_star_base"
-north_loc = file.path(north_dt_loc, north_name)
-north_forecast <- fore_catch$Removals.Model2
-fleet_percents = c(0.03, 0.05,	0.38, 0.54)
-
-years = 2025:2034
-fore.catch = NULL 
-fleets <- 4
-
-for(y in 1:length(years)){
-  for(f in 1:fleets){
-    calc = c(years[y], 1, f, fleet_percents[f]*north_forecast[y])
-    fore.catch = rbind(fore.catch, calc)
-  }
-}
-colnames(fore.catch) = c("Year", "Seas", "Fleet", "Catch or F")
-rownames(fore.catch) = NULL
-write.csv(fore.catch, file.path(north_dt_loc, paste0(north_name, "_", run_name, ".csv")), row.names = FALSE)
-
-
-# Grab the SO and depletion from the low state of nature
-south_low <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/sca/_decision_table/pstar_35/15.0_south_post_star_base_SR_parm[2]_decision_table_1.15_0.277_0.125")
-north_low <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/nca/_decision_table/pstar_35/10.0_north_post_star_base_SR_parm[2]_decision_table_1.15_0.3_0.125")
-
-
-years <- 2023:2034
-sb0 <- south_low$timeseries[south_low$timeseries$Yr == 1916, "SpawnBio"] + 
-  north_low$timeseries[north_low$timeseries$Yr == 1916, "SpawnBio"]
-sby <- south_low$timeseries[south_low$timeseries$Yr %in% years, "SpawnBio"] +
-  north_low$timeseries[north_low$timeseries$Yr %in% years, "SpawnBio"]
-
-sb <- sby
-depl <- sby / sb0
-out <- cbind(years, sb, depl)
-write.csv(out, file.path(south_dt_loc, "low_state_of_nature.csv"))
-
-# Grab the SO and depletion from the high state of nature
-south_hi <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/sca/_decision_table/pstar_35/15.0_south_post_star_base_SR_parm[2]_decision_table_1.15_0.277_0.875")
-north_hi <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/nca/_decision_table/pstar_35/10.0_north_post_star_base_SR_parm[2]_decision_table_1.15_0.3_0.875")
-
-sb0 <- south_hi$timeseries[south_hi$timeseries$Yr == 1916, "SpawnBio"] + 
-  north_hi$timeseries[north_hi$timeseries$Yr == 1916, "SpawnBio"]
-sby <- south_hi$timeseries[south_hi$timeseries$Yr %in% years, "SpawnBio"] +
-  north_hi$timeseries[north_hi$timeseries$Yr %in% years, "SpawnBio"]
-
-sb <- sby
-depl <- sby / sb0
-out <- cbind(years, sb, depl)
-write.csv(out, file.path(south_dt_loc, paste0(run_name, "_high_state_of_nature.csv")))
-
-south <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/sca/_decision_table/pstar_35/15.0_south_post_star_base")
-north <- r4ss::SS_output("C:/Assessments/2023/copper_rockfish_2023/models/nca/_decision_table/pstar_35/10.0_north_post_star_base")
-sb0 <- south$timeseries[south$timeseries$Yr == 1916, "SpawnBio"] + 
-  north$timeseries[north$timeseries$Yr == 1916, "SpawnBio"]
-sby <- south$timeseries[south$timeseries$Yr %in% years, "SpawnBio"] +
-  north$timeseries[north$timeseries$Yr %in% years, "SpawnBio"]
-
-sb <- sby
-depl <- sby / sb0
-out <- cbind(years, sb, depl)
-write.csv(out, file.path(south_dt_loc, paste0(run_name, "_base_state_of_nature.csv")))
+r4ss::run(dir = here('models','decision_tables',paste0("base_",pstar)),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+#Get new forecast catches
+base_mod <- SS_output(here('models','decision_tables',paste0("base_",pstar)))
+fore_catch <- r4ss::SS_ForeCatch(base_mod, yrs = 2023:2034)
+
+
+##
+#Set up low state first
+##
+mod <- SS_read(here('models',low_state))
+mod$fore$ForeCatch <- fore_catch
+
+#Turn off buffers
+mod$fore$Flimitfraction <- 1 #dont have years of buffer applied
+mod$fore$FirstYear_for_caps_and_allocations <- 2035 #these should be overwritten with the fixed catch but putting here anyway
+
+#Estimate from par file parameters
+mod$start$init_values_src <-1
+
+SS_write(mod,
+         dir = here('models','decision_tables',paste0("low_",pstar)),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models','decision_tables',paste0("low_",pstar)),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+##
+#Now set up high state
+##
+mod <- SS_read(here('models',high))
+mod$fore$ForeCatch <- fore_catch
+
+#Turn off buffers
+mod$fore$Flimitfraction <- 1 #dont have years of buffer applied
+mod$fore$FirstYear_for_caps_and_allocations <- 2035 #these should be overwritten with the fixed catch but putting here anyway
+
+#Estimate from par file parameters
+mod$start$init_values_src <-1
+
+SS_write(mod,
+         dir = here('models','decision_tables',paste0("high_",pstar)),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models','decision_tables',paste0("high_",pstar)),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+
+#####-------------------------------------------####
+#Decision Table
+#####-------------------------------------------####
+
+low45 <- SS_output(here('models','decision_tables',"low_0.45"))
+base45 <- SS_output(here('models',"7_3_5_reweight"))
+high45 <- SS_output(here('models','decision_tables',"high_0.45"))
+
+low40 <- SS_output(here('models','decision_tables',"low_0.4"))
+base40 <- SS_output(here('models','decision_tables',"base_0.4"))
+high40 <- SS_output(here('models','decision_tables',"high_0.4"))
+
+
+caption <- "Decision table with 10-year projections. 'Mgmt' refers to the two management scenarios (A) the default harvest control rule $P^* = 0.45$, (B) harvest control rule with a lower $P^* = 0.40$. In each case the 2023 and 2024 catches are fixed at the ACLs which have been set for that year with values provided by the GMT. The alternative states of nature ('Low', 'Base', and 'High') are provided in the columns, with Spawning Output ('Spawn', in millions of eggs) and Fraction of unfished ('Frac') provided for each state of nature. The colors of catch and fraction unfished are relative with lighter colors representing lower values."
+
+tab <- table_decision(
+  caption = caption,
+  label = "es-decision",
+  list(low40, base40, high40),
+  list(low45, base45, high45)
+)
+writeLines(here('documents',"tables", "decision_table.tex"))
