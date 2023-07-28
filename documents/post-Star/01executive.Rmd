@@ -167,7 +167,9 @@ A challenge with the current base model is that the likelihood surface around th
 
 ## Decision table and projections {.unnumbered}
 
-These are to be completed after the STAR panel
+These are to be completed after the STAR panel. Preliminary decision table is provided in Table \ref{tab:es-decision}. 
+
+\input{../tables/decision_table.tex}
 
 ## Scientific uncertainty {.unnumbered}
 

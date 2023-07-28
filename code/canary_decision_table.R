@@ -169,4 +169,4 @@ tab <- table_decision(
   list(low40, base40, high40),
   list(low45, base45, high45)
 )
-writeLines(here('documents',"tables", "decision_table.tex"))
+writeLines(tab,here('documents',"tables", "decision_table.tex"))
