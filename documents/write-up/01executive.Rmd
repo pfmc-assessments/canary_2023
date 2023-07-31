@@ -22,9 +22,10 @@ executive[["stock"]] <- paste0("This assessment reports the status of ",
 ```{r results='asis', message=FALSE}
 tab <- readr::read_csv(file.path(model_dir, 'tables', 'a_Catches_ES.csv')) |>
   dplyr::select(-`10_CA_ASHOP (mt)`, -(`13_CA_FOR (mt)`:`15_WA_FOR (mt)`), -`Total Catch (mt)`) |>
-  dplyr::mutate(dplyr::across(dplyr::everything(), ~round(.x, 1)))
+  dplyr::mutate(dplyr::across(dplyr::everything(), ~round(.x, 1))) 
   
 names(tab) <- stringr::str_remove(names(tab), '[:digit:]+_') |>
+  stringr::str_remove(' \\(mt\\)') |>
   stringr::str_replace('_', ' ') |>
   stringr::str_replace('REC', 'Rec') |>
   stringr::str_remove('OP')
@@ -33,7 +34,8 @@ knitr::kable(tab,
              caption = 'Summary of catches (mt) by fleet over the last ten years. Discards are included in catches for each fleet, so total landings and total dead catch are equivalent.', 
              label = 'es-catch',
              format = 'latex',
-             booktabs = TRUE) |> 
+             booktabs = TRUE, 
+             escape = FALSE) |> 
   kableExtra::landscape() |>
   kableExtra::kable_styling(
       font_size = 9)
@@ -130,7 +132,7 @@ Although ecosystem factors have not been explicitly modeled in this assessment, 
 
 ## Reference points {.unnumbered}
 
-The management target for `r spp` is 40% of unfished spawning output, or $B_{40\%}$. This is associated with an annual exploitation rate of `r round(model$derived_quants['annF_Btgt', 'Value'], 4)` yr^-1^ (95% confidence interval, `r stringr::str_flatten(round(qnorm(c(0.025, 0.975), model$derived_quants['annF_Btgt', 'Value'], model$derived_quants['annF_Btgt', 'StdDev']), 4), collapse = '-')`) and yield of `r round(model$derived_quants['Dead_Catch_Btgt', 'Value'], 0)` mt (`r stringr::str_flatten(round(qnorm(c(0.025, 0.975), model$derived_quants['Dead_Catch_Btgt', 'Value'], model$derived_quants['Dead_Catch_Btgt', 'StdDev']), 0), collapse = '-')`). The target fishing intensity is SPR=0.5, which leads to an equilibrium spawning output of `r round(model$derived_quants['SSB_SPR', 'Value'], 0)` million eggs (`r stringr::str_flatten(round(qnorm(c(0.025, 0.975), model$derived_quants['SSB_SPR', 'Value'], model$derived_quants['SSB_SPR', 'StdDev']), 0), collapse = '-')`). Table \ref{tab:ref-pts-es} contains a full list of model estimates and 95% confidence intervals of target spawning output, target 1-SPR, target exploitation rate, and target yield for targets based on spawning depletion, 1-SPR, and the model estimate of MSY (maximum sustainable yield), as well as key population quantities at unfished levels and their current values.
+The management target for `r spp` is 40% of unfished spawning output, or SO40%. This is associated with an annual exploitation rate of `r round(model$derived_quants['annF_Btgt', 'Value'], 4)` yr^-1^ (95% confidence interval, `r stringr::str_flatten(round(qnorm(c(0.025, 0.975), model$derived_quants['annF_Btgt', 'Value'], model$derived_quants['annF_Btgt', 'StdDev']), 4), collapse = '-')`) and yield of `r round(model$derived_quants['Dead_Catch_Btgt', 'Value'], 0)` mt (`r stringr::str_flatten(round(qnorm(c(0.025, 0.975), model$derived_quants['Dead_Catch_Btgt', 'Value'], model$derived_quants['Dead_Catch_Btgt', 'StdDev']), 0), collapse = '-')`). The target fishing intensity is SPR=0.5, which leads to an equilibrium spawning output of `r round(model$derived_quants['SSB_SPR', 'Value'], 0)` million eggs (`r stringr::str_flatten(round(qnorm(c(0.025, 0.975), model$derived_quants['SSB_SPR', 'Value'], model$derived_quants['SSB_SPR', 'StdDev']), 0), collapse = '-')`). Table \ref{tab:ref-pts-es} contains a full list of model estimates and 95% confidence intervals of target spawning output, target 1-SPR, target exploitation rate, and target yield for targets based on spawning depletion (SO40%), 1-SPR (SPR50), and the model estimate of MSY (maximum sustainable yield), as well as key population quantities at unfished levels and their current values.
 
 ```{r, results = 'asis'}
 options(knitr.kable.NA = '')
@@ -157,9 +159,7 @@ readr::read_csv(here('documents/tables/ACL_history.csv')) |>
 
 ## Unresolved problems and major uncertainties {.unnumbered}
 
-Although not required before the STAR panel, below is a description of problems and uncertainties as identified by the STAT to help guide discussion during review. This section will be more fully completed following the STAR panel.
-
-The major uncertainty in the opinion of the STAT is treatment of natural mortality. This issue has been a long-standing uncertainty for `r spp` assessments, and remains so. This uncertainty arises from observations in survey and fishery data that age-based sex-ratios are male skewed starting around age 20. This could be explained by females being less susceptible to capture, or to fewer females in the population, or to some combination of both. No refugia for old females has been found thus far suggesting mortality may be a more probable culprit, however sex ratios within Oregon fishery data have been nearer to equal in the last decade. Regardless, there is uncertainty on how best to model this dynamic.
+The major uncertainty is treatment of natural mortality. This issue has been a long-standing uncertainty for `r spp` assessments, and remains so. This uncertainty arises from observations in survey and fishery data that age-based sex-ratios are male skewed starting around age 20. This could be explained by females being less susceptible to capture, or to fewer females in the population, or to some combination of both. No refugia for old females has been found thus far suggesting mortality may be a more probable culprit, however sex ratios within Oregon fishery data have been nearer to equal in the last decade. Regardless, there is uncertainty on how best to model this dynamic.
 
 The choice of how to model natural mortality matters. Assuming sex-specific age-invariant natural mortality results in a more pessimistic outlook, because with the added length and age samples, natural mortality for females is estimated near to the prior estimate (0.066). If natural mortality is age-dependent, female natural mortality is estimated to be higher at older ages, and the magnitude of the value increases with the age at which the break in natural mortality occurs. A higher natural mortality estimate results in a more optimistic population estimate that increases dramatically from low abundance in the 2000s. Modeling selectivity as sex-dependent, as in the base model, reflects a middle ground in the estimate of natural mortality, in that age-invariant estimates between males and females differ by 18 percent (with females higher), while avoiding the less common biological assumption that natural mortality increases with age.
 
