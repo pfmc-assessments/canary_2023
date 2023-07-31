@@ -1,5 +1,0 @@
----
-bibliography:
-  - sa4ss.bib
-  - canary.bib
----
