@@ -29,7 +29,7 @@ if(Sys.getenv("USERNAME") == "Kiva.Oken") {
   Sys.setenv(PATH = paste("C:\\texlive\\2023\\bin\\windows;", old))
 }
 #Create directory
-doc_dir <- file.path(dir, "documents","pre-Star")
+doc_dir <- file.path(dir, "documents","write-up")
 if(!dir.exists(doc_dir)){
   dir.create(doc_dir,recursive=TRUE)
 }
@@ -48,8 +48,8 @@ setwd(doc_dir)
 # )
 
 #This is now defined in 00a.Rmd. If change the base model change that in 00a.Rmd
-# model_name <- "5_5_0_hessian"
-# model_dir <- file.path(dir, "models", model_name)
+model_name <- "7_3_5_reweight"
+model_dir <- file.path(dir, "models", model_name)
 
 sa4ss::read_model(mod_loc = model_dir, 
                   save_loc = doc_dir, 

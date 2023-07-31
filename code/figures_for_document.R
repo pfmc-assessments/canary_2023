@@ -11,11 +11,12 @@ library(r4ss)
 library(PEPtools)
 library(here)
 library(dplyr)
+library(ggplot2)
 
 source(here('code/selexComp.R'))
 
-base_mod <- '5_5_0_hessian'
-base_mod_proj <- '6_1_0_projections'
+base_mod <- '7_3_5_reweight'
+base_mod_proj <- '7_3_5_reweight'
 mod15 <- SS_output(here('models','2015base'))
 mod23 <- SS_output(here('models', base_mod))
 
@@ -326,7 +327,7 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  '3_3_6_coastwide_tuned',
                                                  '3_3_4_coastwide_tuned',
                                                  '3_3_8_sexDependentSelex',
-                                                 '../5_5_0_hessian')))
+                                                 '../7_3_5_reweight')))
 
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
@@ -421,7 +422,7 @@ labels <- expand.grid(c('SSB', 'SPR', 'annF', 'Dead_Catch'),
                       c('Btgt', 'SPR', 'MSY')) |>
   dplyr::mutate(label = paste(Var1, Var2, sep = '_'))
 
-ref.tab <- dplyr::filter(model$derived_quants, Label %in% labels$label) |>
+ref.tab <- dplyr::filter(mod23$derived_quants, Label %in% labels$label) |>
   dplyr::mutate(ref = sapply(stringr::str_split(Label, pattern = '_'), tail, 1),
                 met = stringr::str_remove(Label, paste0('_', ref))) |>
   dplyr::mutate(value.fmt = glue::glue('${x}\\pm {sd}$',
@@ -638,10 +639,7 @@ dev.off()
 
 #Squid plot for retro recruitments -----------------------------------
 
-retro_model = "5_5_0_profile_retro_5yr"
-retro_model = "5_5_0_hessian_retro"
-retro_model = "7_0_2_hessian_retro"
-retro_model = "7_3_2_tuned_retro" #For brian: if use this need to load the .Rdata file there. Kiva has all files
+retro_model = "7_3_5_reweight_retro"
 
 base <- mod23
 retro1 = SS_output(here('models',retro_model, "retro", "retro-1"), printstats = FALSE, verbose = FALSE, covar = FALSE)

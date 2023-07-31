@@ -1,60 +1,45 @@
 # History files
 .Rhistory
 .Rapp.history
-
 # Session Data files
 .RData
-
 # User-specific files
 .Ruserdata
-
 # Example code in package build process
 *-Ex.R
-
 # Output files from R CMD build
 /*.tar.gz
-
 # Output files from R CMD check
 /*.Rcheck/
-
 # RStudio files
 .Rproj.user/
-
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
-
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
-
 # knitr and R markdown default cache directories
 *_cache/
 /cache/
-
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
-
 # R Environment Variables
 .Renviron
-
 # ignore data directory
 data-raw/
-
-# ignore literature 
+# ignore literature
 literature/
-
 # ignore R project (Brian does not use)
 *.RProj
-
 # ignore figures (take up a lot of space)
 *.png
 !figure_title.png
 !documents/figures/*.png
 !documents/figures/sensitivities/*.png
-!models/5_5_0_hessian_retro/*.png
-!models/5_5_0_profile_profile*/*.png
-!models/5_5_0_hessian_KLO_profile*/*.png 
+!models/7_3_5_reweight_retro/*.png
+!models/7_3_5_reweight_profile*/*.png
+!models/5_5_0_hessian_KLO_profile*/*.png
 !docs/*.png
 !models/7_0_2_hessian_retro/*.png
 *.jpg
@@ -62,7 +47,6 @@ literature/
 data_workshop_figs/
 data_explore_figs/
 *.zip
-
 # stock synthesis files
 admodel.cov
 admodel.dep
@@ -100,7 +84,6 @@ ss.rep
 ss.std
 suggested_tuning.ss
 !5_5_0_hessian/covar.sso
-
 # rmarkdown / latex files
 *.aux
 *.log
@@ -113,13 +96,10 @@ suggested_tuning.ss
 _main.Rmd
 !input_accessability.tex
 !sa4ss_glossaries.tex
-
 #batch files
 *run_ss.bat
-
 #powerpoint files (may want to change once get to STAR panel)
 *.ppt*
-
 # Rdata files are usually too large for github
 *.Rdata
 *.Rds

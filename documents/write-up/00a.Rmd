@@ -38,7 +38,7 @@ spp = 'canary rockfish'
 Spp = 'Canary rockfish'
 spp_latin = 'Sebastes pinnegar'
 model_dir = file.path(stringr::str_split_1(getwd(), '/doc')[1], 
-                      "models", "6_1_0_projections")
+                      "models", "7_3_5_reweight")
 
 if(file.exists("00mod.Rdata")){
   load("00mod.Rdata")
