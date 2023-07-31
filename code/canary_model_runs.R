@@ -14092,6 +14092,7 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 
 ####------------------------------------------------####
 ### 7_3_5_reweight - OR NTWL ascending is steep. See if reweighting resolves (CA NTWL is 1.28)
+### THIS IS THE POST-STAR PANEL BASE MODEL
 ####------------------------------------------------####
 
 new_name <- "7_3_5_reweight"
