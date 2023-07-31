@@ -21,7 +21,7 @@ executive[["stock"]] <- paste0("This assessment reports the status of ",
 
 ```{r results='asis', message=FALSE}
 tab <- readr::read_csv(file.path(model_dir, 'tables', 'a_Catches_ES.csv')) |>
-  dplyr::select(-`10_CA_ASHOP`, -(`13_CA_FOR`:`15_WA_FOR`), -`Total Landings`) |>
+  dplyr::select(-`10_CA_ASHOP (mt)`, -(`13_CA_FOR (mt)`:`15_WA_FOR (mt)`), -`Total Catch (mt)`) |>
   dplyr::mutate(dplyr::across(dplyr::everything(), ~round(.x, 1)))
   
 names(tab) <- stringr::str_remove(names(tab), '[:digit:]+_') |>

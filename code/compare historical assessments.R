@@ -11,7 +11,7 @@ library(dplyr)
 
 setwd("\\\\nwcfile/FRAM/Assessments/Archives/CanaryRF")
 
-base_2023 <- here('models','5_5_0_hessian')
+base_2023 <- here('models','7_3_5_reweight')
 
 ##
 #Read in current files
