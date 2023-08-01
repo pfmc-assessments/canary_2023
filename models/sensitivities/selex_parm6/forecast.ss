@@ -1,7 +1,7 @@
 #C forecast file written by R function SS_writeforecast
 #C rerun model to get more complete formatting in forecast.ss_new
 #C should work with SS version: 3.3
-#C file write time: 2023-06-28 11:39:19
+#C file write time: 2023-07-31 15:17:13
 #
 1 #_benchmarks
 2 #_MSY
@@ -38,7 +38,7 @@
 3 #_First_forecast_loop_with_stochastic_recruitment
 0 #_fcast_rec_option
 1 #_fcast_rec_val
-0 #_Forecast_loop_control_5
+0 #_Fcast_MGparm_averaging
 2025 #_FirstYear_for_caps_and_allocations
 0 #_stddev_of_log_catch_ratio
 0 #_Do_West_Coast_gfish_rebuilder_output
@@ -55,36 +55,28 @@
 -9999 -1
 2 #_InputBasis
  #_Year Seas Fleet Catch or F
-   2023    1     1          0
-   2023    1     2          0
-   2023    1     3          0
-   2023    1     4          0
-   2023    1     5          0
-   2023    1     6          0
-   2023    1     7          0
-   2023    1     8          0
-   2023    1     9          0
-   2023    1    10          0
-   2023    1    11          0
-   2023    1    12          0
-   2023    1    13          0
-   2023    1    14          0
-   2023    1    15          0
-   2024    1     1          0
-   2024    1     2          0
-   2024    1     3          0
-   2024    1     4          0
-   2024    1     5          0
-   2024    1     6          0
-   2024    1     7          0
-   2024    1     8          0
-   2024    1     9          0
-   2024    1    10          0
-   2024    1    11          0
-   2024    1    12          0
-   2024    1    13          0
-   2024    1    14          0
-   2024    1    15          0
+   2023    1    11  15.120000
+   2023    1    12  20.880000
+   2023    1     1 101.720829
+   2023    1     2 298.046113
+   2023    1     3 106.093058
+   2023    1     4  83.446448
+   2023    1     5  30.890462
+   2023    1     6   6.863090
+   2023    1     7  96.500000
+   2023    1     8  62.400000
+   2023    1     9  41.200000
+   2024    1    11  15.120000
+   2024    1    12  20.880000
+   2024    1     1 101.720829
+   2024    1     2 298.046113
+   2024    1     3 106.093058
+   2024    1     4  82.207145
+   2024    1     5  30.431693
+   2024    1     6   6.761163
+   2024    1     7  96.500000
+   2024    1     8  61.500000
+   2024    1     9  40.930000
 -9999 0 0 0
 #
 999 # verify end of input 

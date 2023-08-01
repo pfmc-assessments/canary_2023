@@ -1,7 +1,9 @@
 library(here)
 library(r4ss)
+library(dplyr)
 
-base_mod_name <- '5_5_0_hessian'
+#base_mod_name <- '5_5_0_hessian'
+base_mod_name <- '7_3_5_reweight'
 base_mod <- SS_read(here('models', base_mod_name))
 fleet.converter <- base_mod$dat$fleetinfo |>
   dplyr::mutate(fleet_no_num = stringr::str_remove(fleetname, '[:digit:]+_'),
@@ -65,7 +67,7 @@ xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('mode
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Base model',
                                      'Add WCVI catches to WA'),
-                    print = TRUE, plotdir = here('models/sensitivities',new_name))
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
 
 
 # Survey catches --------------------------------------------------------
@@ -171,8 +173,20 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 
 mod <- base_mod
 
-mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
-mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- 99
+#If did this would also need to reset inits because new post-STAR base model uses inits from best fitting model...
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- -99
+
+#...here is resetting inits for sex selectivity
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'INIT'] <- 0
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'INIT'] <- 0
+
+#Turn off male options
+mod$ctl$size_selex_types$Male <- 0
+
+#Remove all female offsets
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep("PFemOff",rownames(mod$ctl$size_selex_parms)),]
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[-grep("PFemOff",rownames(mod$ctl$size_selex_parms_tv)),]
 
 new_name <- 'no_sex_selectivity'
 SS_write(mod, here('models/sensitivities', new_name),
@@ -308,8 +322,20 @@ SSsummarize(xx) |>
 mod <- base_mod
 
 #Sex male and female selectivity to be equal
-mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
-mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- 99
+#If did this would also need to reset inits because new post-STAR base model uses inits from best fitting model...
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- -99
+
+#...here is resetting inits for sex selectivity
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'INIT'] <- 0
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'INIT'] <- 0
+
+#Turn off male options
+mod$ctl$size_selex_types$Male <- 0
+
+#Remove all female offsets
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep("PFemOff",rownames(mod$ctl$size_selex_parms)),]
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[-grep("PFemOff",rownames(mod$ctl$size_selex_parms_tv)),]
 
 #setup M ramp
 mod$ctl$natM_type <- 1
@@ -354,8 +380,20 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 mod <- base_mod
 
 #Sex male and female selectivity to be equal
-mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
-mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- 99
+#If did this would also need to reset inits because new post-STAR base model uses inits from best fitting model...
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- -99
+
+#...here is resetting inits for sex selectivity
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'INIT'] <- 0
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'INIT'] <- 0
+
+#Turn off male options
+mod$ctl$size_selex_types$Male <- 0
+
+#Remove all female offsets
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep("PFemOff",rownames(mod$ctl$size_selex_parms)),]
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[-grep("PFemOff",rownames(mod$ctl$size_selex_parms_tv)),]
 
 #Setup M breakpoint
 mod$ctl$natM_type <- 1
@@ -400,8 +438,20 @@ plot_sel_noncomm(pp, sex=2, spatial = FALSE)
 mod <- base_mod
 
 #Sex male and female selectivity to be equal
-mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
-mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- 99
+#If did this would also need to reset inits because new post-STAR base model uses inits from best fitting model...
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'PHASE'] <- -99
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'PHASE'] <- -99
+
+#...here is resetting inits for sex selectivity
+# mod$ctl$size_selex_parms[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms)), 'INIT'] <- 0
+# mod$ctl$size_selex_parms_tv[grep('PFemOff_3', rownames(mod$ctl$size_selex_parms_tv)), 'INIT'] <- 0
+
+#Turn off male options
+mod$ctl$size_selex_types$Male <- 0
+
+#Remove all female offsets
+mod$ctl$size_selex_parms <- mod$ctl$size_selex_parms[-grep("PFemOff",rownames(mod$ctl$size_selex_parms)),]
+mod$ctl$size_selex_parms_tv <- mod$ctl$size_selex_parms_tv[-grep("PFemOff",rownames(mod$ctl$size_selex_parms_tv)),]
 
 #Setup M breakpoint
 mod$ctl$natM_type <- 1
@@ -591,18 +641,18 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 
 #Based on looking at the selectivity patterns:
 #No blocks for CA trawl, CA non-trawl, and one block for OR non-trawl
-#No blocks for CA rec, OR rec, and only one block for WA rec (recent)
+#No blocks for CA rec, OR rec, and only one block for WA rec
 
 mod <- base_mod
 
 mod$ctl$N_Block_Designs <- 3
-mod$ctl$blocks_per_pattern <- c(2,2,1)
+mod$ctl$blocks_per_pattern <- c(2,1,1)
 names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
 
-#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+#Update blocks
 mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2022), #OR/WA TWL fleets
-                             c(2000, 2019, 2020, 2022), #OR ntwl
-                             c(2021, 2022)) #WA rec
+                             c(2000, 2019), #OR ntwl
+                             c(2006, 2020)) #WA rec
 
 # Use new block set up
 selex_new <- mod$ctl$size_selex_parms
@@ -611,6 +661,7 @@ selex_new[intersect(
   grep('CA_REC', rownames(selex_new)),
   grep('PFemOff', rownames(selex_new))), c('Block', 'Block_Fxn')] <- 0
 selex_new[grepl('CA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 0
+selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 2
 selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
 
 mod$ctl$size_selex_parms <- selex_new
@@ -639,68 +690,14 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           skipfinished = FALSE)
 
 
-# More Simplified blocks -----------------------------------------------------
-
-#Because the OR NTWL was not changed in the above
-
-#Based on looking at the selectivity patterns:
-#No blocks for CA trawl, CA non-trawl, and one block for OR non-trawl (block 2000-2019 and keep before and after together)
-#No blocks for CA rec, OR rec, and only one block for WA rec (recent)
-
-mod <- base_mod
-
-mod$ctl$N_Block_Designs <- 3
-mod$ctl$blocks_per_pattern <- c(2,1,1)
-names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
-
-#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
-mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2022), #OR/WA TWL fleets
-                             c(2000, 2019), #OR ntwl
-                             c(2021, 2022)) #WA rec
-
-# Use new block set up
-selex_new <- mod$ctl$size_selex_parms
-selex_new[grepl('CA_TWL|CA_NTWL|CA_REC|OR_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block', 'Block_Fxn')] <- 0
-selex_new[intersect(
-  grep('CA_REC', rownames(selex_new)),
-  grep('PFemOff', rownames(selex_new))), c('Block', 'Block_Fxn')] <- 0
-selex_new[grepl('OR_NTWL', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 2
-selex_new[grepl('WA_REC', rownames(selex_new)) & selex_new$PHASE > 0, c('Block')] <- 3
-
-mod$ctl$size_selex_parms <- selex_new
-
-
-#Time varying selectivity table
-selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
-  dplyr::select(LO, HI, INIT, PRIOR, PR_SD, PR_type, PHASE, Block) |>
-  tidyr::uncount(mod$ctl$blocks_per_pattern[Block], .id = 'id', .remove = FALSE)
-
-rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
-  stringr::str_remove('\\.\\.\\.[:digit:]+') |>
-  stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
-
-mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
-  dplyr::select(-Block, -id)
-
-new_name <- 'simpler_block_OR_NTWL'
-SS_write(mod, here('models/sensitivities', new_name),
-         overwrite = TRUE)
-
-r4ss::run(dir = here('models/sensitivities', new_name), 
-          exe = here('models/ss_win.exe'), 
-          extras = '-nohess', 
-          show_in_console = FALSE,
-          skipfinished = FALSE)
-
-
 # Even More Simplified blocks -----------------------------------------------------
 
 #Because WA/OR trawl in later times are similarish (mostly for males) and could also be combined
 
 #Based on looking at the selectivity patterns:
-#No blocks for CA trawl, CA non-trawl, and one block for OR non-trawl (block 2000-2019 and keep before and after together)
+#No blocks for CA trawl, CA non-trawl, and one block for OR non-trawl
 #and use only one block for WA/OR trawl (>2000)
-#No blocks for CA rec, OR rec, and only one block for WA rec (recent)
+#No blocks for CA rec, OR rec, and only one block for WA rec
 
 mod <- base_mod
 
@@ -708,10 +705,10 @@ mod$ctl$N_Block_Designs <- 3
 mod$ctl$blocks_per_pattern <- c(1,1,1)
 names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
 
-#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+#Update blocks
 mod$ctl$Block_Design <- list(c(2000, 2022), #OR/WA TWL fleets
                              c(2000, 2019), #OR ntwl
-                             c(2021, 2022)) #WA rec
+                             c(2006, 2020)) #WA rec
 
 # Use new block set up
 selex_new <- mod$ctl$size_selex_parms
@@ -737,7 +734,8 @@ rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
 
-new_name <- 'simpler_block_OR_NTWL_TWL'
+#keep same naming as from using 5_5_0_hessian (but now with 7_3_5_reweight where OR_NTWL was combined that part of the name is not relevant)
+new_name <- 'simpler_block_OR_NTWL_TWL' 
 SS_write(mod, here('models/sensitivities', new_name),
          overwrite = TRUE)
 
@@ -754,15 +752,16 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 
 mod <- base_mod
 
-mod$ctl$blocks_per_pattern <- c(3,2,2,2,2)
+mod$ctl$blocks_per_pattern <- c(3,2,2,2,1,1)
 names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
 
-#Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
+#Update blocks
 mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2016, 2017, 2022), #TWL fleets
-                             c(2000, 2019, 2020, 2022), #CA/OR ntwl
+                             c(2000, 2019, 2020, 2022), #CA ntwl
                              c(2004, 2016, 2017, 2022), #CA rec
                              c(2004, 2014, 2015, 2022), #OR rec
-                             c(2006, 2020, 2021, 2022)) #WA rec
+                             c(2006, 2020), #WA rec
+                             c(2000, 2019)) #OR NTWL
 
 selex_new <- mod$ctl$size_selex_parms
 
@@ -774,6 +773,9 @@ selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
 rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
   stringr::str_remove('\\.\\.\\.[:digit:]+') |>
   stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+#Turn off sex dependent OR REC middle selectivity because have no sexed data
+selex_tv_pars[grep("SizeSel_PFemOff_3_8_OR_REC\\(8\\)_BLK4repl_2004",rownames(selex_tv_pars)),c("INIT","PHASE")] <- c(0,-99)
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
@@ -796,15 +798,16 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 
 mod <- base_mod
 
-mod$ctl$blocks_per_pattern <- c(3,2,2,2,2)
+mod$ctl$blocks_per_pattern <- c(3,2,2,2,1,1)
 names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
 
 #Update blocks. Blocking for NTWL is tricky. Right now have WA NTWL to WA TWL mirrored but could unmirror
 mod$ctl$Block_Design <- list(c(2000, 2010, 2011, 2019, 2020, 2022), #TWL fleets
-                             c(2000, 2019, 2020, 2022), #CA/OR ntwl
+                             c(2000, 2019, 2020, 2022), #CA ntwl
                              c(2004, 2016, 2017, 2022), #CA rec
                              c(2004, 2014, 2015, 2022), #OR rec
-                             c(2006, 2020, 2021, 2022)) #WA rec
+                             c(2006, 2020), #WA rec
+                             c(2000, 2019)) #OR NTWL
 
 selex_new <- mod$ctl$size_selex_parms
 
@@ -816,6 +819,9 @@ selex_tv_pars <- dplyr::filter(selex_new, Block > 0) |>
 rownames(selex_tv_pars) <- rownames(selex_tv_pars) |>
   stringr::str_remove('\\.\\.\\.[:digit:]+') |>
   stringr::str_c('_BLK', selex_tv_pars$Block, 'repl_', mapply("[",mod$ctl$Block_Design[selex_tv_pars$Block], selex_tv_pars$id * 2 - 1))
+
+#Turn off sex dependent OR REC middle selectivity because have no sexed data
+selex_tv_pars[grep("SizeSel_PFemOff_3_8_OR_REC\\(8\\)_BLK4repl_2004",rownames(selex_tv_pars)),c("INIT","PHASE")] <- c(0,-99)
 
 mod$ctl$size_selex_parms_tv <- selex_tv_pars |>
   dplyr::select(-Block, -id)
@@ -999,7 +1005,7 @@ SS_plots(pp, plot = c(1:26))
 
 xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
                                         subdir = c(base_mod_name,
-                                                   'sensitivities/updated_PacFIN_utilities_comps'))))
+                                                   'sensitivities/updated_PacFIN_utilities_comps_nospiky'))))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('Base model',
                                      'PacFIN util comps'),
@@ -1035,6 +1041,7 @@ plot_sel_comm_age(pp, sex=1, fact = "Asel2")
 plot_sel_comm_age(pp, sex=2, fact = "Asel2")
 plot_sel_noncomm_age(pp, sex=1, spatial = FALSE, fact = "Asel2")
 plot_sel_noncomm_age(pp, sex=2, spatial = FALSE, fact = "Asel2")
+
 
 # One asymptotic fleet (TOR) ----------------------------------------------
 
@@ -1223,7 +1230,6 @@ mod$ctl$lambdas <- mod$ctl$lambdas[!mod$ctl$lambdas$fleet %in% c(16:24),]
 #Set lambdas
 mod$ctl$N_lambdas <- nrow(mod$ctl$lambdas)
 mod$ctl$lambdas$value <- 0
-
 
 new_name <- 'age_lambda0'
 
@@ -1432,7 +1438,7 @@ mod <- base_mod
 
 #75 length entries with total Nsamp = 186
 mod$dat$lencomp[mod$dat$lencomp$Yr>0 & mod$dat$lencomp$Nsamp <= 5,]$Yr <- -1*mod$dat$lencomp[mod$dat$lencomp$Yr>0 & mod$dat$lencomp$Nsamp <= 5,]$Yr
-#37 age entries with total Nsamp = 107
+#39 age entries with total Nsamp = 108
 mod$dat$agecomp[mod$dat$agecomp$Yr>0 & 
                   mod$dat$agecomp$Nsamp <= 5 & 
                   mod$dat$agecomp$Lbin_lo < 0 ,]$Yr <- -1*mod$dat$agecomp[mod$dat$agecomp$Yr>0 & 
@@ -1639,20 +1645,19 @@ weighting_pretty <- c('McAllister-Ianelli',
                       'Francis lengths x10')
 
 data_choices <- c('no_sparse_comps',
-                  #                  'noDebWV_lengths', minor
+                  #'noDebWV_lengths', minor
                   'prerec_data',
                   'released_lengths_in',
                   'canada_catches', 
                   'catch_se_0.1',
-                  'bomb_radiocarbon_age')#,
-                  #'../7_0_2_hessian')
+                  'bomb_radiocarbon_age')
+
 data_pretty <- c('No sparse comps',
                  'Pre-recruit data',
                  'Released lengths in',
                  'Canada catches',
                  'Catch SE 0.1',
-                 'Bomb radiocarbon age bias')#,
-                 #'Add ages')
+                 'Bomb radiocarbon age bias')
 
 productivity <- c('est_h',
                   'est_male_M',
