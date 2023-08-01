@@ -319,7 +319,7 @@
    -99	99	    -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_28_coastwide_NWFSC(28)          
    -25	25	       0	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_1_28_coastwide_NWFSC(28)    
     -9	 9	       0	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_2_28_coastwide_NWFSC(28)    
-    -9	 9	 2.67984	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_3_28_coastwide_NWFSC(28)    
+    -9	 9	       0	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_3_28_coastwide_NWFSC(28)    
    -99	99	       0	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_4_28_coastwide_NWFSC(28)    
      0	 2	       1	 1	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_5_28_coastwide_NWFSC(28)    
 13.001	65	 59.0435	99	99	0	  4	0	0	0	0	0	0	0	#_SizeSel_P_1_29_coastwide_Tri_early(29)      

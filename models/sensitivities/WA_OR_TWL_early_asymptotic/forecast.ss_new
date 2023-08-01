@@ -2,7 +2,7 @@
 #C forecast file written by R function SS_writeforecast
 #C rerun model to get more complete formatting in forecast.ss_new
 #C should work with SS version: 3.3
-#C file write time: 2023-07-31 15:15:51
+#C file write time: 2023-08-01 09:57:38
 # for all year entries except rebuilder; enter either: actual year, -999 for styr, 0 for endyr, neg number for rel. endyr
 1 # Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F0.1,F_msy; 3=add F_Blimit; 
 2 # Do_MSY: 1= set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F0.1; 4=set to F(endyr); 5=calc F(MEY) with MSY_unit options
@@ -56,17 +56,17 @@
 2 # basis for fcast catch tuning and for fcast catch caps and allocation  (2=deadbio; 3=retainbio; 5=deadnum; 6=retainnum); NOTE: same units for all fleets
 # Conditional input if relative F choice = 2
 # enter list of:  season,  fleet, relF; if used, terminate with season=-9999
-# 1 1 0.153305
-# 1 2 0.232961
-# 1 3 0.0810534
-# 1 4 0.0447978
-# 1 5 0.00835123
-# 1 6 0.00168676
-# 1 7 0.291308
-# 1 8 0.155858
-# 1 9 0.0251345
-# 1 11 0.00264364
-# 1 12 0.00290064
+# 1 1 0.153416
+# 1 2 0.233038
+# 1 3 0.0810791
+# 1 4 0.0447847
+# 1 5 0.00824314
+# 1 6 0.0016871
+# 1 7 0.291207
+# 1 8 0.155862
+# 1 9 0.0251379
+# 1 11 0.00264459
+# 1 12 0.00290099
 # -9999 0 0  # terminator for list of relF
 # enter list of: fleet number, max annual catch for fleets with a max; terminate with fleet=-9999
 -9999 -1

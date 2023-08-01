@@ -264,7 +264,7 @@
    -99	99	    -999	99	99	0	-99	0	0	0	0	0	0	0	#_SizeSel_P_6_6_WA_NTWL(6)                    
    -25	25	       0	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_1_6_WA_NTWL(6)              
     -9	 9	       0	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_2_6_WA_NTWL(6)              
-    -9	 9	 2.87698	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_3_6_WA_NTWL(6)              
+    -9	 9	       0	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_3_6_WA_NTWL(6)              
    -99	99	       0	 0	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_4_6_WA_NTWL(6)              
      0	 2	       1	 1	50	0	-99	0	0	0	0	0	0	0	#_SizeSel_PFemOff_5_6_WA_NTWL(6)              
 13.001	65	 28.8139	99	99	0	  4	0	0	0	0	0	3	2	#_SizeSel_P_1_7_CA_REC(7)                     

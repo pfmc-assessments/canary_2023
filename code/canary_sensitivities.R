@@ -1,6 +1,7 @@
 library(here)
 library(r4ss)
 library(dplyr)
+library(ggplot2)
 
 #base_mod_name <- '5_5_0_hessian'
 base_mod_name <- '7_3_5_reweight'
@@ -1018,6 +1019,7 @@ SSsummarize(xx) |>
 mod <- base_mod
 
 mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', 'PHASE'] <- -50
+mod$ctl$MG_parms['NatM_p_1_Fem_GP_1', 'INIT'] <- 0.0643
 
 new_name <- 'single_M'
 SS_write(mod, here('models/sensitivities', new_name),
@@ -1049,7 +1051,7 @@ plot_sel_noncomm_age(pp, sex=2, spatial = FALSE, fact = "Asel2")
 mod <- base_mod
 
 mod$ctl$size_selex_parms[grep("P_4_6_WA_NTWL",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(15,-99)
-mod$ctl$size_selex_parms[grep("PFemOff_3_6_WA_NTWL",rownames(mod$ctl$size_selex_parms)),"PHASE"] <- -99
+mod$ctl$size_selex_parms[grep("PFemOff_3_6_WA_NTWL",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(0,-99)
 
 new_name <- 'wa_ntwl_asymptotic'
 
@@ -1067,7 +1069,7 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 mod <- base_mod
 
 mod$ctl$size_selex_parms[grep("P_4_28_coastwide",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(15,-99)
-mod$ctl$size_selex_parms[grep("PFemOff_3_28_coastwide",rownames(mod$ctl$size_selex_parms)),"PHASE"] <- -99
+mod$ctl$size_selex_parms[grep("PFemOff_3_28_coastwide",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(0,-99)
 
 new_name <- 'wcgbts_asymptotic'
 
@@ -1085,7 +1087,7 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 mod <- base_mod
 
 mod$ctl$size_selex_parms[grep("P_4_2_OR_TWL",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(15,-99)
-mod$ctl$size_selex_parms[grep("PFemOff_3_2_OR_TWL",rownames(mod$ctl$size_selex_parms)),"PHASE"] <- -99
+mod$ctl$size_selex_parms[grep("PFemOff_3_2_OR_TWL",rownames(mod$ctl$size_selex_parms)),c("INIT","PHASE")] <- c(0,-99)
 
 new_name <- 'WA_OR_TWL_early_asymptotic'
 
@@ -1671,6 +1673,7 @@ prod_pretty <- c('Estimate h',
                  'M break 20',
                  'Single M')
 
+#Survey sensitivities are from STAR panel - not including in report output at the moment
 surveys <- c('survey_lambda10',
              'survey_prerecruit_lambda0',
              'survey_tri_lambda0',
@@ -1722,7 +1725,7 @@ make_detailed_sensitivites(big_sensitivity_output,
                            mods_to_include = data_choices,
                            outdir = outdir,
                            grp_name = 'data',
-                           grp_name = 'data_with_ages',
+                           #grp_name = 'data_with_ages',
                            pretty_names = data_pretty)
 
 make_detailed_sensitivites(big_sensitivity_output, 
@@ -1731,11 +1734,12 @@ make_detailed_sensitivites(big_sensitivity_output,
                            grp_name = 'productivity',
                            pretty_names = prod_pretty)
 
-make_detailed_sensitivites(big_sensitivity_output, 
-                           mods_to_include = surveys,
-                           outdir = outdir,
-                           grp_name = 'surveys',
-                           pretty_names = survey_pretty)
+#From STAR panel - not including in report output at the moment
+# make_detailed_sensitivites(big_sensitivity_output, 
+#                            mods_to_include = surveys,
+#                            outdir = outdir,
+#                            grp_name = 'surveys',
+#                            pretty_names = survey_pretty)
 
 current.year <- 2023
 CI <- 0.95
