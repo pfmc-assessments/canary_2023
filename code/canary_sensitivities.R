@@ -199,6 +199,26 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE, 
           skipfinished = FALSE)
 
+xx <- SS_output(here('models/sensitivities', new_name)) 
+
+# #Copied pre-weighted version and ran with 1 reweight iteration. We did this originally with the pre-star model because results differed more than expected
+# #Ultimately not using for the post-STAR version because results similarly extreme (and not due to weightings)
+# tune_comps(xx, option = 'Francis', 
+#            niters_tuning = 1, 
+#            dir = here('models/sensitivities', new_name), 
+#            exe = here('models/ss_win.exe'), 
+#            extras = '-nohess')
+# 
+# xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+#                                         subdir = c(base_mod_name,
+#                                                    'sensitivities/no_sex_selectivity',
+#                                                    'sensitivities/no_sex_selectivity_reweight'))))
+# SSsummarize(xx) |>
+#   SSplotComparisons(legendlabels = c('Base model',
+#                                      'no sex selectivity no reweight',
+#                                      'no sex selectivity reweight'),
+#                     subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities','no_sex_selectivity_reweight'))
+
 
 # M ramp ------------------------------------------------------------------
 
@@ -598,11 +618,23 @@ r4ss::run(dir = here('models/sensitivities', new_name),
 
 xx <- SS_output(here('models/sensitivities', new_name)) 
 
-tune_comps(xx, option = 'Francis', 
-           niters_tuning = 1, 
-           dir = here('models/sensitivities', new_name), 
-           exe = here('models/ss_win.exe'), 
-           extras = '-nohess')
+# #Copied pre-weighted version and ran with 1 reweight iteration. We did this originally with the pre-star model because results differed more than expected
+# #Ultimately not using for the post-STAR version because results not as extreme
+# tune_comps(xx, option = 'Francis', 
+#            niters_tuning = 1, 
+#            dir = here('models/sensitivities', new_name), 
+#            exe = here('models/ss_win.exe'), 
+#            extras = '-nohess')
+# 
+# xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+#                                         subdir = c(base_mod_name,
+#                                                    'sensitivities/Float_q',
+#                                                    'sensitivities/Float_q_reweight'))))
+# SSsummarize(xx) |>
+#   SSplotComparisons(legendlabels = c('Base model',
+#                                      'float q no reweight',
+#                                      'float q reweight'),
+#                     subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities','Float_q_reweight'))
 
 # Unmirror triennial -------------------------------------------------------
 
