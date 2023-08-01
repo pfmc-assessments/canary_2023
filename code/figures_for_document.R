@@ -341,7 +341,8 @@ SSsummarize(xx) |>
 file.copy(from =  here('models','Bridging coastwide', '3_3_8_sexDependentSelex',
                        c("compare2_spawnbio_uncertainty.png","compare4_Bratio_uncertainty.png")),
           to = here('documents','figures',
-                    c("bridge5_selex_spawnbio_uncertainty.png","bridge5_selex_compare4_Bratio_uncertainty.png")))
+                    c("bridge5_selex_spawnbio_uncertainty.png","bridge5_selex_compare4_Bratio_uncertainty.png")), 
+          overwrite = TRUE)
 
 
 # Parameter table ---------------------------------------------------------
