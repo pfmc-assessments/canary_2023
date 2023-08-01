@@ -1806,7 +1806,7 @@ ggplot(dev.quants, aes(x = relErr, y = mod_num, col = Metric, pch = Metric)) +
   scale_y_continuous(breaks = 1:length(sens_names), name = '', labels = pretty_names, 
                      limits = c(1, length(pretty_names) + 2), minor_breaks = NULL) +
   xlab("Relative change") 
-ggsave(file.path(outdir, 'survey_summary.png'),  dpi = 300,  
+ggsave(file.path(outdir, 'sens_summary.png'),  dpi = 300,  
        width = 6, height = 6.5, units = "in")
 
 
