@@ -39,7 +39,7 @@ literature/
 !documents/figures/sensitivities/*.png
 !models/7_3_5_reweight_retro/*.png
 !models/7_3_5_reweight_profile*/*.png
-!models/5_5_0_hessian_KLO_profile*/*.png
+!models/7_3_5_reweight_phases_profile*/*.png
 !docs/*.png
 !models/7_0_2_hessian_retro/*.png
 *.jpg

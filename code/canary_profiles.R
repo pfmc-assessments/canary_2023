@@ -74,10 +74,10 @@ beepr::beep()
 # steepness profile -------------------------------------------------------
 
 profile.settings <- get_settings_profile(parameters = 'SR_BH_steep',
-                                         low = -0.1, high = 0.1,
-                                         step_size = 0.02, 
-                                         param_space = 'relative',
-                                         use_prior_like = 0) 
+                                         low = 0.5, high = 0.95,
+                                         step_size = 0.05, 
+                                         param_space = 'real',
+                                         use_prior_like = 1) 
 settings <- get_settings(settings = list(base_name = base_model,
                                          run = 'profile',
                                          profile_details = profile.settings,
@@ -102,9 +102,9 @@ new_name <- paste0(base_model, '_phases')
 #Copy inputs
 ##
 
-R.utils::copyDirectory(from = here('models', base_model),
-                       to = here('models', new_name),
-                       overwrite = TRUE)
+copy_SS_inputs(dir.old = here('models', base_model),
+               dir.new = here('models', new_name),
+               overwrite = TRUE)
 
 mod <- SS_read(here('models',new_name))
 
@@ -114,6 +114,14 @@ SS_write(mod,
          dir = here('models',new_name),
          overwrite = TRUE)
 
+file.copy(here('models/ss_win.exe'),
+          here('models', new_name, 'ss_win.exe'),
+          overwrite = TRUE)
+run(here('models', new_name), 
+    exe = 'ss_win.exe', 
+    extras = '-nohess', 
+    show_in_console = FALSE)
+beepr::beep()
 profile.settings <- get_settings_profile(parameters = 'SR_LN(R0)',
                                          low = -0.5, high = 0.5,
                                          step_size = 0.1, 

@@ -1,0 +1,4 @@
+Warning 1 : Setting in starter does not request all priors, and 2 parameters have priors and are not estimated, so their prior not included in obj_fun.
+Warning 2 : 1st iteration warning: ssb(endyr)/ssb(styr)= 5.97669e-08; suggest start with larger R0 to get near 0.4; or use depletion fleet option
+Warning 3 : 1st iteration warning: catch logL > 50% total logL; check configuration; suggest start with larger R0
+ 3 warnings 

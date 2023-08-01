@@ -1,0 +1,3 @@
+Warning 1 : 1st iteration warning: ssb(endyr)/ssb(styr)= 0.00576814; suggest start with larger R0 to get near 0.4; or use depletion fleet option
+Warning 2 : Final gradient: 0.000627386 is larger than final_conv: 0.0001
+ 2 warnings 
