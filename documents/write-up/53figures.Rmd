@@ -22,7 +22,7 @@
  
 ![Length composition data for the Washington non-trawl fishery for females (red) and males (blue) \label{fig:WA_ntwl_lencomp}](../figures/plots/comp_lendat_bubflt6mkt0.png){width="100%" height="100%" alt="Bubble plot of Washington non-trawl length compositions for males and females"}
 
-![Age composition data for the California trawl fishery for females (red) and males (blue) \label{fig:CA_twl_agecomp}](../figures/plots/comp_agedat_bubflt1mkt0.png){width="100%" height="100%" alt="Bubble plot of California trawl age compositions for males and females"}
+![Age composition data for the California trawl fishery for females (red) and males (blue) \label{fig:CA_twl_agecomp}](../figures/plots/comp_agedat_bubflt1mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of California trawl age compositions for males and females"}
 
 ![Age composition data for the Oregon trawl fishery for females (red) and males (blue) \label{fig:OR_twl_agecomp}](../figures/plots/comp_agedat_bubflt2mkt0_page2.png){width="100%" height="100%" alt="Bubble plot of Oregon trawl age compositions for males and females"}
 
@@ -228,7 +228,7 @@ label = 'noncomm-selex-male')
 
 ![Age composition aggregated across years by fleet with the model estimated fit to the data by sex (red female, and blue male) \label{fig:age-agg-fit}](../figures/plots/comp_agefit__aggregated_across_time.png){width="100%," alt="Figure showing fits of modeled age composition for all fleets generally matching the distribution observed in the data"}
 
-![Pearson residuals for ages in the California trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson1}](../figures/plots/comp_agefit_residsflt1mkt0.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years"}
+![Pearson residuals for ages in the California trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue) \label{fig:age-pearson1}](../figures/plots/comp_agefit_residsflt1mkt0_page2.png){width="100%," alt="Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years"}
 
 ![Mean age for the California trawl fleet with 95 percent confidence intervals based on current samples sizes \label{fig:mean-age-fit1}](../figures/plots/comp_agefit_data_weighting_TA1.8_1_CA_TWL.png){width="100%," alt="Figure with uncertainty around each point of mean age which is slightly higher in early years compared to later years"}
 
