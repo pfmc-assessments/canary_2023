@@ -966,6 +966,14 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE,
           skipfinished = FALSE)
 
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   'sensitivities/noDebWV_lengths'))))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'no Deb lengths'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
+
 
 # Use comps from updated PacFIN utilities -----------------------------------------------------
 
@@ -1691,14 +1699,14 @@ weighting_pretty <- c('McAllister-Ianelli',
 data_choices <- c('no_sparse_comps',
                   #'noDebWV_lengths', minor
                   'prerec_data',
-                  'released_lengths_in',
+                  #'released_lengths_in', minor
                   'canada_catches', 
                   'catch_se_0.1',
                   'bomb_radiocarbon_age')
 
 data_pretty <- c('No sparse comps',
                  'Pre-recruit data',
-                 'Released lengths in',
+                 #'Released lengths in',
                  'Canada catches',
                  'Catch SE 0.1',
                  'Bomb radiocarbon age bias')
