@@ -79,7 +79,7 @@ practice to include surveys as fishing fleets in West Coast assessments.
 We also removed the California at-sea hake fishery composition data,
 which was very sparse, and incorrectly assigned to California, and
 combined selectivity for the Washington and Oregon fleets, which have
-similar dynamics and fish across state boundaries.
+similar dynamics and fish across state boundaries. 
 
 Data has also been updated for this assessment. The synthesis and
 treatment of data has been altered for this assessment based on updated
@@ -308,7 +308,7 @@ The model contains four primary likelihood components:
 
 1.  Fit to survey indices of abundance (included for fleets 28-31).
 2.  Fit to length composition samples (included for fleets 1-12 with the
-    exception of fleet 10, and fleets 28-30, i.e., all fishing fleets
+    exception of fleet 10, and fleets 28-30; i.e., all fishing fleets
     except the foreign and California at-sea hake fleets, and the
     pre-recruit survey).
 3.  Fit to age composition samples (marginal ages are included for
@@ -440,20 +440,18 @@ composition data between the period when `r spp` was declared overfished
 and when regulations relaxed in 2017. Based on patterns in the data and
 discussion with state partners about regulation changes, we included
 selectivity blocks for the Oregon and California non-trawl fleets at
-2000 and then again at 2019, to reflect the general period of relaxed
-regulations for the fishery initiated by the rebuilt declaration. The
-Washington non-trawl fleet had very sparse composition data until 2017,
+2000 and then again at 2020, to reflect the general period of relaxed
+regulations for the fishery initiated by the rebuilt declaration. Due to high correlation among parameters in the most recent block, selectivity for the Oregon non-trawl was mirrored between the early (< 2000) and late (> 2019) periods. The Washington non-trawl fleet had very sparse composition data until 2017,
 so for parsimony we did not apply any time blocking for this fleet.
 Regulations for the recreational fleets across the coast have been
 variable, based on seasonal or depth closures and bag limits. Time
 blocks were applied to the California recreational fleet in 2004 and
-again in 2016, corresponding to the imposition and lifting of the most
+again in 2017, corresponding to the imposition and lifting of the most
 stringent regulations. Time-blocks were applied to the Oregon
-recreational fleet in 2004 and again in 2014, and for the Washington
-recreational fleet in 2006 and again in 2020, which correspond roughly
+recreational fleet in 2004 and again in 2015, and for the Washington
+recreational fleet in 2006 and again in 2021, which correspond roughly
 to the periods where depth restrictions were imposed (for the first
-block) and again lifted (for the second block). For each break-point
-change in selectivity, we re-estimate all three parameters.
+block) and again lifted (for the second block). Due to high correlation among parameters in the most recent block, selectivity for the Washington recreational fleet was mirrored between the early (< 2006) and late (> 2020) periods. For each break-point change in selectivity, we re-estimate all three parameters.
 Sensitivities to selectivity assumptions include the use of a four
 parameter parameterization, fixing fleets to have asymptotic
 selectivity, and simplified blocking (Section \@ref(sensitivities)).
@@ -468,13 +466,12 @@ mortality. When age-varying natural mortality was assumed, as done in
 previous stock assessments for `r spp`, higher values for older female
 natural mortality were estimated. We found that by allowing sex-dependent
 selectivity in parameter 4, which governs how steeply selectivity
-declines at larger sizes, the estimate for female natural mortality increased and the fit to the data improved. Sex-dependence
-on other selectivity parameters was explored, but parameter 4 had the
+declines at larger sizes, the estimate for female natural mortality increased and the fit to the data improved. Sex-dependence on other selectivity parameters was explored, but parameter 4 had the
 largest per-parameter improvement in likelihood, and was large enough to
-warrant the additional number of selecitivity parameters. We therefore
+warrant the additional number of selectivity parameters. We therefore
 estimate sex-dependent selectivity in the base model, modeled as a
 logarithmic female offset to parameter 4 for all fleets and blocks with
-sex-specific composition data. Sensitivity to excluding sex-dependent
+sex-specific composition data (i.e. all fleets and blocks except the California recreational fleet and the 2004-2014 block of the Oregon recreational fleet). Sensitivity to excluding sex-dependent
 selectivity is described in Section \@ref(sensitivities).
 
 #### Stock Recruitment Function
