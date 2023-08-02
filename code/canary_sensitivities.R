@@ -869,8 +869,18 @@ r4ss::run(dir = here('models/sensitivities', new_name),
           show_in_console = FALSE,
           skipfinished = FALSE)
 
-#Fit is not as good but it puts the model in the high recent recdev high recovery place (without greatly lowering female M). 
+xx <- SSgetoutput(dirvec = c(glue::glue("{models}/{subdir}", models = here('models'),
+                                        subdir = c(base_mod_name,
+                                                   'sensitivities/block_TWL_2017',
+                                                   'sensitivities/block_TWL_2020'))))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('Base model',
+                                     'third trawl block 2017',
+                                     'third trawl block 2020'),
+                    subplots = c(1,3), print = TRUE, plotdir = here('models/sensitivities',new_name))
 
+
+#Based on likelihood these could be worthwhile (~ 20 units for 4 more parameters but results are nearly identical)
 
 
 # Add released fish into length comps for CA and OR rec fleets -----------------------------------------------------
