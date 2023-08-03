@@ -162,7 +162,14 @@ base40 <- SS_output(here('models','decision_tables',"base_0.4"))
 high40 <- SS_output(here('models','decision_tables',"high_0.4"))
 
 
-caption <- "Decision table with 10-year projections. 'Mgmt' refers to the two management scenarios (A) the default harvest control rule $P^* = 0.45$, (B) harvest control rule with a lower $P^* = 0.40$. In each case the 2023 and 2024 catches are fixed at the ACLs which have been set for that year with values provided by the GMT. The alternative states of nature ('Low', 'Base', and 'High') are provided in the columns, with Spawning Output ('Spawn', in millions of eggs) and Fraction of unfished ('Frac') provided for each state of nature. The colors of catch and fraction unfished are relative with lighter colors representing lower values."
+caption <- "Decision table with 10-year projections beginning in 2025 for alternative states of nature based around 
+modeling natural mortality. 'Mgmt' refers to the two management scenarios (A) the default harvest control rule 
+$P^* = 0.45$, and (B) harvest control rule with a lower $P^* = 0.40$. Catch (in mt) is from the projections from the 
+base model for each management scenario, and is applied to each state of nature. Catches in 2023 
+and 2024 are fixed at the ACLs and have been set for that year with values provided by the GMT. The alternative 
+states of nature ('Low', 'Base', and 'High') are provided in the columns, and assume female natural mortality is either 
+fixed at the prior estimate (Single M; low state), estimated as age-invariant (base), or is estimated at older ages
+(M ramp; high state). Spawning output ('Spawn', in millions of eggs) and fraction of unfished ('Frac') is provided for each state of nature."
 
 tab <- table_decision(
   caption = caption,
@@ -170,8 +177,15 @@ tab <- table_decision(
   list(low40, base40, high40),
   list(low45, base45, high45)
 )
-writeLines(tab,here('documents',"tables", "decision_table.tex"))
+writeLines(tab,here('documents',"tables", "decision_table_es.tex"))
 
+tab <- table_decision(
+  caption = caption,
+  label = "dec-tab",
+  list(low40, base40, high40),
+  list(low45, base45, high45)
+)
+writeLines(tab,here('documents',"tables", "decision_table.tex"))
 
 
 #####-------------------------------------------####
