@@ -353,8 +353,7 @@ at the mean length or age and the variance of the mean to determine if
 across years, model explains the variability in the data. If the
 variability around the mean does not encompass the model predictions,
 then that data source should be weighted, and typically is
-down-weighted. We applied four iterations of the Francis method when
-data-weighting, which resulted in stable weights. The weighting of
+down-weighted. We iterated the Francis method until weights stabilized. The weighting of
 both the length and age composition was allowed to exceed one, and we
 confirmed that data sources that were upweighted did not have a weighted
 sample size above the number of fish sampled that would be a cause for concern. Weights for
@@ -451,7 +450,7 @@ stringent regulations. Time-blocks were applied to the Oregon
 recreational fleet in 2004 and again in 2015, and for the Washington
 recreational fleet in 2006 and again in 2021, which correspond roughly
 to the periods where depth restrictions were imposed (for the first
-block) and again lifted (for the second block). Due to high correlation among parameters in the most recent block, selectivity for the Washington recreational fleet was mirrored between the early (< 2006) and late (> 2020) periods. For each break-point change in selectivity, we re-estimate all three parameters.
+block) and again lifted (for the second block). Due to high correlation among parameters in the most recent block, selectivity for the Washington recreational fleet was mirrored between the early (< 2006) and late (> 2020) periods. For each break-point change in selectivity, we re-estimate all parameters.
 Sensitivities to selectivity assumptions include the use of a four
 parameter parameterization, fixing fleets to have asymptotic
 selectivity, and simplified blocking (Section \@ref(sensitivities)).
