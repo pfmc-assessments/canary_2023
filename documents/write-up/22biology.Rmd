@@ -32,12 +32,12 @@ fishery age data well, and was a better biological explanation for the
 disappearance of older age females than the alternative hypothesis that
 the older females were not vulnerable to the fishery. The pattern of
 male-skewed sex ratio at older ages has been observed along the U.S.
-West Coast in fishery data off Oregon (L. Rasmuson, \gls{odfw}), personal communication, 1/23/23), Canada [@dfo2023canary], and Alaska and in black rockfish
+West Coast in fishery data off Oregon [@rasmuson2023finding], Canada [@dfo2023canary], and Alaska and in black rockfish
 in addition to canary and yellowtail rockfishes. Although it has been
 found in these three semi-pelagic species, the pattern has not been
 observed for bocaccio, chilipepper rockfish, shortbelly rockfish, or dusky
 rockfishes (*Sebastes ciliatus*, in Alaska), which are also semi-pelagic.
-However, starting in the 2010's the sex ratio has been less skewed in fishery data off Oregon (L. Rasmuson \gls{odfw}), personal communication, 1/23/23). The sex ratio has
+However, starting in the 2010's the sex ratio has been less skewed in fishery data off Oregon [@rasmuson2023finding]. The sex ratio has
 remained male-skewed within the \gls{s-wcgbt} in recent years.
 
 In this assessment, we elect to model natural mortality for males and
@@ -203,7 +203,7 @@ $L_\infty$ = 57.9 cm and $k$ = 0.143 for females with length at age 1
 equal to 11.38 cm, and $L_\infty$ = 51.3 cm and $k$ = 0.175 for males
 with length at age 1 equal to 11.36 cm. We therefore assume size of
 young males and females are identical, consistent with the assumptions
-in the 2015 benchmark assessment.
+in the 2015 benchmark assessment. Though the estimates differ slightly, these parameters ($L_\infty$, $k$, length at age 1) are identical to those estimated internally within the stock assessment model.
 
 ### Sex Ratio
 
