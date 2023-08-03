@@ -8,11 +8,9 @@ The 2022 `r spp` spawning output relative to unfished spawning biomass is within
 
 ## Harvest Projections and Decision Tables
 
-To be completed following the STAR panel.
+A ten-year projection of the base model with catches equal to the estimated \gls{acl} based on the category 1 time-varying $\sigma$ (0.5) with $P^*$ = 0.45 (i.e., termed the "buffer") for years 2025-2034 is shown in Table \ref{tab:project}. The removals in 2023 and 2024 were set equal to the recommended fleet-specific values as provided by the \gls{gmt} (W. Roberts, \gls{wdfw}, personal communication, 7/6/23).
 
-<!-- A ten-year projection of the base model with catches equal to the estimated \gls{acl} based on the category 1 time-varying $\sigma$ (0.5) with $P^*$ = 0.45 (i.e., termed the "buffer") for years 2025-2034 is shown in Table \ref{tab:project}. The removals in 2023 and 2024 were set equal to the recommended fleet-specific values as provided by the \gls{gmt} (W. Roberts, \gls{wdfw}, personal communication, 7/6/23).   -->
-
-<!-- At the end of the projection period, 2034, the projected ACL removals result in spawning output relative to unfished increasing to be `r round(100*(model$timeseries$SpawnBio[model$timeseries$Yr==2034]/model$timeseries$SpawnBio[1]),1)` percent. -->
+At the end of the projection period, 2034, the projected ACL removals result in spawning output relative to unfished increasing to be `r round(100*(model$timeseries$SpawnBio[model$timeseries$Yr==2034]/model$timeseries$SpawnBio[1]),1)` percent.
 
 
 ## Evaluation of Scientific Uncertainty
