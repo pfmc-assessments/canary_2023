@@ -19,8 +19,9 @@
 #' @param label A character string without underscores that
 #' will be passed to the `label` parameter of [kableExtra::kbl].
 #' The default value is `NULL`.
-#' @param digits A vector of digits for catch, spawning output, and fraction, 
+#' @param digits A vector of digits for catch, spawning output, and fraction,
 #' unfished. It gets passed to `r4ss::SS_decision_table_stuff()`.
+#' @param tex TRUE/FALSE controlling whether to apply latex formatting.
 #' @export
 #' @author Kelli F. Johnson, Ian G. Taylor, Chantel R. Wetzel
 #' @examples
@@ -35,7 +36,8 @@ table_decision <- function(
     format = c("latex", "html"),
     caption = formals(kableExtra::kbl)$caption,
     label = formals(kableExtra::kbl)$label,
-    digits = c(0, 2, 3)) {
+    digits = c(0, 2, 3),
+    tex = TRUE) {
   mods <- list(...)
   # make sure that the format input is good
   # chooses first option by default
@@ -75,61 +77,33 @@ table_decision <- function(
     dplyr::select(-dplyr::starts_with("catch", ignore.case = FALSE))
   
   # remove repeated lables in Mgmt column
-  results <- results %>% 
-    dplyr::mutate(Mgmt = ifelse(duplicated(Mgmt), "", Mgmt))
-  
-  # # add horizontal lines between groups (only works in latex) 
-  # # only works if Mgmt column has single value at the top of each group
-  # results <- results %>% 
-  #   kableExtra::row_spec(row = which(results$Mgmt != "")[-1] - 1, 
-  #     hline_after = TRUE)
-  
-  # add color to the depletion column
   results <- results %>%
-    dplyr::mutate_at(
-      .vars = dplyr::vars(grep(value = TRUE, "^dep", colnames(.))),
-      ~ kableExtra::cell_spec(
-        format = format,
-        x = .,
-        color = "white",
-        background = kableExtra::spec_color(
-          .,
-          begin = 0, end = 1,
-          option = "D",
-          scale_from = c(0, 1),
-          direction = -1
-        )
-      )
-    )
+    dplyr::mutate(Mgmt = ifelse(duplicated(Mgmt), "", Mgmt))
   
   # add column names
   rownames(results) <- NULL
   colnames(results) <- c(
-    "Mgmt", "Year", "Catch", "Low Spawn M=0.072", "Low Frac M=0.072",
-    "Base Spawn M=0.142", "Base Frac M=0.142", "High Spawn M=0.219", "High Frac M=0.219"
+    "Mgmt", "Year", "Catch", "Low Spawn Single M", "Low Frac Single M",
+    "Base Spawn", "Base Frac", "High Spawn M ramp", "High Frac M ramp"
   )
   
-  results %>%
-    kableExtra::kbl(
-      format = format,
-      escape = FALSE,
-      booktabs = TRUE,
-      linesep = rep(c(rep("", length(years) - 1), "\\addlinespace"), 2),
-      align = c("l", "l", "r", rep(c("r", "r"), 3)),
-      caption = caption,
-      label = label
-    ) %>%
-    kableExtra::column_spec(c(1), bold = TRUE) %>% # first column bold
-    # kableExtra::column_spec(c(1, 3, 3+2*3, border_right = TRUE) %>% # vertical lines (not really needed)
-    kableExtra::column_spec(3,
-                            color = "white", # white text
-                            background = kableExtra::spec_color(results[["Catch"]], # background coloring for catch columns
-                                                                begin = 0.3,
-                                                                end = 0.7,
-                                                                option = "E",
-                                                                direction = -1
-                            )
-    ) %>%
-    kableExtra::column_spec(4:NCOL(results), width = "3.5em") %>%
-    kableExtra::kable_classic(full_width = FALSE)
+  if (tex) {
+    results <- results %>%
+      kableExtra::kbl(
+        format = format,
+        escape = FALSE,
+        booktabs = TRUE,
+        linesep = rep(c(rep("", length(years) - 1), "\\addlinespace"), 2),
+        align = c("l", "l", "r", rep(c("r", "r"), 3)),
+        caption = caption,
+        label = label
+      ) %>%
+      kableExtra::column_spec(c(1), bold = TRUE) # first column bold
+    
+    results <- results %>%
+      kableExtra::column_spec(4:5, width = "4.0em") %>%
+      kableExtra::column_spec(6:9, width = "3.5em") %>%
+      kableExtra::kable_classic(full_width = FALSE)
+  }  
+  return(results)
 }
