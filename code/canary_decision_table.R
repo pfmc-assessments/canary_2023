@@ -198,6 +198,7 @@ base45 <- "7_3_5_reweight"
 #Set up base model with new recruitment period
 mod <- SS_read(here('models',base45))
 mod$fore$Fcast_years[c(5,6)] <- c(2014,2019)
+mod$fore$fcast_rec_option <- 3 #Turn on average recruitment option
 
 #Use catch from original base model with recruits from SR curve
 mod$fore$ForeCatch <- fore_catch
