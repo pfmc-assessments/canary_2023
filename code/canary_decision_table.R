@@ -198,6 +198,7 @@ base45 <- "7_3_5_reweight"
 #Set up base model with new recruitment period
 mod <- SS_read(here('models',base45))
 mod$fore$Fcast_years[c(5,6)] <- c(2014,2019)
+mod$fore$fcast_rec_option <- 3 #Turn on average recruitment option
 
 #Use catch from original base model with recruits from SR curve
 mod$fore$ForeCatch <- fore_catch
@@ -224,7 +225,13 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
                                                  'decision_tables/base_0.45_lowRecruit')))
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('base model',
-                                     'average recruit from 2014-2019'), endyrvec = 2034, shadeForecast = TRUE,
-                    subplot = c(1,3,9,11), print = TRUE, plotdir = here('models','decision_tables', paste0("base_",pstar,"_lowRecruit")))
+                                     'average recruit from 2014-2019'), 
+                    endyrvec = 2034, shadeForecast = TRUE, btarg = 0, minbthresh = 0,
+                    subplot = c(2,4,9,11), print = TRUE, plotdir = here('models','decision_tables', paste0("base_",pstar,"_lowRecruit")))
+
+file.copy(from =  here('models','decision_tables', paste0("base_",pstar,"_lowRecruit"),'compare4_Bratio_uncertainty.png'),
+          to = here('documents','figures',
+                    c("compare_lowrecruit_projection_Bratio.png")), overwrite = TRUE)
+
 
 

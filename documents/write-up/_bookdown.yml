@@ -5,7 +5,7 @@ rmd_files: [
   '00authors.Rmd',
   '00bibliography.Rmd',
   '00title.Rmd',
-  #'02disclaimer.Rmd',
+  '02disclaimer.Rmd',
   '01a.Rmd',
   '01executive.Rmd',
   '10a.Rmd',

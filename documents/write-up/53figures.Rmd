@@ -357,3 +357,5 @@ label = 'retro_relbio')
 ## Management
 
 ![Estimated yield curve with various reference point proxies \label{fig:yield}](../figures/plots/yield2_yield_curve_with_refpoints.png){width="100%," height="100%," alt="Yield curve maximized around 0.25 of unfished at yield of about 1200 metric tons"}
+
+![Comparison of spawning output relative to unfished for projections under average recruitment assumptions (blue line) and when applying the base projected catch values to a model assuming low recruitment (average recruitment from 2014-2019; red line). Blue band represents 95% confidence interval from the base model. Shaded block indicates the projection period (2023-2034) \label{fig:project-lowrec}](../figures/compare_lowrecruit_projection_Bratio.png){width="100%," height="100%," alt="Figure showing a slight decrease in spawning output for projections under lower recruitment conditions using average recruitment from 2014 to 2019 compared to base conditions using average recruitment over all years"}
