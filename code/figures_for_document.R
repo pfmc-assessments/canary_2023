@@ -331,8 +331,8 @@ xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models
 
 SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
-                                     'Coastwide model (tuned)',
-                                     'Update selectivity (tuned)',
+                                     'Coastwide model (reweighted)',
+                                     'Update selectivity (reweighted)',
                                      'Sex dependent selectivity parameter 4',
                                      'Various changes (base model)'),
                     subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,4)),
