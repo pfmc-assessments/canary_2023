@@ -14129,7 +14129,10 @@ pp <- SS_output(here('models',new_name))
                       allow_up_tuning = TRUE)
   
   pp <- SS_output(here('models',new_name))
-  SS_plots(pp)
+  short.names <- stringr::str_remove(pp$FleetNames, '[:digit:]+_') |>
+    stringr::str_remove('coastwide_') |>
+    stringr::str_replace('NWFSC', 'WCGBTS')
+  SS_plots(pp, fleetnames = short.names)
   
   plot_sel_comm(pp, sex=1)
   plot_sel_comm(pp, sex=2)

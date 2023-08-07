@@ -1,4 +1,4 @@
-## Fishery-Dedependent Data
+## Fishery-Dependent Data
 
 ### Total Removals {#removals}
 

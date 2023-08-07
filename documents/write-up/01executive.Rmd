@@ -200,7 +200,7 @@ We list current research recommendations and prioritize them from high to low. L
 
 1.  Continued research into the rationale for skewed sex ratios and empirical studies to estimate natural mortality rates.
 
-2.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of a non-trawl coast-wide fishery-independent indices.
+2.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of non-trawl coast-wide fishery-independent indices.
 
 3.  Similar to recommendations 1 and 2, other biological relationships can be updated to better understand dynamics for `r spp`. Few samples of canary rockfish are available to inform estimates of fecundity. Fecundity for canary rockfish was based on a genus level relationship.
 
