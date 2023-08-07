@@ -451,12 +451,12 @@ mod23_mi <- SS_output(here('models', 'sensitivities', 'mcallister_ianelli'))
 fran <- table_compweight(mod23,
                  caption_extra = paste("The WCGBTS age comps are conditioned on length,",
                                        "so there are more observations with fewer samples per observation."),
-                 label = "data-weights", dataframe = TRUE) 
+                 label = "data-weights", dataframe = TRUE, fleetnames = "short") 
 
 mi <- table_compweight(mod23_mi,
                  caption_extra = paste("The WCGBTS age comps are conditioned on length,",
                                        "so there are more observations with fewer samples per observation."),
-                 label = "data-weights", dataframe = TRUE) 
+                 label = "data-weights", dataframe = TRUE, fleetnames = "short") 
 
 both <- cbind(fran[,c("Type","Fleet","Francis")], mi[,c("Francis")])
 colnames(both)[4] <- "MI"

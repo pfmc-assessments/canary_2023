@@ -21,7 +21,8 @@ table_compweight <- function(output,
                              caption_CAAL = "`CAAL' is conditional age-at-length data.",
                              caption_extra = "",
                              label = "table-compweight-base",
-                             dataframe = FALSE) {
+                             dataframe = FALSE,
+                             fleetnames = "default") {
   # figure out which fleets have conditional age at length data
   CAAL_fleets <- output[["condbase"]][["Fleet"]] %>% unique()
   Age_fleets <- output[["agedbase"]][["Fleet"]] %>% unique()
@@ -47,6 +48,14 @@ table_compweight <- function(output,
     ) %>%
     dplyr::mutate(Francis = sprintf("%.3f", Francis)) %>% # round to 2 places
     dplyr::mutate_at(5:7, ~ sprintf("%.1f", .x)) # round to 1 places
+  
+  #Remove number from names and change NWFSC to WCGBTS (this is specific to the canary 2023 model)
+  if(fleetnames != "default"){
+    short.names <- stringr::str_remove(df$Fleet, '[:digit:]+_') |>
+      stringr::str_remove('coastwide_') |>
+      stringr::str_replace('NWFSC', 'WCGBTS')
+    df$Fleet <- short.names
+  }
     
   if(dataframe == FALSE){
       kableExtra::kbl(df,

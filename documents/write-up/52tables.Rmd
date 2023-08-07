@@ -207,6 +207,14 @@ parm_table[parm_table$Parameter == "Wtlen 1 Fem GP 1","Value"] = format(parm_tab
 parm_table[parm_table$Parameter == "Wtlen 1 Mal GP 1","Value"] = format(parm_table[parm_table$Parameter == "Wtlen 1 Mal GP 1","Value"], scientific = TRUE)
 parm_table[parm_table$Parameter == "Eggs scalar Fem GP 1","Value"] = format(parm_table[parm_table$Parameter == "Eggs scalar Fem GP 1","Value"], scientific = TRUE)
 
+#Simplify names of fleets - remove leading fleet number, and change NWFSC to WCGBTS. Only apply to selectivity parameters
+#because removing the leading number would remove the numbers of some growth parameters
+short.names <- stringr::str_remove(parm_table$Parameter, '[:digit:]+ ') |>
+  stringr::str_remove('coastwide ') |>
+  stringr::str_replace('NWFSC', 'WCGBTS')
+change_parm_names <- c(grep("LnQ",parm_table$Parameter)[1]:length(parm_table$Parameter))
+parm_table$Parameter[change_parm_names] <- short.names[change_parm_names]
+
 sa4ss::table_format(parm_table, caption = "List of parameters used in the base model, including estimated values and standard deviations (SD), bounds (minimum and maximum), estimation phase (negative values not estimated), status (indicates if parameters are near bounds), and prior type information (mean and SD).",
                       label = "params",
                       align = 'l',
@@ -242,7 +250,7 @@ source(here('code/table_compweight.R'))
 table_compweight(model,
   caption_extra = paste("The WCGBTS age comps are conditioned on length,",
    "so there are more observations with fewer samples per observation."),
-   label = "data-weights") |>
+   label = "data-weights", fleetnames = "short") |>
   kableExtra::kable_styling(font_size = 10)
 ```
 
