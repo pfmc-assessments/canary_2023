@@ -13,7 +13,7 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                  TWL.C, TWL.O, TWL.W,
                  NTWL.C, NTWL.O, NTWL.W,
                  rec.C, rec.O, rec.W.mt.2) |>
-  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the trawl (TWL), non-trawl (NTWL) used in the assessment model. See text for description of sources',
+  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the trawl (TWL), non-trawl (NTWL), and recreational (REC) fleets used in the assessment model. See text for description of sources',
                label = 'catches1', 
                format = 'latex',
                col.names = c("Year", 
@@ -37,12 +37,12 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                  FOR.C, FOR.O, FOR.W,
                  ASHOP.C, ASHOP.O, ASHOP.W) |>
   dplyr::filter(Year > 1965) |>
-  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the foreign (FOR) and at-sea hake (ASH) fleets used in the assessment model. Removals before 1966 are zero. See text for description of sources',
+  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the foreign (FOR) and at-sea hake (ASHOP) fleets used in the assessment model. Removals before 1966 are zero. See text for description of sources',
                label = 'catches2', 
                format = 'latex',
                col.names = c("Year",
                              "FOR CA", "FOR OR", "FOR WA",
-                             "ASH CA", "ASH OR", "ASH WA"),
+                             "ASHOP CA", "ASHOP OR", "ASHOP WA"),
                booktabs = TRUE,
                longtable = TRUE,
                digits = 1)

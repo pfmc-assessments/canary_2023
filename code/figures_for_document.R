@@ -309,8 +309,8 @@ SSsummarize(xx) |>
   SSplotComparisons(legendlabels = c('2015:SSv3.30.21',
                                      'Spatial model',
                                      "Coastwide model",
-                                     'Spatial model (tuned)',
-                                     'Coastwide model (tuned)'),
+                                     'Spatial model (reweighted)',
+                                     'Coastwide model (reweighted)'),
                     subplots = c(1:4,9,11), print = TRUE, uncertainty = c(TRUE,rep(FALSE,4)),
                     plotdir = here('models','Bridging coastwide', '3_3_6_coastwide_tuned', 'for_report'))
 

@@ -48,7 +48,7 @@ yet increase the spatial complexity of the fishery. This amounts to
 using an areas-as-fleets approach [@punt_spatial_2019]. Although an
 areas-as-fleets approach does not account for potential regional
 differences in depletion, because catches are assumed to act over the
-entire modeled area, early explorations indicated instability when unmirroring and expanding selectivity, thus suggesting that the data may not support realistic parameterization within the spatial model. Through
+entire modeled area, early explorations indicated instability when unmirroring fleets and updating the selectivity parameterization and blocks, thus suggesting that the data may not support realistic fleet complexity within the spatial model. Through
 bridging of the spatial model (described below) we show that the change in population
 structure does not have a large effect on model results,
 especially relative to changes in the modeling of natural mortality and the
@@ -81,7 +81,7 @@ which was very sparse, and incorrectly assigned to California, and
 combined selectivity for the Washington and Oregon fleets, which have
 similar dynamics and fish across state boundaries. 
 
-Data has also been updated for this assessment. The synthesis and
+Data have also been updated for this assessment. The synthesis and
 treatment of data has been altered for this assessment based on updated
 best practices and extensive work by \gls{nwfsc} to document, reproduce,
 and standardize data processing steps, along with extensive work by
@@ -127,7 +127,7 @@ maturity from length-at-biological maturity to
 age-at-functional-maturity based on additional analysis of maturity
 samples by Melissa Head at \gls{nwfsc}. Changes to biological parameters
 are more completely described in Section \@ref(biology). The effect of
-these changes on model results in described below in the bridging
+these changes on model results is described below in the bridging
 analysis.
 
 ### Bridging Analysis from the 2015 Benchmark Assessment

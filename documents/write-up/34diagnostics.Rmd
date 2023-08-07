@@ -2,7 +2,7 @@
 
 ### Convergence Status
 
-The base model has a final gradient of \<0.00001 and the hessian is determinant. We therefore conclude that the parameter estimates represent a global minimum. No parameters are at or within 2.5 percent of a boundary and two parameter pairs have high correlation coefficients (0.97) with four others between 0.90 and 0.95.
+The base model has a final gradient of \<0.00001 and the hessian is determinant. We therefore conclude that the parameter estimates represent a global minimum. No parameters are at or within 2.5 percent of a boundary but two parameter pairs have high correlation coefficients (0.97) with four others between 0.90 and 0.95.
 
 #### Evidence of Search for Global Convergence
 

@@ -28,20 +28,22 @@ names(tab) <- stringr::str_remove(names(tab), '[:digit:]+_') |>
   stringr::str_remove(' \\(mt\\)') |>
   stringr::str_replace('_', ' ') |>
   stringr::str_replace('REC', 'Rec') |>
-  stringr::str_remove('OP')
+  stringr::str_remove('OP') |>
+  stringr::str_replace('ASH', 'ASHOP')
   
 knitr::kable(tab, 
-             caption = 'Summary of catches (mt) by fleet over the last ten years. Discards are included in catches for each fleet, so total landings and total dead catch are equivalent.', 
+             caption = 'Summary of catches (mt) by fleet (TWL = trawl, NTWL = non-trawl, Rec = recreational, ASHOP = at-sea hake) over the last ten years. Catches from the foreign and CA ASHOP fleets are not shown because they did not have catches within the last ten years. Discards are included in catches for each fleet, so total landings and total dead catch are equivalent.', 
              label = 'es-catch',
              format = 'latex',
              booktabs = TRUE, 
              escape = FALSE) |> 
+  column_spec(c(2:13),width = "0.5in") |> 
   kableExtra::landscape() |>
   kableExtra::kable_styling(
       font_size = 9)
 ```
 
-![Catches of canary rockfish over full assessment period by fleet \label{fig:es-catch}](../figures/catch2 landings stacked_custom.png){width="100%" height="100%" alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
+![Catches of canary rockfish over full assessment period by fleet (TWL = trawl, NTWL = non-trawl, Rec = recreational, ASHOP = at-sea hake, FOR = foreign) \label{fig:es-catch}](../figures/catch2 landings stacked_custom.png){width="100%" height="100%" alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
 
 ## Data and assessment {.unnumbered}
 
@@ -82,7 +84,7 @@ readr::read_csv(file.path(model_dir, 'tables', 'b_SSB_ES.csv'), name_repair = 'm
 
 Recruitment dynamics (Table \ref{tab:recr-es}, Figures \ref{fig:rec-es} and \ref{fig:recdev-es}) are assumed to follow a Beverton-Holt stock-recruit function and the steepness parameter was fixed at the value of 0.72, which is the mean of steepness prior probability distribution. The level of virgin recruitment (ln(R~0~)) is estimated to inform the magnitude of the initial stock size. Annual recruitment is treated as stochastic with 'main' recruitment deviations estimated for 1960--2022 and 'early' deviations for 1892--1959.
 
-The recruitment time series is punctuated by a large recruitment event in 1968, following by a generally declining trend until the 2000s where recruitment varies around a relatively stable average. Among recent years, large events occurred in 2003, 2007, and 2013, and 2021--2023. The 1968 recruitment was estimated at about 6 million age-0 recruits while the latter six were around 3 million. Recent (since 2000) recruitment has averaged around 2.1 million recruits. Recruitment follows a cyclical pattern since 2000 but has more often had deviations below the average (negative recruitment deviations) than above the average.
+The recruitment time series is punctuated by a large recruitment event in 1968, following by a generally declining trend until the 2000s where recruitment varies around a relatively stable average. Among recent years, large events occurred in 2003, 2007, 2013, and 2021--2022, as well as in 2023 where recruitment was pulled from the stock-recruit curve. The 1968 recruitment was estimated at about 6 million age-0 recruits while the latter six were around 3 million. Recent (since 2000) recruitment has averaged around 2.1 million recruits. Recruitment follows a cyclical pattern since 2000 but has more often had deviations below the average (negative recruitment deviations) than above the average.
 
 ```{r results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, 'tables', 'c_Recr_ES.csv'), name_repair = 'minimal') |>
@@ -198,7 +200,7 @@ The model estimate of $\sigma_\text{OFL}$, the uncertainty around the overfishin
 
 We list current research recommendations and prioritize them from high to low. Lower priority needs should not not be interpreted as unimportant, but rather lower relative to other priorities listed here. The topics are further expanded upon in the full document.
 
-1.  Continued research into the rationale for skewed sex ratios and empirical studies to estimate natural mortality rates.
+1.  Continued research into the mechanism leading to skewed sex ratios and empirical studies to estimate natural mortality rates.
 
 2.  The \gls{s-wcgbt} has low encounter rates with `r spp` in part because it has limited access to rocky habitat. We recommend exploration of non-trawl coast-wide fishery-independent indices.
 
