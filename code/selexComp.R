@@ -24,7 +24,7 @@ plot_sel_ret <- function(mod,
                          fleet = 1,
                          Factor = "Lsel",
                          sex = 1,
-                         legloc = "topleft") {
+                         legloc = "topleft", fleetnames = "default") {
   
   #input = r4ss::SS_read(mod$inputs$dir)
   
@@ -39,7 +39,8 @@ plot_sel_ret <- function(mod,
                                  subplots = 1,
                                  plot = FALSE,
                                  print = TRUE,
-                                 plotdir = mod$inputs$dir
+                                 plotdir = mod$inputs$dir,
+                                 fleetnames = fleetnames
   )$infotable
   # remove extra file (would need to sort out the relative path stuff)
   file.remove(file.path(mod$inputs$dir, "sel01_multiple_fleets_length1.png"))
@@ -85,7 +86,8 @@ plot_sel_ret <- function(mod,
                     infotable = infotable,
                     mainTitle = FALSE,
                     mar = c(2,2,2,1),
-                    plotdir = mod$inputs$dir
+                    plotdir = mod$inputs$dir,
+                    fleetnames = fleetnames
   )
   mtext(infotable$FleetName, side = 3, line = 0.1)
 }
@@ -97,7 +99,7 @@ plot_sel_ret <- function(mod,
 #' @param sex Either 1 (females) or 2 (males)
 #' @export
 #' @author Ian G. Taylor
-plot_sel_comm <- function(mod, sex = 1) {
+plot_sel_comm <- function(mod, sex = 1, fleetnames = "default") {
   
   graphics.off()
   
@@ -110,27 +112,27 @@ plot_sel_comm <- function(mod, sex = 1) {
   par(mfrow = c(4,3), oma = c(2,2,0,0), las = 1)
   
   #TWL
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 1, sex = sex)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 1, sex = sex, fleetnames = fleetnames)
   mtext("Selectivity", side = 2, line = 3, las = 0)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 2, sex = sex)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 3, sex = sex)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 2, sex = sex, fleetnames = fleetnames)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 3, sex = sex, fleetnames = fleetnames)
   #NTWL
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 4, sex = sex)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 4, sex = sex, fleetnames = fleetnames)
   mtext("Selectivity", side = 2, line = 3, las = 0)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 5, sex = sex)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 6, sex = sex)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 5, sex = sex, fleetnames = fleetnames)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 6, sex = sex, fleetnames = fleetnames)
   #FOREIGN
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 13, sex = sex)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 13, sex = sex, fleetnames = fleetnames)
   mtext("Selectivity", side = 2, line = 3, las = 0)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 14, sex = sex)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 15, sex = sex)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 14, sex = sex, fleetnames = fleetnames)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 15, sex = sex, fleetnames = fleetnames)
   #ASHOP
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 10, sex = sex)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 10, sex = sex, fleetnames = fleetnames)
   mtext("Selectivity", side = 2, line = 3, las = 0)
   mtext("Length (cm)", side = 1, line = 2.5)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 11, sex = sex)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 11, sex = sex, fleetnames = fleetnames)
   mtext("Length (cm)", side = 1, line = 2.5)
-  plot_sel_ret(mod, Factor = "Lsel", fleet = 12, sex = sex)
+  plot_sel_ret(mod, Factor = "Lsel", fleet = 12, sex = sex, fleetnames = fleetnames)
   mtext("Length (cm)", side = 1, line = 2.5)
   
   dev.off()
@@ -147,7 +149,7 @@ plot_sel_comm <- function(mod, sex = 1) {
 #' @param spatial TRUE/FALSE on whether the model is spatial
 #' @export
 #' @author Ian G. Taylor
-plot_sel_noncomm <- function(mod, sex = 1, spatial = TRUE) {
+plot_sel_noncomm <- function(mod, sex = 1, spatial = TRUE, fleetnames = "default") {
   
   graphics.off()
   
@@ -162,27 +164,27 @@ plot_sel_noncomm <- function(mod, sex = 1, spatial = TRUE) {
     par(mfrow = c(4,3), oma = c(2,2,0,0), las = 1)
     
     #REC
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 7, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 7, sex = sex, fleetnames = fleetnames)
     mtext("Selectivity", side = 2, line = 3, las = 0)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 8, sex = sex)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 9, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 8, sex = sex, fleetnames = fleetnames)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 9, sex = sex, fleetnames = fleetnames)
     #NWFSC trawl
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 16, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 16, sex = sex, fleetnames = fleetnames)
     mtext("Selectivity", side = 2, line = 3, las = 0)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 17, sex = sex)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 18, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 17, sex = sex, fleetnames = fleetnames)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 18, sex = sex, fleetnames = fleetnames)
     #Triennial early
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 19, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 19, sex = sex, fleetnames = fleetnames)
     mtext("Selectivity", side = 2, line = 3, las = 0)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 20, sex = sex)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 21, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 20, sex = sex, fleetnames = fleetnames)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 21, sex = sex, fleetnames = fleetnames)
     #Triennial late
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 22, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 22, sex = sex, fleetnames = fleetnames)
     mtext("Selectivity", side = 2, line = 3, las = 0)
     mtext("Length (cm)", side = 1, line = 2.5)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 23, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 23, sex = sex, fleetnames = fleetnames)
     mtext("Length (cm)", side = 1, line = 2.5)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 24, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 24, sex = sex, fleetnames = fleetnames)
     mtext("Length (cm)", side = 1, line = 2.5)
     
   }
@@ -191,19 +193,19 @@ plot_sel_noncomm <- function(mod, sex = 1, spatial = TRUE) {
     par(mfrow = c(2,3), oma = c(2,2,0,0), las = 1)
     
     #REC
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 7, sex = sex, legloc = "topright")
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 7, sex = sex, legloc = "topright", fleetnames = fleetnames)
     mtext("Selectivity", side = 2, line = 3, las = 0)
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 8, sex = sex, legloc = "topright")
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 9, sex = sex, legloc = "topright")
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 8, sex = sex, legloc = "topright", fleetnames = fleetnames)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 9, sex = sex, legloc = "topright", fleetnames = fleetnames)
     #NWFSC trawl coastal
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 28, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 28, sex = sex, fleetnames = fleetnames)
     mtext("Selectivity", side = 2, line = 3, las = 0)
     mtext("Length (cm)", side = 1, line = 2.5)
     #Triennial early coastal
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 29, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 29, sex = sex, fleetnames = fleetnames)
     mtext("Length (cm)", side = 1, line = 2.5)
    #Triennial late coastal
-    plot_sel_ret(mod, Factor = "Lsel", fleet = 30, sex = sex)
+    plot_sel_ret(mod, Factor = "Lsel", fleet = 30, sex = sex, fleetnames = fleetnames)
     mtext("Length (cm)", side = 1, line = 2.5)
     
   }

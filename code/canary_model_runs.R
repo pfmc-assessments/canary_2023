@@ -14134,10 +14134,22 @@ pp <- SS_output(here('models',new_name))
     stringr::str_replace('NWFSC', 'WCGBTS')
   SS_plots(pp, fleetnames = short.names)
   
-  plot_sel_comm(pp, sex=1)
-  plot_sel_comm(pp, sex=2)
-  plot_sel_noncomm(pp, sex=1, spatial = FALSE)
-  plot_sel_noncomm(pp, sex=2, spatial = FALSE)
+  #Custom plots for visualization
+  #Data plot
+  SSplotData(pp, print = TRUE, subplots = c(1,2), plotdir = here('documents/figures'), fleetnames = short.names,
+             pwidth = 5.5, pheight = 7, ptsize = 8,margins = c(5.1, 2.1, 2.1, 10.1))
+  file.rename(from = file.path(here('documents/figures'), c("data_plot.png","data_plot2.png")),
+              to = file.path(here('documents/figures'), c("data_plot_custom.png","data_plot2_custom.png")))
+  #Length comps with bimodal patterns
+  r4ss::SSplotComps(pp, subplots = 21, kind = "LEN", fleets = c(5,8,9), datonly = TRUE, fleetnames = short.names,
+                    print = TRUE, plot = TRUE, plotdir = here('documents/figures'))
+  file.rename(from = file.path(here('documents/figures'), "comp_lendat__aggregated_across_time.png"),
+              to = file.path(here('documents/figures'), "comp_lendat__aggregated_across_time_custom.png"))
+  
+  plot_sel_comm(pp, sex=1, fleetnames = short.names)
+  plot_sel_comm(pp, sex=2, fleetnames = short.names)
+  plot_sel_noncomm(pp, sex=1, spatial = FALSE, fleetnames = short.names)
+  plot_sel_noncomm(pp, sex=2, spatial = FALSE, fleetnames = short.names)
   
   xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
                                         subdir = c('6_1_0_projections',
