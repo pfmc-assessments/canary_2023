@@ -234,4 +234,64 @@ file.copy(from =  here('models','decision_tables', paste0("base_",pstar,"_lowRec
                     c("compare_lowrecruit_projection_Bratio.png")), overwrite = TRUE)
 
 
+#####-------------------------------------------####
+#If wanted to set up a regime block for recruits
+#####-------------------------------------------####
+
+pstar <- 0.45
+base45 <- "7_3_5_reweight"
+
+#Set up base model with recruitment regime period
+mod <- SS_read(here('models',base45))
+mod$ctl$N_Block_Designs <- 7
+mod$ctl$blocks_per_pattern[7] <- 1
+names(mod$ctl$blocks_per_pattern) <- paste0("blocks_per_pattern_",1:mod$ctl$N_Block_Designs)
+mod$ctl$Block_Design[[7]] <- c(2023, 2034)
+
+#Set up regime (SR time varying parameter)
+mod$ctl$SR_parms["SR_regime",c("Block","Block_Fxn")] <- c(7,1)
+mod$ctl$SR_parms_tv <- data.frame('LO' = -5, 'HI' = 5, 'INIT' = 0, 'PRIOR' = 0, 'PR_SD' = 0, 'PR_type' = 0, 'PHASE' = -50)
+
+#Set the value for the regime change (2014-2019). 
+#Take the exp of the devs, average them, and then take the log as the initial (fixed) value for the regime change
+pp <- SS_output(here('models',base45))
+mod$ctl$SR_parms_tv$INIT = log(mean(exp(pp$recruit$dev[pp$recruit$Yr %in% c(2014:2019)])))
+
+#Use catch from original base model with recruits from SR curve
+mod$fore$ForeCatch <- fore_catch
+
+#Turn off buffers
+mod$fore$Flimitfraction <- 1 #dont have years of buffer applied
+mod$fore$FirstYear_for_caps_and_allocations <- 2035 #these should be overwritten with the fixed catch but putting here anyway
+
+#I dont think we need to read from the par file but could
+
+SS_write(mod,
+         dir = here('models','decision_tables', paste0("base_",pstar,"_lowRecruit_regimeBlockAuto")),
+         overwrite = TRUE)
+
+r4ss::run(dir = here('models','decision_tables', paste0("base_",pstar,"_lowRecruit")),
+          exe = here('models/ss_win.exe'),
+          extras = '-nohess',
+          # show_in_console = TRUE,
+          skipfinished = FALSE)
+
+
+xx <- SSgetoutput(dirvec = glue::glue("{models}/{subdir}", models = here('models'),
+                                      subdir = c('7_3_5_reweight',
+                                                 'decision_tables/base_0.45_lowRecruit',
+                                                 'decision_tables/base_0.45_lowRecruit_regimeBlockAuto')))
+SSsummarize(xx) |>
+  SSplotComparisons(legendlabels = c('base model',
+                                     'average recruit from 2014-2019',
+                                     'regime block'), 
+                    endyrvec = 2034, shadeForecast = TRUE, btarg = 0, minbthresh = 0,
+                    subplot = c(2,4,9,11), print = TRUE, plotdir = here('models','decision_tables', paste0("base_",pstar,"_lowRecruit_regimeBlockAuto")))
+
+
+
+
+
+
+
 
