@@ -12,7 +12,7 @@ executive[["stock"]] <- paste0("This assessment reports the status of ",
 # One-page summary {.unnumbered}
 
 -   `r executive[['stock']]`
--   `r Spp` is a long-lived rockfish caught north of Point Conception in commercial trawl, commercial non-trawl, and recreational fisheries.
+-   `r Spp` is a long-lived slope rockfish caught north of Point Conception in commercial trawl, commercial non-trawl, and recreational fisheries.
 -   The most recent full stock assessment was conducted in 2015. Catch-only projections were conducted in 2017, 2019, and 2021.
 -   There is an unusual pattern in the sex ratio, where the percent of fish that are female decreases rapidly starting around age 20. It is unknown whether females experience higher mortality rates, move into habitat inaccessible to fishing gear, or some combination.
 -   The major changes to this assessment compared to the previous assessment are:
