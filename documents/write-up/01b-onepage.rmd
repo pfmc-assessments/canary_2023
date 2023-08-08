@@ -3,15 +3,15 @@
 # One-page summary {.unnumbered}
 
 -   `r executive[['stock']]`
--   `r Spp` is a long-lived slope rockfish caught north of Point Conception in commercial trawl, commercial non-trawl, and recreational fisheries.
+-   `r Spp` is a long-lived shelf rockfish caught primarily north of Point Conception in commercial trawl, commercial non-trawl, and recreational fisheries.
 -   The most recent full stock assessment was conducted in 2015. Catch-only projections were conducted in 2017, 2019, and 2021.
--   There is an unusual pattern in the sex ratio, where the percent of fish that are female decreases rapidly starting around age 20. It is unknown whether females experience higher mortality rates, move into habitat inaccessible to fishing gear, or some combination.
--   The major changes to this assessment compared to the previous assessment are:
-    -   All data were extended to 2022, and historical data were updated based on new reconstructions.
+-   There is an unusual pattern in the sex ratio, where the percent of fish that are female decreases rapidly starting around age 20. It is unknown whether females experience higher mortality rates, move into habitat inaccessible to fishing gear, some combination of the two, or something different altogether that could cause this pattern in sex-ratio.
+-   The major changes to this assessment compared to the previous benchmark assessment are:
+    -   Data were reanalyzed and extended to 2022.
     -   This model handles the sex ratio pattern by estimating separate female and male natural mortality rates that are constant across ages, and separate selectivity by sex for larger fish. This is in contrast to the 2015 model, which estimated separate natural mortality only for older females, and assumed the same selectivity between sexes.
     -   This model estimates coastwide recruitment deviations. The 2015 assessment estimated additional spatial recruitment deviations by state.
     -   This model estimates separate selectivity curves for fishing fleets by state. The 2015 model assumed selectivity was the same along the coast.
     -   The method for weighting data from different sources has been aligned with current standard practices.
--   The model estimates recovery from the population's low abundance in the late 1990s has been slower than was estimated in 2015, but more similar to estimates from earlier assessments. The change since 2015 is primarily due to different assumptions regarding natural mortality and different data weighting methods.
--   Current depletion in 2023 is `r round(model$current_depletion, 3)`, in the "precautionary zone" between the target of 0.4 and the limit of 0.25.
--   The estimate of recent fishing intensity (1-spawning potential ratio) in 2022 is `r round(model$sprseries$SPR_report[model$sprseries$Yr==2022], 3)`, close to the reference point of 0.5.
+-   The model estimates recovery from the population's low abundance in 1995 to be slower than was estimated in 2015, but more similar to estimates from earlier assessments. The change since 2015 is primarily due to different assumptions regarding natural mortality and current data weighting practices.
+-   Current depletion (spawning output relative to unfished spawning output) in 2023 is `r round(model$current_depletion, 3)`, and is in the "precautionary zone" between the target of 0.4 and the limit of 0.25.
+-   The estimate of recent fishing intensity (measured as 1-spawning potential ratio) in 2022 is `r round(model$sprseries$SPR_report[model$sprseries$Yr==2022], 3)`, and is close to the reference point of 0.5.
