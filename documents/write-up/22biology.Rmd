@@ -99,9 +99,7 @@ This relationship is an improvement to the maturity curve used in the
 previous assessment, as it uses functional maturity instead of
 biological maturity. This, in addition to the use of age instead of
 length, eliminated the need for a third parameter in the maturity curve
-estimating the probability of skip spawning. Due to the relatively steep
-growth curve of `r spp`, a given length can represent a wide range of
-ages. The new relationship results in a rightward shift in maturity and
+estimating the probability of skip spawning. Due to variation in the growth rate, a given length can represent a wide range of ages, especially at larger sizes. The new relationship results in a rightward shift in maturity and
 increase in maturity at older ages compared to the relationship derived
 within the 2015 assessment (Figure \ref{fig:compare_maturity}).
 
