@@ -142,6 +142,33 @@ run_diagnostics(mydir = here('models'),
 tictoc::toc()
 beepr::beep()
 
+#Base model profiled value is different than actual base model and makes the curve look a little odd. 
+#Replace the profiled version with the actual base model files. 
+#The profiled base model is in slot 6
+profile_dir <- file.path(here('models'),"7_3_5_reweight_phases_profile_SR_LN(R0)_prior_like_0")
+file.copy(from = file.path(here('models',base_model), "CompReport.sso"),
+            to = file.path(profile_dir, "CompReport6.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',base_model), "covar.sso"),
+          to = file.path(profile_dir, "covar6.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',base_model), "Report.sso"),
+          to = file.path(profile_dir, "Report6.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',base_model), "ss.par"),
+          to = file.path(profile_dir, "ss.par_6.sso"), overwrite = TRUE)
+file.copy(from = file.path(here('models',base_model), "ss.par"),
+          to = file.path(profile_dir, "ss_input_par6.ss"), overwrite = TRUE)
+file.copy(from = file.path(here('models',base_model), "warning.sso"),
+          to = file.path(profile_dir, "warning6.sso"), overwrite = TRUE)
+#Now rerun profile plotting and tables to use the base model instead of the profiled base model
+baserep <- SS_output(here('models',base_model))
+profilemodels <- r4ss::SSgetoutput(dirvec = profile_dir, keyvec = c(5:1,6:11)) #make sure order follows order of parameters from runs
+vec_val = as.vector(unlist(lapply(profilemodels, FUN = function(x) {
+  x$parameters[x$parameters$Label=='SR_LN(R0)',"Value"] 
+})))
+profilesummary <- r4ss::SSsummarize(profilemodels) 
+nwfscDiag::profile_plot(profile_dir, rep = baserep, para = "SR_LN(R0)", profilesummary)
+nwfscDiag::get_summary(profile_dir, para = "SR_LN(R0)", vec = vec_val, name = "profile_SR_LN(R0)", profilemodels, profilesummary)
+
+
 # sigmaR profile -------------------------------------------------------
 
 profile.settings <- get_settings_profile(parameters = 'SR_sigmaR',
