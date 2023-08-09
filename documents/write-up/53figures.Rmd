@@ -6,7 +6,7 @@
 
 ![Map of management and the 2023 assessment area along with fleet spatial structure and survey ranges for `r spp` off the U.S. West Coast \label{fig:map}](../figures/assessment_map.png){width="100%," height="100%," alt="Map of U.S. West Coast showing indicating coastwide management, assessment, and survey structure, and state-specific fleet structure"}
 
-![Historical catch reconstruction for `r spp` off the U.S. West Coast from 1892-2022 by fleet (TWL = trawl, NTWL = non-trawl, Rec = recreational, ASHOP = at-sea hake, FOR = foreign) \label{fig:catches}](../figures/catch2 landings stacked_custom.png){width="100%," height="100%," alt="Stacked bar plot showing catches are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
+![Total removals for `r spp` off the U.S. West Coast from 1892-2022 by fleet (TWL = trawl, NTWL = non-trawl, Rec = recreational, ASHOP = at-sea hake, FOR = foreign) \label{fig:catches}](../figures/catch2 landings stacked_custom.png){width="100%," height="100%," alt="Stacked bar plot showing total removals are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
 
 ![Illustration of types of data used for each fleet within the assessment for `r spp` off the U.S. West Coast \label{fig:data-plot}](../figures/data_plot_custom.png){width="100%," height="100%," alt="Horizontal bar plot showing data types available by year for each fleet. Commerical catches started in the early 1900s, and recreational in the 1920s for California and around 1970 for other states. Commercial and recreational composition data started in the 1970s and 1980s, with fewer years of age data compared to lengths. Fishery independent indices and composition data started in the 1980s"}
 
@@ -156,7 +156,7 @@ label = 'noncomm-selex-male')
 
 ![Estimated time series of age-0 recruits (1000s) \label{fig:recruits}](../figures/plots/ts11_Age-0_recruits_(1000s)_with_95_asymptotic_intervals.png){width="100%," alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
 
-![Estimated time series of recruitment deviations (circles) and 95% confidence intervals (whiskers) for the main recruitment deviations (black) and early deviations (blue) \label{fig:rec-devs}](../figures/plots/recdevs2_withbars.png){width="100%," alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
+![Estimated time series of recruitment deviations (circles) and 95% confidence intervals (whiskers) for the main recruitment deviations (black) and early or forecast deviations (blue) \label{fig:rec-devs}](../figures/plots/recdevs2_withbars.png){width="100%," alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
 
 ![Stock-recruit curve with labels on first, last, and years with log-deviations greater than 0.50. Point colors indicate year, with warmer colors indicating earlier years and cooler colors in showing later years \label{fig:bh-curve}](../figures/plots/SR_curve2.png){width="100%," alt="Figure showing lowering of spawning output with recruits in early years generally falling above the curve and recruits in recent years falling below the time series"}
 
