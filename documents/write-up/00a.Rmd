@@ -38,7 +38,7 @@ load("00opts.Rdata")
 
 spp = 'canary rockfish'
 Spp = 'Canary rockfish'
-spp_latin = 'Sebastes pinnigar'
+spp_latin = 'Sebastes pinniger'
 model_dir = file.path(stringr::str_split_1(getwd(), '/doc')[1], 
                       "models", "7_3_5_reweight")
 
