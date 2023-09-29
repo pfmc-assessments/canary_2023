@@ -533,6 +533,42 @@ colnames(out)<-col_names
 write.csv(out, here('documents','tables','projections.csv'), row.names = FALSE)
 
 
+# Projection table for Pstar = 0.4 model ----------------------------------------------------
+
+pstar0.4_model <- SS_output(here('models','decision_tables',"base_0.4"))
+SSexecutivesummary(pstar0.4_model)
+
+tab = readr::read_csv(here('models','decision_tables',"base_0.4","tables","g_Projections_ES.csv")) |> data.frame()
+man = readr::read_csv(here('data/ACLs.csv')) |> data.frame()
+
+out = cbind(tab$Year,
+            c(round(man[man$YEAR %in% c(2023, 2024) & man$SPECIFICATION_TYPE == "OFL", "VAL"],0), rep("-",10)),
+            c(round(man[man$YEAR %in% c(2023, 2024) & man$SPECIFICATION_TYPE == "ABC", "VAL"],0), rep("-",10)),
+            c(round(man[man$YEAR %in% c(2023, 2024) & man$SPECIFICATION_TYPE == "ACL", "VAL"],0), rep("-",10)),
+            c(round(tab[1:2,'ABC.Catch..mt.'],2), rep("-",10)),
+            c(rep("-",2), round(tab[3:12,"Predicted.OFL..mt."], 2)),
+            c(rep("-",2), PEPtools::get_buffer(2023:2034,0.5,0.40)[-c(1,2),2]),
+            c(rep("-",2), round(round(tab[3:12,'Predicted.OFL..mt.'],2)*PEPtools::get_buffer(2023:2034,0.5,0.40)[-c(1,2),2],2)),  
+            c(rep("-",2), round(tab[3:12,'ABC.Catch..mt.'],2)),
+            round(tab[ ,5:ncol(tab)], 2))
+
+col_names = c('Year',
+              'Adopted OFL (mt)',
+              'Adopted ABC (mt)',
+              'Adopted ACL (mt)',
+              "Assumed removals (mt)",
+              "OFL (mt)",
+              "Buffer",
+              "ABC",
+              "ACL",
+              "Spawning Output",
+              "Fraction Unfished")
+
+colnames(out)<-col_names
+
+write.csv(out, here('models','decision_tables',"base_0.4","tables",'canary_projections_pstar0.4.csv'), row.names = FALSE)
+
+
 
 #Sample sizes figures for STAR presentation -----------------------------------
 
