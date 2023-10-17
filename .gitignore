@@ -89,6 +89,7 @@ suggested_tuning.ss
 *.log
 *.out
 *.tex
+!documents/tables/*.tex
 *.upa
 *.upb
 *.md

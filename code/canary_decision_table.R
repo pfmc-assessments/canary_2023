@@ -174,16 +174,16 @@ fixed at the prior estimate (Single M; low state), estimated as age-invariant (b
 tab <- table_decision(
   caption = caption,
   label = "es-decision",
-  list(low40, base40, high40),
-  list(low45, base45, high45)
+  list(low45, base45, high45),
+  list(low40, base40, high40)
 )
 writeLines(tab,here('documents',"tables", "decision_table_es.tex"))
 
 tab <- table_decision(
   caption = caption,
   label = "dec-tab",
-  list(low40, base40, high40),
-  list(low45, base45, high45)
+  list(low45, base45, high45),
+  list(low40, base40, high40)
 )
 writeLines(tab,here('documents',"tables", "decision_table.tex"))
 
