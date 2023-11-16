@@ -363,7 +363,7 @@ readr::read_csv(here('documents','tables','data-weight-compare.csv')) |>
 ```{r, results = 'asis'}
 options(knitr.kable.NA = '')
 readr::read_csv(file.path(model_dir, "tables", "e_ReferencePoints_ES.csv")) |>
-  knitr::kable(caption = 'Summary of reference points and management quantities, including estimates of 95 percent intervals',
+  knitr::kable(caption = 'Summary of reference points and management quantities, including estimates of 95 percent intervals.',
                label = 'ref-pts',
                format = 'latex',
                col.names = c("Category", "Estimate", "Lower Interval", "Upper Interval"),
@@ -381,8 +381,23 @@ readr::read_csv(file.path(model_dir, "tables", "e_ReferencePoints_ES.csv")) |>
 #options(knitr.kable.NA = '')
 readr::read_csv(here('documents','tables','projections.csv'), na = "-") |>
   data.frame() |>
-  table_format(caption = "Projections of estimated OFL (mt), ABC (mt), resulting ACLs (mt) based on 40-10 rule and applied buffers, and estimated spawning output in millions of eggs, and spawning output relative to unfished for 2025-2034, with assumed removals in 2023 and 2024 based on recommended values from the Groundfish Management Team.",
+  table_format(caption = "Projections of estimated OFL (mt), ABC (mt), resulting ACLs (mt) based on the 40-10 rule and applied buffers with $P^* = 0.45$, and estimated spawning output in millions of eggs, and spawning output relative to unfished for 2025-2034, with assumed removals in 2023 and 2024 based on recommended values from the Groundfish Management Team.",
              label = "project",
+             row.names = FALSE,
+             col_names = c('Year', 'Adopted OFL (mt)', 'Adopted ABC (mt)', 'Adopted ACL (mt)', "Assumed removals (mt)", "OFL (mt)", "Buffer", "ABC", "ACL", "Spawning Output", "Fraction Unfished"),
+             landscape = TRUE,
+             custom_width = TRUE,
+             align = "l",
+             col_to_adjust = c(2,3,4,5,10,11),
+             width = c("1.27cm", "1.27cm", "1.27cm", "1.676cm", "1.676cm", "1.676cm"))
+```
+
+```{r, results = 'asis'}
+#options(knitr.kable.NA = '')
+readr::read_csv(here('models','decision_tables',"base_0.4","tables",'canary_projections_pstar0.4.csv'), na = "-") |>
+  data.frame() |>
+  table_format(caption = "Projections of estimated OFL (mt), ABC (mt), resulting ACLs (mt) based on the 40-10 rule and applied buffers with $P^* = 0.40$, and estimated spawning output in millions of eggs, and spawning output relative to unfished for 2025-2034, with assumed removals in 2023 and 2024 based on recommended values from the Groundfish Management Team.",
+             label = "project40",
              row.names = FALSE,
              col_names = c('Year', 'Adopted OFL (mt)', 'Adopted ABC (mt)', 'Adopted ACL (mt)', "Assumed removals (mt)", "OFL (mt)", "Buffer", "ABC", "ACL", "Spawning Output", "Fraction Unfished"),
              landscape = TRUE,
