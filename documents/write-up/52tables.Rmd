@@ -13,7 +13,7 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                  TWL.C, TWL.O, TWL.W,
                  NTWL.C, NTWL.O, NTWL.W,
                  rec.C, rec.O, rec.W.mt.2) |>
-  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the trawl (TWL), non-trawl (NTWL), and recreational (Rec) fleets used in the assessment model. See text for description of sources',
+  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the trawl (TWL), non-trawl (NTWL), and recreational (Rec) fleets used in the assessment model. See text for description of sources.',
                label = 'catches1', 
                format = 'latex',
                col.names = c("Year", 
@@ -37,7 +37,7 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
                  FOR.C, FOR.O, FOR.W,
                  ASHOP.C, ASHOP.O, ASHOP.W) |>
   dplyr::filter(Year > 1965) |>
-  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the foreign (FOR) and at-sea hake (ASHOP) fleets used in the assessment model. Removals before 1966 are zero. See text for description of sources',
+  knitr::kable(caption = 'Total removals (mt) of canary rockfish for the foreign (FOR) and at-sea hake (ASHOP) fleets used in the assessment model. Removals before 1966 are zero. See text for description of sources.',
                label = 'catches2', 
                format = 'latex',
                col.names = c("Year",
@@ -56,7 +56,7 @@ readr::read_csv(here('data/canary_total_removals.csv')) |>
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/ACL_history.csv')) |>
-  knitr::kable(caption = 'The OFL, ABC, ACL, and total mortality (landings + dead discards), all in units of metric tons',
+  knitr::kable(caption = 'The OFL, ABC, ACL, and total mortality (landings + dead discards), all in units of metric tons.',
                label = 'acls', 
                format = 'latex',
                booktabs = TRUE)
@@ -74,7 +74,7 @@ readr::read_csv(here('documents/tables/pacfin_lengths.csv')) |>
          Trips_TWL.C, Lengths_TWL.C, Trips_TWL.O, Lengths_TWL.O, Trips_TWL.W, Lengths_TWL.W, 
          Trips_NTWL.C, Lengths_NTWL.C, Trips_NTWL.O, Lengths_NTWL.O, Trips_NTWL.W, Lengths_NTWL.W) |>
   as.data.frame() |>
-  sa4ss::table_format(caption = "Summary of the number of length samples and trips for commercial trawl (TWL) and non-trawl (NTWL) fleets for California (CA), Oregon (OR), and Washington (WA)",
+  sa4ss::table_format(caption = "Summary of the number of length samples and trips for commercial trawl (TWL) and non-trawl (NTWL) fleets for California (CA), Oregon (OR), and Washington (WA).",
                       label = "comm-sample-lengths",
                       align = 'l',
                       col.names = c("Year",
@@ -96,7 +96,7 @@ readr::read_csv(here('documents/tables/pacfin_ages_fixAges.csv')) |>
          Trips_TWL.C, Ages_TWL.C, Trips_TWL.O, Ages_TWL.O, Trips_TWL.W, Ages_TWL.W,
          Trips_NTWL.C, Ages_NTWL.C, Trips_NTWL.O, Ages_NTWL.O, Trips_NTWL.W, Ages_NTWL.W) |>
   as.data.frame() |>
-  sa4ss::table_format(caption = "Summary of the number of aged samples and trips for commercial trawl (TWL) and non-trawl (NTWL) fleets for California (CA), Oregon (OR), and Washington (WA)",
+  sa4ss::table_format(caption = "Summary of the number of aged samples and trips for commercial trawl (TWL) and non-trawl (NTWL) fleets for California (CA), Oregon (OR), and Washington (WA).",
                       label = "comm-sample-age",
                       align = 'l',
                       col.names = c("Year",
@@ -119,7 +119,7 @@ readr::read_csv(here('documents/tables/pacfin_ages_fixAges.csv')) |>
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('data/Canary_ashop_LengthComps_hauls_and_samples.csv')) |> 
   dplyr::select(Year, OR_nhaul, OR_N, WA_nhaul, WA_N) |>
-  knitr::kable(caption = 'Summary of the number of hauls and length samples for the at-sea hake fleets for Oregon (OR), and Washington (WA). No samples were collected in California',
+  knitr::kable(caption = 'Summary of the number of hauls and length samples for the at-sea hake fleets for Oregon (OR), and Washington (WA). No samples were collected in California.',
                label = 'ashop-sample-lengths', 
                format = 'latex',
                col.names = c("Year", "Hauls OR", "Lengths OR", "Hauls WA", "Lengths WA"),
@@ -131,7 +131,7 @@ readr::read_csv(here('data/Canary_ashop_LengthComps_hauls_and_samples.csv')) |>
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')) |>
   dplyr::select(Year, OR_nhaul, OR_N, WA_nhaul, WA_N) |>
-  knitr::kable(caption = 'Summary of the number of trips and aged samples for the at-sea hake fleets for Oregon (OR), and Washington (WA). No samples were collected in California',
+  knitr::kable(caption = 'Summary of the number of trips and aged samples for the at-sea hake fleets for Oregon (OR), and Washington (WA). No samples were collected in California.',
                label = 'ashop-sample-age', 
                format = 'latex',
                col.names = c("Year", "Hauls OR", "Ages OR", "Hauls WA", "Ages WA"),
@@ -147,7 +147,7 @@ readr::read_csv(here('data/Canary_ashop_AgeComps_hauls_and_samples.csv')) |>
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/rec_lengths.csv')) |>
   dplyr::select(year, N_CA, ntrip_CA, N_OR, ntrip_OR, N_WA, ntrip_WA) |>
-  knitr::kable(caption = 'Summary of the number of length samples and trips for recreational fleets for California (CA), Oregon (OR), and Washington (WA)',
+  knitr::kable(caption = 'Summary of the number of length samples and trips for recreational fleets for California (CA), Oregon (OR), and Washington (WA).',
                label = 'rec-sample-lengths', 
                format = 'latex',
                col.names = c("Year", "Lengths CA", "Trips CA", "Lengths OR", "Trips OR", "Lengths WA", "Trips WA"),
@@ -160,7 +160,7 @@ readr::read_csv(here('documents/tables/rec_lengths.csv')) |>
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/rec_ages.csv')) |>
   dplyr::select(year, O_or_ora_N, O_or_ora_ntrip, W_wa_sport_N, W_wa_sport_ntrip) |>
-  knitr::kable(caption = 'Summary of the number of aged samples and trips for recreational fleets for Oregon (OR), and Washington (WA). No aged samples are available for the California recreational fleet',
+  knitr::kable(caption = 'Summary of the number of aged samples and trips for recreational fleets for Oregon (OR), and Washington (WA). No aged samples are available for the California recreational fleet.',
                label = 'rec-sample-age', 
                format = 'latex',
                col.names = c("Year", "Ages OR", "Trips OR", "Ages WA", "Trips WA"),
@@ -176,7 +176,7 @@ readr::read_csv(here('documents/tables/rec_ages.csv')) |>
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/wcgbts_summary.csv')) |>
-  knitr::kable(caption = 'Summary of canary rockfish samples in the West Coast Groundfish Bottomtrawl Survey (WCGBTS)',
+  knitr::kable(caption = 'Summary of canary rockfish samples in the West Coast Groundfish Bottomtrawl Survey (WCGBTS).',
                label = 'wcgbts', 
                format = 'latex',
                booktabs = TRUE)
@@ -186,7 +186,7 @@ readr::read_csv(here('documents/tables/wcgbts_summary.csv')) |>
 
 ```{r, results='asis', message=FALSE}
 readr::read_csv(here('documents/tables/triennial_summary.csv')) |>
-  knitr::kable(caption = 'Summary of canary rockfish samples in the Triennial Shelf Survey (Triennial)',
+  knitr::kable(caption = 'Summary of canary rockfish samples in the Triennial Shelf Survey (Triennial).',
                label = 'triennial', 
                format = 'latex',
                booktabs = TRUE)
@@ -234,7 +234,7 @@ sa4ss::table_format(parm_table, caption = "List of parameters used in the base m
 
 ```{r like, results='asis', message=FALSE}
 readr::read_csv(file.path(model_dir, "tables", "likelihoods.csv")) |>
-  knitr::kable(caption = 'Likelihood components by source',
+  knitr::kable(caption = 'Likelihood components by source.',
                label = 'like',
                format = 'latex',
                col.names = c("Data type", "Total"),
