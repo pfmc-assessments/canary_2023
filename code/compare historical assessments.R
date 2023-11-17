@@ -205,7 +205,7 @@ box()
 
 # empty plot for recruits
 plot(0, type='n', xlim=c(1892, 2022), ylim=c(0, 10000),
-     axes=FALSE, xaxs='i', yaxs='i', xlab="Year", ylab="Recruits (x1000)")
+     axes=FALSE, xaxs='i', yaxs='i', xlab="Year", ylab="Recruits (millions)")
 axis(1)
 axis(2, at=pretty(c(0,10000)), lab=pretty(c(0,10000))/1000, las=1)
 # add lines for the older assessments
