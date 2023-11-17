@@ -516,6 +516,10 @@ out = cbind(tab$Year,
             c(rep("-",2), round(tab[3:12,'ABC.Catch..mt.'],2)),
             round(tab[ ,5:ncol(tab)], 2))
 
+#Change the values (only 2024 was corrected) based on corrections identified during the September 2023 Council meeting:
+#https://www.pcouncil.org/documents/2023/08/g-8-attachment-1-joint-council-staff-and-nwfsc-report-on-technical-corrections-to-the-2023-2024-harvest-specifications.pdf/
+out[2,c(2,3,4)] <- c(1434, 1296, 1296) 
+
 col_names = c('Year',
               'Adopted OFL (mt)',
               'Adopted ABC (mt)',
@@ -551,6 +555,10 @@ out = cbind(tab$Year,
             c(rep("-",2), round(round(tab[3:12,'Predicted.OFL..mt.'],2)*PEPtools::get_buffer(2023:2034,0.5,0.40)[-c(1,2),2],2)),  
             c(rep("-",2), round(tab[3:12,'ABC.Catch..mt.'],2)),
             round(tab[ ,5:ncol(tab)], 2))
+
+#Change the values (only 2024 was corrected) based on corrections identified during the September 2023 Council meeting:
+#https://www.pcouncil.org/documents/2023/08/g-8-attachment-1-joint-council-staff-and-nwfsc-report-on-technical-corrections-to-the-2023-2024-harvest-specifications.pdf/
+out[2,c(2,3,4)] <- c(1434, 1296, 1296) 
 
 col_names = c('Year',
               'Adopted OFL (mt)',
