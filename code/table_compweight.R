@@ -16,7 +16,7 @@ table_compweight <- function(output,
                                "according to the `Francis' method. `Obs.' refers to the number of unique",
                                "composition vectors included in the likelihood. `N input' and `N adj.'",
                                "refer to the sample sizes of those vectors before and after being adjusted",
-                               "by the the weights."
+                               "by the weights."
                              ),
                              caption_CAAL = "`CAAL' is conditional age-at-length data.",
                              caption_extra = "",
