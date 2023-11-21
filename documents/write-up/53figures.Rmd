@@ -9,7 +9,9 @@ sa4ss::add_figure(
   filein = "../figures/assessment_map.png",
   caption = glue::glue("Map of management and the 2023 assessment area along with fleet spatial structure and survey ranges for {spp} off the U.S. West Coast"),
   alt_caption = "Map of U.S. West Coast showing indicating coastwide management assessment and survey structure and state-specific fleet structure.",
-  label = "map"
+  label = "map",
+  width = 95,
+  height = 95
 )
 ```
 
@@ -1110,7 +1112,9 @@ sa4ss::add_figure(
   filein = "../figures/sensitivities/sens_summary.png",
   caption = "Comparison of the relative change in estimated management quantities as compared to the base model for structural sensitivities. The quantities compared are 1) the estimate of unfished spawning output (SB$_{0}$), spawning output in 2023 (SB$_{2023}$), the relative spawning output in 2023 (SB$_{2023}$/SB$_{0}$), the yield resulting in a population at a spawning potential ratio of 0.5 (Yield$_{SPR=0.50}$), and the fishing mortality associated with that yield (F$_{SPR=0.50}$). The thick lines at the top indicate the 95 percent confidence interval around the point estimate of the quantity from the base model, where each color corresponds with a specific quantity in the legend. Values to the right of the vertical dashed line indicate the quantity was estimated higher than in the base model, whereas values to the left indicate the quantity was estimated lower",
   alt_caption = "Figure summarizing how estimates of derived quantities differ between sensitivity models and base model and increasing francis age and length weights result in the largest changes and most other quantities fall within the 95 percent confidence intervals for the respective derived quantities.",
-  label = "sens-summary"
+  label = "sens-summary",
+  width = 94,
+  height = 94
 )
 ```
 
@@ -1279,7 +1283,9 @@ sa4ss::add_figure(
   filein = "../figures/historical_assessment_smry_biomss.png",
   caption = "Summary biomass (1000s of mt) and age-0 recruitment (millions of fish) of current and past full and update assessments. Summary biomass shows age 5+ canary rockfish with the exception of the 2002 update, which provided summary biomass for age 3+ canary rockfish",
   alt_caption = "Figure showing biomass trajectories showing a decline to 2000 followed by an increase until the end year of the assessment.",
-  label = "hist_compare"
+  label = "hist_compare",
+  width = 97,
+  height = 97
 )
 ```
 
