@@ -43,7 +43,14 @@ knitr::kable(tab,
       font_size = 9)
 ```
 
-![Total removals of canary rockfish over full assessment period by fleet (TWL = trawl, NTWL = non-trawl, Rec = recreational, ASHOP = at-sea hake, FOR = foreign) \label{fig:es-catch}](../figures/catch2 landings stacked_custom.png){width="100%" height="100%" alt="Stacked bar plot showing total removals are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly"}
+```{r, results = "asis"}
+sa4ss::add_figure(
+  filein = "../figures/catch2 landings stacked_custom.png",
+  caption = "Total removals of canary rockfish over full assessment period by fleet (TWL = trawl, NTWL = non-trawl, Rec = recreational, ASHOP = at-sea hake, FOR = foreign)",
+  alt_caption = "Stacked bar plot showing total removals are mainly from trawl fleets; were high from 1940-2000; foreign fishing peaked in the 1970s; and fishing was near zero from 2000-2015 and then increased modestly.",
+  label = "es-catch"
+)
+```
 
 ## Data and assessment {.unnumbered}
 
@@ -79,9 +86,23 @@ readr::read_csv(file.path(model_dir, 'tables', 'b_SSB_ES.csv'), name_repair = 'm
   #              booktabs = TRUE)
 ```
 
-![Estimate of spawning output (millions of eggs) over full assessment period. Dashed lines cover 95% confidence interval. \label{fig:ssb-es}](../figures/plots/ts7_Spawning_output_with_95_asymptotic_intervals_intervals.png){width="100%" height="100%" alt="Figure showing lowering of spawning output into 1990s and slow increase since"}
+```{r, results = "asis"}
+sa4ss::add_figure(
+  filein = "../figures/plots/ts7_Spawning_output_with_95_asymptotic_intervals_intervals.png",
+  caption = "Estimate of spawning output (millions of eggs) over full assessment period. Dashed lines cover 95 percent confidence interval",
+  alt_caption = "Figure showing lowering of spawning output into 1990s and slow increase since.",
+  label = "ssb-es"
+)
+```
 
-![Estimate of spawning output relative to unfished over full assessment period. Dashed lines cover 95% confidence interval. \label{fig:depl-es}](../figures/plots/ts9_Relative_spawning_output_intervals.png){width="100%" height="100%" alt="Figure showing similar trends to spawning output surpassing the 0.4 target around 1980, going below the 0.25 threshold shortly thereafter, and then recovering to between the threshold and target starting in around 2015"}
+```{r, results = "asis"}
+sa4ss::add_figure(
+  filein = "../figures/plots/ts9_Relative_spawning_output_intervals.png",
+  caption = "Estimate of spawning output relative to unfished over full assessment period. Dashed lines cover 95 percent confidence interval",
+  alt_caption = "Figure showing similar trends to spawning output surpassing the 0.4 target around 1980 and going below the 0.25 threshold shortly thereafter and then recovering to between the threshold and target starting in around 2015.",
+  label = "depl-es"
+)
+```
 
 ## Recruitment {.unnumbered}
 
@@ -107,9 +128,23 @@ readr::read_csv(file.path(model_dir, 'tables', 'c_Recr_ES.csv'), name_repair = '
   #              booktabs = TRUE)
 ```
 
-![Estimate of age-0 recruitment (1000s of fish) over full assessment period. Bars represent 95% confidence intervals. \label{fig:rec-es}](../figures/plots/ts11_Age-0_recruits_(1000s)_with_95_asymptotic_intervals.png){width="100%" height="100%" alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
+```{r, results = "asis"}
+sa4ss::add_figure(
+  filein = "../figures/plots/ts11_Age-0_recruits_(1000s)_with_95_asymptotic_intervals.png",
+  caption = "Estimate of age-0 recruitment (1000s of fish) over full assessment period. Bars represent 95 percent confidence intervals",
+  alt_caption = "Figure of recruits with estimated variability peaking in the 1960s and declining through the 1990s and staying not trending until increasing in recent years.",
+  label = "rec-es"
+)
+```
 
-![Estimate of multiplicative devations from stock-recruit relationship (recruitment deviations) over full assessment period. Bars represent 95% confidence intervals. Blue points are early and forecast recruitment deviations, while black points are for the main period. \label{fig:recdev-es}](../figures/plots/recdevs2_withbars.png){width="100%" height="100%" alt="Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years"}
+```{r, results = "asis"}
+sa4ss::add_figure(
+  filein = "../figures/plots/recdevs2_withbars.png",
+  caption = "Estimate of multiplicative devations from stock-recruit relationship (recruitment deviations) over full assessment period. Bars represent 95 percent confidence intervals. Blue points are early and forecast recruitment deviations, while black points are for the main period",
+  alt_caption = "Figure of deviations in recruitment with higher deviations starting in the 1960 through to 2000 that decline through to 2019 until increasing in the most recent years.",
+  label = "recdev-es"
+)
+```
 
 ## Exploitation status {.unnumbered}
 
@@ -135,7 +170,14 @@ readr::read_csv(file.path(model_dir, 'tables', 'd_SPR_ES.csv'), name_repair = 'm
   #              booktabs = TRUE)
 ```
 
-![Estimates of 1-SPR (spawning potential ratio, i.e., fishing intensity) versus spawning output relative to unfished level for full time series. Vertical dashed lines are at 0.25 (limit), 0.4 (target), and 1 (unfished level). Horizontal dashed lines are at 0.5 (target) and 1 (population cannot persist in equilibrium). Arrows point in chronological direction with red to yellow colors representing years early in the assessment period and dark blue representing present-day. Gray oval is 95% confidence ellipse for joint distribution of depletion and fishing intensity in terminal model year (2022), with solid gray vertical and horizontal lines representing 95% confidence interval of each quantity individually. \label{fig:kobe-es}](../figures/plots/SPR4_phase.png){height="100%" width="100%" alt="Figure showing population starts at unfished levels, slowly declines with fishing intensity around target levels until 1970s, then fishing intensity increases and depletion declines below target until around 2000, when fishing intensity rapidly declines and population slowly rebuilds. Around 2015 fishing intensity increases towards target levels with depletion still slightly below target"}
+```{r, results = "asis"}
+sa4ss::add_figure(
+  filein = "../figures/plots/SPR4_phase.png",
+  caption = "Estimates of 1-SPR (spawning potential ratio, i.e., fishing intensity) versus spawning output relative to unfished level for full time series. Vertical dashed lines are at 0.25 (limit), 0.4 (target), and 1 (unfished level). Horizontal dashed lines are at 0.5 (target) and 1 (population cannot persist in equilibrium). Arrows point in chronological direction with red to yellow colors representing years early in the assessment period and dark blue representing present-day. Gray oval is 95 percent confidence ellipse for joint distribution of depletion and fishing intensity in terminal model year (2022), with solid gray vertical and horizontal lines representing 95 percent confidence interval of each quantity individually",
+  alt_caption = "Figure showing population starts at unfished levels and slowly declines with fishing intensity around target levels until 1970s. Fishing intensity then increases and depletion declines below target until around 2000 when fishing intensity rapidly declines and population slowly rebuilds. Around 2015 fishing intensity increases towards target levels with depletion still slightly below target.",
+  label = "kobe-es"
+)
+```
 
 ## Ecosystem considerations {.unnumbered}
 
