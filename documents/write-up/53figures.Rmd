@@ -8,7 +8,7 @@
 sa4ss::add_figure(
   filein = "../figures/assessment_map.png",
   caption = "Map of management and the 2023 assessment area along with fleet spatial structure and survey ranges for `r spp` off the U.S. West Coast",
-  alt_caption = "Map of U.S. West Coast showing indicating coastwide management, assessment, and survey structure, and state-specific fleet structure.",
+  alt_caption = "Map of U.S. West Coast showing indicating coastwide management assessment and survey structure and state-specific fleet structure.",
   label = "fig:map"
 )
 ```
@@ -17,7 +17,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/catch2 landings stacked_custom.png",
   caption = "Total removals for `r spp` off the U.S. West Coast from 1892-2022 by fleet (TWL = trawl, NTWL = non-trawl, Rec = recreational, ASHOP = at-sea hake, FOR = foreign)",
-  alt_caption = "Stacked bar plot showing total removals are mainly from trawl fleets, were high from 1940-2000, foreign fishing peaked in the 1970s, fishing was near zero from 2000-2015, and then increased modestly.",
+  alt_caption = "Stacked bar plot showing total removals are mainly from trawl fleets were high from 1940-2000 foreign fishing peaked in the 1970s fishing was near zero from 2000-2015 and then increased modestly.",
   label = "fig:catches"
 )
 ```
@@ -26,7 +26,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/data_plot_custom.png",
   caption = "Illustration of types of data used for each fleet within the assessment for `r spp` off the U.S. West Coast",
-  alt_caption = "Horizontal bar plot showing data types available by year for each fleet. Commerical catches started in the early 1900s, and recreational in the 1920s for California and around 1970 for other states. Commercial and recreational composition data started in the 1970s and 1980s, with fewer years of age data compared to lengths. Fishery independent indices and composition data started in the 1980s.",
+  alt_caption = "Horizontal bar plot showing data types available by year for each fleet. Commerical catches started in the early 1900s and recreational in the 1920s for California and around 1970 for other states. Commercial and recreational composition data started in the 1970s and 1980s with fewer years of age data compared to lengths. Fishery independent indices and composition data started in the 1980s.",
   label = "fig:data-plot"
 )
 ```
@@ -35,7 +35,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lendat_bubflt1mkt0_page2.png",
   caption = "Length composition data for the California trawl fishery for females (red), males (blue), and unsexed (black)",
-  alt_caption = "Bubble plot of California trawl length compositions for males, females, and unsexed fish.",
+  alt_caption = "Bubble plot of California trawl length compositions for males females and unsexed fish.",
   label = "fig:CA_twl_lencomp"
 )
 ```
@@ -53,7 +53,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lendat_bubflt3mkt0_page3.png",
   caption = "Length composition data for the Washington trawl fishery for females (red), males (blue), and unsexed (black)",
-  alt_caption = "Bubble plot of Washington trawl length compositions for males, females, and unsexed fish.",
+  alt_caption = "Bubble plot of Washington trawl length compositions for males females and unsexed fish.",
   label = "fig:WA_twl_lencomp"
 )
 ```
@@ -62,7 +62,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lendat_bubflt4mkt0_page2.png",
   caption = "Length composition data for the California non-trawl fishery for females (red), males (blue), and unsexed (black)",
-  alt_caption = "Bubble plot of California non-trawl length compositions for males, females, and unsexed fish.",
+  alt_caption = "Bubble plot of California non-trawl length compositions for males females and unsexed fish.",
   label = "fig:CA_ntwl_lencomp"
 )
 ```
@@ -188,7 +188,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lendat_bubflt8mkt0_page2.png",
   caption = "Length composition data for the Oregon recreational fishery for females (red), males (blue), and unsexed (black)",
-  alt_caption = "Bubble plot of Oregon recreational length compositions for males, females, and unsexed fish.",
+  alt_caption = "Bubble plot of Oregon recreational length compositions for males females and unsexed fish.",
   label = "fig:OR_rec_lencomp"
 )
 ```
@@ -197,7 +197,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lendat_bubflt9mkt0_page2.png",
   caption = "Length composition data for the Washington recreational fishery for females (red), males (blue), and unsexed (black)",
-  alt_caption = "Bubble plot of Washington non-trawl length compositions for males, females, and unsexed fish.",
+  alt_caption = "Bubble plot of Washington non-trawl length compositions for males females and unsexed fish.",
   label = "fig:WA_rec_lencomp"
 )
 ```
@@ -206,7 +206,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/comp_lendat__aggregated_across_time_custom.png",
   caption = "Aggregate length composition data for the three fisheries with bimodal patterns in length",
-  alt_caption = "Aggregate plots of length compositions for males, females, and unsexed fish across all length distributions.",
+  alt_caption = "Aggregate plots of length compositions for males females and unsexed fish across all length distributions.",
   label = "fig:agglencomp"
 )
 ```
@@ -232,8 +232,8 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/cpue_map.png",
-  caption = "Map of \gls{s-wcgbt} stations and density of catches of `r spp`. Faint gray dots are tows without `r spp`. Larger redder circles indicate higher catch rates",
-  alt_caption = "Map of survey tows of canary rockfish showing highest catch rates in northern Oregon and especially Washington, with catches tapering off south of San Francisco Bay and virtually no catches south of Point Conception.",
+  caption = "Map of \\gls{s-wcgbt} stations and density of catches of `r spp`. Faint gray dots are tows without `r spp`. Larger redder circles indicate higher catch rates",
+  alt_caption = "Map of survey tows of canary rockfish showing highest catch rates in northern Oregon and especially Washington with catches tapering off south of San Francisco Bay and virtually no catches south of Point Conception.",
   label = "fig:wcgbts-tows"
 )
 ```
@@ -241,7 +241,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lendat_bubflt28mkt0.png",
-  caption = "Length composition data for the \gls{s-wcgbt} for females (red) and males (blue)",
+  caption = "Length composition data for the \\gls{s-wcgbt} for females (red) and males (blue)",
   alt_caption = "Bubble plot of WCGBTS length compositions for males and females showing a wide range of lengths over time.",
   label = "fig:wcgbts_lencomp"
 )
@@ -271,7 +271,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/compare_maturity.png",
   caption = "Maturity at age relationship used for the current assessment (black), compared to the last benchmark assessment (red). Sample sizes are shown as gray circles",
-  alt_caption = "Two logistic curves for 2015 and 2023, 2015 is shifted left of 2023 and asymptotes below 1, 2023 asymptotes at 1.",
+  alt_caption = "Two logistic curves for 2015 and 2023. The 2015 curve is shifted left of 2023 and asymptotes below 1 while the 2023 curve asymptotes at 1.",
   label = "fig:compare_maturity"
 )
 ```
@@ -280,7 +280,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/compare_fecundity.png",
   caption = "Fecundity at length relationship",
-  alt_caption = "Two exponential curves for 2015 and 2023, 2023 is lower.",
+  alt_caption = "Two exponential curves for 2015 and 2023. The 2023 curve is lower.",
   label = "fig:compare_fecundity"
 )
 ```
@@ -289,7 +289,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/WL.png",
   caption = "Weight-length relationship for male and females",
-  alt_caption = "Exponential weight-length curves for males and females nearly overlapping, with relatively small spread of data.",
+  alt_caption = "Exponential weight-length curves for males and females nearly overlapping with relatively small spread of data.",
   label = "fig:WL"
 )
 ```
@@ -306,8 +306,8 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/growth_diffs.png",
-  caption = "Externally estimated age-length relationship by Sex and latitude, where "North" is latitudes greater than $43.3672^\circ$N (Coos Bay, OR) for females (red), males (blue), and unsexed (yellow). Note that in the base model growth is estimated internally and is assumed constant across latitudes",
-  alt_caption = "Figure showing age-length data and four fitted curves for north and south males and females. Females are larger than males, but northern individuals are only slightly larger than southern individuals.",
+  caption = "Externally estimated age-length relationship by Sex and latitude, where 'North' is latitudes greater than $43.3672^\\circ$N (Coos Bay, OR) for females (red), males (blue), and unsexed (yellow). Note that in the base model growth is estimated internally and is assumed constant across latitudes",
+  alt_caption = "Figure showing age-length data and four fitted curves for north and south males and females. Females are larger than males but northern individuals are only slightly larger than southern individuals.",
   label = "fig:spatial_AL"
 )
 ```
@@ -315,7 +315,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/age_fraction_female.png",
-  caption = "Sex ratio by age in the \gls{s-wcgbt} for females (red), males (blue) and unsexed (green)",
+  caption = "Sex ratio by age in the \\gls{s-wcgbt} for females (red), males (blue) and unsexed (green)",
   alt_caption = "Figure showing fraction female close to 50 percent until around age 20 when it becomes almost all male.",
   label = "fig:sex_ratio_age"
 )
@@ -324,7 +324,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/length_fraction_female.png",
-  caption = "Sex ratio by length in the \gls{s-wcgbt} for females (red), males (blue) and unsexed (green)",
+  caption = "Sex ratio by length in the \\gls{s-wcgbt} for females (red), males (blue) and unsexed (green)",
   alt_caption = "Figure showing fraction female close to 50 percent until around 45 when it becomes almost all female.",
   label = "fig:sex_ratio_length"
 )
@@ -501,7 +501,7 @@ label = "unavail-bio")
 sa4ss::add_figure(
   filein = "../figures/plots/ts11_Age-0_recruits_(1000s)_with_95_asymptotic_intervals.png",
   caption = "Estimated time series of age-0 recruits (1000s)",
-  alt_caption = "Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years.",
+  alt_caption = "Figure recruits with estimated variability peaking in the 1960s declining through the 1990s and staying not trending until increasing in recent years.",
   label = "fig:recruits"
 )
 ```
@@ -510,7 +510,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/recdevs2_withbars.png",
   caption = "Estimated time series of recruitment deviations (circles) and 95 percent confidence intervals (whiskers) for the main recruitment deviations (black) and early or forecast deviations (blue)",
-  alt_caption = "Figure recruits with estimated variability peaking in the 1960s, declining through the 1990s, and staying not trending until increasing in recent years.",
+  alt_caption = "Figure recruits with estimated variability peaking in the 1960s declining through the 1990s and staying not trending until increasing in recent years.",
   label = "fig:rec-devs"
 )
 ```
@@ -549,7 +549,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt1mkt0_page2.png",
-  caption = "Pearson residuals for lengths in the California trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black)",
+  caption = "Pearson residuals for lengths in the California trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red), males (blue), and unsexed (black)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years.",
   label = "fig:len-pearson1"
 )
@@ -567,7 +567,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt2mkt0_page3.png",
-  caption = "Pearson residuals for lengths in the Oregon trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected)for females (red) and males (blue)",
+  caption = "Pearson residuals for lengths in the Oregon trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected)for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years.",
   label = "fig:len-pearson2"
 )
@@ -577,7 +577,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_data_weighting_TA1.8_OR_TWL.png",
   caption = "Mean length for the Oregon trawl fleet with 95 percent confidence intervals based on current samples sizes",
-  alt_caption = "Figure of mean length with uncertainty around each point showing a decrease early years, stable until 2010, and increasing since.",
+  alt_caption = "Figure of mean length with uncertainty around each point showing a decrease during early years and stable until 2010 and increasing since.",
   label = "fig:mean-len-fit2"
 )
 ```
@@ -585,7 +585,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt3mkt0_page3.png",
-  caption = "Pearson residuals for lengths in the Washington trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black)",
+  caption = "Pearson residuals for lengths in the Washington trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red), males (blue), and unsexed (black)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern.",
   label = "fig:len-pearson3"
 )
@@ -603,7 +603,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt4mkt0_page2.png",
-  caption = "Pearson residuals for lengths in the California non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black).",
+  caption = "Pearson residuals for lengths in the California non-trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red), males (blue), and unsexed (black).",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern.",
   label = "fig:len-pearson4"
 )
@@ -621,7 +621,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt5mkt0.png",
-  caption = "Pearson residuals for lengths in the Oregon non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black)",
+  caption = "Pearson residuals for lengths in the Oregon non-trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red), males (blue), and unsexed (black)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern and indicating bimodality in recent years.",
   label = "fig:len-pearson5"
 )
@@ -631,7 +631,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_data_weighting_TA1.8_OR_NTWL.png",
   caption = "Mean length for the Oregon non-trawl fleet with 95 percent confidence intervals based on current samples sizes",
-  alt_caption = "Figure with uncertainty around each point of sparse mean length data declining to 2000, experiencing a shift downward until 2020, after which length shifts upward.",
+  alt_caption = "Figure with uncertainty around each point of sparse mean length data declining to 2000 and experiencing a shift downward until 2020 after which length shifts upward.",
   label = "fig:mean-len-fit5"
 )
 ```
@@ -639,7 +639,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt6mkt0.png",
-  caption = "Pearson residuals for lengths in the Washington non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for lengths in the Washington non-trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern.",
   label = "fig:len-pearson6"
 )
@@ -657,7 +657,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt7mkt0_page2.png",
-  caption = "Pearson residuals for lengths in the California recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for unsexed (black)",
+  caption = "Pearson residuals for lengths in the California recreational fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for unsexed (black)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern.",
   label = "fig:len-pearson7"
 )
@@ -675,7 +675,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt8mkt0_page2.png",
-  caption = "Pearson residuals for lengths in the Oregon recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black)",
+  caption = "Pearson residuals for lengths in the Oregon recreational fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red), males (blue), and unsexed (black)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern excpet for some underfitting of large length between 1992 and 2008.",
   label = "fig:len-pearson8"
 )
@@ -693,7 +693,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt9mkt0_page2.png",
-  caption = "Pearson residuals for lengths in the Washington recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red), males (blue), and unsexed (black)",
+  caption = "Pearson residuals for lengths in the Washington recreational fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red), males (blue), and unsexed (black)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern and indicating bimodality in recent years.",
   label = "fig:len-pearson9"
 )
@@ -711,7 +711,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt11mkt0.png",
-  caption = "Pearson residuals for lengths in the Oregon at-sea hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for lengths in the Oregon at-sea hake fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern.",
   label = "fig:len-pearson11"
 )
@@ -729,7 +729,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt12mkt0.png",
-  caption = "Pearson residuals for lengths in the Washington at-sea hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females(red) and males (blue)",
+  caption = "Pearson residuals for lengths in the Washington at-sea hake fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females(red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with underfitting of larger lengths in the early 2000s.",
   label = "fig:len-pearson12"
 )
@@ -747,7 +747,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt28mkt0.png",
-  caption = "Pearson residuals for lengths in the West Coast Groundfish Bottomtrawl Survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for lengths in the West Coast Groundfish Bottomtrawl Survey. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern.",
   label = "fig:len-pearson28"
 )
@@ -765,7 +765,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt29mkt0.png",
-  caption = "Pearson residuals for lengths in the early Triennial Survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for lengths in the early Triennial Survey. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern.",
   label = "fig:len-pearson29"
 )
@@ -783,7 +783,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_lenfit_residsflt30mkt0.png",
-  caption = "Pearson residuals for lengths in the late Triennial Survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for lengths in the late Triennial Survey. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern.",
   label = "fig:len-pearson30"
 )
@@ -812,7 +812,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt1mkt0_page2.png",
-  caption = "Pearson residuals for ages in the California trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the California trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with limited pattern except from not fitting decline as steeply in early years.",
   label = "fig:age-pearson1"
 )
@@ -830,7 +830,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt2mkt0_page2.png",
-  caption = "Pearson residuals for ages in the Oregon trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the Oregon trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with underfitting old samples in the early and recent years.",
   label = "fig:age-pearson2"
 )
@@ -848,7 +848,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt3mkt0_page3.png",
-  caption = "Pearson residuals for ages in the Washington trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the Washington trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with overfitting of young samples in the early and years and underfitting moderatlely old samples in the 2000s.",
   label = "fig:age-pearson3"
 )
@@ -866,7 +866,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt4mkt0.png",
-  caption = "Pearson residuals for ages in the California non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the California non-trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals from sparse samples.",
   label = "fig:age-pearson4"
 )
@@ -884,7 +884,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt5mkt0.png",
-  caption = "Pearson residuals for ages in the Oregon non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the Oregon non-trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals from sparse samples.",
   label = "fig:age-pearson5"
 )
@@ -902,7 +902,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt6mkt0.png",
-  caption = "Pearson residuals for ages in the Washington non-trawl fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the Washington non-trawl fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals without trends.",
   label = "fig:age-pearson6"
 )
@@ -920,7 +920,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt8mkt0.png",
-  caption = "Pearson residuals for ages in the Oregon recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the Oregon recreational fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals underfitting older ages in recent years.",
   label = "fig:age-pearson8"
 )
@@ -938,7 +938,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt9mkt0.png",
-  caption = "Pearson residuals for ages in the Washington recreational fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the Washington recreational fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals overfitting younger ages.",
   label = "fig:age-pearson9"
 )
@@ -956,7 +956,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt11mkt0.png",
-  caption = "Pearson residuals for ages in the Oregon at-sea hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the Oregon at-sea hake fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with little trend.",
   label = "fig:age-pearson11"
 )
@@ -974,7 +974,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_agefit_residsflt12mkt0.png",
-  caption = "Pearson residuals for ages in the Washington at-sea hake fleet. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) for females (red) and males (blue)",
+  caption = "Pearson residuals for ages in the Washington at-sea hake fleet. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) for females (red) and males (blue)",
   alt_caption = "Figure showing bubble plot of Pearson residuals with little trend.",
   label = "fig:age-pearson12"
 )
@@ -994,7 +994,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/comp_condAALfit_residsflt28mkt0_page1_custom.png",
-  caption = "Pearson residuals for conditional age-at-length in the West Coast Groundfish Bottomtrawl Survey (plot 1 of 2). Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male)",
+  caption = "Pearson residuals for conditional age-at-length in the West Coast Groundfish Bottomtrawl Survey (plot 1 of 2). Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) and are separate for each sex (red female, and blue male)",
   alt_caption = "Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 2003-2012.",
   label = "fig:caal-pearson28_1"
 )
@@ -1003,7 +1003,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/comp_condAALfit_residsflt28mkt0_page2_custom.png",
-  caption = "Pearson residuals for conditional age-at-length in the West Coast Groundfish Bottomtrawl Survey (plot 2 of 2). Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male)",
+  caption = "Pearson residuals for conditional age-at-length in the West Coast Groundfish Bottomtrawl Survey (plot 2 of 2). Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) and are separate for each sex (red female, and blue male)",
   alt_caption = "Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 2013-2022.",
   label = "fig:caal-pearson28_2"
 )
@@ -1012,7 +1012,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_condAALfit_residsflt29mkt0.png",
-  caption = "Pearson residuals for conditional age-at-length in the early Triennial survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male)",
+  caption = "Pearson residuals for conditional age-at-length in the early Triennial survey. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) and are separate for each sex (red female, and blue male)",
   alt_caption = "Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 1980-1992.",
   label = "fig:caal-pearson29"
 )
@@ -1021,7 +1021,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/comp_condAALfit_residsflt30mkt0.png",
-  caption = "Pearson residuals for conditional age-at-length in the late Triennial survey. Closed bubbles are positive residuals (observed \> expected) and open bubbles are negative residuals (observed \< expected) and are separate for each sex (red female, and blue male)",
+  caption = "Pearson residuals for conditional age-at-length in the late Triennial survey. Closed bubbles are positive residuals (observed > expected) and open bubbles are negative residuals (observed < expected) and are separate for each sex (red female, and blue male)",
   alt_caption = "Figure showing bubble plot of Pearson residuals for males and females with pattern shaped like the age-length relationship for years 1996-2004.",
   label = "fig:caal-pearson30"
 )
@@ -1032,7 +1032,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/index2_cpuefit_WCGBTS.png",
-  caption = "Fit of model to \gls{s-wcgbt}. Lines represent input 95 percent confidence interval of survey index",
+  caption = "Fit of model to \\gls{s-wcgbt}. Lines represent input 95 percent confidence interval of survey index",
   alt_caption = "Figure showing model generally fitting survey data well.",
   label = "fig:wcgbts-fit"
 )
@@ -1041,7 +1041,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/index2_cpuefit_Tri_early.png",
-  caption = "Fit of model to early \gls{s-tri}. Lines represent input 95 percent confidence interval of survey index",
+  caption = "Fit of model to early \\gls{s-tri}. Lines represent input 95 percent confidence interval of survey index",
   alt_caption = "Figure showing model over and then underestimating first two out of five years of generally declining survey index.",
   label = "fig:earlytri-fit"
 )
@@ -1050,7 +1050,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/plots/index2_cpuefit_Tri_late.png",
-  caption = "Fit of model to late \gls{s-tri}. Lines represent input 95 percent confidence interval of survey index",
+  caption = "Fit of model to late \\gls{s-tri}. Lines represent input 95 percent confidence interval of survey index",
   alt_caption = "Figure showing model very well fitting slow increase of survey index.",
   label = "fig:latetri-fit"
 )
@@ -1089,7 +1089,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/ts9_Relative_spawning_output_intervals.png",
   caption = "Estimated time series of spawning output relative to unfished with 95 percent confidence interval",
-  alt_caption = "Figure showing similar trends to spawning output surpassing the 0.4 target around 1980, going below the 0.25 threshold shortly thereafter, and then recovering to between the threshold and target starting in around 2015.",
+  alt_caption = "Figure showing similar trends to spawning output surpassing the 0.4 target around 1980; going below the 0.25 threshold shortly thereafter; and then recovering to between the threshold and target starting in around 2015.",
   label = "fig:depl"
 )
 ```
@@ -1098,7 +1098,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../figures/plots/SPR2_minusSPRseries.png",
   caption = "Estimated time series of fishing intensity (1-SPR)",
-  alt_caption = "Figure showing fishing intensity increasing in the 1940, surpassing 0.5 consistently in the 1960s, declining greatly in 2000 and reching near 0.4 in 2022.",
+  alt_caption = "Figure showing fishing intensity increasing in the 1940; surpassing 0.5 consistently in the 1960s; declining greatly in 2000; and reching near 0.4 in 2022.",
   label = "fig:spr"
 )
 ```
@@ -1117,8 +1117,8 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/sensitivities/datacompare2_spawnbio_uncertainty.png",
-  caption = "Comparison of spawning output for data sensitivities. Scenarios are described in section \@ref(data-choices). Blue band represents 95 percent confidence interval from the base model",
-  alt_caption = "Figure showing spawning output for all data sensitivities is similar to the base model except for adding Canadian catches, which results in a higher overall population scale.",
+  caption = "Comparison of spawning output for data sensitivities. Scenarios are described in section \\ref{data-choices}. Blue band represents 95 percent confidence interval from the base model",
+  alt_caption = "Figure showing spawning output for all data sensitivities is similar to the base model except for adding Canadian catches which results in a higher overall population scale.",
   label = "fig:data-ssb-compare"
 )
 ```
@@ -1126,7 +1126,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/sensitivities/datacompare4_Bratio_uncertainty.png",
-  caption = "Comparison of spawning output relative to unfished for data sensitivities. Scenarios are described in section \@ref(data-choices). Blue band represents 95 percent confidence interval from the base model",
+  caption = "Comparison of spawning output relative to unfished for data sensitivities. Scenarios are described in section \\ref{data-choices}. Blue band represents 95 percent confidence interval from the base model",
   alt_caption = "Figure showing spawning output for all data sensitivities is similar to the base model.",
   label = "fig:data-bratio-compare"
 )
@@ -1135,7 +1135,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/sensitivities/weightingcompare2_spawnbio_uncertainty.png",
-  caption = "Comparison of spawning output for data weighting sensitivities. Scenarios are described in section \@ref(data-weighting). Blue band represents 95 percent confidence interval from the base model",
+  caption = "Comparison of spawning output for data weighting sensitivities. Scenarios are described in section \\ref{data-weighting}. Blue band represents 95 percent confidence interval from the base model",
   alt_caption = "Figure showing major differences in spawning output when increasing length or age weights relative to the base model.",
   label = "fig:weight-ssb-compare"
 )
@@ -1144,8 +1144,8 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/sensitivities/weightingcompare4_Bratio_uncertainty.png",
-  caption = "Comparison of spawning output relative to unfished for data weighting sensitivities. Scenarios are described in section \@ref(data-weighting). Blue band represents 95 percent confidence interval from the base model",
-  alt_caption = "Figure showing spawning output for all data sensitivities is similar to the base model except for adding Canadian catches, which results in a higher overall population scale.",
+  caption = "Comparison of spawning output relative to unfished for data weighting sensitivities. Scenarios are described in section \\ref{data-weighting}. Blue band represents 95 percent confidence interval from the base model",
+  alt_caption = "Figure showing spawning output for all data sensitivities is similar to the base model except for adding Canadian catches which results in a higher overall population scale.",
   label = "fig:weight-bratio-compare"
 )
 ```
@@ -1153,7 +1153,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/sensitivities/selectivitycompare2_spawnbio_uncertainty.png",
-  caption = "Comparison of spawning output for selectivity and catchability sensitivities. Scenarios are described in section \@ref(selectivity-and-catchability). Blue band represents 95 percent confidence interval from the base model",
+  caption = "Comparison of spawning output for selectivity and catchability sensitivities. Scenarios are described in section \\ref{selectivity-and-catchability}. Blue band represents 95 percent confidence interval from the base model",
   alt_caption = "Figure showing no sex selectivity leads to major increase in spawning output early in the time series.",
   label = "fig:selec-ssb-compare"
 )
@@ -1162,7 +1162,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/sensitivities/selectivitycompare4_Bratio_uncertainty.png",
-  caption = "Comparison of spawning output relative to unfished for selectivity and catchability sensitivities. Scenarios are described in section \@ref(selectivity-and-catchability). Blue band represents 95 percent confidence interval from the base model",
+  caption = "Comparison of spawning output relative to unfished for selectivity and catchability sensitivities. Scenarios are described in section \\ref{selectivity-and-catchability}. Blue band represents 95 percent confidence interval from the base model",
   alt_caption = "Figure showing no sex selectivity leads to much lower present-day depletion below the minimum size size threshold.",
   label = "fig:selec-bratio-compare"
 )
@@ -1171,8 +1171,8 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/sensitivities/productivitycompare2_spawnbio_uncertainty.png",
-  caption = "Comparison of spawning output for productivity sensitivities. Scenarios are described in section \@ref(population-productivity). Blue band represents 95 percent confidence interval from the base model",
-  alt_caption = "Figure showing spawning output changes most with a single natural mortality rate where historical spawning output is higher, and estimating male natural mortality, where present-day spawning output is higher.",
+  caption = "Comparison of spawning output for productivity sensitivities. Scenarios are described in section \\ref{population-productivity}. Blue band represents 95 percent confidence interval from the base model",
+  alt_caption = "Figure showing spawning output changes most with a single natural mortality rate where historical spawning output is higher; and estimating male natural mortality where present-day spawning output is higher.",
   label = "fig:prod-ssb-compare"
 )
 ```
@@ -1180,8 +1180,8 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/sensitivities/productivitycompare4_Bratio_uncertainty.png",
-  caption = "Comparison of spawning output relative to unfished for productivity sensitivities. Scenarios are described in section \@ref(population-productivity). Blue band represents 95 percent confidence interval from the base model",
-  alt_caption = "Figure showing present-day spawning depletion is much higher for most structural senstivities related to productivity, except for a single natural mortality which has much lower depletion.",
+  caption = "Comparison of spawning output relative to unfished for productivity sensitivities. Scenarios are described in section \\ref{population-productivity}. Blue band represents 95 percent confidence interval from the base model",
+  alt_caption = "Figure showing present-day spawning depletion is much higher for most structural senstivities related to productivity except for a single natural mortality which has much lower depletion.",
   label = "fig:prod-bratio-compare"
 )
 ```
@@ -1206,7 +1206,7 @@ label = 'retro_relbio')
 sa4ss::add_figure(
   filein = "../../models/7_3_5_reweight_phases_profile_SR_LN(R0)_prior_like_0/piner_panel_SR_LN(R0).png",
   caption = "Likelihood profile showing support from various data sources for different values of ln(R$_{0}$), the natural logarithm of unfished recruitment, relative to the base model. Values associated with likelihoods that fall below the red dashed line are within the 95 percent chi-squared confidence interval",
-  alt_caption = "Four-panel figure showing influence of different likelihood components and different fleets within age, length, and survey likelihood components on profile of unfished recruitment.",
+  alt_caption = "Four-panel figure showing influence of different likelihood components and different fleets within age length and survey likelihood components on profile of unfished recruitment.",
   label = "fig:r0-profile"
 )
 ```
@@ -1215,7 +1215,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../../models/7_3_5_reweight_phases_profile_SR_LN(R0)_prior_like_0/parameter_panel_SR_LN(R0).png",
   caption = "Likelihood profile of ln(R$_{0}$), and impact of changing ln(R$_{0}$) values from the base model (blue dot) on depletion (top right), unfished spawning output (lower left), and terminal year spawning output (lower right)",
-  alt_caption = "Four-panel figure showing how minimum negative log likelihood, depletion, and spawning output vary with different unfished recruitment parameters.",
+  alt_caption = "Four-panel figure showing how minimum negative log likelihood depletion and spawning output vary with different unfished recruitment parameters.",
   label = "fig:r0-profile2"
 )
 ```
@@ -1224,7 +1224,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../../models/7_3_5_reweight_profile_SR_BH_steep_prior_like_1/piner_panel_SR_BH_steep.png",
   caption = "Likelihood profile showing support from various data sources for different values of steepness, relative to the base model. Change in log-likelihood is relative to the base model. Values associated with likelihoods that fall below the red dashed line are within the 95 percent chi-squared confidence interval",
-  alt_caption = "Four-panel figure showing influence of different likelihood components and different fleets within age, length, and survey likelihood components on profile of stock-recruit steepness.",
+  alt_caption = "Four-panel figure showing influence of different likelihood components and different fleets within age length and survey likelihood components on profile of stock-recruit steepness.",
   label = "fig:h-profile"
 )
 ```
@@ -1233,7 +1233,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../../models/7_3_5_reweight_profile_SR_BH_steep_prior_like_1/parameter_panel_SR_BH_steep.png",
   caption = "Likelihood profile of steepness, and impact of changing steepness values from the base model (blue dot) on depletion (top right), unfished spawning output (lower left), and terminal year spawning output (lower right)",
-  alt_caption = "Four-panel figure showing how minimum negative log likelihood, depletion, and spawning output vary with different steepness parameters.",
+  alt_caption = "Four-panel figure showing how minimum negative log likelihood depletion and spawning output vary with different steepness parameters.",
   label = "fig:h-profile2"
 )
 ```
@@ -1242,7 +1242,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../../models/7_3_5_reweight_profile_NatM_uniform_Fem_GP_1_prior_like_1/piner_panel_NatM_uniform_Fem_GP_1.png",
   caption = "Likelihood profile showing support from various data sources for different values of female natural mortality. Change in log-likelihood is relative to the base model. Values associated the likelihoods that fall below the red dashed line are within the 95 percent chi-squared confidence interval",
-  alt_caption = "Four-panel figure showing influence of different likelihood components and different fleets within age, length, and survey likelihood components on profile of female natural mortality.",
+  alt_caption = "Four-panel figure showing influence of different likelihood components and different fleets within age length and survey likelihood components on profile of female natural mortality.",
   label = "fig:female-m-profile"
 )
 ```
@@ -1251,7 +1251,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../../models/7_3_5_reweight_profile_NatM_uniform_Fem_GP_1_prior_like_1/parameter_panel_NatM_uniform_Fem_GP_1.png",
   caption = "Likelihood profile of female natural mortality, and impact of changing female natural mortality values from the base model (blue dot) on depletion (top right), unfished spawning output (lower left), and terminal year spawning output (lower right)",
-  alt_caption = "Four-panel figure showing how minimum negative log likelihood, depletion, and spawning output vary with different female natural mortality parameters.",
+  alt_caption = "Four-panel figure showing how minimum negative log likelihood depletion and spawning output vary with different female natural mortality parameters.",
   label = "fig:female-m-profile2"
 )
 ```
@@ -1260,7 +1260,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../../models/7_3_5_reweight_profile_NatM_uniform_Mal_GP_1_prior_like_1/piner_panel_NatM_uniform_Mal_GP_1.png",
   caption = "Likelihood profile showing support from various data sources for different values of male natural mortality. Change in log-likelihood is relative to the base model. Values associated the likelihoods that fall below the red dashed line are within the 95 percent chi-squared confidence interval",
-  alt_caption = "Four-panel figure showing influence of different likelihood components and different fleets within age, length, and survey likelihood components on profile of male natural mortality.",
+  alt_caption = "Four-panel figure showing influence of different likelihood components and different fleets within age length and survey likelihood components on profile of male natural mortality.",
   label = "fig:male-m-profile"
 )
 ```
@@ -1269,7 +1269,7 @@ sa4ss::add_figure(
 sa4ss::add_figure(
   filein = "../../models/7_3_5_reweight_profile_NatM_uniform_Mal_GP_1_prior_like_1/parameter_panel_NatM_uniform_Mal_GP_1.png",
   caption = "Likelihood profile of male natural mortality, and impact of changing male natural mortality values from the base model (blue dot) on depletion (top right), unfished spawning output (lower left), and terminal year spawning output (lower right)",
-  alt_caption = "Four-panel figure showing how minimum negative log likelihood, depletion, and spawning output vary with different male natural mortality parameters.",
+  alt_caption = "Four-panel figure showing how minimum negative log likelihood depletion and spawning output vary with different male natural mortality parameters.",
   label = "fig:male-m-profile2"
 )
 ```
