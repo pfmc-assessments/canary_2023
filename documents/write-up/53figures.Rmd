@@ -7,7 +7,7 @@
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/assessment_map.png",
-  caption = "Map of management and the 2023 assessment area along with fleet spatial structure and survey ranges for `r spp` off the U.S. West Coast",
+  caption = glue::glue("Map of management and the 2023 assessment area along with fleet spatial structure and survey ranges for {spp} off the U.S. West Coast"),
   alt_caption = "Map of U.S. West Coast showing indicating coastwide management assessment and survey structure and state-specific fleet structure.",
   label = "map"
 )
@@ -16,7 +16,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/catch2 landings stacked_custom.png",
-  caption = "Total removals for `r spp` off the U.S. West Coast from 1892-2022 by fleet (TWL = trawl, NTWL = non-trawl, Rec = recreational, ASHOP = at-sea hake, FOR = foreign)",
+  caption = glue::glue("Total removals for {spp} off the U.S. West Coast from 1892-2022 by fleet (TWL = trawl, NTWL = non-trawl, Rec = recreational, ASHOP = at-sea hake, FOR = foreign)"),
   alt_caption = "Stacked bar plot showing total removals are mainly from trawl fleets were high from 1940-2000 foreign fishing peaked in the 1970s fishing was near zero from 2000-2015 and then increased modestly.",
   label = "catches"
 )
@@ -25,7 +25,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/data_plot_custom.png",
-  caption = "Illustration of types of data used for each fleet within the assessment for `r spp` off the U.S. West Coast",
+  caption = glue::glue("Illustration of types of data used for each fleet within the assessment for {spp} off the U.S. West Coast"),
   alt_caption = "Horizontal bar plot showing data types available by year for each fleet. Commerical catches started in the early 1900s and recreational in the 1920s for California and around 1970 for other states. Commercial and recreational composition data started in the 1970s and 1980s with fewer years of age data compared to lengths. Fishery independent indices and composition data started in the 1980s.",
   label = "data-plot"
 )
@@ -232,7 +232,7 @@ sa4ss::add_figure(
 ```{r, results = "asis"}
 sa4ss::add_figure(
   filein = "../figures/cpue_map.png",
-  caption = "Map of \\gls{s-wcgbt} stations and density of catches of `r spp`. Faint gray dots are tows without `r spp`. Larger redder circles indicate higher catch rates",
+  caption = paste0("Map of \\gls{s-wcgbt} stations and density of catches of ", spp,". Faint gray dots are tows without ", spp, ". Larger redder circles indicate higher catch rates"),
   alt_caption = "Map of survey tows of canary rockfish showing highest catch rates in northern Oregon and especially Washington with catches tapering off south of San Francisco Bay and virtually no catches south of Point Conception.",
   label = "wcgbts-tows"
 )
