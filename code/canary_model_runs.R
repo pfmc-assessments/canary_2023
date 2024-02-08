@@ -14134,6 +14134,9 @@ pp <- SS_output(here('models',new_name))
     stringr::str_replace('NWFSC', 'WCGBTS')
   SS_plots(pp, fleetnames = short.names)
   
+  #TSC plot
+  TSCplot(pp, makePNG = here('models',new_name,"plots/TSCcanary.png"))
+  
   #Custom plots for visualization
   #Data plot
   SSplotData(pp, print = TRUE, subplots = c(1,2), plotdir = here('documents/figures'), fleetnames = short.names,
