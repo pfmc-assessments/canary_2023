@@ -1,6 +1,6 @@
 # canary_2023
 
-Repository for work on the 2023 Canary rockfish stock assessment 
+Repository for work on the 2023 Canary rockfish stock assessment. Final post-star panel base model is called "7_3_5_reweight". 
 
 ## Disclaimer
 
