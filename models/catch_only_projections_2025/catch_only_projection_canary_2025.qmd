@@ -1,0 +1,214 @@
+---
+title: "Catch only projection for canary rockfish"
+author: "Brian J. Langseth (Northwest Fisheries Science Center)" 
+date: today
+format: pdf
+params:
+  species: "canary rockfish"
+  assess_year: 2023
+  current_year: 2025
+  final_proj_year: 2036
+  category: 1
+  sigma: 0.50
+  p_star: 0.45
+  spawn_output_decimals: 0
+---
+
+```{r}
+#| label: parameters
+#| echo: false
+#| warning: false
+#| message: false
+species <- params$species
+Species <- stringr::str_to_sentence(params$species)
+assess_year <- params$assess_year
+current_year <- params$current_year
+final_proj_year <- params$final_proj_year
+category <- params$category
+sigma <- params$sigma
+p_star <- params$p_star
+spawn_output_decimals <- params$spawn_output_decimals
+
+# original model
+model_original <- r4ss::SS_output(
+  dir = here::here("models", "7_3_5_reweight"),
+  verbose = FALSE,
+  printstats = FALSE, 
+  hidewarn = TRUE)
+
+# catch-only projection
+model <- r4ss::SS_output(
+  dir = here::here("models", "catch_only_projections_2025", "2025_standard"),
+  verbose = FALSE,
+  printstats = FALSE, 
+  hidewarn = TRUE) 
+
+```
+
+This document details a catch-only projection for `r species`. The most recent assessment for `r species` was conducted in `r assess_year`. This analysis updates catches between `r assess_year` - `r current_year` to the removals by year from the Groundfish Multiyear Mortality (GEMM) report. The removals for `r current_year` and `r current_year + 1` were set equal to mortality projections provided by the Groundfish Management Team (GMT). For years `r current_year + 2` and beyond, removals were set equal to the projected Acceptable Biological Catch (ABC) based on a category `r category` time-varying $\sigma$ of `r sigma` and a P* value of `r p_star`.
+
+```{r}
+#| label: tbl-proj
+#| echo: false
+#| warning: false
+#| message: false
+#| tbl-cap: "Projected OFLs (mt), ABCs (mt), buffer, spawning output, and stock status given the assumed removals."
+
+all_years <- assess_year:final_proj_year
+proj_years <- (current_year + 2):final_proj_year
+catch_years <- assess_year:(current_year + 1)
+catch <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("ForeCatch_", catch_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    Catch = Value) 
+ofl <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("OFLCatch_", proj_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    OFL = Value) 
+abc <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("ForeCatch_", proj_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    ABC = Value) 
+sb <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("SSB_", all_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    SB = Value) 
+depl <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("Bratio_", all_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    depl = round(Value, 3)) 
+
+dplyr::full_join(dplyr::full_join(dplyr::full_join(dplyr::full_join(ofl, abc), sb), depl), catch) |>
+  dplyr::arrange(Year) |>
+  dplyr::relocate(Catch, .after = Year) |>
+  dplyr::mutate(
+    Buffer = dplyr::case_when(depl >= model$btarg ~ round(ABC / OFL, 3), .default = NA),
+    .after = ABC
+  ) |>
+  dplyr::rename(
+    `Assumed Removals (mt)` = Catch,
+    `Stock Status` = depl,
+    `Spawning Output` = SB,
+    ) |>
+  gt::gt() |>
+  gt::fmt_number(
+    columns = c(2:4, 6),
+    decimals = 0
+  ) |>
+  gt::tab_options(
+    table.font.size = 12,
+    latex.use_longtable = TRUE 
+  ) |>
+  gt::sub_missing(
+    columns = tidyselect::everything(),
+    missing_text = "---"
+  ) |>
+  gt::cols_align(
+    align = "center"
+  ) |>
+  gt::as_latex()
+
+
+```
+
+::: {.landscape}
+```{r}
+#| label: tbl-proj2
+#| echo: false
+#| warning: false
+#| message: false
+#| tbl-cap: "Projected OFLs (mt), ABCs (mt), buffer, spawning output, and stock status given the assumed removals."
+
+all_years <- assess_year:final_proj_year
+proj_years <- (current_year + 2):final_proj_year
+catch_years <- assess_year:(current_year + 1)
+catch <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("ForeCatch_", catch_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    Catch = Value) 
+ofl_original <- model_original$derived_quants |> 
+  dplyr::filter(Label %in% paste0("OFLCatch_", all_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    OFL_original = Value) 
+ofl <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("OFLCatch_", all_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    OFL = Value) 
+abc <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("ForeCatch_", all_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    ABC = Value) 
+abc_original <- model_original$derived_quants |> 
+  dplyr::filter(Label %in% paste0("ForeCatch_", proj_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    ABC_original = Value) 
+sb <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("SSB_", all_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    SB = Value) 
+status_original <- model_original$derived_quants |> 
+  dplyr::filter(Label %in% paste0("Bratio_", all_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    status_original = round(Value, 3)) 
+status <- model$derived_quants |> 
+  dplyr::filter(Label %in% paste0("Bratio_", all_years)) |> 
+  dplyr::summarise(
+    Year = stringr::str_extract(Label, "\\d+"),
+    status = round(Value, 3)) 
+
+purrr::reduce(
+  list(ofl_original, ofl, abc_original, abc, sb, status_original, status, catch),
+  dplyr::full_join
+) |>
+  dplyr::arrange(Year) |>
+  dplyr::relocate(Catch, .after = Year) |>
+  dplyr::mutate(
+    Buffer = dplyr::case_when(status >= model$btarg ~ round(ABC / OFL, 3), .default = NA),
+    .after = ABC
+  ) |>
+  dplyr::rename(
+    `Assumed Removals (mt)` = Catch,
+    `Stock Status` = status,
+    `Spawning Output` = SB,
+    ) |>
+  dplyr::rename_with(
+    ~ gsub("_original", paste0(" (", assess_year, ")"), .x)
+  ) |> 
+  gt::gt() |>
+  gt::fmt_number(
+    columns = c(2:6),
+    decimals = 0
+  ) |>
+  gt::fmt_number(
+    columns = 8,
+    decimals = spawn_output_decimals
+  ) |>
+  gt::tab_options(
+    table.font.size = 12,
+    latex.use_longtable = TRUE 
+  ) |>
+  gt::sub_missing(
+    columns = tidyselect::everything(),
+    missing_text = "---"
+  ) |>
+  gt::cols_align(
+    align = "center"
+  ) |>
+  gt::as_latex()
+
+
+```
+
+:::
