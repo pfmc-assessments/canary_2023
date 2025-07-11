@@ -90,6 +90,7 @@ suggested_tuning.ss
 *.out
 *.tex
 !documents/tables/*.tex
+!models/catch_only_projections_2025/*.tex
 *.upa
 *.upb
 *.md

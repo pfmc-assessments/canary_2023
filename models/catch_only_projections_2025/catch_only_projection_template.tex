@@ -1,0 +1,24 @@
+\documentclass[12pt]{report}
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{lscape} % Add this package for landscape support
+\usepackage{array} 
+\usepackage[margin=1in]{geometry}
+\usepackage[table]{xcolor} % Added for cell and text coloring in tables
+\usepackage{caption}
+\pagenumbering{gobble} % Suppress page numbers
+\captionsetup{width=8in} % attempt to widen caption for the table
+\begin{document}
+\begin{landscape} % Begin landscape mode
+\begin{center}
+\vspace*{-.7in}
+{\LARGE $title$} \\[1.5ex]
+{\large $author$} \\
+$affiliation$ \\[1.5ex]
+{\large $date$}
+\end{center}
+
+$body$
+\end{landscape} % End landscape mode
+\end{document}
