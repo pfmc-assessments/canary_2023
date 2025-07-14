@@ -17,6 +17,7 @@ params:
   spawn_output_decimals: 2
   dir_original: "../models/7_3_5_reweight"
   dir_new: "../models/catch_only_projections_2025/2025_standard"
+  dir_new2: "../models/catch_only_projections_2025/2025_2026project_part2"
   spawn_output_units: "(millions of eggs)"
 ---
 
@@ -51,11 +52,22 @@ model <- r4ss::SS_output(
   printstats = FALSE, 
   hidewarn = TRUE) 
 
+# catch-only projection Alternative 1
+model2 <- r4ss::SS_output(
+  dir = here::here("models", "catch_only_projections_2025", "2025_2026project_part2"),
+  #dir = params$dir_new2,
+  verbose = FALSE,
+  printstats = FALSE,
+  hidewarn = TRUE)
+
 table_caption <- glue::glue("Original {assess_year} projection and new catch-only projection for OFLs (mt), buffer, ABCs (mt), actual & assumed catch (mt), ACLs (mt), spawning output {params$spawn_output_units}, and stock status (fraction of unfished spawning output) given the removals. The gray shading indicates values associated with the original {assess_year} assessment projection. In both the original model and the new projection, the removals for years beyond the values in the 'Actual & Assumed Removals' columns are the ACL values estimated from that model.")
 
+table_caption2 <- glue::glue("Original {assess_year} projection and alternative catch-only projection in which the 2026 assumed catches are set to 88% of the ACLs (2290 = 0.88 * 593) rather than fixed at the values calculated by the GMT based on the current harvest specifications. See caption of table above for additional details.")
 ```
 
 This document details a catch-only projection for `r species`. The most recent assessment for `r species` was conducted in `r assess_year`. This analysis updates catches between `r assess_year` - `r current_year` to the removals by year from the Groundfish Multiyear Mortality (GEMM) report. The removals for `r current_year` and `r current_year + 1` were set equal to mortality projections provided by the Groundfish Management Team (GMT) for each fleet in the model. For years `r current_year + 2` and beyond, removals were set equal to the projected Annual Catch Limit (ACL) based on a category `r category` time-varying $\sigma$ of `r sigma` and a P* value of `r p_star`. These buffers are the same as in the previous stock assessment, with two additional years of buffers for years `r current_year + 10` and `r current_year + 11`. 
+
+An alternative projection is provided in the second table where the assumed catch in 2026 is based on ACL from a catch-only projection through 2025 rather than the current harvest specifications. An assumption of 88% attainment estimated by the GMT was used in both cases.
 
 ```{r}
 #| label: calc-table
@@ -66,7 +78,9 @@ This document details a catch-only projection for `r species`. The most recent a
 # define ranges of years to get values
 all_years <- assess_year:final_proj_year
 proj_years <- (current_year + 2):final_proj_year
+proj_years2 <- (current_year + 1):final_proj_year
 catch_years <- assess_year:(current_year + 1)
+catch_years2 <- assess_year:(current_year)
 diff_years <- current_year - assess_year
 
 # function to get model outputs
@@ -198,7 +212,9 @@ table <- catch_only_projection_table(model,
 table_original <- catch_only_projection_table(model_original,
     all_years = head(all_years, 12), proj_years = proj_years - diff_years, catch_years = catch_years - diff_years
 )
-
+table2 <- catch_only_projection_table(model2,
+    all_years = all_years, proj_years = proj_years2, catch_years = catch_years2
+)
 ```
 
 ```{r}
@@ -226,6 +242,12 @@ table_original <- table_original |>
     dplyr::rename_with(~ paste(.x, "(yyyy)"), .cols = -Year)
 # combine the two tables
 wide_table <- combine_tables(table, table_original)
+
+wide_table2 <- combine_tables(table2, table_original)
+# move 2026 ACL to assumed catch column
+wide_table2$"Actual & Assumed Removals"[wide_table2$Year == 2026] <- 
+  wide_table2$ACL[wide_table2$Year == 2026]
+wide_table2$ACL[wide_table2$Year == 2026] <- NA 
 ```
 
 ```{r}
@@ -236,4 +258,14 @@ wide_table <- combine_tables(table, table_original)
 #| eval: true
 #| tbl-cap: !expr table_caption
 format_table(wide_table)
+```
+
+```{r}
+#| label: tbl-proj2
+#| echo: false
+#| warning: false
+#| message: false
+#| eval: true
+#| tbl-cap: !expr table_caption2
+format_table(wide_table2)
 ```
