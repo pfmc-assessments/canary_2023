@@ -250,6 +250,71 @@ pp <- SS_output(here('models', "catch_only_projections_2025/2025_2026project_par
 SS_plots(pp, plot = c(1:26))
 
 
+##----------------------------------##-
+# Model 3 - Use 2025_2026project_part1 projection model back to fixed catch in 2026 excluding 40-10 rule for 2026 -----------------
+##----------------------------------##-
+
+#Fixed catch in 2026 is based on the % allocation of the 2026 GMT estimate to the ACL in regulation in 2026 
+#multiplied by the model estimated 2026 ABC (i.e. removing 40-10 rule) from when 2026 catch is projected (from 2025_2026project_part1)
+
+mod <- SS_read(here('models', 'catch_only_projections_2025', '2025_2026project_part2'))
+mod_out <- SS_output(here('models', "catch_only_projections_2025/2025_2026project_part2"))
+
+
+## Change 2026 fixed catch to be based on ABC not ACL from model 1a (part1)
+
+# GMT catches emailed to me on Jun 10, 2025, also found in
+# https://docs.google.com/spreadsheets/d/1UtxsXxbwQTWMgn1TwYZaCyptq-S0BZtO3wGH0LJ7M1w/edit?gid=118359478#gid=118359478
+gmt_catch <- data.frame("year" = c(2023:2026),
+                        "CA_TWL_1" = c(150.6, 114.4, 74.2, 74.2),
+                        "OR_TWL_2" = c(295.2, 259, 179.2, 179.2),
+                        "WA_TWL_3" = c(74.4, 51.2, 87.9, 87.9),
+                        "CA_NTWL_4" = c(19.2, 19.3, 34.3, 34.4),
+                        "OR_NTWL_5" = c(12, 12, 16.6, 16.6),
+                        "WA_NTWL_6" = c(0.8, 0.4, 1.5, 1.5),
+                        "CA_REC_7" = c(73.2, 40.2, 46.7, 46.9),
+                        "OR_REC_8" = c(57, 50.3, 26.1, 26),
+                        "WA_REC_9" = c(21.9, 26.8, 17.3, 17.4),
+                        "OR_ASHOP_11" = c(7, 1, 11.2, 11.2),
+                        "WA_ASHOP_12" = c(13.2, 0, 8.8, 8.8))
+
+# Adjust the 2026 fixed value based on the % of allocation from the original 2026 GMT fixed value (504)
+# to the 2026 ACL in regulation (573) multiplied by the 2026 ABC from part 1 (model 2a)
+
+buffer2026 <- PEPtools::get_buffer(years = 2023:2036, sigma = 0.5, pstar = 0.45) |> 
+  dplyr::filter(year == 2026) |> 
+  dplyr::select(buffer) |>
+  as.numeric()
+new2026ABC <- buffer2026 * mod_out$derived_quants[mod_out$derived_quants$Label == "OFLCatch_2026", "Value"]
+scaled2026catch <- new2026ABC * (rowSums(gmt_catch[,-1])[4] / 573)
+#allocate new scaled 2026 total catch to fleets based on same percentage as original allocation
+temp <- gmt_catch[gmt_catch$year == 2026, -1]
+allocated2026catch <- round(scaled2026catch * temp/sum(temp), 1)
+
+mod$fore$ForeCatch[mod$fore$ForeCatch$year == 2026, "catch_or_F"] <- unlist(allocated2026catch)
+
+
+##
+#Output new model and run
+##
+
+r4ss::SS_write(
+  mod,
+  dir = here('models', "catch_only_projections_2025/2025_2026project_part3"),
+  overwrite = TRUE
+)
+
+r4ss::run(
+  dir = here('models', "catch_only_projections_2025/2025_2026project_part3"),
+  extras = "-nohess",
+  exe = here('models/ss_win.exe'),
+  show_in_console = TRUE,
+  skipfinished = FALSE
+)
+
+pp <- SS_output(here('models', "catch_only_projections_2025/2025_2026project_part3"))
+SS_plots(pp, plot = c(1:26))
+
 
 ##----------------------------------##-
 # Render markdown template based on template -----------------
