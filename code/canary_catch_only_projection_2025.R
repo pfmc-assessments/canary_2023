@@ -316,6 +316,100 @@ pp <- SS_output(here('models', "catch_only_projections_2025/2025_2026project_par
 SS_plots(pp, plot = c(1:26))
 
 
+
+##----------------------------------##-
+# Model 4 - Use 2025_2026project_part3 projection model but exclude 40-10 rule for 2027 and 2028 -----------------
+##----------------------------------##-
+
+#To do this we need two parts. The first is to remove the 40-10 rule (I do this by setting 
+#it to a 30-10 rule). The second is to the fix catches in 2027-2028 at the ABC and then rerun
+#the model but turn on the 40-10 rule. 
+
+
+## ---- Part A ----
+
+mod <- SS_read(here('models', 'catch_only_projections_2025', '2025_2026project_part3'))
+mod_out <- SS_output(here('models', "catch_only_projections_2025/2025_2026project_part3"))
+
+## Turn off 40-10 rule in 2027 and 2028
+
+mod$fore$BforconstantF <- 0.3
+
+
+##
+#Output new model and run
+##
+
+r4ss::SS_write(
+  mod,
+  dir = here('models', "catch_only_projections_2025/2025_2026project_part4a"),
+  overwrite = TRUE
+)
+
+r4ss::run(
+  dir = here('models', "catch_only_projections_2025/2025_2026project_part4a"),
+  extras = "-nohess",
+  exe = here('models/ss_win.exe'),
+  show_in_console = TRUE,
+  skipfinished = FALSE
+)
+
+pp <- SS_output(here('models', "catch_only_projections_2025/2025_2026project_part4a"))
+SS_plots(pp, plot = c(1:26))
+
+
+## ---- Part B ----
+
+mod <- SS_read(here('models', 'catch_only_projections_2025', '2025_2026project_part4a'))
+mod_out <- SS_output(here('models', "catch_only_projections_2025/2025_2026project_part4a"))
+
+## Set catches in 2027 and 2028 to be the ABC/ACL from part4
+
+
+#Add fixed 2027-2028 catches
+new2027_2028 <- SS_ForeCatch(mod_out, 
+                             yrs = 2027:2028,
+                             average = FALSE,
+                             digits = 2, 
+                             dead = TRUE,
+                             zeros = TRUE) |>
+  dplyr::filter(Fleet <= 12)
+colnames(new2027_2028)[1:4] <- c("year", "seas", "fleet", "catch_or_F")
+  
+mod$fore$ForeCatch <- dplyr::bind_rows(mod$fore$ForeCatch, new2027_2028[,-5])
+
+
+#Adjust buffer so catches are fixed in 2027-2028
+mod$fore$Flimitfraction_m[mod$fore$Flimitfraction_m$year %in% c(2027:2028),"fraction"] <- 1
+
+
+#Revert to typical 40-10 rule
+mod$fore$BforconstantF <- 0.4
+
+
+##
+#Output new model and run
+##
+
+r4ss::SS_write(
+  mod,
+  dir = here('models', "catch_only_projections_2025/2025_2026project_part4b"),
+  overwrite = TRUE
+)
+
+r4ss::run(
+  dir = here('models', "catch_only_projections_2025/2025_2026project_part4b"),
+  extras = "-nohess",
+  exe = here('models/ss_win.exe'),
+  show_in_console = TRUE,
+  skipfinished = FALSE
+)
+
+pp <- SS_output(here('models', "catch_only_projections_2025/2025_2026project_part4b"))
+SS_plots(pp, plot = c(1:26))
+
+
+
 ##----------------------------------##-
 # Render markdown template based on template -----------------
 ##----------------------------------##-

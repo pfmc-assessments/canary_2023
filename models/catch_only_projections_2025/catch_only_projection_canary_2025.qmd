@@ -19,6 +19,7 @@ params:
   dir_new: "../models/catch_only_projections_2025/2025_standard"
   dir_new2: "../models/catch_only_projections_2025/2025_2026project_part2"
   dir_new3: "../models/catch_only_projections_2025/2025_2026project_part3"
+  dir_new4: "../models/catch_only_projections_2025/2025_2026project_part4b"
   spawn_output_units: "(millions of eggs)"
 ---
 
@@ -69,16 +70,32 @@ model3 <- r4ss::SS_output(
   printstats = FALSE,
   hidewarn = TRUE)
 
+# catch-only projection Alternative 3 second part
+model4b <- r4ss::SS_output(
+  dir = here::here("models", "catch_only_projections_2025", "2025_2026project_part4b"),
+  #dir = params$dir_new4,
+  verbose = FALSE,
+  printstats = FALSE,
+  hidewarn = TRUE)
+
 table_caption <- glue::glue("Original {assess_year} projection and new catch-only projection for OFLs (mt), buffer, ABCs (mt), actual & assumed catch (mt), ACLs (mt), spawning output {params$spawn_output_units}, and stock status (fraction of unfished spawning output) given the removals. The gray shading indicates values associated with the original {assess_year} assessment projection. In both the original model and the new projection, the removals for years beyond the values in the 'Actual & Assumed Removals' columns are the ACL values estimated from that model.")
 
 table_caption2 <- glue::glue("Original {assess_year} projection and alternative catch-only projection in which the 2026 assumed catches are set to 88% of the ACL (522 = 0.88 * 593) rather than fixed at the values calculated by the GMT based on the current harvest specifications. See caption of table above for additional details.")
 
-table_caption3 <- glue::glue("Original {assess_year} projection and alternative catch-only projection in which the 2026 assumed catches are set to 88% of the ABC (551 = 0.88 * 626) rather than fixed at the values calculated by the GMT based on the current harvest specifications. See caption of table above for additional details.")
+table_caption3 <- glue::glue("Original {assess_year} projection and alternative catch-only projection in which the 2026 assumed catches are set to 88% of the ABC (551 = 0.88 * 626) rather than fixed at the values calculated by the GMT based on the current harvest specifications. See caption of table above for additional details. See caption of Table 1 above for additional details.")
+
+# #If compare to original
+# table_caption4 <- glue::glue("Original {assess_year} projection and alternative catch-only projection in which the 2026 assumed catches are set to 88% of the ABC (551 = 0.88 * 626) rather than fixed at the values calculated by the GMT based on the current harvest specifications and where 2027--2028 projections are calculated without the 40-10 harvest control rule. The 40-10 harvest control rule is applied starting in 2029 and beyond. See caption of Table 1 above for additional details.")
+
+#If compare to Table 3
+table_caption4 <- glue::glue("September 2025 Table 3 projection and alternative catch-only projection in which the 2026 assumed catches are set to 88% of the ABC (551 = 0.88 * 626) rather than fixed at the values calculated by the GMT based on the current harvest specifications and where the 2027--2028 projected values are calculated without the 40-10 harvest control rule. The 40-10 harvest control rule is applied starting in 2029. See caption of Table 1 above for additional details.")
 ```
 
 This document details a catch-only projection for `r species`. The most recent assessment for `r species` was conducted in `r assess_year`. This analysis updates catches between `r assess_year` - `r current_year - 1` to the best information about observed removals as provided by the Groundfish Management Team (GMT). The removals for `r current_year` and `r current_year + 1` were set equal to mortality projections provided by the GMT for each fleet in the model. For years `r current_year + 2` and beyond, removals were set equal to the projected Annual Catch Limit (ACL) based on a category `r category` time-varying $\sigma$ of `r sigma` and a P* value of `r p_star`. These buffers are the same as in the previous stock assessment, with two additional years of buffers for years `r current_year + 10` and `r current_year + 11`. 
 
-Two alternative projections are provided. In @tbl-proj2, the assumed catch in 2026 is based on the ACL from a catch-only projection through 2025 rather than the current harvest specifications. In @tbl-proj3, the assumed catch in 2026 is based on the ABC from a catch-only projection through 2025 rather than the current harvest specifications, thereby removing the effect of the 40-10 rule for 2026. An assumption of 88% attainment for 2026 catches, as estimated by the GMT, was used in both cases.
+Two alternative projections were provided for the September 2025 council meeting. In @tbl-proj2, the assumed catch in 2026 was based on the ACL from a catch-only projection through 2025 rather than the current harvest specifications. In @tbl-proj3, the assumed catch in 2026 was based on the ABC from a catch-only projection through 2025 rather than the current harvest specifications, thereby removing the effect of the 40-10 rule for 2026. An assumption of 88% attainment for 2026 catches, as estimated by the GMT, was used in both cases.
+
+A third alternative projection was requested by the Council during the September and November 2025 council meetings. This third alternative is based on the previous run shown in @tbl-proj3 where an 88% attainment of projected 2026 catches was assumed and the 40-10 rule was not applied in 2026, but now also removes the effect of the 40-10 rule for 2027 and 2028 (@tbl-proj4). 
 
 ```{r}
 #| label: calc-table
@@ -229,6 +246,9 @@ table2 <- catch_only_projection_table(model2,
 table3 <- catch_only_projection_table(model3,
     all_years = all_years, proj_years = proj_years2, catch_years = catch_years2
 )
+table4 <- catch_only_projection_table(model4b,
+    all_years = all_years, proj_years = proj_years2, catch_years = catch_years2
+)
 ```
 
 ```{r}
@@ -268,6 +288,27 @@ wide_table3 <- combine_tables(table3, table_original)
 wide_table3$"Actual & Assumed Removals"[wide_table3$Year == 2026] <- 
   wide_table3$ACL[wide_table3$Year == 2026]
 wide_table3$ACL[wide_table3$Year == 2026] <- 626 #Hard coded addition based on model 1a ABC
+
+# #If want to compare to 2023 model
+# wide_table4 <- combine_tables(table4, table_original) 
+# # move 2026 ACL to assumed catch column
+# wide_table4$"Actual & Assumed Removals"[wide_table4$Year == 2026] <- 
+#   wide_table4$ACL[wide_table4$Year == 2026]
+# wide_table4$ACL[wide_table4$Year == 2026] <- 626 #Hard coded addition based on model 1a ABC
+# wide_table4$ACL[wide_table4$Year == 2027] <- 643 #Hard coded addition based on model 4a ABC
+# wide_table4$ACL[wide_table4$Year == 2028] <- 664 #Hard coded addition based on model 4a ABC
+
+#If want to compare to Table 3 from September 2025 run
+wide_table3_reformat <- wide_table3 |> 
+  dplyr::select("Year", "Actual & Assumed Removals", "OFL", "ABC", "ACL", "Stock Status")
+names(wide_table3_reformat) <- names(table_original)
+assess_year <- "Sept"
+wide_table4 <- combine_tables(table4, wide_table3_reformat)
+# move 2026 ACL to assumed catch column
+wide_table4$"Actual & Assumed Removals"[wide_table4$Year == 2026] <- 
+  wide_table4$ACL[wide_table4$Year == 2026]
+wide_table4$ACL[wide_table4$Year == 2026] <- 626 #Hard coded addition based on model 1a ABC
+assess_year <- 2023 #reset this value
 ```
 
 {{< pagebreak >}}
@@ -306,5 +347,19 @@ format_table(wide_table2)
 #| eval: true
 #| tbl-cap: !expr table_caption3
 format_table(wide_table3)
+```
+
+{{< pagebreak >}}
+
+```{r}
+#| label: tbl-proj4
+#| echo: false
+#| warning: false
+#| message: false
+#| eval: true
+#| tbl-cap: !expr table_caption4
+assess_year <- "Sept"
+format_table(wide_table4)
+assess_year <- "2023"
 ```
 :::
